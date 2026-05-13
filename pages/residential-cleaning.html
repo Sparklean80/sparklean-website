@@ -677,6 +677,39 @@
 
 </section>
 
+<section class="founder-story" id="res-sparklean-diff" aria-labelledby="res-sparklean-diff-h">
+<div class="founder-inner">
+<div class="eyebrow">
+<div class="ey-line"></div>
+<span>After the clean</span>
+<div class="ey-line"></div>
+</div>
+
+<h2 class="sec-h" id="res-sparklean-diff-h">The Sparklean<br>
+<em>difference</em></h2>
+
+<p class="founder-lede">Walk the home with Roxy right after a Sparklean visit — see the presentation-level finishing, quiet details, and walk-through standards our supervised teams deliver across Southwest Florida.</p>
+
+<div class="founder-cinematic">
+<div class="founder-cinematic__chrome">
+<div class="founder-cinematic__ratio">
+<div class="founder-player" id="res-diff-player" data-yt-src="https://www.youtube-nocookie.com/embed/Zs7m366xVz8?rel=0&amp;modestbranding=1&amp;playsinline=1">
+<button type="button" class="founder-poster-btn" id="res-diff-poster-btn" aria-label="Play video: The Sparklean difference — post-cleaning walkthrough with Roxy">
+<img class="founder-poster-img" src="https://img.youtube.com/vi/Zs7m366xVz8/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy" decoding="async">
+<span class="founder-poster-veil" aria-hidden="true"></span>
+<span class="founder-play-wrap" aria-hidden="true"><span class="founder-play-ring"></span><span class="founder-play-tri"></span></span>
+<span class="founder-poster-hint" aria-hidden="true">Watch the walkthrough</span>
+</button>
+<div class="founder-embed-slot" id="res-diff-embed-slot" aria-live="polite"></div>
+</div>
+</div>
+</div>
+
+<p class="founder-tagline">Guest-ready finishes — before we ever step off your driveway.</p>
+<a class="founder-soft-cta" href="#quote">Request your personalized quote</a>
+</div>
+</section>
+
 <section class="why">
 <div class="why-grid">
 <div class="why-text">
@@ -991,6 +1024,41 @@
 <script>document.addEventListener('DOMContentLoaded', function() { document.querySelectorAll('.tab').forEach(function(btn) { btn.addEventListener('click', function() { var id = btn.getAttribute('data-tab'); document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); }); document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); }); btn.classList.add('active'); document.getElementById('pane-' + id).classList.add('active'); }); }); document.querySelectorAll('.faq-q').forEach(function(btn) { btn.addEventListener('click', function() { btn.parentElement.classList.toggle('open'); }); }); });</script>
 
 <script>var hb=document.getElementById('hamburger'); var mm=document.getElementById('mobileMenu'); if(hb&&mm){ hb.addEventListener('click',function(){hb.classList.toggle('open');mm.classList.toggle('open');}); mm.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){hb.classList.remove('open');mm.classList.remove('open');});}); }</script>
+
+<script>
+(function(){
+  var sec=document.getElementById('res-sparklean-diff');
+  if(sec){
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(ents){
+        ents.forEach(function(en){if(en.isIntersecting){sec.classList.add('founder-story--inview');io.disconnect();}});
+      },{threshold:0.14,rootMargin:'0px 0px -36px 0px'});
+      io.observe(sec);
+    }else{sec.classList.add('founder-story--inview');}
+  }
+  var btn=document.getElementById('res-diff-poster-btn');
+  var slot=document.getElementById('res-diff-embed-slot');
+  var player=document.getElementById('res-diff-player');
+  if(!btn||!slot||!player)return;
+  var srcBase=player.getAttribute('data-yt-src');
+  if(!srcBase)return;
+  btn.addEventListener('click',function(){
+    if(slot.querySelector('iframe'))return;
+    var u=srcBase+(srcBase.indexOf('?')>=0?'&':'?')+'autoplay=1&mute=1';
+    var fr=document.createElement('iframe');
+    fr.className='founder-iframe';
+    fr.src=u;
+    fr.setAttribute('title','The Sparklean difference — Roxy walkthrough after cleaning');
+    fr.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+    fr.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+    fr.setAttribute('allowfullscreen','');
+    slot.appendChild(fr);
+    slot.classList.add('is-active');
+    btn.classList.add('is-replaced');
+    try{fr.focus();}catch(e){}
+  });
+})();
+</script>
 
 </body>
 
