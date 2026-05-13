@@ -256,7 +256,7 @@ __INLINE_CSS__
       <p class="ci-body">To Roxy, caring for someone’s home is personal. It requires trust, responsibility, precision, and pride in the details others overlook.</p>
     </div>
     <div class="sl-img-wrap">
-      <img class="sl-img" src="/images/IMG_1847.jpg" alt="Roxana “Roxy” Tellez, Sparklean Cleaning co-founder" loading="lazy" decoding="async">
+      <img class="sl-img" src="/images/IMG_1847.jpg" alt="Roxana “Roxy” Tellez, Sparklean Cleaning co-founder" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b313b10e917717507d2c8e_1000051684.jpeg';">
       <div class="sl-corner"></div>
     </div>
   </div>
