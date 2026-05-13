@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>Luxury Add-On Cleaning Services | Tile, Windows &amp; More | Sparklean</title>
 <meta name="description" content="Premium add-on services from Sparklean — tile and grout renewal, interior and exterior window cleaning, kitchen detailing, and white-glove extras including bed making, dishes, and laundry across Southwest Florida.">
 <link rel="canonical" href="https://www.sparklean.co/specialized-cleaning">
@@ -163,15 +163,22 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
 .footer-col a:hover{color:var(--gold-lt);}
 .footer-bottom{padding:22px 80px;display:flex;justify-content:space-between;align-items:center;}
 .footer-copy{font-size:.58rem;color:rgba(249,247,243,.2);letter-spacing:.06em;}
-@media(max-width:900px){
-  nav{padding:0 20px;}.nav-links,.nav-phone{display:none;}.nav-logo img{height:76px;}
-  .hero{display:none;}.hero-mobile{display:flex;}
+@media(max-width:1024px){
+  nav{padding:0 24px;}
+  .nav-links,.nav-phone{display:none !important;}
+  .nav-logo img{height:76px;}
+  .nav-hamburger{display:flex !important;}
+  .nav-btn{display:none;}
+  .hero{display:none;}
+  .hero-mobile{display:flex;}
   .hero-mobile-img{object-position:58% 48%;}
   .pc-intro,.project-types,.svc-list,.why-builders,.community,.cta{padding:60px 20px;}
   .ci-grid,.sl-grid{grid-template-columns:1fr;gap:40px;}
   .pt-grid,.wb-grid,.comm-grid{grid-template-columns:1fr;gap:3px;}
-  .photo-pair{grid-template-columns:1fr;}.pp-img{height:260px;}
-  .footer-top{padding:52px 20px 40px;}.footer-bottom{padding:18px 20px;flex-direction:column;gap:10px;text-align:center;}
+  .photo-pair{grid-template-columns:1fr;}
+  .pp-img{height:260px;}
+  .footer-top{padding:52px 20px 40px;}
+  .footer-bottom{padding:18px 20px;flex-direction:column;gap:10px;text-align:center;}
   .footer-cols{grid-template-columns:1fr;gap:30px;}
 }
 .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;}
@@ -183,17 +190,6 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
 .nav-mobile-menu.open{display:flex;}
 .nav-mobile-menu a{font-size:.62rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--w70);text-decoration:none;padding:14px 28px;border-bottom:1px solid rgba(201,168,76,.06);transition:color .2s;}
 .nav-mobile-menu a:hover{color:var(--gold);}
-@media(max-width:900px){
-  .nav-links{display:none !important;}
-  .nav-hamburger{display:flex !important;}
-  .nav-btn{display:none;}
-}
-@media(max-width:900px){
-  nav{padding:0 16px;}
-  .nav-phone{display:none;}
-  .nav-hamburger{display:flex !important;}
-  .nav-logo img{height:64px;}
-}
 @media(max-width:640px){
   :root{--nav-h:70px;}
   nav{height:70px;padding:0 16px;}
@@ -220,6 +216,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
   .cta-btns{flex-direction:column !important;align-items:stretch !important;}
 }
 </style>
+<link rel="stylesheet" href="/css/sparklean-mobile-first.css">
 </head>
 <body>
 

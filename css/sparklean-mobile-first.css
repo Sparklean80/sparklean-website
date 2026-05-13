@@ -1,0 +1,45 @@
+/**
+ * Sparklean — mobile-first layer (load after each page’s inline <style>).
+ * Shared rhythm, safe areas, and tap targets; does not replace page layout CSS.
+ */
+:root {
+  --bp-phone: 640px;
+  --bp-tablet: 1024px;
+  --page-pad-mobile: 20px;
+  --page-pad-tablet: 24px;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@supports (padding: max(0px)) {
+  .nav-mobile-menu {
+    padding-bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 1024px) {
+  .nav-hamburger {
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .nav-mobile-menu a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding-left: max(28px, env(safe-area-inset-left, 0px));
+    padding-right: max(28px, env(safe-area-inset-right, 0px));
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-mobile-body {
+    padding-left: max(var(--page-pad-mobile), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--page-pad-mobile), env(safe-area-inset-right, 0px));
+  }
+}
