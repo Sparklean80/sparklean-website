@@ -372,6 +372,35 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
   </div>
 </section>
 
+<section class="founder-story" id="addon-window-video" role="region" aria-labelledby="addon-window-video-h" aria-describedby="addon-window-video-desc">
+  <div class="founder-inner">
+    <div class="eyebrow">
+      <div class="ey-line"></div>
+      <span>Aerial tour · Window add-on</span>
+      <div class="ey-line"></div>
+    </div>
+    <h2 class="sec-h" id="addon-window-video-h">Above the shoreline,<br><em>glass that holds the view</em></h2>
+    <p class="founder-lede" id="addon-window-video-desc">Take in the beach and architecture from the drone — then see the home we are cleaning windows for, the way Sparklean treats glass when add-ons are part of the visit: streak-conscious, frame-aware, and presentation-ready for Southwest Florida light.</p>
+    <div class="founder-cinematic">
+      <div class="founder-cinematic__chrome">
+        <div class="founder-cinematic__ratio">
+          <div class="founder-player" id="addon-win-player" data-yt-src="https://www.youtube-nocookie.com/embed/vlNzxegsMpo?rel=0&amp;modestbranding=1&amp;playsinline=1">
+            <button type="button" class="founder-poster-btn" id="addon-win-poster-btn" aria-label="Play drone tour: Sparklean window cleaning at a luxury beach home in Southwest Florida">
+              <img class="founder-poster-img" src="https://img.youtube.com/vi/vlNzxegsMpo/maxresdefault.jpg" alt="Aerial drone view of a Southwest Florida beach and luxury home where Sparklean is performing window cleaning" width="1280" height="720" loading="lazy" decoding="async">
+              <span class="founder-poster-veil" aria-hidden="true"></span>
+              <span class="founder-play-wrap" aria-hidden="true"><span class="founder-play-ring"></span><span class="founder-play-tri"></span></span>
+              <span class="founder-poster-hint" aria-hidden="true">Watch the drone tour</span>
+            </button>
+            <div class="founder-embed-slot" id="addon-win-embed-slot" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="founder-tagline">Coastal homes deserve glass that reads invisible — inside, outside, and from every angle.</p>
+    <a class="founder-soft-cta" href="/contact">Request a window add-on quote</a>
+  </div>
+</section>
+
 <div class="photo-pair">
   <img class="pp-img" src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21e37dc913e9e39c6e66b_1000051480.JPG" alt="Sparklean specialized add-on cleaning luxury home care" loading="lazy">
   <img class="pp-img" src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21c9939e6441bc6975f7e_1000051963.jpeg" alt="Sparklean kitchen detailing and luxury finishing Southwest Florida" loading="lazy">
@@ -475,6 +504,40 @@ if(hb&&mm){
   hb.addEventListener('click',function(){hb.classList.toggle('open');mm.classList.toggle('open');});
   mm.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){hb.classList.remove('open');mm.classList.remove('open');});});
 }
+</script>
+<script>
+(function(){
+  var sec=document.getElementById('addon-window-video');
+  if(sec){
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(ents){
+        ents.forEach(function(en){if(en.isIntersecting){sec.classList.add('founder-story--inview');io.disconnect();}});
+      },{threshold:0.14,rootMargin:'0px 0px -36px 0px'});
+      io.observe(sec);
+    }else{sec.classList.add('founder-story--inview');}
+  }
+  var btn=document.getElementById('addon-win-poster-btn');
+  var slot=document.getElementById('addon-win-embed-slot');
+  var player=document.getElementById('addon-win-player');
+  if(!btn||!slot||!player)return;
+  var srcBase=player.getAttribute('data-yt-src');
+  if(!srcBase)return;
+  btn.addEventListener('click',function(){
+    if(slot.querySelector('iframe'))return;
+    var u=srcBase+(srcBase.indexOf('?')>=0?'&':'?')+'autoplay=1&mute=1';
+    var fr=document.createElement('iframe');
+    fr.className='founder-iframe';
+    fr.src=u;
+    fr.setAttribute('title','Drone tour: Sparklean window cleaning at a luxury Southwest Florida beach home');
+    fr.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+    fr.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+    fr.setAttribute('allowfullscreen','');
+    slot.appendChild(fr);
+    slot.classList.add('is-active');
+    btn.classList.add('is-replaced');
+    try{fr.focus();}catch(e){}
+  });
+})();
 </script>
 </body>
 </html>
