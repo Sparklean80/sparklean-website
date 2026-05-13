@@ -61,15 +61,32 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:var(--nav-h);backgrou
 
 .blog-hero{padding:calc(var(--nav-h) + clamp(48px,8vw,80px)) clamp(20px,5vw,80px) clamp(48px,8vw,80px);background:var(--dark2);border-bottom:1px solid rgba(201,168,76,.1);position:relative;overflow:hidden;}
 .blog-hero::before{content:'BLOG';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--serif);font-size:min(14vw,180px);font-weight:400;color:rgba(201,168,76,.03);pointer-events:none;white-space:nowrap;letter-spacing:.2em;}
-.blog-hero-inner{position:relative;z-index:1;max-width:700px;}
+.blog-hero-inner{position:relative;z-index:1;max-width:min(36rem,100%);}
 .eyebrow{display:flex;align-items:center;gap:13px;margin-bottom:15px}
 .eyebrow--center{justify-content:center}
 .ey-line{width:26px;height:1px;background:var(--gold);flex-shrink:0}
 .eyebrow span{font-size:.54rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
-.blog-hero h1{font-family:var(--serif);font-size:clamp(1.85rem,4.2vw,4rem);font-weight:400;line-height:1.12;margin-bottom:20px;}
+.blog-hero h1{font-family:var(--serif);font-size:clamp(1.85rem,4.2vw,4rem);font-weight:400;line-height:1.12;margin-bottom:clamp(26px,4vw,40px);}
 .blog-hero h1 em{font-style:italic;color:var(--gold);}
-.blog-hero p{font-family:var(--serif);font-size:clamp(.95rem,2.5vw,1rem);line-height:1.85;color:var(--w70);max-width:65ch;}
-.blog-hero p a{color:var(--gold-lt);text-decoration:underline;text-underline-offset:3px;}
+.blog-hero-copy{display:flex;flex-direction:column;align-items:flex-start;gap:0;}
+.blog-hero-lede{font-family:var(--serif);font-size:clamp(.92rem,2.2vw,.98rem);line-height:1.78;color:var(--w70);max-width:38ch;margin:0 0 clamp(14px,2.2vw,20px);}
+.blog-hero-topics{margin:0;width:100%;max-width:100%;}
+.blog-hero-topics-h{font-family:var(--sans);font-size:.48rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:rgba(184,164,122,.55);margin:clamp(10px,1.8vw,14px) 0 8px;}
+.blog-hero-topics-h:first-child{margin-top:0;}
+.blog-hero-pill-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;}
+.blog-hero-chip{display:inline-flex;align-items:center;justify-content:center;padding:9px 16px;font-family:var(--sans);font-size:.52rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(212,191,150,.92);text-decoration:none;border:1px solid rgba(184,164,122,.22);background:rgba(184,164,122,.06);border-radius:999px;transition:background .22s,border-color .22s,color .22s;}
+.blog-hero-chip:hover,.blog-hero-chip:focus-visible{background:rgba(184,164,122,.12);border-color:rgba(184,164,122,.38);color:var(--gold-lt);}
+.blog-hero-chip:focus{outline:none;}
+.blog-hero-chip:focus-visible{outline:2px solid rgba(184,164,122,.45);outline-offset:2px;}
+.blog-hero-cta-line{font-family:var(--sans);font-size:.58rem;font-weight:400;letter-spacing:.04em;color:rgba(249,247,243,.45);margin:clamp(16px,2.5vw,22px) 0 0;}
+.blog-hero-cta-line a{color:rgba(212,191,150,.85);text-decoration:none;border-bottom:1px solid rgba(184,164,122,.25);padding-bottom:1px;transition:color .2s,border-color .2s;}
+.blog-hero-cta-line a:hover,.blog-hero-cta-line a:focus-visible{color:var(--gold-lt);border-bottom-color:rgba(184,164,122,.55);}
+.blog-hero-cta-line a:focus{outline:none;}
+.blog-hero-cta-line a:focus-visible{outline:2px solid rgba(184,164,122,.4);outline-offset:3px;border-radius:1px;}
+.blog-hero-cta-line .blog-hero-dot{margin:0 .35em;color:rgba(249,247,243,.22);}
+@media(max-width:640px){
+  .blog-hero-chip{min-height:var(--tap-min);padding:8px 14px;font-size:.5rem;}
+}
 
 .blog-section{padding:clamp(56px,10vw,100px) clamp(20px,5vw,80px);}
 .blog-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:3px;margin-bottom:3px;}
@@ -209,7 +226,26 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   <div class="blog-hero-inner">
     <div class="eyebrow"><div class="ey-line"></div><span>Sparklean Insights</span></div>
     <h1>Cleaning Tips &amp; Guides for<br><em>Southwest Florida</em></h1>
-    <p>Expert advice on residential, commercial, and post-construction cleaning — written for homeowners and businesses across Naples, Fort Myers, Bonita Springs, Estero &amp; Cape Coral. When you are ready to book, explore Sparklean <a href="/residential-cleaning">residential cleaning</a>, <a href="/commercial-cleaning">commercial programs</a>, and <a href="/post-construction-cleaning">post-construction teams</a> across <a href="/house-cleaning-naples">Naples</a>, <a href="/house-cleaning-fort-myers">Fort Myers</a>, <a href="/house-cleaning-bonita-springs">Bonita Springs</a>, <a href="/house-cleaning-estero">Estero</a>, and <a href="/house-cleaning-cape-coral">Cape Coral</a>. <a href="/contact">Contact us</a> or return <a href="/">home</a>.</p>
+    <div class="blog-hero-copy">
+      <p class="blog-hero-lede">Editorial guidance for discerning homeowners and businesses—residential rhythm, commercial presence, and post-construction finishing along the Gulf Coast. We serve Collier and Lee County, including Naples, Fort Myers, Bonita Springs, Estero, and Cape Coral.</p>
+      <nav class="blog-hero-topics" aria-label="Browse by city and service">
+        <p class="blog-hero-topics-h">Service areas</p>
+        <div class="blog-hero-pill-row">
+          <a class="blog-hero-chip" href="/house-cleaning-naples">Naples</a>
+          <a class="blog-hero-chip" href="/house-cleaning-fort-myers">Fort Myers</a>
+          <a class="blog-hero-chip" href="/house-cleaning-bonita-springs">Bonita Springs</a>
+          <a class="blog-hero-chip" href="/house-cleaning-estero">Estero</a>
+          <a class="blog-hero-chip" href="/house-cleaning-cape-coral">Cape Coral</a>
+        </div>
+        <p class="blog-hero-topics-h">Topics</p>
+        <div class="blog-hero-pill-row">
+          <a class="blog-hero-chip" href="/residential-cleaning">Residential cleaning</a>
+          <a class="blog-hero-chip" href="/commercial-cleaning">Commercial cleaning</a>
+          <a class="blog-hero-chip" href="/post-construction-cleaning">Post-construction</a>
+        </div>
+      </nav>
+      <p class="blog-hero-cta-line"><a href="/contact">Contact</a><span class="blog-hero-dot" aria-hidden="true">·</span><a href="/">Home</a></p>
+    </div>
   </div>
 </div>
 
