@@ -159,7 +159,7 @@ function contactIntent(html) {
   console.log('=== Fetching seed pages (GET, follow redirects) ===\n');
   for (const path of SEEDS) {
     const url = path === '/' ? ORIGIN + '/' : ORIGIN + path;
-    const r = await fetch(url, { redirect: 'follow' });
+    const r = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(30000) });
     const text = await r.text();
     results[path] = { status: r.status, finalUrl: r.url, bytes: text.length };
     if (r.status !== 200) {
