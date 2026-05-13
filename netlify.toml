@@ -1,0 +1,54 @@
+[[redirects]]
+  from = "/residential-cleaning"
+  to = "/pages/residential-cleaning.html"
+  status = 200
+
+[[redirects]]
+  from = "/commercial-cleaning"
+  to = "/pages/commercial-cleaning.html"
+  status = 200
+
+[[redirects]]
+  from = "/post-construction-cleaning"
+  to = "/pages/post-construction-cleaning.html"
+  status = 200
+
+[[redirects]]
+  from = "/specialized-cleaning"
+  to = "/pages/specialized-cleaning.html"
+  status = 200
+
+[[redirects]]
+  from = "/about"
+  to = "/pages/about.html"
+  status = 200
+
+[[redirects]]
+  from = "/contact"
+  to = "/pages/contact.html"
+  status = 200
+
+[[redirects]]
+  from = "/house-cleaning-naples"
+  to = "/pages/house-cleaning-naples.html"
+  status = 200
+
+[[redirects]]
+  from = "/house-cleaning-fort-myers"
+  to = "/pages/house-cleaning-fort-myers.html"
+  status = 200
+
+[[redirects]]
+  from = "/house-cleaning-bonita-springs"
+  to = "/pages/house-cleaning-bonita-springs.html"
+  status = 200
+
+[[redirects]]
+  from = "/house-cleaning-estero"
+  to = "/pages/house-cleaning-estero.html"
+  status = 200
+
+[[redirects]]
+  from = "/house-cleaning-cape-coral"
+  to = "/pages/house-cleaning-cape-coral.html"
+  status = 200
