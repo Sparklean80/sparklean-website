@@ -1,0 +1,586 @@
+/**
+ * Sparklean — luxury editorial flow (sitewide layer).
+ * Load after each page’s inline <style> and sparklean-mobile-first.css.
+ * Tightens hero readability, section rhythm, type hierarchy, cards, lists, and CTA pacing.
+ */
+
+/* --- Hero: lighter full wash + left “read plate” behind copy only --- */
+.hero .hero-ov,
+.hero-ov {
+  z-index: 1;
+  background: linear-gradient(
+    to right,
+    rgba(14, 14, 14, 0.58) 0%,
+    rgba(14, 14, 14, 0.28) 44%,
+    rgba(14, 14, 14, 0.08) 100%
+  );
+}
+.hero .hero-ov::after,
+.hero-ov::after {
+  background: linear-gradient(
+    to bottom,
+    rgba(14, 14, 14, 0.32) 0%,
+    transparent 18%,
+    transparent 62%,
+    rgba(14, 14, 14, 0.88) 100%
+  );
+}
+
+.hero .hero-content,
+.hero-content {
+  isolation: isolate;
+}
+
+.hero .hero-content::before,
+.hero-content::before {
+  content: "";
+  position: absolute;
+  left: -56px;
+  top: -44px;
+  bottom: -64px;
+  width: min(720px, calc(100% + 72px));
+  background: linear-gradient(
+    102deg,
+    rgba(5, 5, 5, 0.92) 0%,
+    rgba(10, 10, 10, 0.72) 42%,
+    rgba(14, 14, 14, 0.38) 78%,
+    transparent 100%
+  );
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 3px;
+}
+
+.hero-content h1,
+.hero .hero-content h1 {
+  line-height: 1.1;
+  margin-bottom: 22px;
+}
+
+.hero-content .hero-sub,
+.hero .hero-content .hero-sub {
+  font-size: 1.06rem;
+  line-height: 1.68;
+  color: rgba(249, 247, 243, 0.86);
+  margin-bottom: 14px;
+  max-width: 34em;
+}
+
+.hero-mobile-body {
+  background: #11100e;
+  padding: 36px 20px 52px;
+  position: relative;
+}
+
+.hero-mobile .hero-sub {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(249, 247, 243, 0.84);
+  margin-bottom: 12px;
+}
+
+/* --- Global type rhythm --- */
+.sec-h {
+  line-height: 1.14;
+  margin-bottom: 6px;
+}
+
+.gold-line {
+  margin: 26px 0 24px;
+}
+
+/* --- Intro / split sections (warm charcoal) --- */
+.pc-intro,
+.naples-intro,
+.comm-intro {
+  padding: clamp(96px, 11vw, 132px) 80px;
+  background: linear-gradient(180deg, #0f0f0d 0%, #12110e 48%, #0e0e0e 100%);
+}
+
+/* --- Grids on charcoal-warm panel --- */
+.project-types,
+.industries {
+  padding: clamp(100px, 11vw, 128px) 80px;
+  background: #151412;
+}
+
+.hoods {
+  padding: clamp(100px, 11vw, 128px) 80px;
+  background: #151412;
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+}
+
+/* --- Service / industry / neighborhood cards --- */
+.pt-card,
+.ind-card,
+.hood-card,
+.wb-card {
+  transition: border-color 0.35s, background 0.35s, transform 0.35s, box-shadow 0.35s;
+}
+
+.pt-card:hover,
+.ind-card:hover,
+.hood-card:hover,
+.wb-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.38);
+}
+
+.pt-card-featured,
+.ind-card-featured,
+.hood-card-featured,
+.why-card-featured,
+.wb-card-featured {
+  border-color: rgba(201, 168, 76, 0.32);
+  background: linear-gradient(
+    165deg,
+    rgba(30, 28, 24, 0.95) 0%,
+    var(--dark3, #1c1c1c) 55%
+  );
+  box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.14), 0 8px 40px rgba(0, 0, 0, 0.25);
+}
+
+.pt-card-featured:hover,
+.ind-card-featured:hover,
+.hood-card-featured:hover,
+.why-card-featured:hover,
+.wb-card-featured:hover {
+  box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.22), 0 26px 56px rgba(0, 0, 0, 0.42);
+}
+
+.pt-card-featured .pt-name,
+.ind-card-featured .ind-name,
+.hood-card-featured .hood-name {
+  font-size: 1.28rem;
+}
+
+.pt-card-featured .pt-desc,
+.ind-card-featured .ind-desc,
+.hood-card-featured .hood-desc,
+.wb-card-featured .wb-desc {
+  max-width: 26em;
+}
+
+.why-card-featured .why-num {
+  font-size: 3.1rem;
+}
+
+.why-card-featured .why-desc {
+  max-width: 28em;
+}
+
+.pt-name,
+.ind-name {
+  font-size: 1.22rem;
+}
+
+.pt-desc,
+.ind-desc {
+  font-size: 0.78rem;
+  line-height: 1.78;
+  color: rgba(249, 247, 243, 0.72);
+  max-width: 28em;
+}
+
+.pt-card,
+.ind-card {
+  padding: 42px 36px;
+}
+
+.pt-card:hover,
+.ind-card:hover {
+  border-color: rgba(201, 168, 76, 0.28);
+  background: rgba(184, 164, 122, 0.05);
+}
+
+.hood-card {
+  padding: 36px 30px;
+}
+
+.hood-name {
+  font-size: 1.15rem;
+}
+
+.hood-desc {
+  font-size: 0.78rem;
+  line-height: 1.78;
+  color: rgba(249, 247, 243, 0.72);
+  max-width: 28em;
+}
+
+/* --- Photo band separator --- */
+.photo-pair {
+  border-top: 1px solid rgba(201, 168, 76, 0.1);
+}
+
+/* --- “How it works” / process strip --- */
+.svc-list {
+  padding: clamp(104px, 12vw, 140px) 80px;
+  background: #0e0e0e;
+  border-top: 1px solid rgba(201, 168, 76, 0.1);
+}
+
+.svc-sum {
+  border-top: 1px solid rgba(201, 168, 76, 0.1);
+}
+
+.sl-items {
+  gap: 10px;
+}
+
+.sl-item {
+  padding: 26px 28px;
+  border-radius: 2px;
+  transition: border-color 0.3s, background 0.3s, transform 0.25s, box-shadow 0.3s;
+}
+
+.sl-item:hover {
+  border-color: rgba(201, 168, 76, 0.28);
+  background: rgba(184, 164, 122, 0.06);
+  transform: translateX(5px);
+  box-shadow: -4px 0 0 0 rgba(184, 164, 122, 0.35);
+}
+
+.sl-bullet {
+  width: auto;
+  height: auto;
+  background: none;
+  border-radius: 0;
+  font-size: 0.72rem;
+  color: var(--gold, #b8a47a);
+  line-height: 1;
+  font-family: var(--serif, "Playfair Display", Georgia, serif);
+}
+
+.sl-bullet::before {
+  content: "◇";
+}
+
+.sl-text {
+  font-size: 0.96rem;
+  line-height: 1.72;
+  color: rgba(249, 247, 243, 0.76);
+}
+
+.sl-text strong {
+  font-size: 0.74rem;
+  letter-spacing: 0.09em;
+  margin-bottom: 6px;
+}
+
+/* --- Why builders / proof tiles --- */
+.why-builders {
+  padding: clamp(100px, 11vw, 128px) 80px;
+  background: linear-gradient(180deg, #131210 0%, #0e0e0e 100%);
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+}
+
+.wb-card {
+  background: #1a1917;
+}
+
+.wb-desc {
+  font-size: 0.88rem;
+  line-height: 1.78;
+  color: rgba(249, 247, 243, 0.74);
+}
+
+/* --- Commercial numeric “why” grid --- */
+.why {
+  padding: clamp(100px, 11vw, 128px) 80px;
+  background: linear-gradient(180deg, #131210 0%, #0e0e0e 100%);
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+}
+
+.why-card {
+  transition: border-color 0.3s, background 0.3s, transform 0.25s, box-shadow 0.3s;
+}
+
+.why-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.why-desc {
+  line-height: 1.78;
+  color: rgba(249, 247, 243, 0.74);
+}
+
+/* --- Split intro body copy --- */
+.ci-body {
+  font-size: 1.02rem;
+  line-height: 2;
+  color: rgba(249, 247, 243, 0.78);
+}
+
+.ci-txt {
+  font-size: 0.84rem;
+  color: rgba(249, 247, 243, 0.76);
+  line-height: 1.65;
+}
+
+/* --- Community / service area --- */
+.community {
+  padding: clamp(104px, 11vw, 132px) 80px;
+  border-top: 1px solid rgba(201, 168, 76, 0.07);
+}
+
+.comm-desc {
+  font-size: 0.94rem;
+  line-height: 1.85;
+  color: rgba(249, 247, 243, 0.74);
+}
+
+/* --- Snowbird / long-form city sections --- */
+.snowbird {
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+  background: linear-gradient(180deg, #131210 0%, #0e0e0e 100%);
+}
+
+/* --- Closing CTA band --- */
+.cta {
+  padding: clamp(100px, 12vw, 140px) 80px clamp(110px, 14vw, 160px);
+  text-align: center;
+  border-top: 1px solid rgba(201, 168, 76, 0.12);
+  background: radial-gradient(
+      ellipse 80% 55% at 50% 0%,
+      rgba(201, 168, 76, 0.06) 0%,
+      transparent 55%
+    ),
+    #0c0c0c;
+}
+
+.cta-quote {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold, #b8a47a);
+  margin-bottom: 22px;
+  opacity: 0.9;
+}
+
+.cta-prelude {
+  font-family: var(--serif, "Playfair Display", Georgia, serif);
+  font-size: clamp(1.05rem, 2.2vw, 1.22rem);
+  line-height: 1.65;
+  font-style: italic;
+  color: rgba(249, 247, 243, 0.82);
+  max-width: 38rem;
+  margin: 0 auto 28px;
+}
+
+.cta h2,
+.cta-h {
+  margin-bottom: 18px;
+}
+
+.cta h2 em,
+.cta-h em {
+  font-style: italic;
+  color: var(--gold, #b8a47a);
+}
+
+.cta-sub {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: rgba(249, 247, 243, 0.76);
+  margin-bottom: 14px;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- Homepage: section rhythm --- */
+.about {
+  padding: clamp(96px, 11vw, 120px) 80px;
+  background: linear-gradient(180deg, #0f0f0d 0%, #12110e 48%, #0e0e0e 100%);
+}
+
+.about-body {
+  font-size: 1.02rem;
+  line-height: 2;
+  color: rgba(249, 247, 243, 0.78);
+}
+
+.ck-t {
+  font-size: 0.84rem;
+  line-height: 1.65;
+  color: rgba(249, 247, 243, 0.76);
+}
+
+.services {
+  padding: clamp(100px, 11vw, 120px) 80px;
+  background: #151412;
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+}
+
+.svc-card {
+  transition: border-color 0.35s, transform 0.35s, box-shadow 0.35s;
+}
+
+.svc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.38);
+}
+
+.svc-desc {
+  line-height: 1.85;
+  color: rgba(249, 247, 243, 0.76);
+  max-width: 32em;
+}
+
+.why .why-feats .why-feat {
+  border-radius: 2px;
+  transition: padding-left 0.3s, background 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+
+.why .why-feats .why-feat:hover {
+  padding-left: 14px;
+  background: rgba(184, 164, 122, 0.06);
+  box-shadow: -4px 0 0 0 rgba(184, 164, 122, 0.35);
+}
+
+.wf-desc {
+  line-height: 1.78;
+  color: rgba(249, 247, 243, 0.76);
+}
+
+.products {
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+}
+
+.prod-body {
+  line-height: 1.92;
+  color: rgba(249, 247, 243, 0.78);
+}
+
+.reviews {
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+  background: #0e0e0e;
+}
+
+.rev-sub,
+.rev-text {
+  color: rgba(249, 247, 243, 0.76);
+  line-height: 1.82;
+}
+
+.rev-card {
+  transition: border-color 0.3s, transform 0.35s, box-shadow 0.35s;
+}
+
+.rev-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+}
+
+.areas {
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+  background: linear-gradient(180deg, #131210 0%, #161616 100%);
+}
+
+.faq {
+  border-top: 1px solid rgba(201, 168, 76, 0.06);
+}
+
+.faq-body-txt {
+  line-height: 1.92;
+  color: rgba(249, 247, 243, 0.78);
+}
+
+.inner {
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+}
+
+/* --- Blog index --- */
+.blog-hero {
+  background: linear-gradient(180deg, #0f0f0d 0%, #12110e 55%, #161616 100%);
+}
+
+.blog-hero-lede {
+  line-height: 1.82;
+  color: rgba(249, 247, 243, 0.78);
+  max-width: 42ch;
+}
+
+.blog-section {
+  border-top: 1px solid rgba(201, 168, 76, 0.07);
+}
+
+.blog-card {
+  transition: border-color 0.3s, background 0.3s, transform 0.35s, box-shadow 0.35s;
+}
+
+.blog-card:hover,
+.blog-card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.35);
+}
+
+.blog-excerpt {
+  line-height: 1.88;
+  color: rgba(249, 247, 243, 0.76);
+}
+
+@media (max-width: 1024px) {
+  .hero-content::before,
+  .hero .hero-content::before {
+    left: -28px;
+    width: min(100%, 540px);
+    top: -32px;
+    bottom: -48px;
+  }
+
+  .pc-intro,
+  .naples-intro,
+  .comm-intro,
+  .project-types,
+  .industries,
+  .hoods,
+  .svc-list,
+  .why-builders,
+  .community,
+  .cta,
+  .about,
+  .services,
+  .why,
+  .snowbird,
+  .products,
+  .reviews,
+  .areas,
+  .faq,
+  .inner,
+  .blog-hero,
+  .blog-section {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .pc-intro,
+  .naples-intro,
+  .comm-intro,
+  .project-types,
+  .industries,
+  .hoods,
+  .svc-list,
+  .why-builders,
+  .community,
+  .cta,
+  .about,
+  .services,
+  .why,
+  .snowbird,
+  .products,
+  .reviews,
+  .areas,
+  .faq,
+  .inner,
+  .blog-hero,
+  .blog-section {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+}
