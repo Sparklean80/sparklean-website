@@ -109,28 +109,20 @@ NEVER mention prices, rates, estimates, costs, dollars, or "quotes" as numbers.`
   }
 }
 
-async function sendResendEmail({ subject, html, text, attachmentJson }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.SPARKLEAN_FROM_EMAIL;
-  const to = process.env.SPARKLEAN_LEAD_TO || "info@sparklean.co";
-  if (!apiKey || !from) {
-    throw new Error("Email is not configured (RESEND_API_KEY / SPARKLEAN_FROM_EMAIL).");
+function parseResendFailureText(text) {
+  if (!text || typeof text !== "string") return "Unknown error from email provider.";
+  try {
+    const j = JSON.parse(text);
+    if (typeof j.message === "string") return j.message;
+    if (Array.isArray(j.message)) return j.message.map(String).join("; ");
+    if (j.message && typeof j.message === "object") return JSON.stringify(j.message);
+  } catch {
+    /* ignore */
   }
-  const body = {
-    from,
-    to: [to],
-    subject,
-    html,
-    text,
-  };
-  if (attachmentJson) {
-    body.attachments = [
-      {
-        filename: "lead-intake.json",
-        content: Buffer.from(attachmentJson, "utf8").toString("base64"),
-      },
-    ];
-  }
+  return text.slice(0, 500);
+}
+
+async function resendPost(apiKey, body) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -139,12 +131,62 @@ async function sendResendEmail({ subject, html, text, attachmentJson }) {
     },
     body: JSON.stringify(body),
   });
-  if (!res.ok) {
-    const t = await res.text();
-    console.error("Resend error", res.status, t);
-    throw new Error("Unable to deliver email.");
+  const text = await res.text();
+  return { ok: res.ok, status: res.status, text };
+}
+
+async function sendResendEmail({ subject, html, text, attachmentJson, replyTo }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.SPARKLEAN_FROM_EMAIL;
+  const to = process.env.SPARKLEAN_LEAD_TO || "info@sparklean.co";
+  if (!apiKey || !from) {
+    throw new Error("Email is not configured (RESEND_API_KEY / SPARKLEAN_FROM_EMAIL).");
   }
-  return res.json();
+
+  const base = {
+    from,
+    to: [to],
+    subject,
+    html,
+    text,
+  };
+  if (replyTo && typeof replyTo === "string" && replyTo.includes("@")) {
+    base.reply_to = replyTo;
+  }
+
+  const withAttachment =
+    attachmentJson &&
+    ({
+      ...base,
+      attachments: [
+        {
+          filename: "lead-intake.json",
+          content: Buffer.from(attachmentJson, "utf8").toString("base64"),
+        },
+      ],
+    });
+
+  let attempt = withAttachment ? await resendPost(apiKey, withAttachment) : await resendPost(apiKey, base);
+
+  if (!attempt.ok && withAttachment) {
+    console.warn("Resend failed with attachment; retrying without.", attempt.status, attempt.text);
+    attempt = await resendPost(apiKey, base);
+  }
+
+  if (!attempt.ok) {
+    const detail = parseResendFailureText(attempt.text);
+    console.error("Resend error", attempt.status, attempt.text);
+    const err = new Error("Unable to deliver email.");
+    err.resendStatus = attempt.status;
+    err.resendDetail = detail;
+    throw err;
+  }
+
+  try {
+    return attempt.text ? JSON.parse(attempt.text) : {};
+  } catch {
+    return {};
+  }
 }
 
 export default async (request) => {
@@ -234,10 +276,30 @@ export default async (request) => {
     text
   )}</pre>`;
 
+  const verbose =
+    process.env.SPARKLEAN_QUOTE_VERBOSE_ERRORS === "1" ||
+    process.env.CONTEXT === "deploy-preview";
+
   try {
-    await sendResendEmail({ subject, html, text, attachmentJson });
+    await sendResendEmail({
+      subject,
+      html,
+      text,
+      attachmentJson,
+      replyTo: answers.email,
+    });
   } catch (e) {
-    return json({ error: e.message || "Send failed" }, 500);
+    const hint =
+      verbose && e.resendDetail
+        ? e.resendDetail
+        : "Confirm in Netlify: RESEND_API_KEY, SPARKLEAN_FROM_EMAIL (must be a domain verified in Resend), and SPARKLEAN_LEAD_TO. Check the function log for the full Resend response.";
+    return json(
+      {
+        error: e.message || "Send failed",
+        hint,
+      },
+      500
+    );
   }
 
   return json({ ok: true, receivedAt: new Date().toISOString() });

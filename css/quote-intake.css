@@ -234,6 +234,8 @@ body.sq-intake-open {
   color: #c9a882;
   margin-top: 8px;
   flex-shrink: 0;
+  white-space: pre-wrap;
+  line-height: 1.45;
 }
 
 .sq-intake__actions {

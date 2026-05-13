@@ -252,7 +252,11 @@
         });
       })
       .then(function (res) {
-        if (!res.ok) throw new Error(res.j && res.j.error ? res.j.error : "Unable to send");
+        if (!res.ok) {
+          var msg = res.j && res.j.error ? res.j.error : "Unable to send";
+          if (res.j && res.j.hint) msg += "\n\n" + res.j.hint;
+          throw new Error(msg);
+        }
         stepIndex = steps.length;
         submitting = false;
         render();
