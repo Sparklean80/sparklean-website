@@ -52,3 +52,7 @@
   from = "/house-cleaning-cape-coral"
   to = "/pages/house-cleaning-cape-coral.html"
   status = 200
+[[redirects]]
+  from = "/blog"
+  to = "/pages/blog.html"
+  status = 200
