@@ -23,7 +23,7 @@
             '<span class="sparklean-mcta__call-num">(239) 888-3588</span>' +
           "</span>" +
         "</a>" +
-        '<a class="sparklean-mcta__quote" href="/contact">Get quote</a>' +
+        '<button type="button" class="sparklean-mcta__quote">Get quote</button>' +
       "</div>";
     return el;
   }

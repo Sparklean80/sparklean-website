@@ -58,6 +58,10 @@ html {
       var(--sparklean-mcta-h) + var(--sparklean-mcta-inner-pad) + env(safe-area-inset-bottom, 0px)
     );
   }
+
+  body.sparklean-mcta--active.sq-intake-open {
+    padding-bottom: 0;
+  }
 }
 
 .sparklean-mcta {
@@ -172,6 +176,11 @@ html {
     letter-spacing: 0.2em;
     text-transform: uppercase;
     -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
   }
 
   .sparklean-mcta__quote:focus-visible {
