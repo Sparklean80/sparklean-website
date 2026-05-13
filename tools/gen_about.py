@@ -21,7 +21,7 @@ css = css.replace(
 extra = r"""
 .hero--about .hero-bg{background-image:url("https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21c8b4a74322eaf0b5148_1000051954.WEBP");background-position:center 38%;}
 .hero-mobile--about .hero-mobile-img{object-position:center 38%;}
-.ab-founder-split .ci-img{object-position:center 42%;}
+.ab-founder-split .ci-img{object-position:center 28%;}
 .ab-roxy .sl-img{object-position:center 22%;}
 .ab-story-photos .pp-img:first-child{object-position:center 32%;}
 .ab-story-photos .pp-img:last-child{object-position:center 48%;}
@@ -213,7 +213,7 @@ __INLINE_CSS__
 <section class="pc-intro ab-founder-split">
   <div class="ci-grid">
     <div class="ci-img-wrap">
-      <img class="ci-img" src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b3054cb0f376b3a2fc6522_1000052028.JPG" alt="Sparklean supervisor leading a residential team on site in Southwest Florida" loading="lazy" decoding="async">
+      <img class="ci-img" src="/images/IMG_0456.jpg" alt="Tony Giuliano, Sparklean Cleaning co-founder" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b3054cb0f376b3a2fc6522_1000052028.JPG';">
       <div class="ci-badge"><div class="ci-badge-n">✦</div><div class="ci-badge-t">Leadership &amp; care</div></div>
     </div>
     <div>
