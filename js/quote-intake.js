@@ -1,5 +1,6 @@
 /**
- * Sparklean — luxury guided quote intake (single overlay, sitewide).
+ * Sparklean — guided concierge intake (single overlay, sitewide).
+ * Deterministic steps only; no client-side model, no freeform chat.
  * Depends on: /js/serviceFlows.js (window.SparkleanQuoteFlows)
  */
 (function () {
@@ -86,7 +87,7 @@
     elErr.textContent = "";
     if (!q || stepIndex >= steps.length) {
       elStep.innerHTML =
-        '<p class="sq-intake__done">Thank you. Our team will review your request and contact you shortly with the best service approach for your property.</p>';
+        '<p class="sq-intake__done">Thank you. Your request has been received and a Sparklean team member will contact you shortly to discuss the best service approach for your property.</p>';
       elProg.textContent = "";
       root.querySelector("[data-intake-back]").style.display = "none";
       root.querySelector("[data-intake-next]").textContent = "Close";
@@ -94,7 +95,7 @@
       return;
     }
     var n = steps.length;
-    elProg.textContent = "Step " + (stepIndex + 1) + " of " + n;
+    elProg.textContent = stepIndex + 1 + " — " + n;
     var html = "";
     html += '<h2 class="sq-intake__q" id="sq-intake-qh">' + esc(q.label) + "</h2>";
     if (q.assist) html += '<p class="sq-intake__assist">' + esc(q.assist) + "</p>";
@@ -142,7 +143,7 @@
     elStep.innerHTML = html;
     root.querySelector("[data-intake-back]").style.display = stepIndex > 0 ? "" : "none";
     var nextBtn = root.querySelector("[data-intake-next]");
-    nextBtn.textContent = stepIndex >= steps.length - 1 ? "Submit request" : "Continue";
+    nextBtn.textContent = stepIndex >= steps.length - 1 ? "Send request" : "Continue";
     nextBtn.removeAttribute("data-intake-done");
 
     if (q.type === "select") {
@@ -177,7 +178,7 @@
 
   function advance() {
     if (!validateCurrent()) {
-      root.querySelector("[data-intake-error]").textContent = "Please complete this step to continue.";
+      root.querySelector("[data-intake-error]").textContent = "Please complete this item before continuing.";
       return;
     }
     var q = currentQuestion();
@@ -258,9 +259,9 @@
       })
       .catch(function (err) {
         root.querySelector("[data-intake-error]").textContent =
-          err.message || "We could not send your request. Please call (239) 888-3588.";
+          err.message || "We could not send this request. Please call (239) 888-3588.";
         nextBtn.disabled = false;
-        nextBtn.textContent = "Submit request";
+        nextBtn.textContent = "Send request";
         submitting = false;
       });
   }
@@ -274,10 +275,10 @@
       '<div class="sq-intake__backdrop" data-intake-close tabindex="-1"></div>' +
       '<div class="sq-intake__dialog" role="dialog" aria-modal="true" aria-labelledby="sq-intake-title">' +
       '<div class="sq-intake__head">' +
-      '<div><p class="sq-intake__eyebrow">Private intake</p>' +
-      '<h1 id="sq-intake-title" class="sq-intake__title">Request coordination</h1></div>' +
+      '<div><p class="sq-intake__eyebrow">Service request</p>' +
+      '<h1 id="sq-intake-title" class="sq-intake__title">A few brief questions</h1></div>' +
       '<button type="button" class="sq-intake__x" data-intake-close aria-label="Close">×</button></div>' +
-      '<p class="sq-intake__intro">A few concise questions — one at a time. We do not discuss pricing here; a coordinator will follow up personally.</p>' +
+      '<p class="sq-intake__intro">One question at a time. Pricing is not reviewed here; a Sparklean team member will reach out to you directly.</p>' +
       '<p class="sq-intake__progress" data-intake-progress></p>' +
       '<div class="sq-intake__body" data-intake-step></div>' +
       '<p class="sq-intake__err" data-intake-error role="alert"></p>' +
@@ -315,10 +316,10 @@
     document.addEventListener("keydown", onKey);
     applySkipsForward();
     render();
-    setTimeout(function () {
+    requestAnimationFrame(function () {
       var inp = root.querySelector(".sq-intake__input");
       if (inp) inp.focus();
-    }, 80);
+    });
   }
 
   window.SparkleanQuoteIntake = { open: open, close: close };

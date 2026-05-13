@@ -1,6 +1,7 @@
 /**
  * Sparklean — POST /.netlify/functions/quote-submit
- * Validates intake payload, requests a short OpenAI summary (no pricing), emails info@sparklean.co via Resend.
+ * Validates structured intake, optional brief model summary (capped latency), emails via Resend.
+ * The lead record is the source of truth; summary is secondary.
  */
 
 const MAX_BODY = 120_000;
@@ -46,19 +47,22 @@ function formatAnswerLines(answers) {
 async function summarizeLead({ serviceLabel, answers, sourceUrl, submittedAt }) {
   const key = process.env.OPENAI_API_KEY;
   if (!key) return null;
+
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), 2200);
+
   const payload = {
     model: "gpt-4o-mini",
-    temperature: 0.25,
+    temperature: 0.2,
+    max_tokens: 120,
     response_format: { type: "json_object" },
     messages: [
       {
         role: "system",
-        content: `You are a discreet intake coordinator for Sparklean Cleaning, a luxury property services company in Southwest Florida.
-Return a single JSON object with key "summary" (string, 2–4 sentences, professional and calm).
-Rules:
-- Describe what the client appears to need and context only. No emojis.
-- NEVER mention prices, rates, estimates, dollar amounts, or "quote" as a number. Do not imply cost.
-- If information is thin, note what is clear and what may need clarification.`,
+        content: `You output ONLY valid JSON: {"summary":"..."}.
+The summary must be exactly 2 short sentences (under 320 characters total), calm and professional, like an internal hotel handoff note — no emojis, no exclamation marks, no sales language.
+Use ONLY facts implied by the provided fields. Do not invent services, policies, availability, or scope. Do not address the client directly ("you").
+NEVER mention prices, rates, estimates, costs, dollars, or "quotes" as numbers.`,
       },
       {
         role: "user",
@@ -71,27 +75,37 @@ Rules:
       },
     ],
   };
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-  if (!res.ok) {
-    const t = await res.text();
-    console.error("OpenAI error", res.status, t);
-    return null;
-  }
-  const data = await res.json();
-  const txt = data?.choices?.[0]?.message?.content;
-  if (!txt) return null;
+
   try {
-    const parsed = JSON.parse(txt);
-    return typeof parsed.summary === "string" ? parsed.summary.trim() : null;
-  } catch {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      signal: ctrl.signal,
+    });
+    if (!res.ok) {
+      const t = await res.text();
+      console.error("OpenAI error", res.status, t);
+      return null;
+    }
+    const data = await res.json();
+    const txt = data?.choices?.[0]?.message?.content;
+    if (!txt) return null;
+    try {
+      const parsed = JSON.parse(txt);
+      return typeof parsed.summary === "string" ? parsed.summary.trim() : null;
+    } catch {
+      return null;
+    }
+  } catch (e) {
+    if (e && e.name === "AbortError") return null;
+    console.error("OpenAI fetch failed", e);
     return null;
+  } finally {
+    clearTimeout(tid);
   }
 }
 
@@ -187,7 +201,7 @@ export default async (request) => {
   });
   if (!summary) {
     summary =
-      "A coordinator will review the structured responses below. Summary generation was skipped or unavailable.";
+      "Structured responses appear below; a coordinator will review and respond.";
   }
   dashboardRecord.summary = summary;
 
@@ -210,7 +224,7 @@ export default async (request) => {
     "DETAIL",
     lines,
     "",
-    "AI SUMMARY",
+    "BRIEF INTERNAL SUMMARY",
     summary,
     "",
     "Structured JSON is attached for your future dashboard (lead-intake.json).",

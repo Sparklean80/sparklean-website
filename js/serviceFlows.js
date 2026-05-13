@@ -1,6 +1,6 @@
 /**
- * Sparklean — structured intake flows (guided; not freeform chat).
- * OpenAI is only used server-side for a short summary; branching is deterministic here.
+ * Sparklean — structured intake flows only (concierge-style; not chat, not CRM).
+ * Branching is fixed here. Any model use is server-side, post-submit, and minimal.
  */
 (function () {
   function opts() {
@@ -16,8 +16,8 @@
     {
       id: "fullName",
       type: "text",
-      label: "Who may we address this request to?",
-      assist: "Your first and last name, as you would like our team to use it.",
+      label: "How should we address you?",
+      assist: "First and last name, as you would like it noted.",
       placeholder: "Full name",
       required: true,
       maxLength: 120,
@@ -25,8 +25,8 @@
     {
       id: "phone",
       type: "tel",
-      label: "Best number to reach you",
-      assist: "A direct line is ideal — our coordinators respond quickly during business hours.",
+      label: "Best number for a return call",
+      assist: "Direct line preferred.",
       placeholder: "(239) 555-0100",
       required: true,
       maxLength: 32,
@@ -34,8 +34,8 @@
     {
       id: "email",
       type: "email",
-      label: "Email for confirmations",
-      assist: "We will send a brief confirmation and any follow-up details here.",
+      label: "Email address",
+      assist: "For confirmations and follow-up only.",
       placeholder: "you@example.com",
       required: true,
       maxLength: 160,
@@ -44,7 +44,7 @@
       id: "location",
       type: "text",
       label: "City or ZIP code",
-      assist: "Southwest Florida — approximate location helps us assign the right crew.",
+      assist: "Approximate location is sufficient.",
       placeholder: "Naples, FL or 34102",
       required: true,
       maxLength: 120,
@@ -52,8 +52,8 @@
     {
       id: "serviceCategory",
       type: "select",
-      label: "Which type of service are you considering?",
-      assist: "We will tailor the next questions to your property and priorities.",
+      label: "Which service are you considering?",
+      assist: "The next questions will follow from your selection.",
       required: true,
       options: [
         { value: "residential", label: "Residential cleaning" },
