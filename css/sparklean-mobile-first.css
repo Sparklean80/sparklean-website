@@ -43,3 +43,166 @@ html {
     padding-right: max(var(--page-pad-mobile), env(safe-area-inset-right, 0px));
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* Mobile sticky contact bar — injected by /js/sparklean-mobile-sticky-cta.js */
+/* -------------------------------------------------------------------------- */
+:root {
+  --sparklean-mcta-h: 72px;
+  --sparklean-mcta-inner-pad: 10px;
+}
+
+@media (max-width: 1024px) {
+  body.sparklean-mcta--active {
+    padding-bottom: calc(
+      var(--sparklean-mcta-h) + var(--sparklean-mcta-inner-pad) + env(safe-area-inset-bottom, 0px)
+    );
+  }
+}
+
+.sparklean-mcta {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .sparklean-mcta {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 860;
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+    pointer-events: none;
+  }
+
+  .sparklean-mcta__inner {
+    pointer-events: auto;
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    padding: var(--sparklean-mcta-inner-pad) 14px
+      calc(var(--sparklean-mcta-inner-pad) + env(safe-area-inset-bottom, 0px));
+    min-height: var(--sparklean-mcta-h);
+    background: linear-gradient(180deg, rgba(12, 12, 12, 0.97) 0%, rgba(6, 6, 6, 0.99) 100%);
+    border-top: 1px solid rgba(184, 164, 122, 0.38);
+    box-shadow:
+      0 -12px 44px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(184, 164, 122, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    animation: sparklean-mcta-in 0.36s ease-out both;
+  }
+
+  .sparklean-mcta__call {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 12px 16px;
+    border-radius: 4px;
+    background: linear-gradient(165deg, #d4bf96 0%, #b8a47a 38%, #9e8b63 100%);
+    color: #0e0e0e;
+    text-decoration: none;
+    font-family: "Montserrat", system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 8px 28px rgba(184, 164, 122, 0.32);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sparklean-mcta__call:focus-visible {
+    outline: 2px solid #f9f7f3;
+    outline-offset: 3px;
+  }
+
+  .sparklean-mcta__call:active {
+    transform: scale(0.985);
+  }
+
+  .sparklean-mcta__call-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .sparklean-mcta__call-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 3px;
+  }
+
+  .sparklean-mcta__call-kicker {
+    font-size: 0.5rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    opacity: 0.9;
+  }
+
+  .sparklean-mcta__call-num {
+    font-size: clamp(0.95rem, 3.8vw, 1.12rem);
+    letter-spacing: 0.06em;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+
+  .sparklean-mcta__quote {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 112px;
+    min-height: 52px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    border: 1px solid rgba(184, 164, 122, 0.42);
+    color: #d4bf96;
+    background: rgba(18, 18, 18, 0.92);
+    text-decoration: none;
+    font-family: "Montserrat", system-ui, -apple-system, sans-serif;
+    font-size: 0.48rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sparklean-mcta__quote:focus-visible {
+    outline: 2px solid #b8a47a;
+    outline-offset: 3px;
+  }
+
+  .sparklean-mcta__quote:active {
+    transform: scale(0.98);
+  }
+}
+
+@media (min-width: 1025px) {
+  body.sparklean-mcta--active {
+    padding-bottom: 0;
+  }
+}
+
+@keyframes sparklean-mcta-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sparklean-mcta__inner {
+    animation: none;
+  }
+}

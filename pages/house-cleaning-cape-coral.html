@@ -707,4 +707,11 @@ document.querySelectorAll('.faq-q').forEach(btn=>{
 <script>
 var hb=document.getElementById('hamburger');
 var mm=document.getElementById('mobileMenu');
-if(hb&&mm)
+if(hb&&mm){
+  hb.addEventListener('click',function(){hb.classList.toggle('open');mm.classList.toggle('open');});
+  mm.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){hb.classList.remove('open');mm.classList.remove('open');});});
+}
+</script>
+<script src="/js/sparklean-mobile-sticky-cta.js" defer></script>
+</body>
+</html>
