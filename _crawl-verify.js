@@ -5,21 +5,33 @@
 const ORIGIN = 'https://www.sparklean.co';
 const APEX = 'https://sparklean.co';
 
+/** Crawl + link checks: completed pages only (unfinished routes ignored per deploy plan). */
 const SEEDS = [
   '/',
   '/blog',
   '/residential-cleaning',
   '/commercial-cleaning',
   '/post-construction-cleaning',
-  '/contact',
   '/house-cleaning-naples',
   '/house-cleaning-fort-myers',
   '/house-cleaning-bonita-springs',
   '/house-cleaning-estero',
   '/house-cleaning-cape-coral',
-  '/specialized-cleaning',
-  '/about',
 ];
+
+const UNFINISHED_PATHS = new Set([
+  '/contact',
+  '/about',
+  '/specialized-cleaning',
+  '/locations',
+  '/services',
+]);
+
+function isUnfinishedPath(pathname) {
+  if (!pathname) return false;
+  const p = pathname.endsWith('/') && pathname !== '/' ? pathname.slice(0, -1) : pathname;
+  return UNFINISHED_PATHS.has(p);
+}
 
 const suspiciousHrefPatterns = [
   { name: 'Brizy', re: /brizy/i },
@@ -182,24 +194,32 @@ function contactIntent(html) {
 
   console.log('\n=== Unique internal link targets (from seeds) ===', allTargets.size);
 
-  console.log('\n=== GET check internal targets (follow redirects) ===');
+  console.log('\n=== GET check internal targets (follow redirects; unfinished paths skipped) ===');
   const bad = [];
+  const hostWarn = [];
   for (const u of [...allTargets].sort()) {
+    let path;
+    try {
+      path = new URL(u).pathname;
+    } catch {
+      continue;
+    }
+    if (isUnfinishedPath(path)) {
+      console.log('SKIP (unfinished)', u);
+      continue;
+    }
     const res = await checkUrlGet(u);
-    if (!res.ok || res.status === 404 || res.wrongHost) {
+    if (res.wrongHost) hostWarn.push({ u, ...res });
+    if (!res.ok || res.status === 404) {
       bad.push({ u, ...res });
-      console.log(
-        'FAIL',
-        u,
-        '->',
-        res.status,
-        res.finalUrl || '',
-        res.wrongHost ? '[final host not www]' : '',
-        res.error || '',
-      );
+      console.log('FAIL', u, '->', res.status, res.finalUrl || '', res.error || '');
     }
   }
-  if (bad.length === 0) console.log('All internal targets: 2xx on www.sparklean.co after redirects.');
+  if (hostWarn.length) {
+    console.log('\n=== Host note (expect none after apex→www redirect is live) ===');
+    hostWarn.forEach((w) => console.log('HOST', w.u, '->', w.finalUrl));
+  }
+  if (bad.length === 0) console.log('All checked internal targets: 2xx on completed pages.');
 
   console.log('\n=== Canonical check (seed pages only) ===');
   for (const p of SEEDS) {
@@ -214,18 +234,19 @@ function contactIntent(html) {
     console.log(okCanon && !apex ? 'OK  ' : 'WARN', p, '|', c || '(missing)', apex ? '[APEX]' : !c ? '[MISSING]' : !okCanon ? '[NON-WWW HOST?]' : '');
   }
 
-  console.log('\n=== Apex / non-www in hrefs (seed pages) ===');
+  console.log('\n=== Apex host in absolute URLs (seed pages; excludes https://www.) ===');
   let apexCount = 0;
+  const apexAbsRe = /https:\/\/sparklean\.co\//g;
   for (const p of SEEDS) {
     const html = pageBodies[p];
     if (!html) continue;
-    if (html.includes('https://sparklean.co/') || html.includes('href="https://sparklean.co')) {
-      const n = (html.match(/https:\/\/sparklean\.co/g) || []).length;
+    const n = (html.match(apexAbsRe) || []).length;
+    if (n > 0) {
       apexCount += n;
-      console.log('FOUND apex URL occurrences in HTML:', p, 'count~', n);
+      console.log('FOUND apex https://sparklean.co/... in HTML:', p, 'count', n);
     }
   }
-  if (apexCount === 0) console.log('No obvious https://sparklean.co links in seed HTML.');
+  if (apexCount === 0) console.log('No https://sparklean.co/... absolute URLs in seed HTML.');
 
   console.log('\n=== Suspicious patterns in seed HTML ===');
   for (const p of SEEDS) {
@@ -282,4 +303,9 @@ function contactIntent(html) {
   }
 
   console.log('\nDone.');
+  if (hostWarn.length && process.env.CRAWL_FAIL_ON_HOST === '1') {
+    console.error('CRAWL_FAIL_ON_HOST=1: final URL host is not www.sparklean.co for some requests.');
+    process.exit(1);
+  }
+  process.exit(bad.length > 0 ? 1 : 0);
 })();

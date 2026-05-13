@@ -1,3 +1,31 @@
+# Publish root = repo root (default). Clean URLs: path → /pages/*.html (200 rewrites).
+#
+# PRIMARY DOMAIN (Netlify UI): set to https://www.sparklean.co
+# Site settings → Domain management → Primary domain = www.sparklean.co
+# If the primary domain stays apex, Netlify may issue www → apex 301s, which fights
+# these rules and your canonical/sitemap (split authority). After switching primary
+# to www, apex + http still hit the rules below and land on https://www.
+
+# --- Canonical host: force HTTPS + apex → www (matches <link rel="canonical"> on www) ---
+[[redirects]]
+  from = "http://sparklean.co/*"
+  to = "https://www.sparklean.co/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://sparklean.co/*"
+  to = "https://www.sparklean.co/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.sparklean.co/*"
+  to = "https://www.sparklean.co/:splat"
+  status = 301
+  force = true
+
+# --- Page rewrites (completed + in-progress HTML targets) ---
 [[redirects]]
   from = "/residential-cleaning"
   to = "/pages/residential-cleaning.html"
@@ -52,6 +80,7 @@
   from = "/house-cleaning-cape-coral"
   to = "/pages/house-cleaning-cape-coral.html"
   status = 200
+
 [[redirects]]
   from = "/blog"
   to = "/pages/blog.html"
