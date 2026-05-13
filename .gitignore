@@ -1,1 +1,6 @@
 node_modules/
+
+# Large source videos — use YouTube/Vimeo embeds; GitHub blocks files > 100 MB
+videos/*.mp4
+videos/*.mov
+videos/*.MOV
