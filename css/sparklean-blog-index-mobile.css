@@ -7,27 +7,21 @@
 @media (max-width: 640px) {
   .blog-hero {
     position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    padding-top: calc(var(--nav-h) + clamp(32px, 9vw, 48px));
+    /* Avoid clipping the first row of in-flow chips (reads as “floating” / cropped pills) */
+    overflow-x: hidden;
+    overflow-y: visible;
+    padding-top: calc(var(--nav-h) + clamp(36px, 10vw, 52px));
     padding-bottom: clamp(36px, 10vw, 52px);
   }
 
-  /* Giant watermark: quieter + smaller so it never competes with copy */
+  /* Remove decorative watermark on small screens — eliminates layered “ghost” UI behind copy */
   .blog-hero::before {
-    font-size: min(34vw, 112px);
-    letter-spacing: 0.1em;
-    color: rgba(201, 168, 76, 0.028);
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -46%);
-    z-index: 0;
+    content: none !important;
   }
 
   .blog-hero-inner {
     position: relative;
     z-index: 1;
-    isolation: isolate;
   }
 
   .blog-hero-inner > .eyebrow {
@@ -59,7 +53,7 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: clamp(14px, 3.8vw, 20px);
+    gap: clamp(16px, 4vw, 22px);
     width: 100%;
     max-width: 100%;
   }
@@ -71,13 +65,22 @@
     max-width: none;
   }
 
+  /* One intentional grid: section labels span full width; all chips share the same flow (no “floating” rows). */
   .blog-hero-topics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    align-items: stretch;
     width: 100%;
     max-width: 100%;
+    position: relative;
+    z-index: 1;
   }
 
   .blog-hero-topics-h {
-    margin: clamp(12px, 3.2vw, 16px) 0 10px;
+    grid-column: 1 / -1;
+    margin: 0 0 8px;
+    padding: 0;
     line-height: 1.45;
     letter-spacing: 0.18em;
   }
@@ -86,29 +89,38 @@
     margin-top: 0;
   }
 
-  /* Wrapped grid: predictable rows, no horizontal “float” collisions */
+  .blog-hero-topics-h:not(:first-child) {
+    margin-top: 10px;
+  }
+
   .blog-hero-pill-row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    width: 100%;
-    align-items: stretch;
+    display: contents;
   }
 
   .blog-hero-chip {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    float: none !important;
+    transform: none !important;
     display: flex;
-    width: 100%;
-    max-width: 100%;
+    width: auto;
     min-width: 0;
+    max-width: none;
+    justify-self: stretch;
     justify-content: center;
     text-align: center;
-    padding: 10px 12px;
+    padding: 11px 12px;
     min-height: 44px;
     font-size: 0.48rem;
     letter-spacing: 0.1em;
     line-height: 1.28;
     white-space: normal;
     box-sizing: border-box;
+    /* Editorial “tag” blocks — not floating circles */
+    border-radius: 6px;
   }
 
   .blog-hero-cta-line {
@@ -157,9 +169,8 @@
   }
 }
 
-/* Very narrow phones: single column chips read cleaner than squeezed 2-up */
 @media (max-width: 360px) {
-  .blog-hero-pill-row {
+  .blog-hero-topics {
     grid-template-columns: 1fr;
   }
 }
