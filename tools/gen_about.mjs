@@ -90,7 +90,7 @@ ${fullCss}
 
 <nav>
   <a href="/" class="nav-logo">
-    <img src="https://www.sparklean.co/images/branding/sparklean-logo-white.jpg" alt="Sparklean Cleaning">
+    <img src="https://www.sparklean.co/images/branding/Sparklean_Logo_Transparent.png" alt="Sparklean Cleaning">
   </a>
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
@@ -311,7 +311,7 @@ ${fullCss}
 
 <footer>
   <div class="footer-top">
-    <div class="footer-logo-wrap"><img src="https://www.sparklean.co/images/branding/sparklean-logo-white.jpg" alt="Sparklean Cleaning"></div>
+    <div class="footer-logo-wrap"><img src="https://www.sparklean.co/images/branding/Sparklean_Logo_Transparent.png" alt="Sparklean Cleaning"></div>
     <div class="footer-divider"></div>
     <div class="footer-cities"><a href="/house-cleaning-naples">Naples</a> &nbsp;·&nbsp; <a href="/house-cleaning-estero">Estero</a> &nbsp;·&nbsp; <a href="/house-cleaning-fort-myers">Fort Myers</a> &nbsp;·&nbsp; <a href="/house-cleaning-bonita-springs">Bonita Springs</a> &nbsp;·&nbsp; <a href="/house-cleaning-cape-coral">Cape Coral</a></div>
     <div class="footer-cols">

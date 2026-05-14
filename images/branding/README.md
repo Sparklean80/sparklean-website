@@ -1,7 +1,12 @@
-# Branding assets
+# Branding — transparent logo
 
-**Header / footer / email logo file:** `sparklean-logo-white.jpg`
+**Required file (exact name, case-sensitive on Netlify):**  
+`Sparklean_Logo_Transparent.png`
 
-Copy your file `Desktop/Logo/sparkle 1 white.jpg` into this folder and save it as **`sparklean-logo-white.jpg`** (exact name). Commit it to the repo so Netlify deploys it.
+**Repo path:**  
+`images/branding/Sparklean_Logo_Transparent.png`  
+→ live URL: `https://www.sparklean.co/images/branding/Sparklean_Logo_Transparent.png`
 
-The site references `https://www.sparklean.co/images/branding/sparklean-logo-white.jpg` in HTML, meta tags, JSON-LD, and lead emails.
+Copy your `Desktop/Logo/Sparklean_Logo_Transparent.png` (or `Sparklean_logo_transparent.png`) into this folder using the exact filename above, then commit.
+
+Header/footer, meta tags, JSON-LD, and lead emails reference this asset.

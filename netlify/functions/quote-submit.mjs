@@ -11,7 +11,7 @@ const PUBLIC_EMAIL_FAILURE =
   "We're having trouble submitting your request right now. Please call Sparklean directly at (239) 888-3588.";
 
 const LOGO_URL =
-  "https://www.sparklean.co/images/branding/sparklean-logo-white.jpg";
+  "https://www.sparklean.co/images/branding/Sparklean_Logo_Transparent.png";
 
 const CONTACT_KEYS = new Set(["fullName", "phone", "email", "location"]);
 

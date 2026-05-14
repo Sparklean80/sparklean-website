@@ -1,0 +1,64 @@
+/**
+ * Sparklean — header logo (transparent asset, no “plaque” frame).
+ * Loads after page inline nav CSS so these rules win.
+ */
+
+:root {
+  --nav-h: 132px;
+}
+
+.nav-logo {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 2px 0 !important;
+}
+
+.nav-logo img {
+  height: 124px !important;
+  width: auto !important;
+  max-width: min(380px, 48vw);
+  display: block !important;
+  aspect-ratio: auto !important;
+  object-fit: contain !important;
+  object-position: left center !important;
+  background: transparent !important;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --nav-h: 100px;
+  }
+
+  nav {
+    height: var(--nav-h) !important;
+  }
+
+  .nav-logo img {
+    height: 90px !important;
+    max-width: min(300px, 52vw);
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --nav-h: 76px;
+  }
+
+  nav {
+    height: var(--nav-h) !important;
+  }
+
+  .nav-logo img {
+    height: 62px !important;
+    max-width: min(240px, 58vw);
+  }
+}
+
+@media (max-width: 479px) {
+  .nav-logo img {
+    height: 56px !important;
+    max-width: min(210px, 62vw);
+  }
+}
