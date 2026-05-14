@@ -1,7 +1,6 @@
 /**
  * Sparklean — POST /.netlify/functions/quote-submit
- * Outbound only: Netlify function → Resend API → your inbox (e.g. info@sparklean.co).
- * Gmail / Google Workspace MX for inbound mail is unrelated — Resend only sends; it does not host inbound.
+ * Outbound only: Netlify function → Brevo transactional API → your inbox (e.g. info@sparklean.co).
  * Structured lead body is authoritative; optional OpenAI summary never blocks email.
  */
 
@@ -114,7 +113,7 @@ NEVER mention prices, rates, estimates, costs, dollars, or "quotes" as numbers.`
   }
 }
 
-function parseResendFailureText(text) {
+function parseBrevoFailureText(text) {
   if (!text || typeof text !== "string") return "Unknown error from email provider.";
   try {
     const j = JSON.parse(text);
@@ -127,75 +126,110 @@ function parseResendFailureText(text) {
   return text.slice(0, 500);
 }
 
-async function resendPost(apiKey, body) {
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-  const text = await res.text();
-  return { ok: res.ok, status: res.status, text };
+/** Parse SPARKLEAN_FROM_EMAIL into Brevo sender { name, email }. */
+function parseSender(fromRaw) {
+  const s = String(fromRaw || "").trim();
+  const br = s.match(/^(.+?)\s*<([^>]+)>$/);
+  if (br) {
+    return {
+      name: br[1].replace(/^["']|["']$/g, "").trim() || "Sparklean Cleaning",
+      email: br[2].trim(),
+    };
+  }
+  return { name: "Sparklean Cleaning", email: s || "info@sparklean.co" };
 }
 
-async function sendResendEmail({ subject, html, text, attachmentJson, replyTo }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.SPARKLEAN_FROM_EMAIL;
-  const to = process.env.SPARKLEAN_LEAD_TO || "info@sparklean.co";
-  if (!apiKey || !from) {
+function buildBrevoPayload({ sender, toEmail, subject, html, text, replyTo, attachment }) {
+  const payload = {
+    sender,
+    to: [{ email: toEmail }],
+    subject,
+    htmlContent: html,
+    textContent: text,
+  };
+  if (replyTo && typeof replyTo === "string" && replyTo.includes("@")) {
+    payload.replyTo = { email: replyTo.trim() };
+  }
+  if (attachment) {
+    payload.attachment = [attachment];
+  }
+  return payload;
+}
+
+async function brevoPost(apiKey, payload) {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      "api-key": apiKey,
+    },
+    body: JSON.stringify(payload),
+  });
+  const responseText = await res.text();
+  return { ok: res.ok, status: res.status, text: responseText };
+}
+
+async function sendBrevoTransactionalEmail({ subject, html, text, attachmentJson, replyTo }) {
+  const apiKey = process.env.BREVO_API_KEY;
+  const fromRaw = (process.env.SPARKLEAN_FROM_EMAIL && process.env.SPARKLEAN_FROM_EMAIL.trim()) || "info@sparklean.co";
+  const toEmail = (process.env.SPARKLEAN_LEAD_TO && process.env.SPARKLEAN_LEAD_TO.trim()) || "info@sparklean.co";
+  const sender = parseSender(fromRaw);
+
+  if (!apiKey) {
     console.error("[quote-submit] missing outbound config", {
-      hasResendApiKey: Boolean(apiKey),
-      hasSparkleanFromEmail: Boolean(from),
-      leadTo: to,
+      hasBrevoApiKey: false,
+      senderEmail: sender.email,
+      leadTo: toEmail,
     });
-    const err = new Error("MISSING_EMAIL_CONFIG");
-    err.publicOnly = true;
-    throw err;
+    throw new Error("MISSING_EMAIL_CONFIG");
   }
 
-  const base = {
-    from,
-    to: [to],
+  const basePayload = buildBrevoPayload({
+    sender,
+    toEmail,
     subject,
     html,
     text,
-  };
-  if (replyTo && typeof replyTo === "string" && replyTo.includes("@")) {
-    base.reply_to = replyTo;
-  }
+    replyTo,
+    attachment: null,
+  });
 
-  const withAttachment =
+  const withAttachmentPayload =
     attachmentJson &&
-    ({
-      ...base,
-      attachments: [
-        {
-          filename: "lead-intake.json",
-          content: Buffer.from(attachmentJson, "utf8").toString("base64"),
-        },
-      ],
+    buildBrevoPayload({
+      sender,
+      toEmail,
+      subject,
+      html,
+      text,
+      replyTo,
+      attachment: {
+        name: "lead-intake.json",
+        content: Buffer.from(attachmentJson, "utf8").toString("base64"),
+      },
     });
 
-  let attempt = withAttachment ? await resendPost(apiKey, withAttachment) : await resendPost(apiKey, base);
+  let attempt = withAttachmentPayload
+    ? await brevoPost(apiKey, withAttachmentPayload)
+    : await brevoPost(apiKey, basePayload);
 
-  if (!attempt.ok && withAttachment) {
-    console.warn("[quote-submit] Resend failed with attachment; retrying without.", attempt.status, attempt.text);
-    attempt = await resendPost(apiKey, base);
+  if (!attempt.ok && withAttachmentPayload) {
+    console.warn("[quote-submit] Brevo failed with attachment; retrying without.", attempt.status, attempt.text);
+    attempt = await brevoPost(apiKey, basePayload);
   }
 
   if (!attempt.ok) {
-    const detail = parseResendFailureText(attempt.text);
-    console.error("[quote-submit] Resend outbound failed", {
+    const detail = parseBrevoFailureText(attempt.text);
+    console.error("[quote-submit] Brevo outbound failed", {
       httpStatus: attempt.status,
       parsedMessage: detail,
-      attemptedWithAttachmentFirst: Boolean(withAttachment),
+      attemptedWithAttachmentFirst: Boolean(withAttachmentPayload),
     });
-    console.error("[quote-submit] Resend raw response (for support / Resend dashboard):", attempt.text);
-    const err = new Error("RESEND_FAILED");
-    err.resendStatus = attempt.status;
-    err.resendDetail = detail;
+    console.error("[quote-submit] Brevo raw response (for support):", attempt.text);
+    const err = new Error("BREVO_FAILED");
+    err.brevoStatus = attempt.status;
+    err.brevoDetail = detail;
     throw err;
   }
 
@@ -294,7 +328,7 @@ export default async (request) => {
   )}</pre>`;
 
   try {
-    await sendResendEmail({
+    await sendBrevoTransactionalEmail({
       subject,
       html,
       text,
@@ -302,10 +336,10 @@ export default async (request) => {
       replyTo: answers.email,
     });
   } catch (e) {
-    console.error("[quote-submit] email path aborted — see logs above for Resend / config", {
+    console.error("[quote-submit] email path aborted — see logs above for Brevo / config", {
       code: e && e.message,
-      resendStatus: e && e.resendStatus,
-      resendDetail: e && e.resendDetail,
+      brevoStatus: e && e.brevoStatus,
+      brevoDetail: e && e.brevoDetail,
     });
     return json({ error: PUBLIC_EMAIL_FAILURE }, 500);
   }
