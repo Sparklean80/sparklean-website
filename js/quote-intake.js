@@ -248,14 +248,14 @@
           } catch (e) {
             j = { error: t || "Invalid response" };
           }
-          return { ok: r.ok, j: j };
+          return { ok: r.ok, status: r.status, j: j };
         });
       })
       .then(function (res) {
         if (!res.ok) {
-          var msg = res.j && res.j.error ? res.j.error : "Unable to send";
-          if (res.j && res.j.hint) msg += "\n\n" + res.j.hint;
-          throw new Error(msg);
+          var pub =
+            "Unable to send request at the moment. Please call Sparklean directly at (239) 888-3588.";
+          throw new Error((res.j && res.j.error) || pub);
         }
         stepIndex = steps.length;
         submitting = false;
@@ -263,7 +263,8 @@
       })
       .catch(function (err) {
         root.querySelector("[data-intake-error]").textContent =
-          err.message || "We could not send this request. Please call (239) 888-3588.";
+          err.message ||
+          "Unable to send request at the moment. Please call Sparklean directly at (239) 888-3588.";
         nextBtn.disabled = false;
         nextBtn.textContent = "Send request";
         submitting = false;

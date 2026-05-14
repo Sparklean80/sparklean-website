@@ -1,10 +1,15 @@
 /**
  * Sparklean — POST /.netlify/functions/quote-submit
- * Validates structured intake, optional brief model summary (capped latency), emails via Resend.
- * The lead record is the source of truth; summary is secondary.
+ * Outbound only: Netlify function → Resend API → your inbox (e.g. info@sparklean.co).
+ * Gmail / Google Workspace MX for inbound mail is unrelated — Resend only sends; it does not host inbound.
+ * Structured lead body is authoritative; optional OpenAI summary never blocks email.
  */
 
 const MAX_BODY = 120_000;
+
+/** Returned to the browser on any email send failure — no env names or provider bodies. */
+const PUBLIC_EMAIL_FAILURE =
+  "Unable to send request at the moment. Please call Sparklean directly at (239) 888-3588.";
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -88,7 +93,7 @@ NEVER mention prices, rates, estimates, costs, dollars, or "quotes" as numbers.`
     });
     if (!res.ok) {
       const t = await res.text();
-      console.error("OpenAI error", res.status, t);
+      console.error("[quote-submit] OpenAI summary skipped (non-OK)", res.status, t);
       return null;
     }
     const data = await res.json();
@@ -102,7 +107,7 @@ NEVER mention prices, rates, estimates, costs, dollars, or "quotes" as numbers.`
     }
   } catch (e) {
     if (e && e.name === "AbortError") return null;
-    console.error("OpenAI fetch failed", e);
+    console.error("[quote-submit] OpenAI summary skipped (fetch error)", e);
     return null;
   } finally {
     clearTimeout(tid);
@@ -140,7 +145,14 @@ async function sendResendEmail({ subject, html, text, attachmentJson, replyTo })
   const from = process.env.SPARKLEAN_FROM_EMAIL;
   const to = process.env.SPARKLEAN_LEAD_TO || "info@sparklean.co";
   if (!apiKey || !from) {
-    throw new Error("Email is not configured (RESEND_API_KEY / SPARKLEAN_FROM_EMAIL).");
+    console.error("[quote-submit] missing outbound config", {
+      hasResendApiKey: Boolean(apiKey),
+      hasSparkleanFromEmail: Boolean(from),
+      leadTo: to,
+    });
+    const err = new Error("MISSING_EMAIL_CONFIG");
+    err.publicOnly = true;
+    throw err;
   }
 
   const base = {
@@ -169,14 +181,19 @@ async function sendResendEmail({ subject, html, text, attachmentJson, replyTo })
   let attempt = withAttachment ? await resendPost(apiKey, withAttachment) : await resendPost(apiKey, base);
 
   if (!attempt.ok && withAttachment) {
-    console.warn("Resend failed with attachment; retrying without.", attempt.status, attempt.text);
+    console.warn("[quote-submit] Resend failed with attachment; retrying without.", attempt.status, attempt.text);
     attempt = await resendPost(apiKey, base);
   }
 
   if (!attempt.ok) {
     const detail = parseResendFailureText(attempt.text);
-    console.error("Resend error", attempt.status, attempt.text);
-    const err = new Error("Unable to deliver email.");
+    console.error("[quote-submit] Resend outbound failed", {
+      httpStatus: attempt.status,
+      parsedMessage: detail,
+      attemptedWithAttachmentFirst: Boolean(withAttachment),
+    });
+    console.error("[quote-submit] Resend raw response (for support / Resend dashboard):", attempt.text);
+    const err = new Error("RESEND_FAILED");
     err.resendStatus = attempt.status;
     err.resendDetail = detail;
     throw err;
@@ -276,10 +293,6 @@ export default async (request) => {
     text
   )}</pre>`;
 
-  const verbose =
-    process.env.SPARKLEAN_QUOTE_VERBOSE_ERRORS === "1" ||
-    process.env.CONTEXT === "deploy-preview";
-
   try {
     await sendResendEmail({
       subject,
@@ -289,17 +302,12 @@ export default async (request) => {
       replyTo: answers.email,
     });
   } catch (e) {
-    const hint =
-      verbose && e.resendDetail
-        ? e.resendDetail
-        : "Confirm in Netlify: RESEND_API_KEY, SPARKLEAN_FROM_EMAIL (must be a domain verified in Resend), and SPARKLEAN_LEAD_TO. Check the function log for the full Resend response.";
-    return json(
-      {
-        error: e.message || "Send failed",
-        hint,
-      },
-      500
-    );
+    console.error("[quote-submit] email path aborted — see logs above for Resend / config", {
+      code: e && e.message,
+      resendStatus: e && e.resendStatus,
+      resendDetail: e && e.resendDetail,
+    });
+    return json({ error: PUBLIC_EMAIL_FAILURE }, 500);
   }
 
   return json({ ok: true, receivedAt: new Date().toISOString() });
