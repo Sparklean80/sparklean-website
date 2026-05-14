@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.sparklean.co/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://www.sparklean.co/blog</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.sparklean.co/residential-cleaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.sparklean.co/commercial-cleaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.sparklean.co/post-construction-cleaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.sparklean.co/specialized-cleaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.sparklean.co/inner-circle</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
-  <url><loc>https://www.sparklean.co/house-cleaning-naples</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.sparklean.co/house-cleaning-fort-myers</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.sparklean.co/house-cleaning-bonita-springs</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.sparklean.co/house-cleaning-estero</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.sparklean.co/house-cleaning-cape-coral</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.sparklean.co/</loc><lastmod>2026-05-14</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.sparklean.co/about</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.sparklean.co/blog</loc><lastmod>2026-05-14</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.sparklean.co/commercial-cleaning</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.sparklean.co/contact</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.sparklean.co/house-cleaning-bonita-springs</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.sparklean.co/house-cleaning-cape-coral</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.sparklean.co/house-cleaning-estero</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.sparklean.co/house-cleaning-fort-myers</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.sparklean.co/house-cleaning-naples</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.sparklean.co/inner-circle</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://www.sparklean.co/post-construction-cleaning</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.sparklean.co/residential-cleaning</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.sparklean.co/specialized-cleaning</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
 </urlset>

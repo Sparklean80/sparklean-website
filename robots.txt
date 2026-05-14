@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
+# Raw HTML lives under /pages/ for Netlify rewrites; index the clean URLs from the sitemap instead.
+Disallow: /pages/
+
+# Netlify build internals (not public content)
+Disallow: /.netlify/
+
 Sitemap: https://www.sparklean.co/sitemap.xml

@@ -1,0 +1,9 @@
+{
+  "name": "sparklean-website",
+  "private": true,
+  "description": "Static site; build step generates sitemap.xml from netlify.toml.",
+  "scripts": {
+    "build": "node scripts/generate-sitemap.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs"
+  }
+}
