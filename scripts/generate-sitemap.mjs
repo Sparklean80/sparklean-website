@@ -52,6 +52,7 @@ function parseRedirects(tomlText) {
 function metaForPath(p) {
   if (p === "/") return { changefreq: "weekly", priority: "1.0" };
   if (p === "/blog") return { changefreq: "weekly", priority: "0.9" };
+  if (p.startsWith("/blog/")) return { changefreq: "monthly", priority: "0.78" };
   if (p === "/inner-circle") return { changefreq: "monthly", priority: "0.75" };
   if (p.startsWith("/house-cleaning")) return { changefreq: "monthly", priority: "0.85" };
   if (["/residential-cleaning", "/commercial-cleaning", "/post-construction-cleaning"].includes(p))
@@ -99,15 +100,25 @@ function main() {
   }
 
   const pagesDir = path.join(ROOT, "pages");
-  const htmlFiles = fs.existsSync(pagesDir)
-    ? fs.readdirSync(pagesDir).filter((f) => f.endsWith(".html"))
-    : [];
+  function walkPagesHtml(sub) {
+    const out = [];
+    const dir = path.join(pagesDir, sub);
+    if (!fs.existsSync(dir)) return out;
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+      const piece = sub ? `${sub}/${ent.name}` : ent.name;
+      if (ent.isDirectory()) out.push(...walkPagesHtml(piece));
+      else if (ent.name.endsWith(".html")) out.push(piece.split(path.sep).join("/"));
+    }
+    return out;
+  }
+  const htmlFiles = walkPagesHtml("");
   const targets = new Set(
-    [...urlMap.values()].map((e) => path.basename(e.file)).filter(Boolean)
+    [...urlMap.values()].map((e) => path.relative(ROOT, e.file).split(path.sep).join("/"))
   );
   for (const f of htmlFiles) {
-    if (!targets.has(f)) {
-      console.warn(`[sitemap] orphan page (no 200 rewrite in netlify.toml): pages/${f}`);
+    const rel = `pages/${f}`;
+    if (!targets.has(rel)) {
+      console.warn(`[sitemap] orphan page (no 200 rewrite in netlify.toml): ${rel}`);
     }
   }
 

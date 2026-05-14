@@ -28,7 +28,7 @@
 <meta name="twitter:image" content="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png">
 <meta name="twitter:image:alt" content="Sparklean Cleaning logo">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.sparklean.co/#organization","name":"Sparklean Cleaning","url":"https://www.sparklean.co/","logo":{"@type":"ImageObject","url":"https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png"},"telephone":"+1-239-888-3588","areaServed":["Naples FL","Bonita Springs FL","Fort Myers FL","Estero FL","Cape Coral FL"]},{"@type":"Blog","@id":"https://www.sparklean.co/blog#blog","name":"Sparklean Cleaning Blog","description":"Cleaning tips, guides, and local insights for Southwest Florida homes and businesses.","url":"https://www.sparklean.co/blog","publisher":{"@id":"https://www.sparklean.co/#organization"},"blogPost":[{"@id":"https://www.sparklean.co/blog#post-residential"},{"@id":"https://www.sparklean.co/blog#post-post-construction"},{"@id":"https://www.sparklean.co/blog#post-office"},{"@id":"https://www.sparklean.co/blog#post-commercial"}]},{"@type":"BlogPosting","@id":"https://www.sparklean.co/blog#post-residential","headline":"House Cleaning in Naples, FL: When to Hire a Pro (and What You Actually Get)","url":"https://www.sparklean.co/blog#post-residential","datePublished":"2026-01-10","dateModified":"2026-05-01","isPartOf":{"@id":"https://www.sparklean.co/blog#blog"},"publisher":{"@id":"https://www.sparklean.co/#organization"},"articleSection":"Residential Cleaning"},{"@type":"BlogPosting","@id":"https://www.sparklean.co/blog#post-post-construction","headline":"Post-Construction Cleaning in Naples, FL: Remodel or New Build — What You Need Before Move-In","url":"https://www.sparklean.co/blog#post-post-construction","datePublished":"2026-01-18","dateModified":"2026-05-01","isPartOf":{"@id":"https://www.sparklean.co/blog#blog"},"publisher":{"@id":"https://www.sparklean.co/#organization"},"articleSection":"Post-Construction Cleaning"},{"@type":"BlogPosting","@id":"https://www.sparklean.co/blog#post-office","headline":"Office Cleaning in Naples, FL: Medical Practices, Law Firms & Professional Suites","url":"https://www.sparklean.co/blog#post-office","datePublished":"2026-02-02","dateModified":"2026-05-01","isPartOf":{"@id":"https://www.sparklean.co/blog#blog"},"publisher":{"@id":"https://www.sparklean.co/#organization"},"articleSection":"Office Cleaning"},{"@type":"BlogPosting","@id":"https://www.sparklean.co/blog#post-commercial","headline":"Commercial Cleaning in Naples, FL: Dealerships, Schools, Theaters & High-Traffic Venues","url":"https://www.sparklean.co/blog#post-commercial","datePublished":"2026-02-20","dateModified":"2026-05-01","isPartOf":{"@id":"https://www.sparklean.co/blog#blog"},"publisher":{"@id":"https://www.sparklean.co/#organization"},"articleSection":"Commercial Cleaning"}]}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.sparklean.co/#organization","name":"Sparklean Cleaning","url":"https://www.sparklean.co/","logo":{"@type":"ImageObject","url":"https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png"},"telephone":"+1-239-888-3588","areaServed":["Naples FL","Bonita Springs FL","Fort Myers FL","Estero FL","Cape Coral FL"]},{"@type":"Blog","@id":"https://www.sparklean.co/blog#blog","name":"Sparklean Cleaning Blog","description":"Cleaning tips, guides, and local insights for Southwest Florida homes and businesses.","url":"https://www.sparklean.co/blog","publisher":{"@id":"https://www.sparklean.co/#organization"},"blogPost":["https://www.sparklean.co/blog/naples-house-cleaning-when-to-hire-a-pro","https://www.sparklean.co/blog/naples-post-construction-cleaning-before-move-in","https://www.sparklean.co/blog/naples-office-cleaning-medical-law-firms","https://www.sparklean.co/blog/naples-commercial-cleaning-high-traffic-venues"]}]}
 </script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -91,7 +91,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:var(--nav-h);backgrou
 
 .blog-section{padding:clamp(56px,10vw,100px) clamp(20px,5vw,80px);}
 .blog-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:3px;margin-bottom:3px;}
-.blog-card{background:var(--dark2);border:1px solid rgba(201,168,76,.08);padding:clamp(28px,5vw,52px) clamp(22px,4vw,48px);transition:border-color .3s,background .3s;color:inherit;display:flex;flex-direction:column;align-items:stretch;text-align:left;width:100%;font:inherit;cursor:pointer;font-family:var(--sans);}
+.blog-card{background:var(--dark2);border:1px solid rgba(201,168,76,.08);padding:clamp(28px,5vw,52px) clamp(22px,4vw,48px);transition:border-color .3s,background .3s;color:inherit;text-decoration:none;display:flex;flex-direction:column;align-items:stretch;text-align:left;width:100%;font:inherit;cursor:pointer;font-family:var(--sans);}
 .blog-card:hover,.blog-card:focus-visible{border-color:rgba(201,168,76,.28);background:var(--dark3);}
 .blog-card:focus{outline:none;}
 .blog-card:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
@@ -103,31 +103,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:var(--nav-h);backgrou
 .blog-arrow{width:36px;height:36px;min-width:36px;min-height:36px;border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.8rem;transition:background .3s;}
 .blog-card:hover .blog-arrow,.blog-card:focus-visible .blog-arrow{background:var(--gold);color:#0E0E0E;}
 
-.article-overlay{position:fixed;inset:0;z-index:1000;padding:0;display:flex;justify-content:center;align-items:stretch;visibility:hidden;opacity:0;pointer-events:none;transition:opacity .38s ease,visibility .38s;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);background:rgba(14,14,14,.78);}
-.article-overlay.open{visibility:visible;opacity:1;pointer-events:auto;}
-.article-dialog{width:100%;max-width:calc(var(--article-max) + clamp(32px,6vw,80px));margin:0 auto;min-height:100%;max-height:100dvh;display:flex;flex-direction:column;transform:scale(.97) translateY(12px);opacity:0;transition:transform .42s cubic-bezier(.22,1,.36,1),opacity .36s ease;}
-.article-overlay.open .article-dialog{transform:scale(1) translateY(0);opacity:1;}
-.article-toolbar{position:sticky;top:0;z-index:2;display:flex;justify-content:flex-end;padding:max(12px,env(safe-area-inset-top)) clamp(16px,4vw,40px) 8px;background:linear-gradient(to bottom,rgba(14,14,14,.95) 60%,transparent);}
-.article-close{flex-shrink:0;background:rgba(22,22,22,.9);border:1px solid rgba(201,168,76,.35);color:var(--gold);width:var(--tap-min);height:var(--tap-min);min-width:var(--tap-min);min-height:var(--tap-min);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.15rem;line-height:1;transition:background .25s,color .25s;border-radius:0;}
-.article-close:hover,.article-close:focus-visible{background:var(--gold);color:#0E0E0E;}
-.article-close:focus{outline:none;}
-.article-close:focus-visible{outline:2px solid var(--gold-lt);outline-offset:2px;}
-.article-scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:0 clamp(18px,4vw,40px) max(48px,env(safe-area-inset-bottom));}
-.article-inner{max-width:var(--article-max);margin:0 auto;padding-bottom:clamp(64px,12vh,120px);}
-.article-cat{font-size:.5rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block;}
-.article-title{font-family:var(--serif);font-size:clamp(1.45rem,4.2vw,2.75rem);font-weight:400;line-height:1.12;margin-bottom:12px;color:var(--white);}
-.article-byline{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--w30);margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid rgba(201,168,76,.1);}
-.article-body{font-family:var(--serif);font-size:clamp(.98rem,2.2vw,1.05rem);line-height:1.92;color:var(--w70);max-width:var(--article-max);}
-.article-body h2{font-family:var(--serif);font-size:clamp(1.15rem,2.8vw,1.4rem);font-weight:400;color:var(--white);margin:40px 0 14px;}
-.article-body h3{font-family:var(--serif);font-size:clamp(1rem,2.2vw,1.12rem);font-weight:400;color:var(--gold-lt);margin:28px 0 10px;}
-.article-body p{margin-bottom:18px;}
-.article-body ul,.article-body ol{margin:14px 0 18px 22px;display:flex;flex-direction:column;gap:8px;}
-.article-body li{color:var(--w70);line-height:1.68;}
-.article-body strong{color:var(--white);font-weight:500;}
-.article-cta{margin-top:52px;padding:clamp(28px,5vw,48px);border:1px solid rgba(201,168,76,.22);background:rgba(201,168,76,.04);text-align:center;}
-.article-cta p{font-family:var(--serif);font-size:clamp(1rem,2.4vw,1.12rem);color:var(--w70);margin-bottom:22px;line-height:1.68;}
-.article-cta-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;}
-.article-cta .btn-gold,.article-cta .btn-outline{margin:0;}
 .btn-gold{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:.58rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#0E0E0E;background:var(--gold);padding:15px clamp(22px,4vw,32px);min-height:var(--tap-min);text-decoration:none;transition:background .25s;}
 .btn-gold:hover,.btn-gold:focus-visible{background:var(--gold-lt);}
 .btn-gold:focus{outline:none;}
@@ -172,17 +147,16 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   :root{--nav-h:70px;}
   nav{height:70px;}
   .nav-logo img{height:54px;}
-  .article-toolbar{padding-top:max(8px,env(safe-area-inset-top));}
   .footer-cols{grid-template-columns:1fr;gap:28px;}
   .nl-btns{flex-direction:column;align-items:stretch;}
   .nl-btns .btn-gold,.nl-btns .btn-outline{width:100%;}
 }
 @media(min-width:1800px){
-  .blog-hero-inner,.article-inner{max-width:min(var(--article-max),48vw);}
+  .blog-hero-inner{max-width:min(var(--article-max),48vw);}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
-  .nav-mobile-menu,.article-overlay,.article-dialog{transition:none!important;}
+  .nav-mobile-menu{transition:none!important;}
 }
 </style>
 <link rel="stylesheet" href="/css/sparklean-mobile-first.css">
@@ -257,7 +231,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 <section class="blog-section" aria-label="Blog articles">
   <div class="blog-grid">
 
-    <button type="button" class="blog-card" id="card-article1" data-article="article1" aria-labelledby="card-article1-title">
+    <a class="blog-card" id="card-article1" href="/blog/naples-house-cleaning-when-to-hire-a-pro" aria-labelledby="card-article1-title">
       <span class="blog-cat">Residential Cleaning</span>
       <span class="blog-title" id="card-article1-title">House Cleaning in Naples, FL: When to Hire a Pro (and What You Actually Get)</span>
       <span class="blog-excerpt">Between Gulf humidity, sandy floors, and busy schedules, keeping a home consistently clean in Southwest Florida is harder than it looks. Here is what to expect when you hire a professional cleaning service — and how it pays for itself.</span>
@@ -265,9 +239,9 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
         <span class="blog-tag">Naples · Fort Myers · SW Florida</span>
         <span class="blog-arrow" aria-hidden="true">→</span>
       </span>
-    </button>
+    </a>
 
-    <button type="button" class="blog-card" id="card-article2" data-article="article2" aria-labelledby="card-article2-title">
+    <a class="blog-card" id="card-article2" href="/blog/naples-post-construction-cleaning-before-move-in" aria-labelledby="card-article2-title">
       <span class="blog-cat">Post-Construction Cleaning</span>
       <span class="blog-title" id="card-article2-title">Post-Construction Cleaning in Naples, FL: Remodel or New Build — What You Need Before Move-In</span>
       <span class="blog-excerpt">Dust does not stop when the contractor packs up. After a kitchen remodel, bathroom renovation, or new construction home, fine debris hides everywhere. Here is what a proper builder's clean actually covers.</span>
@@ -275,9 +249,9 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
         <span class="blog-tag">Remodels · New Builds · SW Florida</span>
         <span class="blog-arrow" aria-hidden="true">→</span>
       </span>
-    </button>
+    </a>
 
-    <button type="button" class="blog-card" id="card-article3" data-article="article3" aria-labelledby="card-article3-title">
+    <a class="blog-card" id="card-article3" href="/blog/naples-office-cleaning-medical-law-firms" aria-labelledby="card-article3-title">
       <span class="blog-cat">Office &amp; Commercial Cleaning</span>
       <span class="blog-title" id="card-article3-title">Office Cleaning in Naples, FL: Medical Practices, Law Firms &amp; Professional Suites</span>
       <span class="blog-excerpt">Clients judge your space before they read your credentials. In a doctor's office, dental practice, or law firm, dust in the waiting area or streaks on glass undermine trust instantly. Here is what professional office cleaning really means.</span>
@@ -285,9 +259,9 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
         <span class="blog-tag">Medical · Legal · Office Suites</span>
         <span class="blog-arrow" aria-hidden="true">→</span>
       </span>
-    </button>
+    </a>
 
-    <button type="button" class="blog-card" id="card-article4" data-article="article4" aria-labelledby="card-article4-title">
+    <a class="blog-card" id="card-article4" href="/blog/naples-commercial-cleaning-high-traffic-venues" aria-labelledby="card-article4-title">
       <span class="blog-cat">Commercial Cleaning</span>
       <span class="blog-title" id="card-article4-title">Commercial Cleaning in Naples, FL: Dealerships, Schools, Theaters &amp; High-Traffic Venues</span>
       <span class="blog-excerpt">Commercial spaces do not fail quietly. A car dealership showroom with dusty counters signals inventory nobody wants. A school hallway that looks tired undermines your standard. Here is what real commercial cleaning looks like at scale.</span>
@@ -295,195 +269,11 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
         <span class="blog-tag">Dealerships · Schools · Theaters</span>
         <span class="blog-arrow" aria-hidden="true">→</span>
       </span>
-    </button>
+    </a>
 
   </div>
 </section>
 </main>
-
-<!-- ARTICLE 1 -->
-<div class="article-overlay" id="article1" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="article1-heading">
-  <div class="article-dialog">
-    <div class="article-toolbar">
-      <button type="button" class="article-close" data-close="article1" aria-label="Close article">✕</button>
-    </div>
-    <div class="article-scroll">
-      <div class="article-inner">
-        <span class="article-cat">Residential Cleaning</span>
-        <h2 class="article-title" id="article1-heading">House Cleaning in Naples, FL: When to Hire a Pro (and What You Actually Get)</h2>
-        <div class="article-byline">Sparklean Cleaning · Naples, Bonita Springs, Fort Myers, Estero &amp; Cape Coral</div>
-        <div class="article-body">
-          <p>Between Gulf humidity, sandy floors, and busy schedules, keeping a home consistently clean in Southwest Florida is harder than it looks. If you are searching for residential house cleaning near you, you want a dependable routine, a healthier space, and your weekends back — not another chore list.</p>
-          <h3>Why "DIY" Often Costs More Than a Cleaning Service</h3>
-          <p>Many families in Naples, Bonita Springs, Fort Myers, Estero, and Cape Coral try to handle everything themselves — then realize:</p>
-          <ul>
-            <li><strong>Time is the hidden expense.</strong> Deep cleaning kitchens, bathrooms, and floors eats entire Saturdays.</li>
-            <li><strong>Consistency slips first.</strong> Dust returns quickly; baseboards and ceiling fans get skipped when you are tired.</li>
-            <li><strong>Wear and tear shows up</strong> in grout, glass, and finishes when soil sits too long.</li>
-          </ul>
-          <p>A recurring maid service or home cleaning plan with Sparklean Cleaning keeps the baseline high so you only touch up between visits, not start from zero every week.</p>
-          <h3>High-Intent Signs You Should Call Sparklean Today</h3>
-          <ul>
-            <li>You need the house "show-ready" for guests, snowbirds returning, or a rental turnover.</li>
-            <li>Allergies or pets mean you want floors, upholstery zones, and dust handled on a schedule.</li>
-            <li>You are juggling work, kids, or travel and cleaning keeps falling to the bottom of the list.</li>
-            <li>You want recurring peace of mind — predictable visits and predictable results.</li>
-          </ul>
-          <h3>What a Professional Residential Cleaning Visit Typically Includes</h3>
-          <p>Every home is different, but a strong standard home cleaning usually covers:</p>
-          <ul>
-            <li>Kitchen counters, appliance fronts, and sink area</li>
-            <li>Bathrooms: toilets, tubs/showers, vanities, mirrors</li>
-            <li>Dusting of reachable surfaces</li>
-            <li>Vacuuming and hard-floor mopping</li>
-            <li>Trash emptied (where agreed)</li>
-          </ul>
-          <p>Deep cleaning or move-in/move-out cleaning adds detail work: inside appliances (if requested), baseboards, interior windows, cabinet fronts, and heavier buildup in kitchens and baths — ideal for Estero and Bonita Springs seasonal homes that sat closed for months.</p>
-          <h3>Local Advantage: Why a Southwest Florida Team Matters</h3>
-          <p>Generic national brands do not live with our climate day to day. Sparklean Cleaning serves Naples, Bonita Springs, Fort Myers, Estero, and Cape Coral, so we understand sand and moisture tracked in from beaches, docks, and patios — and seasonal schedules for snowbirds, holidays, and rental peaks.</p>
-          <div class="article-cta">
-            <p>Ready for a cleaner home this week? Sparklean Cleaning is ready when you are.</p>
-            <div class="article-cta-row">
-              <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588 →</a>
-              <a href="/contact" class="btn-outline">Get a Quote</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ARTICLE 2 -->
-<div class="article-overlay" id="article2" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="article2-heading">
-  <div class="article-dialog">
-    <div class="article-toolbar">
-      <button type="button" class="article-close" data-close="article2" aria-label="Close article">✕</button>
-    </div>
-    <div class="article-scroll">
-      <div class="article-inner">
-        <span class="article-cat">Post-Construction Cleaning</span>
-        <h2 class="article-title" id="article2-heading">Post-Construction Cleaning in Naples, FL: Remodel or New Build — What You Need Before Move-In</h2>
-        <div class="article-byline">Sparklean Cleaning · Naples, Bonita Springs, Fort Myers, Estero &amp; Cape Coral</div>
-        <div class="article-body">
-          <p>Dust does not stop when the contractor packs up. After a kitchen remodel, bathroom renovation, or new construction home, fine debris hides in vents, inside cabinets, on window tracks, and across every horizontal surface. Standard house cleaning is not built for that layer of silica dust, drywall compound, adhesive residue, and trade footprints.</p>
-          <h3>Post-Construction Cleaning vs. Regular House Cleaning</h3>
-          <p>Regular residential cleaning maintains a lived-in home using standard products and equipment. Post-construction cleaning is a full reset of a jobsite into a finished interior — often requiring multi-pass dusting, HEPA focus areas, and careful detail work on new finishes like stone, engineered wood, and fresh paint.</p>
-          <p>Skipping a proper builder's clean means dust recirculates through your HVAC, settles on new paint, and shows up again after you unpack. In Naples, Bonita Springs, Fort Myers, Estero, and Cape Coral, coastal air and humidity can also make residues feel "sticky" faster.</p>
-          <h3>Who Needs This Service</h3>
-          <ul>
-            <li>Your remodel just wrapped — cabinets are in, but every shelf has grit and there is film on tile and glass.</li>
-            <li>Your new build is nearing closing — you want a move-in ready clean before movers or staging.</li>
-            <li>Your GC did a rough clean — but you still see dust on baseboards, inside closets, and on light fixtures.</li>
-            <li>You are a homeowner, investor, or property manager with a turnover or punch-list date.</li>
-          </ul>
-          <h3>What Sparklean Covers on a Post-Construction Clean</h3>
-          <ul>
-            <li>Multi-pass dusting of walls, trim, ledges, doors, and door frames</li>
-            <li>Interior windows &amp; tracks, removal of stickers and light residue</li>
-            <li>Cabinet interiors &amp; exteriors, drawers, and closets</li>
-            <li>Kitchen &amp; baths: sinks, counters, fixtures; careful treatment of new stone and grout</li>
-            <li>Floors: vacuuming and appropriate damp mopping for dust-heavy sites</li>
-            <li>Surface wipe-down of appliances, railings, and built-ins</li>
-          </ul>
-          <h3>Rough Clean vs. Final Clean</h3>
-          <p>Many projects benefit from two phases. A rough clean after major trades exit reduces dust before flooring protection comes off. A final clean after last touch-ups delivers the "camera-ready" standard before the owner walkthrough.</p>
-          <div class="article-cta">
-            <p>Tell us where you are in the schedule and we will align with your GC, designer, or closing date.</p>
-            <div class="article-cta-row">
-              <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588 →</a>
-              <a href="/contact" class="btn-outline">Get a Quote</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ARTICLE 3 -->
-<div class="article-overlay" id="article3" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="article3-heading">
-  <div class="article-dialog">
-    <div class="article-toolbar">
-      <button type="button" class="article-close" data-close="article3" aria-label="Close article">✕</button>
-    </div>
-    <div class="article-scroll">
-      <div class="article-inner">
-        <span class="article-cat">Office &amp; Commercial Cleaning</span>
-        <h2 class="article-title" id="article3-heading">Office Cleaning in Naples, FL: Medical Practices, Law Firms &amp; Professional Suites</h2>
-        <div class="article-byline">Sparklean Cleaning · Naples, Bonita Springs, Fort Myers, Estero &amp; Cape Coral</div>
-        <div class="article-body">
-          <p>Clients judge your space before they read your credentials. In a doctor's office, dental practice, law firm, or financial advisory suite, dust in the waiting area, streaks on glass, or odors in restrooms undermine trust instantly. Staff notice too: when break rooms and workstations feel neglected, morale and focus slip.</p>
-          <h3>Why Professional Office Cleaning Is Different</h3>
-          <p>Professional environments have high-traffic reception and exam or conference areas that soil faster than a typical home. Glass, hard flooring, and upholstery show every footprint and smudge. Restrooms and touchpoints must read clean at a glance — every visit. Schedules cannot slip.</p>
-          <h3>Who We Serve</h3>
-          <ul>
-            <li><strong>Medical &amp; dental offices</strong> — waiting rooms, operatories, admin stations, restrooms</li>
-            <li><strong>Law firms &amp; title companies</strong> — conference rooms, partner offices, client-facing lobbies</li>
-            <li><strong>CPA, wealth management, and insurance offices</strong> — glass-heavy reception areas and private meeting rooms</li>
-            <li><strong>Professional suites &amp; coworking offices</strong> — shared kitchens, restrooms, and high-touch corridors</li>
-          </ul>
-          <h3>What Office Cleaning Typically Covers</h3>
-          <ul>
-            <li>Reception &amp; waiting areas — dusting, glass, seating zones</li>
-            <li>Exam rooms / offices — horizontal surfaces, chairs, sinks where applicable</li>
-            <li>Restrooms — fixtures, mirrors, dispensers, floors, trash</li>
-            <li>Kitchen / break room — counters, appliance fronts, tables, floors, trash</li>
-            <li>Corridors &amp; common areas — vacuuming, hard-floor care, spot treatment</li>
-            <li>Trash removal and recycling per your building rules</li>
-          </ul>
-          <h3>Why Local Matters for Doctor &amp; Law Office Cleaning</h3>
-          <p>National franchises often sell a brand, not a relationship. A Southwest Florida–based team understands seasonal population swings, storm and humidity effects on entryways and hard floors, and property manager requirements in medical plazas and office parks across Naples, Bonita Springs, Fort Myers, Estero, and Cape Coral.</p>
-          <div class="article-cta">
-            <p>Your lobby should feel as sharp as your intake forms. Your conference room should look as careful as your filings.</p>
-            <div class="article-cta-row">
-              <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588 →</a>
-              <a href="/contact" class="btn-outline">Get a Quote</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ARTICLE 4 -->
-<div class="article-overlay" id="article4" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="article4-heading">
-  <div class="article-dialog">
-    <div class="article-toolbar">
-      <button type="button" class="article-close" data-close="article4" aria-label="Close article">✕</button>
-    </div>
-    <div class="article-scroll">
-      <div class="article-inner">
-        <span class="article-cat">Commercial Cleaning</span>
-        <h2 class="article-title" id="article4-heading">Commercial Cleaning in Naples, FL: Dealerships, Schools, Theaters &amp; High-Traffic Venues</h2>
-        <div class="article-byline">Sparklean Cleaning · Naples, Bonita Springs, Fort Myers, Estero &amp; Cape Coral</div>
-        <div class="article-body">
-          <p>Commercial spaces do not fail quietly. A car dealership showroom with tire marks and dusty counters signals inventory nobody wants. A school hallway that looks tired undermines the standard you set for students. A movie theater lobby or restroom that feels sticky becomes the review — and not about the film.</p>
-          <h3>Car Dealership Cleaning: Showrooms That Sell the Vehicle Before the Test Drive</h3>
-          <ul>
-            <li>Showroom floors free of compound dust, footprints, and service-area track-in</li>
-            <li>Customer lounges, coffee bars, and glass walls that stay fingerprint-aware</li>
-            <li>Restrooms that read dealership-grade, not gas-station adjacent</li>
-          </ul>
-          <h3>School &amp; Campus Cleaning: Consistency Where Absences and Events Stack Up</h3>
-          <p>Schools, daycares, and training centers share a common truth: high touchpoints, frequent spills, and calendar chaos. A strong education facility cleaning program emphasizes classrooms and labs, hallways and stairwells, cafeterias, restrooms, and administrative areas that set tone for parents and visitors.</p>
-          <h3>Movie Theaters &amp; Entertainment Venues: Turnover Windows Are Non-Negotiable</h3>
-          <p>Theaters, arcades, and family entertainment centers live in sprint cycles: between showtimes, after late shows, before weekend crowds. Miss a window and the next guest sees it immediately. Focus areas include lobby and concession zones, auditoriums, restrooms, and entries.</p>
-          <h3>Why a Southwest Florida Commercial Partner Beats a Distant Call Center</h3>
-          <p>Franchise dashboards do not mop floors. Sparklean Cleaning is rooted in Naples, Bonita Springs, Fort Myers, Estero, and Cape Coral — which matters when humidity and rain trash entryways in minutes, seasonal traffic shifts your peak patterns, and you need a same-week adjustment before a promo weekend or premiere.</p>
-          <div class="article-cta">
-            <p>Ready for a commercial program that matches your traffic? Call us to schedule a facility walkthrough.</p>
-            <div class="article-cta-row">
-              <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588 →</a>
-              <a href="/contact" class="btn-outline">Get a Quote</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <section class="newsletter" aria-label="Contact Sparklean">
   <div class="eyebrow eyebrow--center"><div class="ey-line"></div><span>Get a Free Quote Today</span><div class="ey-line"></div></div>
@@ -544,30 +334,13 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 
 <script>
 (function(){
-  var FOCUSABLE_SEL='a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])';
   var body=document.body;
   var hb=document.getElementById('hamburger');
   var mm=document.getElementById('mobileMenu');
   var menuOpen=false;
-  var activeDialogId=null;
-  var lastFocusEl=null;
-  var trapHandler=null;
 
   function syncScrollLock(){
-    body.classList.toggle('is-scroll-locked',menuOpen||!!activeDialogId);
-  }
-
-  function getFocusable(root){
-    return Array.prototype.slice.call(root.querySelectorAll(FOCUSABLE_SEL)).filter(function(n){
-      return n.offsetWidth>0&&n.offsetHeight>0&&getComputedStyle(n).visibility!=='hidden';
-    });
-  }
-
-  function clearTrap(){
-    if(trapHandler){
-      document.removeEventListener('keydown',trapHandler);
-      trapHandler=null;
-    }
+    body.classList.toggle('is-scroll-locked',menuOpen);
   }
 
   function setMobileMenu(open){
@@ -596,82 +369,15 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
     }
   }
 
-  function openArticle(id){
-    var el=document.getElementById(id);
-    if(!el||activeDialogId)return;
-    if(menuOpen)setMobileMenu(false);
-    clearTrap();
-    lastFocusEl=document.activeElement;
-    activeDialogId=id;
-    el.classList.add('open');
-    el.setAttribute('aria-hidden','false');
-    syncScrollLock();
-    requestAnimationFrame(function(){
-      if(activeDialogId!==id||!el.classList.contains('open'))return;
-      var closeBtn=el.querySelector('.article-close');
-      if(closeBtn)closeBtn.focus();
-      trapHandler=function(e){
-        if(e.key!=='Tab'||!activeDialogId)return;
-        var dlg=document.getElementById(activeDialogId);
-        if(!dlg||!dlg.classList.contains('open'))return;
-        var nodes=getFocusable(dlg);
-        if(nodes.length<2)return;
-        var first=nodes[0];
-        var last=nodes[nodes.length-1];
-        if(e.shiftKey&&document.activeElement===first){
-          e.preventDefault();
-          last.focus();
-        }else if(!e.shiftKey&&document.activeElement===last){
-          e.preventDefault();
-          first.focus();
-        }
-      };
-      document.addEventListener('keydown',trapHandler);
-    });
-  }
-
-  function closeArticle(id){
-    var el=document.getElementById(id);
-    if(!el)return;
-    el.classList.remove('open');
-    el.setAttribute('aria-hidden','true');
-    if(activeDialogId===id){
-      activeDialogId=null;
-      clearTrap();
-      syncScrollLock();
-      if(lastFocusEl&&typeof lastFocusEl.focus==='function'){
-        lastFocusEl.focus();
-      }
-      lastFocusEl=null;
-    }
-  }
-
   function onDocKeydown(e){
     if(e.key!=='Escape')return;
-    if(activeDialogId){
-      e.preventDefault();
-      closeArticle(activeDialogId);
-    }else if(menuOpen){
+    if(menuOpen){
       e.preventDefault();
       setMobileMenu(false);
     }
   }
 
   document.addEventListener('keydown',onDocKeydown);
-
-  document.querySelectorAll('.blog-card[data-article]').forEach(function(card){
-    card.addEventListener('click',function(){openArticle(card.getAttribute('data-article'));});
-  });
-
-  document.querySelectorAll('.article-close[data-close]').forEach(function(btn){
-    btn.addEventListener('click',function(){closeArticle(btn.getAttribute('data-close'));});
-  });
-
-  document.querySelectorAll('.article-overlay').forEach(function(overlay){
-    overlay.addEventListener('click',function(e){
-      if(e.target===overlay)closeArticle(overlay.id);
-    });
-  });
 
   if(hb&&mm){
     hb.addEventListener('click',function(){

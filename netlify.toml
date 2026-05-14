@@ -112,3 +112,35 @@
   from = "/inner-circle/"
   to = "/pages/inner-circle.html"
   status = 200
+[[redirects]]
+  from = "/blog/naples-house-cleaning-when-to-hire-a-pro"
+  to = "/pages/blog/naples-house-cleaning-when-to-hire-a-pro.html"
+  status = 200
+[[redirects]]
+  from = "/blog/naples-house-cleaning-when-to-hire-a-pro/"
+  to = "/pages/blog/naples-house-cleaning-when-to-hire-a-pro.html"
+  status = 200
+[[redirects]]
+  from = "/blog/naples-post-construction-cleaning-before-move-in"
+  to = "/pages/blog/naples-post-construction-cleaning-before-move-in.html"
+  status = 200
+[[redirects]]
+  from = "/blog/naples-post-construction-cleaning-before-move-in/"
+  to = "/pages/blog/naples-post-construction-cleaning-before-move-in.html"
+  status = 200
+[[redirects]]
+  from = "/blog/naples-office-cleaning-medical-law-firms"
+  to = "/pages/blog/naples-office-cleaning-medical-law-firms.html"
+  status = 200
+[[redirects]]
+  from = "/blog/naples-office-cleaning-medical-law-firms/"
+  to = "/pages/blog/naples-office-cleaning-medical-law-firms.html"
+  status = 200
+[[redirects]]
+  from = "/blog/naples-commercial-cleaning-high-traffic-venues"
+  to = "/pages/blog/naples-commercial-cleaning-high-traffic-venues.html"
+  status = 200
+[[redirects]]
+  from = "/blog/naples-commercial-cleaning-high-traffic-venues/"
+  to = "/pages/blog/naples-commercial-cleaning-high-traffic-venues.html"
+  status = 200
