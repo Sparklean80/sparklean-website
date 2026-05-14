@@ -1,59 +1,49 @@
 /**
- * Blog index (pages/blog.html) — mobile-only responsive refinement.
- * Load after sparklean-luxury-flow.css so padding/hero rules can layer cleanly.
- * Desktop (641px+): intentionally untouched.
+ * Blog index (pages/blog.html) — mobile-only layout stabilization (≤640px).
+ * Goal: normal document flow only — no display:contents, no decorative layers.
+ * Load after sparklean-luxury-flow.css. Desktop (641px+): untouched.
  */
 
 @media (max-width: 640px) {
   .blog-hero {
     position: relative;
-    /* Avoid clipping the first row of in-flow chips (reads as “floating” / cropped pills) */
     overflow-x: hidden;
     overflow-y: visible;
     padding-top: calc(var(--nav-h) + clamp(36px, 10vw, 52px));
     padding-bottom: clamp(36px, 10vw, 52px);
   }
 
-  /* Remove decorative watermark on small screens — eliminates layered “ghost” UI behind copy */
+  /* No decorative watermark layer on mobile (inline ::before is position:absolute). */
   .blog-hero::before {
     content: none !important;
   }
 
   .blog-hero-inner {
     position: relative;
-    z-index: 1;
+    max-width: min(36rem, 100%);
   }
 
   .blog-hero-inner > .eyebrow {
-    position: relative;
-    z-index: 1;
-    margin-bottom: clamp(14px, 4.2vw, 20px);
-    row-gap: 8px;
-    column-gap: 12px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .blog-hero-inner > .eyebrow span {
-    line-height: 1.4;
-    letter-spacing: 0.22em;
+    margin-bottom: clamp(14px, 4vw, 18px);
   }
 
   .blog-hero h1 {
-    position: relative;
-    z-index: 1;
     font-size: clamp(1.52rem, 5.6vw, 1.86rem);
     line-height: 1.14;
     margin-bottom: clamp(14px, 4vw, 20px);
   }
 
+  /*
+   * Document flow stack (matches DOM order in blog.html):
+   * 1) lede
+   * 2) nav.blog-hero-topics (labels + two real pill-row boxes)
+   * 3) p.blog-hero-cta-line (Contact · Home) — MUST follow topics; no overlap
+   */
   .blog-hero-copy {
-    position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: clamp(16px, 4vw, 22px);
+    gap: clamp(18px, 4.5vw, 24px);
     width: 100%;
     max-width: 100%;
   }
@@ -65,51 +55,41 @@
     max-width: none;
   }
 
-  /* One intentional grid: section labels span full width; all chips share the same flow (no “floating” rows). */
   .blog-hero-topics {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px 12px;
-    align-items: stretch;
+    display: block;
     width: 100%;
     max-width: 100%;
-    position: relative;
-    z-index: 1;
+    margin: 0;
   }
 
   .blog-hero-topics-h {
-    grid-column: 1 / -1;
-    margin: 0 0 8px;
-    padding: 0;
+    margin: clamp(12px, 3vw, 16px) 0 10px;
     line-height: 1.45;
-    letter-spacing: 0.18em;
   }
 
   .blog-hero-topics-h:first-child {
     margin-top: 0;
   }
 
-  .blog-hero-topics-h:not(:first-child) {
-    margin-top: 10px;
+  /* Real wrapping rows — each .blog-hero-pill-row stays in the box tree (no display:contents). */
+  .blog-hero-pill-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+    margin: 0 0 clamp(4px, 1.5vw, 8px);
   }
 
-  .blog-hero-pill-row {
-    display: contents;
+  .blog-hero-pill-row:last-of-type {
+    margin-bottom: 0;
   }
 
   .blog-hero-chip {
-    position: static !important;
-    top: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    left: auto !important;
-    float: none !important;
-    transform: none !important;
+    position: static;
     display: flex;
-    width: auto;
+    width: 100%;
     min-width: 0;
-    max-width: none;
-    justify-self: stretch;
+    box-sizing: border-box;
     justify-content: center;
     text-align: center;
     padding: 11px 12px;
@@ -118,15 +98,13 @@
     letter-spacing: 0.1em;
     line-height: 1.28;
     white-space: normal;
-    box-sizing: border-box;
-    /* Editorial “tag” blocks — not floating circles */
-    border-radius: 6px;
   }
 
+  /* Divider belongs ONLY above Contact · Home, after all pills, with clear space */
   .blog-hero-cta-line {
-    margin-top: 0;
-    padding-top: clamp(12px, 3.2vw, 18px);
-    border-top: 1px solid rgba(201, 168, 76, 0.09);
+    margin: 0;
+    padding-top: clamp(14px, 3.5vw, 20px);
+    border-top: 1px solid rgba(201, 168, 76, 0.1);
   }
 
   .blog-section {
@@ -170,7 +148,7 @@
 }
 
 @media (max-width: 360px) {
-  .blog-hero-topics {
+  .blog-hero-pill-row {
     grid-template-columns: 1fr;
   }
 }
