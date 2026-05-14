@@ -108,6 +108,11 @@ const FIELD_LABELS = {
   notesMedical: "Clinical notes",
   notesRetail: "Retail notes",
   notesHoa: "Community notes",
+  innerCadence: "Preferred cadence",
+  innerHomeProfile: "Residence type",
+  innerSeasonalPattern: "Occupancy pattern",
+  innerSparkleanHistory: "Sparklean history",
+  notesInnerCircle: "Household notes",
 };
 
 function newLeadId() {
@@ -152,6 +157,7 @@ function displayLocation(locRaw) {
 function buildPriorityTags(answers) {
   const tags = [];
   const cat = answers.serviceCategory;
+  if (cat === "innerCircle") tags.push("INNER CIRCLE");
   if (cat === "luxuryEstate") tags.push("HIGH VALUE");
   if (
     cat === "commercialOffice" ||
@@ -167,6 +173,9 @@ function buildPriorityTags(answers) {
   if (cat === "retailHospitality") tags.push("RETAIL");
   if (cat === "postConstruction") tags.push("POST-CONSTRUCTION");
   if (answers.frequency === "weekly" || answers.frequency === "biweekly" || answers.frequencyEstate === "weekly" || answers.frequencyEstate === "biweekly") {
+    tags.push("RECURRING");
+  }
+  if (cat === "innerCircle" && (answers.innerCadence === "weekly" || answers.innerCadence === "biweekly")) {
     tags.push("RECURRING");
   }
   if (answers.deepClean === "yes") tags.push("DEEP CLEAN");
@@ -191,7 +200,9 @@ function buildEmailSubject({ serviceLabel, answers }) {
   const loc = displayLocation(answers.location);
   const parts = [`New ${serviceLabel} Lead`, loc];
   const cat = answers.serviceCategory;
-  if (cat === "residential" || cat === "condoHighRise" || cat === "luxuryEstate") {
+  if (cat === "innerCircle") {
+    parts.push("Membership inquiry");
+  } else if (cat === "residential" || cat === "condoHighRise" || cat === "luxuryEstate") {
     const bb = bedBathSubjectPart(answers);
     if (bb) parts.push(bb);
   } else if (cat === "commercialOffice" || cat === "medicalOffice") {
@@ -224,6 +235,16 @@ function humanFrequency(v) {
 function buildHumanFallbackSummary(answers, serviceLabel) {
   const loc = displayLocation(answers.location);
   const cat = answers.serviceCategory;
+
+  if (cat === "innerCircle") {
+    let s = `This contact requested Inner Circle membership consideration in ${loc}.`;
+    if (answers.innerCadence) s += ` They indicated interest in ${answers.innerCadence} cadence.`;
+    if (answers.innerHomeProfile) s += ` Home profile: ${answers.innerHomeProfile}.`;
+    if (answers.innerSeasonalPattern) s += ` Occupancy pattern: ${answers.innerSeasonalPattern}.`;
+    if (answers.innerSparkleanHistory) s += ` Prior Sparklean relationship: ${answers.innerSparkleanHistory}.`;
+    if (answers.notesInnerCircle) s += ` Notes: ${answers.notesInnerCircle}`;
+    return s.trim();
+  }
 
   if (cat === "residential") {
     const freq = humanFrequency(answers.frequency);
@@ -376,6 +397,9 @@ const PROPERTY_DETAIL_KEYS = new Set([
   "punchListStatus",
   "cleanPhase",
   "addonFocus",
+  "innerHomeProfile",
+  "innerSeasonalPattern",
+  "innerSparkleanHistory",
 ]);
 
 const SERVICE_DETAIL_KEYS = new Set([
@@ -391,6 +415,7 @@ const SERVICE_DETAIL_KEYS = new Set([
   "consumables",
   "disinfectCadence",
   "pairedService",
+  "innerCadence",
 ]);
 
 const SCHEDULING_DETAIL_KEYS = new Set(["timelinePc", "moveDate", "afterHoursAccess", "builderOrOwner"]);
@@ -823,6 +848,8 @@ export default async (request) => {
   const deviceType = typeof body.deviceType === "string" ? body.deviceType.slice(0, 80) : "";
   const userAgent = typeof body.userAgent === "string" ? body.userAgent.slice(0, 500) : "";
   const campaign = body.campaign && typeof body.campaign === "object" && !Array.isArray(body.campaign) ? body.campaign : null;
+  const intakePreset =
+    typeof body.intakePreset === "string" && body.intakePreset.trim() ? body.intakePreset.trim().slice(0, 80) : null;
 
   const intakeEntryUrl =
     typeof body.intakeEntryUrl === "string" && body.intakeEntryUrl.trim()
@@ -863,6 +890,7 @@ export default async (request) => {
       deviceType,
       userAgent,
       intakeSourceUrl: sourceUrl,
+      intakePreset,
     },
     reporting: {
       _future:

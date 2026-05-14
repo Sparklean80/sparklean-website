@@ -11,6 +11,20 @@
   var answers = {};
   var sourceUrl = "";
   var submitting = false;
+  /** When set (e.g. "innerCircle"), skips generic "which service" branching and uses a dedicated flow. */
+  var intakePreset = null;
+  var INTAKE_CHROME_DEFAULT = {
+    eyebrow: "Service request",
+    title: "A few brief questions",
+    intro:
+      "One question at a time. Pricing is not reviewed here; a Sparklean team member will reach out to you directly.",
+  };
+  var INTAKE_CHROME_INNER_CIRCLE = {
+    eyebrow: "Inner Circle",
+    title: "Membership consideration",
+    intro:
+      "A brief private intake so our team can review fit, continuity, and availability—this is not the public quote calculator.",
+  };
   var INTAKE_FAILURE_MSG =
     "We're having trouble submitting your request right now. Please call Sparklean directly at (239) 888-3588.";
 
@@ -25,6 +39,7 @@
   function shouldInterceptAnchor(a) {
     if (!a || a.tagName !== "A") return false;
     if (a.hasAttribute("data-sparklean-intake")) return true;
+    if ((a.getAttribute("data-sparklean-intake-preset") || "").trim()) return true;
     if (a.hasAttribute("data-sparklean-intake-skip")) return false;
     if (a.classList.contains("sparklean-no-intake")) return false;
     var href = (a.getAttribute("href") || "").trim();
@@ -53,7 +68,8 @@
         var a = e.target.closest("a");
         if (!shouldInterceptAnchor(a)) return;
         e.preventDefault();
-        open({ sourceUrl: window.location.href });
+        var pr = (a.getAttribute("data-sparklean-intake-preset") || "").trim();
+        open({ sourceUrl: window.location.href, preset: pr || null });
       },
       true
     );
@@ -88,8 +104,11 @@
     var elErr = root.querySelector("[data-intake-error]");
     elErr.textContent = "";
     if (!q || stepIndex >= steps.length) {
-      elStep.innerHTML =
-        '<p class="sq-intake__done">Thank you. Your request has been received and a Sparklean team member will contact you shortly to discuss the best service approach for your property.</p>';
+      var doneText =
+        intakePreset === "innerCircle"
+          ? "Thank you. A member of our private-client team will contact you soon to discuss membership fit, cadence, and availability."
+          : "Thank you. Your request has been received and a Sparklean team member will contact you shortly to discuss the best service approach for your property.";
+      elStep.innerHTML = '<p class="sq-intake__done">' + esc(doneText) + "</p>";
       var doneBar = root.querySelector("[data-intake-progress-bar]");
       if (doneBar) doneBar.style.width = "100%";
       elProg.textContent = "Complete";
@@ -211,6 +230,13 @@
   function goBack() {
     if (stepIndex <= 0) return;
     stepIndex--;
+    if (intakePreset === "innerCircle") {
+      if (stepIndex < 4) {
+        steps = F.flows.universal.slice(0, 4).concat(F.flows.innerCircleMembership);
+      }
+      render();
+      return;
+    }
     if (stepIndex < F.flows.universal.length) {
       steps = F.flows.universal.slice();
     }
@@ -222,6 +248,8 @@
       root.setAttribute("hidden", "");
       root.classList.remove("is-open");
     }
+    intakePreset = null;
+    applyIntakeChrome(null);
     document.body.classList.remove("sq-intake-open");
     document.removeEventListener("keydown", onKey);
   }
@@ -253,6 +281,7 @@
       deviceType: deviceTypeGuess(),
       userAgent: (navigator.userAgent || "").slice(0, 400),
       submittedAt: new Date().toISOString(),
+      intakePreset: intakePreset || null,
       serviceLabel: F.categoryLabel(answers.serviceCategory || ""),
     };
     fetch("/.netlify/functions/quote-submit", {
@@ -285,6 +314,17 @@
         nextBtn.textContent = "Send request";
         submitting = false;
       });
+  }
+
+  function applyIntakeChrome(preset) {
+    if (!root) return;
+    var pack = preset === "innerCircle" ? INTAKE_CHROME_INNER_CIRCLE : INTAKE_CHROME_DEFAULT;
+    var ey = root.querySelector(".sq-intake__eyebrow");
+    var ti = root.querySelector("#sq-intake-title");
+    var intro = root.querySelector(".sq-intake__intro");
+    if (ey) ey.textContent = pack.eyebrow;
+    if (ti) ti.textContent = pack.title;
+    if (intro) intro.textContent = pack.intro;
   }
 
   function buildShell() {
@@ -350,6 +390,8 @@
   function open(opts) {
     if (!ensureFlows()) return;
     sourceUrl = (opts && opts.sourceUrl) || window.location.href;
+    var preset = (opts && opts.preset && String(opts.preset).trim()) || "";
+    intakePreset = preset === "innerCircle" ? "innerCircle" : null;
     try {
       if (!sessionStorage.getItem("sparklean_intake_entry")) {
         sessionStorage.setItem("sparklean_intake_entry", sourceUrl || window.location.href);
@@ -358,9 +400,15 @@
       /* ignore private mode */
     }
     if (!root) buildShell();
-    answers = {};
+    applyIntakeChrome(intakePreset);
+    if (intakePreset === "innerCircle") {
+      answers = { serviceCategory: "innerCircle" };
+      steps = F.flows.universal.slice(0, 4).concat(F.flows.innerCircleMembership);
+    } else {
+      answers = {};
+      steps = F.flows.universal.slice();
+    }
     stepIndex = 0;
-    steps = F.flows.universal.slice();
     submitting = false;
     root.querySelector("[data-intake-next]").disabled = false;
     root.removeAttribute("hidden");

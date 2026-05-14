@@ -323,6 +323,48 @@
     { id: "notesAddons", type: "textarea", label: "Scope notes", assist: "Optional.", required: false, maxLength: 1200, placeholder: "Optional" },
   ];
 
+  /** Private recurring membership — not the standard service quote branch */
+  flows.innerCircleMembership = [
+    {
+      id: "innerCadence",
+      type: "select",
+      label: "Preferred recurring cadence",
+      assist: "Approximate is fine; your team will confirm routing and capacity.",
+      required: true,
+      options: opts("weekly", "Weekly", "biweekly", "Every two weeks", "monthly", "Monthly", "custom", "Custom / to discuss", "unsure", "Not sure yet"),
+    },
+    {
+      id: "innerHomeProfile",
+      type: "select",
+      label: "How would you describe the residence?",
+      required: true,
+      options: opts("singleFamily", "Single-family home", "condo", "Condo / high-rise", "estate", "Estate or large single-family", "other", "Other / prefer to discuss"),
+    },
+    {
+      id: "innerSeasonalPattern",
+      type: "select",
+      label: "How is the home typically occupied?",
+      required: true,
+      options: opts("yearRound", "Year-round primary", "seasonal", "Seasonal (SW Florida)", "mixed", "Mixed / guests & travel", "preferDiscuss", "Prefer to discuss"),
+    },
+    {
+      id: "innerSparkleanHistory",
+      type: "select",
+      label: "Have you worked with Sparklean before?",
+      required: true,
+      options: opts("notYet", "Not yet", "current", "Current recurring or occasional client", "past", "In the past", "preferNot", "Prefer not to say"),
+    },
+    {
+      id: "notesInnerCircle",
+      type: "textarea",
+      label: "Anything we should understand about your household?",
+      assist: "Access, sensitivities, priorities, timing windows — optional.",
+      required: false,
+      maxLength: 1200,
+      placeholder: "Optional",
+    },
+  ];
+
   /** Build ordered steps: universal + branch */
   function buildSteps(serviceKey) {
     var u = flows.universal.slice();
@@ -346,6 +388,7 @@
       postConstruction: "Post-construction",
       windowCleaning: "Window cleaning",
       specializedAddons: "Specialized add-ons",
+      innerCircle: "Inner Circle membership",
     };
     return map[key] || key;
   }
