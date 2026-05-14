@@ -11,6 +11,8 @@
   var answers = {};
   var sourceUrl = "";
   var submitting = false;
+  var INTAKE_FAILURE_MSG =
+    "We're having trouble submitting your request right now. Please call Sparklean directly at (239) 888-3588.";
 
   function esc(s) {
     return String(s == null ? "" : s)
@@ -88,14 +90,19 @@
     if (!q || stepIndex >= steps.length) {
       elStep.innerHTML =
         '<p class="sq-intake__done">Thank you. Your request has been received and a Sparklean team member will contact you shortly to discuss the best service approach for your property.</p>';
-      elProg.textContent = "";
+      var doneBar = root.querySelector("[data-intake-progress-bar]");
+      if (doneBar) doneBar.style.width = "100%";
+      elProg.textContent = "Complete";
       root.querySelector("[data-intake-back]").style.display = "none";
       root.querySelector("[data-intake-next]").textContent = "Close";
       root.querySelector("[data-intake-next]").setAttribute("data-intake-done", "1");
       return;
     }
     var n = steps.length;
-    elProg.textContent = stepIndex + 1 + " — " + n;
+    var pct = n ? Math.round(((stepIndex + 1) / n) * 100) : 0;
+    var bar = root.querySelector("[data-intake-progress-bar]");
+    if (bar) bar.style.width = pct + "%";
+    elProg.textContent = "Step " + (stepIndex + 1) + " of " + n;
     var html = "";
     html += '<h2 class="sq-intake__q" id="sq-intake-qh">' + esc(q.label) + "</h2>";
     if (q.assist) html += '<p class="sq-intake__assist">' + esc(q.assist) + "</p>";
@@ -229,9 +236,22 @@
     var nextBtn = root.querySelector("[data-intake-next]");
     nextBtn.disabled = true;
     nextBtn.textContent = "Sending…";
+    var intakeEntry = "";
+    try {
+      intakeEntry = sessionStorage.getItem("sparklean_intake_entry") || "";
+    } catch (e0) {
+      intakeEntry = "";
+    }
     var payload = {
       answers: answers,
       sourceUrl: sourceUrl || window.location.href,
+      landingPage: sourceUrl || window.location.href,
+      intakeEntryUrl: intakeEntry || sourceUrl || window.location.href,
+      submitPageUrl: window.location.href,
+      referrer: document.referrer || "",
+      campaign: campaignFromLocation(),
+      deviceType: deviceTypeGuess(),
+      userAgent: (navigator.userAgent || "").slice(0, 400),
       submittedAt: new Date().toISOString(),
       serviceLabel: F.categoryLabel(answers.serviceCategory || ""),
     };
@@ -246,25 +266,21 @@
           try {
             j = t ? JSON.parse(t) : {};
           } catch (e) {
-            j = { error: t || "Invalid response" };
+            j = {};
           }
           return { ok: r.ok, status: r.status, j: j };
         });
       })
       .then(function (res) {
         if (!res.ok) {
-          var pub =
-            "Unable to send request at the moment. Please call Sparklean directly at (239) 888-3588.";
-          throw new Error((res.j && res.j.error) || pub);
+          throw new Error("INTAKE_FAIL");
         }
         stepIndex = steps.length;
         submitting = false;
         render();
       })
-      .catch(function (err) {
-        root.querySelector("[data-intake-error]").textContent =
-          err.message ||
-          "Unable to send request at the moment. Please call Sparklean directly at (239) 888-3588.";
+      .catch(function () {
+        root.querySelector("[data-intake-error]").textContent = INTAKE_FAILURE_MSG;
         nextBtn.disabled = false;
         nextBtn.textContent = "Send request";
         submitting = false;
@@ -284,13 +300,16 @@
       '<h1 id="sq-intake-title" class="sq-intake__title">A few brief questions</h1></div>' +
       '<button type="button" class="sq-intake__x" data-intake-close aria-label="Close">×</button></div>' +
       '<p class="sq-intake__intro">One question at a time. Pricing is not reviewed here; a Sparklean team member will reach out to you directly.</p>' +
+      '<div class="sq-intake__progress-track" aria-hidden="true"><span class="sq-intake__progress-fill" data-intake-progress-bar></span></div>' +
       '<p class="sq-intake__progress" data-intake-progress></p>' +
       '<div class="sq-intake__body" data-intake-step></div>' +
       '<p class="sq-intake__err" data-intake-error role="alert"></p>' +
+      '<div class="sq-intake__foot">' +
+      '<a class="sq-intake__callstrip" href="tel:+12398883588">Call Sparklean · (239) 888-3588</a>' +
       '<div class="sq-intake__actions">' +
       '<button type="button" class="sq-intake__btn sq-intake__btn--ghost" data-intake-back>Back</button>' +
       '<button type="button" class="sq-intake__btn sq-intake__btn--primary" data-intake-next>Continue</button>' +
-      "</div></div>";
+      "</div></div></div>";
     document.body.appendChild(root);
     root.querySelectorAll("[data-intake-close]").forEach(function (el) {
       el.addEventListener("click", close);
@@ -306,9 +325,38 @@
     });
   }
 
+  function campaignFromLocation() {
+    try {
+      var p = new URLSearchParams(window.location.search);
+      var o = {};
+      var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+      for (var i = 0; i < keys.length; i++) {
+        var v = p.get(keys[i]);
+        if (v) o[keys[i]] = v.slice(0, 200);
+      }
+      return Object.keys(o).length ? o : null;
+    } catch (e1) {
+      return null;
+    }
+  }
+
+  function deviceTypeGuess() {
+    var ua = navigator.userAgent || "";
+    if (/iPad|Tablet/i.test(ua)) return "tablet";
+    if (/Mobi|Android.+Mobile/i.test(ua)) return "mobile";
+    return "desktop";
+  }
+
   function open(opts) {
     if (!ensureFlows()) return;
     sourceUrl = (opts && opts.sourceUrl) || window.location.href;
+    try {
+      if (!sessionStorage.getItem("sparklean_intake_entry")) {
+        sessionStorage.setItem("sparklean_intake_entry", sourceUrl || window.location.href);
+      }
+    } catch (e2) {
+      /* ignore private mode */
+    }
     if (!root) buildShell();
     answers = {};
     stepIndex = 0;

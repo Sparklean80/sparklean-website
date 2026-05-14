@@ -40,7 +40,6 @@ const ZIP_CITY = {
   33928: "Estero",
   33929: "Estero",
   34135: "Bonita Springs",
-  34134: "Naples",
   33904: "Cape Coral",
   33909: "Cape Coral",
   33914: "Cape Coral",
@@ -96,6 +95,19 @@ const FIELD_LABELS = {
   amenityTypes: "Amenities",
   gateAccessModel: "Gate / access model",
   hoaMeetingCadence: "Board / walk cadence",
+  notesResidential: "Residential notes",
+  notesCondo: "Building / access notes",
+  notesEstate: "Estate priorities",
+  notesMove: "Move notes",
+  notesAirbnb: "Listing notes",
+  notesCommercial: "Operational notes",
+  notesFacility: "Facility notes",
+  notesPc: "Site notes",
+  notesWindows: "Window / access notes",
+  notesAddons: "Add-on scope",
+  notesMedical: "Clinical notes",
+  notesRetail: "Retail notes",
+  notesHoa: "Community notes",
 };
 
 function newLeadId() {
@@ -141,10 +153,18 @@ function buildPriorityTags(answers) {
   const tags = [];
   const cat = answers.serviceCategory;
   if (cat === "luxuryEstate") tags.push("HIGH VALUE");
-  if (cat === "commercialOffice" || cat === "facilityJanitorial" || cat === "medicalOffice" || cat === "retailHospitality") {
+  if (
+    cat === "commercialOffice" ||
+    cat === "facilityJanitorial" ||
+    cat === "medicalOffice" ||
+    cat === "retailHospitality" ||
+    cat === "hoaCommunity"
+  ) {
     tags.push("COMMERCIAL");
   }
   if (cat === "medicalOffice") tags.push("MEDICAL");
+  if (cat === "hoaCommunity") tags.push("HOA / COMMUNITY");
+  if (cat === "retailHospitality") tags.push("RETAIL");
   if (cat === "postConstruction") tags.push("POST-CONSTRUCTION");
   if (answers.frequency === "weekly" || answers.frequency === "biweekly" || answers.frequencyEstate === "weekly" || answers.frequencyEstate === "biweekly") {
     tags.push("RECURRING");
@@ -178,6 +198,10 @@ function buildEmailSubject({ serviceLabel, answers }) {
     parts.push("Office");
   } else if (cat === "facilityJanitorial") {
     parts.push("Facility");
+  } else if (cat === "retailHospitality") {
+    parts.push("Retail");
+  } else if (cat === "hoaCommunity") {
+    parts.push("HOA / community");
   } else if (cat === "postConstruction") {
     parts.push("Post-construction");
   } else if (cat === "windowCleaning") {
@@ -200,7 +224,6 @@ function humanFrequency(v) {
 function buildHumanFallbackSummary(answers, serviceLabel) {
   const loc = displayLocation(answers.location);
   const cat = answers.serviceCategory;
-  const name = answers.fullName || "This contact";
 
   if (cat === "residential") {
     const freq = humanFrequency(answers.frequency);
@@ -212,7 +235,7 @@ function buildHumanFallbackSummary(answers, serviceLabel) {
         : answers.occupied === "vacant"
           ? "a vacant home"
           : "a home";
-    let s = `${name} is exploring ${freq || "residential cleaning"} for ${occ} in ${loc}.`;
+    let s = `This client is exploring ${freq || "residential cleaning"} for ${occ} in ${loc}.`;
     if (bed || bath) s += ` They noted approximately ${bed || "—"} bedroom(s) and ${bath || "—"} bathroom(s).`;
     if (answers.deepClean === "unsure" || answers.deepClean === "Not sure yet") {
       s += " They were unsure about starting with a deep clean—worth a quick conversation on expectations.";
@@ -223,25 +246,71 @@ function buildHumanFallbackSummary(answers, serviceLabel) {
     return s.trim();
   }
 
+  if (cat === "condoHighRise") {
+    let s = `This client is coordinating condo or high-rise service in ${loc}.`;
+    if (answers.floorNumber) s += ` Floor context: ${answers.floorNumber}.`;
+    if (answers.elevator) s += ` Elevator access for equipment: ${answers.elevator}.`;
+    if (answers.hoaRules && answers.hoaRules !== "none") s += " There may be HOA or building rules to align on.";
+    if (answers.notesCondo) s += ` ${answers.notesCondo}`;
+    return s.trim();
+  }
+
+  if (cat === "luxuryEstate") {
+    const freq = humanFrequency(answers.frequencyEstate);
+    let s = `This client is shaping a ${freq || "custom estate"} program in ${loc}.`;
+    if (answers.estateSqft) s += ` Approximate footprint band: ${answers.estateSqft}.`;
+    if (answers.security && answers.security !== "none") s += " Expect gate, alarm, or vendor coordination details.";
+    if (answers.notesEstate) s += ` ${answers.notesEstate}`;
+    return s.trim();
+  }
+
   if (cat === "commercialOffice" || cat === "medicalOffice") {
-    let s = `${name} submitted a ${serviceLabel.toLowerCase()} inquiry for ${loc}.`;
+    let s = `This client submitted a ${serviceLabel.toLowerCase()} inquiry for ${loc}.`;
     if (answers.officeSize) s += ` Footprint context: ${answers.officeSize}.`;
     if (answers.daysPerWeek) s += ` Service rhythm: ${answers.daysPerWeek} day(s) per week.`;
-    if (cat === "medicalOffice" && answers.examRooms) s += ` Clinical layout notes include exam/treatment room count.`;
+    if (cat === "medicalOffice" && answers.examRooms) s += ` They flagged exam or treatment room count for clinical routing.`;
+    if (answers.afterHoursAccess) s += ` After-hours access: ${answers.afterHoursAccess}.`;
+    if (answers.disinfectCadence && cat === "medicalOffice") s += ` Disinfection cadence preference: ${answers.disinfectCadence}.`;
     if (answers.notesCommercial || answers.notesMedical) s += ` Notes: ${answers.notesCommercial || answers.notesMedical}`;
     return s.trim();
   }
 
+  if (cat === "facilityJanitorial") {
+    let s = `This client outlined janitorial scope for a ${answers.facilityType || "facility"} footprint in ${loc}.`;
+    if (answers.facilitySqft) s += ` Size context: ${answers.facilitySqft}.`;
+    if (answers.trafficLevel) s += ` Traffic profile: ${answers.trafficLevel}.`;
+    if (answers.notesFacility) s += ` ${answers.notesFacility}`;
+    return s.trim();
+  }
+
+  if (cat === "retailHospitality") {
+    let s = `This client is evaluating guest-facing or retail floor support in ${loc}.`;
+    if (answers.retailSqft) s += ` Public floor scale: ${answers.retailSqft}.`;
+    if (answers.peakTraffic) s += ` Peak traffic: ${answers.peakTraffic}.`;
+    if (answers.notesRetail) s += ` ${answers.notesRetail}`;
+    return s.trim();
+  }
+
+  if (cat === "hoaCommunity") {
+    let s = `This client is coordinating HOA or community common-area care in ${loc}.`;
+    if (answers.hoaCommonSqft) s += ` Common-area scale: ${answers.hoaCommonSqft}.`;
+    if (answers.gateAccessModel) s += ` Access model: ${answers.gateAccessModel}.`;
+    if (answers.notesHoa) s += ` ${answers.notesHoa}`;
+    return s.trim();
+  }
+
   if (cat === "postConstruction") {
-    let s = `${name} is coordinating ${serviceLabel.toLowerCase()} work in ${loc}.`;
-    if (answers.cleanPhase) s += ` Phase: ${answers.cleanPhase}.`;
-    if (answers.dustLevel) s += ` Site condition: ${answers.dustLevel} residual dust/debris.`;
+    let s = `This client is coordinating ${serviceLabel.toLowerCase()} work in ${loc}.`;
+    if (answers.cleanPhase) s += ` Clean phase: ${answers.cleanPhase}.`;
+    if (answers.constructionPhase) s += ` Build stage: ${answers.constructionPhase}.`;
+    if (answers.punchListStatus) s += ` Punch-list status: ${answers.punchListStatus}.`;
+    if (answers.dustLevel) s += ` Site condition: ${answers.dustLevel} residual dust or debris.`;
     if (answers.timelinePc) s += ` Timing: ${answers.timelinePc}.`;
     if (answers.notesPc) s += ` ${answers.notesPc}`;
     return s.trim();
   }
 
-  return `${name} completed the guided intake for ${serviceLabel} (${loc}). Review the structured fields below and follow up promptly while intent is fresh.`;
+  return `This client completed the Sparklean intake for ${serviceLabel} in ${loc}. Follow up soon while expectations and timing are still fresh.`;
 }
 
 function labelForKey(k) {
@@ -257,6 +326,102 @@ function groupDetailRows(answers) {
   }
   rows.sort((a, b) => a.label.localeCompare(b.label));
   return rows;
+}
+
+const PROPERTY_DETAIL_KEYS = new Set([
+  "serviceCategory",
+  "bedrooms",
+  "bathrooms",
+  "sqftBand",
+  "pets",
+  "occupied",
+  "floorNumber",
+  "elevator",
+  "hoaRules",
+  "balconyGlass",
+  "condoOccupied",
+  "estateSqft",
+  "staffOnSite",
+  "security",
+  "officeSize",
+  "employees",
+  "facilityType",
+  "facilitySqft",
+  "floors",
+  "trafficLevel",
+  "multiSuite",
+  "pcSqft",
+  "medicalSqft",
+  "retailSqft",
+  "hoaCommonSqft",
+  "amenityTypes",
+  "gateAccessModel",
+  "hoaMeetingCadence",
+  "examRooms",
+  "moveType",
+  "emptyHome",
+  "intExt",
+  "waterfront",
+  "stories",
+  "ladderAccess",
+  "glassAmount",
+  "screensTracks",
+  "turnsPerMonth",
+  "linensLaundry",
+  "restock",
+  "activeConstruction",
+  "dustLevel",
+  "stickersPaint",
+  "constructionPhase",
+  "punchListStatus",
+  "cleanPhase",
+  "addonFocus",
+]);
+
+const SERVICE_DETAIL_KEYS = new Set([
+  "frequency",
+  "frequencyEstate",
+  "deepClean",
+  "daysPerWeek",
+  "dayNight",
+  "restrooms",
+  "trashService",
+  "currentProvider",
+  "dayPorter",
+  "consumables",
+  "disinfectCadence",
+  "pairedService",
+]);
+
+const SCHEDULING_DETAIL_KEYS = new Set(["timelinePc", "moveDate", "afterHoursAccess", "builderOrOwner"]);
+
+function isNotesKey(k) {
+  return /^notes/i.test(k);
+}
+
+function partitionIntakeRows(detailRows) {
+  const property = [];
+  const services = [];
+  const scheduling = [];
+  const notes = [];
+  for (const r of detailRows) {
+    if (isNotesKey(r.key)) notes.push(r);
+    else if (SCHEDULING_DETAIL_KEYS.has(r.key)) scheduling.push(r);
+    else if (SERVICE_DETAIL_KEYS.has(r.key)) services.push(r);
+    else if (PROPERTY_DETAIL_KEYS.has(r.key)) property.push(r);
+    else property.push(r);
+  }
+  return { property, services, scheduling, notes };
+}
+
+function emailIntakeSection(title, rows) {
+  if (!rows.length) return "";
+  const inner = buildDetailTableRows(rows);
+  return (
+    `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">` +
+    `<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(184,164,122,.25);">${escapeHtml(title)}</td></tr>` +
+    `<tr><td style="padding:0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:rgba(0,0,0,.25);border-radius:4px;">${inner}</table></td></tr></table>`
+  );
 }
 
 function buildDetailTableRows(rows) {
@@ -283,15 +448,15 @@ function buildLuxuryHtmlEmail({
   const displayPhone = answers.phone || "(239) 888-3588";
   const replyHref = `mailto:${encodeURIComponent(answers.email)}?subject=${encodeURIComponent("Re: Sparklean inquiry")}`;
   const tagsHtml = priorityTags.length
-    ? `<tr><td style="padding:0 0 20px 0;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>${priorityTags
-        .map(
-          (t) =>
-            `<td style="padding:4px 10px;margin-right:6px;border:1px solid #b8a47a;color:#d4bf96;font-size:10px;letter-spacing:.14em;text-transform:uppercase;border-radius:2px;">${escapeHtml(t)}</td>`
-        )
-        .join('<td width="8"></td>')}</tr></table></td></tr>`
+    ? `<tr><td style="padding:0 0 20px 0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#d4bf96;">${priorityTags.map((t) => escapeHtml(t)).join(" · ")}</td></tr>`
     : "";
 
-  const detailHtml = buildDetailTableRows(detailRows);
+  const { property, services, scheduling, notes } = partitionIntakeRows(detailRows);
+  const schedulingNotes = [...scheduling, ...notes];
+  const sectionsHtml =
+    emailIntakeSection("Property information", property) +
+    emailIntakeSection("Requested services", services) +
+    emailIntakeSection("Scheduling notes", schedulingNotes);
 
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lead</title></head>
@@ -307,7 +472,7 @@ function buildLuxuryHtmlEmail({
 </td></tr>
 <tr><td style="padding:20px 24px 8px 24px;">${tagsHtml}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">
-<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(184,164,122,.25);">Contact</td></tr>
+<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(184,164,122,.25);">Contact information</td></tr>
 <tr><td style="padding:14px 0 0 0;font-family:Arial,sans-serif;font-size:15px;line-height:1.7;color:#f9f7f3;">
 <strong style="color:#f9f7f3;">${escapeHtml(answers.fullName)}</strong><br>
 <span style="color:rgba(249,247,243,.75);">${escapeHtml(answers.email)}</span><br>
@@ -322,12 +487,9 @@ function buildLuxuryHtmlEmail({
 <a href="${replyHref}" style="display:block;padding:14px 20px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;letter-spacing:.14em;text-transform:uppercase;color:#d4bf96;text-decoration:none;">Reply to lead</a>
 </td></tr>
 </table>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
-<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(184,164,122,.25);">Intake details</td></tr>
-<tr><td style="padding:0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:rgba(0,0,0,.25);border-radius:4px;">${detailHtml}</table></td></tr>
-</table>
+${sectionsHtml}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(184,164,122,.25);">Internal brief</td></tr>
+<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(184,164,122,.25);">Internal AI summary</td></tr>
 <tr><td style="padding:14px 0 8px 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.65;color:rgba(249,247,243,.88);font-style:italic;">${escapeHtml(summary)}</td></tr>
 </table>
 <p style="margin:20px 0 0 0;font-family:Arial,sans-serif;font-size:11px;line-height:1.5;color:rgba(249,247,243,.35);">Structured JSON is attached for CRM import. Do not discuss pricing in email threads—coordinate by phone.</p>
@@ -337,6 +499,11 @@ function buildLuxuryHtmlEmail({
 </body></html>`;
 }
 
+function formatPlainSection(title, rows) {
+  if (!rows.length) return "";
+  return `${title}\n${rows.map((r) => `${r.label}: ${r.value}`).join("\n")}\n`;
+}
+
 function buildPlainTextLead({
   leadId,
   submittedAtEst,
@@ -344,29 +511,31 @@ function buildPlainTextLead({
   serviceLabel,
   answers,
   summary,
-  lines,
+  detailRows,
 }) {
+  const { property, services, scheduling, notes } = partitionIntakeRows(detailRows);
+  const schedulingNotes = [...scheduling, ...notes];
   return [
     `SPARKLEAN — ${serviceLabel.toUpperCase()}`,
     `Lead ID: ${leadId}`,
     `Received (EST): ${submittedAtEst}`,
     priorityTags.length ? `Tags: ${priorityTags.join(" · ")}` : "",
     "",
-    "CONTACT",
+    "CONTACT INFORMATION",
     `Name: ${answers.fullName}`,
     `Phone: ${answers.phone}`,
     `Email: ${answers.email}`,
     `Location: ${answers.location}`,
     "",
-    "DETAIL",
-    lines,
-    "",
-    "INTERNAL BRIEF",
+    formatPlainSection("PROPERTY INFORMATION", property),
+    formatPlainSection("REQUESTED SERVICES", services),
+    formatPlainSection("SCHEDULING NOTES", schedulingNotes),
+    "INTERNAL AI SUMMARY",
     summary,
     "",
     "JSON attachment: lead-intake.json",
   ]
-    .filter(Boolean)
+    .filter((line) => line !== "")
     .join("\n");
 }
 
@@ -424,13 +593,6 @@ function escapeHtml(s) {
     .replace(/'/g, "&#39;");
 }
 
-function formatAnswerLines(answers) {
-  if (!answers || typeof answers !== "object") return "";
-  return Object.entries(answers)
-    .map(([k, v]) => `${k}: ${typeof v === "string" ? v : JSON.stringify(v)}`)
-    .join("\n");
-}
-
 async function summarizeLead({ serviceLabel, answers, sourceUrl, submittedAt }) {
   const key = process.env.OPENAI_API_KEY;
   if (!key) return null;
@@ -441,15 +603,15 @@ async function summarizeLead({ serviceLabel, answers, sourceUrl, submittedAt }) 
   const payload = {
     model: "gpt-4o-mini",
     temperature: 0.2,
-    max_tokens: 120,
+    max_tokens: 200,
     response_format: { type: "json_object" },
     messages: [
       {
         role: "system",
         content: `You output ONLY valid JSON: {"summary":"..."}.
-The summary must be exactly 2 short sentences (under 320 characters total), calm and professional, like an internal hotel handoff note — no emojis, no exclamation marks, no sales language.
-Use ONLY facts implied by the provided fields. Do not invent services, policies, availability, or scope. Do not address the client directly ("you").
-NEVER mention prices, rates, estimates, costs, dollars, or "quotes" as numbers.`,
+The summary must be 2–3 short sentences (max ~420 characters), warm and operational—like a senior coordinator handing off to a partner. No emojis, no exclamation marks, no sales hype.
+Use ONLY facts from the provided fields. Do not invent services, policies, availability, or scope. Write in third person ("they" / "the contact") or neutral phrasing—never "you".
+NEVER mention prices, rates, estimates, costs, dollars, or numeric quotes.`,
       },
       {
         role: "user",
@@ -653,20 +815,59 @@ export default async (request) => {
 
   const submittedAt = typeof body.submittedAt === "string" ? body.submittedAt : new Date().toISOString();
   const sourceUrl = typeof body.sourceUrl === "string" ? body.sourceUrl.slice(0, 2000) : "";
+  const landingPage =
+    typeof body.landingPage === "string" && body.landingPage.trim()
+      ? body.landingPage.trim().slice(0, 2000)
+      : sourceUrl;
+  const referrer = typeof body.referrer === "string" ? body.referrer.slice(0, 2000) : "";
+  const deviceType = typeof body.deviceType === "string" ? body.deviceType.slice(0, 80) : "";
+  const userAgent = typeof body.userAgent === "string" ? body.userAgent.slice(0, 500) : "";
+  const campaign = body.campaign && typeof body.campaign === "object" && !Array.isArray(body.campaign) ? body.campaign : null;
+
+  const intakeEntryUrl =
+    typeof body.intakeEntryUrl === "string" && body.intakeEntryUrl.trim()
+      ? body.intakeEntryUrl.trim().slice(0, 2000)
+      : landingPage;
+  const submitPageUrl =
+    typeof body.submitPageUrl === "string" && body.submitPageUrl.trim()
+      ? body.submitPageUrl.trim().slice(0, 2000)
+      : "";
+
   const serviceLabel =
     typeof body.serviceLabel === "string" && body.serviceLabel.trim()
       ? body.serviceLabel.trim()
       : answers.serviceCategory;
 
+  const leadId = newLeadId();
+  const submittedAtEst = formatEst(submittedAt);
+  const priorityTags = buildPriorityTags(answers);
+
   const dashboardRecord = {
     event: "quote_intake_completed",
-    version: 1,
+    version: 2,
+    leadId,
     submittedAt,
+    submittedAtEst,
     sourceUrl,
     serviceCategory: answers.serviceCategory,
     serviceLabel,
+    priorityTags,
     answers: { ...answers },
     summary: null,
+    analytics: {
+      landingPage,
+      intakeEntryUrl,
+      submitPageUrl,
+      referrer,
+      campaign,
+      deviceType,
+      userAgent,
+      intakeSourceUrl: sourceUrl,
+    },
+    reporting: {
+      _future:
+        "Daily 6PM digest (visitors, quote starts/completions, top pages, device mix, attribution) — wire to analytics store when ready; not populated here.",
+    },
   };
 
   let summary = await summarizeLead({
@@ -676,39 +877,33 @@ export default async (request) => {
     submittedAt,
   });
   if (!summary) {
-    summary =
-      "Structured responses appear below; a coordinator will review and respond.";
+    summary = buildHumanFallbackSummary(answers, serviceLabel);
   }
   dashboardRecord.summary = summary;
 
   const attachmentJson = JSON.stringify(dashboardRecord, null, 2);
-  const lines = formatAnswerLines(answers);
-  const subject = `New lead — ${serviceLabel}`;
+  const subject = buildEmailSubject({ serviceLabel, answers });
+  const detailRows = groupDetailRows(answers);
 
-  const text = [
-    `NEW LEAD — ${serviceLabel.toUpperCase()}`,
-    "",
-    `Submitted: ${submittedAt}`,
-    `Source: ${sourceUrl || "(not provided)"}`,
-    "",
-    "CONTACT",
-    `Name: ${answers.fullName}`,
-    `Phone: ${answers.phone}`,
-    `Email: ${answers.email}`,
-    `Location: ${answers.location}`,
-    "",
-    "DETAIL",
-    lines,
-    "",
-    "BRIEF INTERNAL SUMMARY",
+  const html = buildLuxuryHtmlEmail({
+    leadId,
+    submittedAtEst,
+    priorityTags,
+    serviceLabel,
+    answers,
     summary,
-    "",
-    "Structured JSON is attached for your future dashboard (lead-intake.json).",
-  ].join("\n");
+    detailRows,
+  });
 
-  const html = `<pre style="font-family:ui-monospace,Consolas,monospace;font-size:13px;line-height:1.45;color:#111;background:#faf9f6;padding:16px;border-radius:8px;white-space:pre-wrap">${escapeHtml(
-    text
-  )}</pre>`;
+  const text = buildPlainTextLead({
+    leadId,
+    submittedAtEst,
+    priorityTags,
+    serviceLabel,
+    answers,
+    summary,
+    detailRows,
+  });
 
   try {
     await sendBrevoTransactionalEmail({
@@ -727,5 +922,7 @@ export default async (request) => {
     return json({ error: PUBLIC_EMAIL_FAILURE }, 500);
   }
 
-  return json({ ok: true, receivedAt: new Date().toISOString() });
+  await notifySlackOptional({ leadId, serviceLabel, summary, priorityTags });
+
+  return json({ ok: true, receivedAt: new Date().toISOString(), leadId });
 };

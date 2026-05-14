@@ -50,6 +50,17 @@ body.sq-intake-open {
   box-shadow:
     0 -18px 48px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease;
+}
+
+.sq-intake:not(.is-open) .sq-intake__dialog {
+  transform: translateY(108%);
+  opacity: 0;
+}
+
+.sq-intake.is-open .sq-intake__dialog {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 @media (min-width: 720px) {
@@ -58,12 +69,21 @@ body.sq-intake-open {
     right: auto;
     top: 50%;
     bottom: auto;
-    transform: translate(-50%, -50%);
     width: min(440px, 94vw);
     max-height: min(86vh, 720px);
     border-radius: 16px;
     border-bottom: 1px solid rgba(184, 164, 122, 0.22);
     padding: 28px 28px 24px;
+  }
+
+  .sq-intake:not(.is-open) .sq-intake__dialog {
+    transform: translate(-50%, calc(-50% + 18px));
+    opacity: 0;
+  }
+
+  .sq-intake.is-open .sq-intake__dialog {
+    transform: translate(-50%, -50%);
+    opacity: 1;
   }
 }
 
@@ -128,6 +148,24 @@ body.sq-intake-open {
   flex-shrink: 0;
 }
 
+.sq-intake__progress-track {
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(184, 164, 122, 0.12);
+  overflow: hidden;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.sq-intake__progress-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #7d6f52, #d4bf96 55%, #e8d4b0);
+  transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .sq-intake__progress {
   font-size: 0.52rem;
   font-weight: 600;
@@ -168,8 +206,8 @@ body.sq-intake-open {
 }
 
 .sq-intake__opt {
-  min-height: 52px;
-  padding: 14px 18px;
+  min-height: 56px;
+  padding: 16px 18px;
   text-align: left;
   border-radius: 4px;
   border: 1px solid rgba(184, 164, 122, 0.22);
@@ -238,10 +276,46 @@ body.sq-intake-open {
   line-height: 1.45;
 }
 
+.sq-intake__foot {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 4px;
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.92) 28%);
+}
+
+.sq-intake__callstrip {
+  display: none;
+}
+
+@media (max-width: 719px) {
+  .sq-intake__callstrip {
+    display: block;
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    text-align: center;
+    margin: 0 0 10px;
+    padding: 14px 16px;
+    border-radius: 4px;
+    border: 1px solid rgba(184, 164, 122, 0.38);
+    background: rgba(14, 14, 14, 0.96);
+    color: #d4bf96;
+    text-decoration: none;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .sq-intake__callstrip:active {
+    background: rgba(184, 164, 122, 0.12);
+  }
+}
+
 .sq-intake__actions {
   display: flex;
   gap: 12px;
-  margin-top: 14px;
+  margin-top: 0;
   padding-top: 12px;
   border-top: 1px solid rgba(184, 164, 122, 0.1);
   flex-shrink: 0;
@@ -304,7 +378,9 @@ body.sq-intake-open {
   .sq-intake__opt,
   .sq-intake__btn,
   .sq-intake__input,
-  .sq-intake__textarea {
+  .sq-intake__textarea,
+  .sq-intake__dialog,
+  .sq-intake__progress-fill {
     transition: none;
   }
 }
