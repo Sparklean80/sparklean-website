@@ -193,6 +193,50 @@ html {
   }
 }
 
+/* Phones: slimmer sticky bar + reserved body space matches actual height */
+@media (max-width: 640px) {
+  :root {
+    --sparklean-mcta-h: 56px;
+    --sparklean-mcta-inner-pad: 6px;
+  }
+
+  .sparklean-mcta__inner {
+    gap: 8px;
+    padding: var(--sparklean-mcta-inner-pad) 12px
+      calc(var(--sparklean-mcta-inner-pad) + env(safe-area-inset-bottom, 0px));
+    min-height: var(--sparklean-mcta-h);
+  }
+
+  .sparklean-mcta__call {
+    min-height: 42px;
+    padding: 7px 10px;
+    gap: 8px;
+  }
+
+  .sparklean-mcta__call-icon {
+    font-size: 1.1rem;
+  }
+
+  .sparklean-mcta__call-kicker {
+    font-size: 0.46rem;
+    letter-spacing: 0.2em;
+  }
+
+  .sparklean-mcta__call-num {
+    font-size: clamp(0.78rem, 3.2vw, 0.98rem);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .sparklean-mcta__quote {
+    min-width: 96px;
+    min-height: 42px;
+    padding: 8px 10px;
+    font-size: 0.46rem;
+    letter-spacing: 0.18em;
+  }
+}
+
 @media (min-width: 1025px) {
   body.sparklean-mcta--active {
     padding-bottom: 0;
