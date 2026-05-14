@@ -1,12 +1,10 @@
-# Branding — transparent logo
+# Branding — logo asset
 
-**Required file (exact name, case-sensitive on Netlify):**  
-`Sparklean_Logo_Transparent.png`
+The live site currently loads the **transparent** mark from Webflow CDN (same file as before), so the logo always renders even if this folder has no PNG committed.
 
-**Repo path:**  
-`images/branding/Sparklean_Logo_Transparent.png`  
-→ live URL: `https://www.sparklean.co/images/branding/Sparklean_Logo_Transparent.png`
+**Optional self-hosted file:** add `Sparklean_Logo_Transparent.png` here and switch HTML / `quote-submit.mjs` / generators to:
 
-Copy your `Desktop/Logo/Sparklean_Logo_Transparent.png` (or `Sparklean_logo_transparent.png`) into this folder using the exact filename above, then commit.
+`/images/branding/Sparklean_Logo_Transparent.png`  
+(or `https://www.sparklean.co/images/branding/Sparklean_Logo_Transparent.png`)
 
-Header/footer, meta tags, JSON-LD, and lead emails reference this asset.
+Netlify paths are **case-sensitive**; the filename must match exactly.
