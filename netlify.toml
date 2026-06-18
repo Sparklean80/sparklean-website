@@ -354,3 +354,27 @@
   from = "/blog/naples-commercial-cleaning-high-traffic-venues/"
   to = "/pages/blog/naples-commercial-cleaning-high-traffic-venues.html"
   status = 200
+[[redirects]]
+  from = "/blog/cape-coral-house-cleaning-when-to-hire-a-pro"
+  to = "/pages/blog/cape-coral-house-cleaning-when-to-hire-a-pro.html"
+  status = 200
+[[redirects]]
+  from = "/blog/cape-coral-house-cleaning-when-to-hire-a-pro/"
+  to = "/pages/blog/cape-coral-house-cleaning-when-to-hire-a-pro.html"
+  status = 200
+[[redirects]]
+  from = "/blog/fort-myers-house-cleaning-when-to-hire-a-pro"
+  to = "/pages/blog/fort-myers-house-cleaning-when-to-hire-a-pro.html"
+  status = 200
+[[redirects]]
+  from = "/blog/fort-myers-house-cleaning-when-to-hire-a-pro/"
+  to = "/pages/blog/fort-myers-house-cleaning-when-to-hire-a-pro.html"
+  status = 200
+[[redirects]]
+  from = "/blog/estero-house-cleaning-when-to-hire-a-pro"
+  to = "/pages/blog/estero-house-cleaning-when-to-hire-a-pro.html"
+  status = 200
+[[redirects]]
+  from = "/blog/estero-house-cleaning-when-to-hire-a-pro/"
+  to = "/pages/blog/estero-house-cleaning-when-to-hire-a-pro.html"
+  status = 200
