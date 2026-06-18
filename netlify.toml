@@ -6,6 +6,216 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Legacy URLs (old host) → current clean URLs. 301 passes ranking signals to the new pages.
+[[redirects]]
+  from = "/home"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/home/"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/about-us"
+  to = "/about"
+  status = 301
+[[redirects]]
+  from = "/about-us/"
+  to = "/about"
+  status = 301
+[[redirects]]
+  from = "/get-a-quote"
+  to = "/contact"
+  status = 301
+[[redirects]]
+  from = "/get-a-quote/"
+  to = "/contact"
+  status = 301
+[[redirects]]
+  from = "/join-the-sparklean-inner-circle"
+  to = "/inner-circle"
+  status = 301
+[[redirects]]
+  from = "/join-the-sparklean-inner-circle/"
+  to = "/inner-circle"
+  status = 301
+[[redirects]]
+  from = "/post-construction"
+  to = "/post-construction-cleaning"
+  status = 301
+[[redirects]]
+  from = "/post-construction/"
+  to = "/post-construction-cleaning"
+  status = 301
+[[redirects]]
+  from = "/post-construction-and-remodeling-cleaning"
+  to = "/post-construction-cleaning"
+  status = 301
+[[redirects]]
+  from = "/post-construction-and-remodeling-cleaning/"
+  to = "/post-construction-cleaning"
+  status = 301
+[[redirects]]
+  from = "/commercial-and-janitorial-services"
+  to = "/commercial-cleaning"
+  status = 301
+[[redirects]]
+  from = "/commercial-and-janitorial-services/"
+  to = "/commercial-cleaning"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-estero-fl"
+  to = "/house-cleaning-estero"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-estero-fl/"
+  to = "/house-cleaning-estero"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-fort-myers-fl"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-fort-myers-fl/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-in-fort-myers"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-in-fort-myers/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/naples-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/naples-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/old-naples-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/old-naples-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/bay-colony-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/bay-colony-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/cleaning-service-cost-naples-fl"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/cleaning-service-cost-naples-fl/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/fort-myers-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/fort-myers-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/river-district-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/river-district-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/the-verandah-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/the-verandah-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/cape-coral-residential-cleaning"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/cape-coral-residential-cleaning/"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/gulf-harbour-residential-cleaning"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/gulf-harbour-residential-cleaning/"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/the-preserve-at-corkscrew-residential-cleaning"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/the-preserve-at-corkscrew-residential-cleaning/"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/bonita-springs-residential-cleaning"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/bonita-springs-residential-cleaning/"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/bonita-bay-residential-cleaning"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/bonita-bay-residential-cleaning/"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/barefoot-beach-residential-cleaning"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/barefoot-beach-residential-cleaning/"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/spanish-wells-residential-cleaning"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/spanish-wells-residential-cleaning/"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/the-colony-residential-cleaning"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/the-colony-residential-cleaning/"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/corkscrew-shores-residential-cleaning"
+  to = "/house-cleaning-estero"
+  status = 301
+[[redirects]]
+  from = "/corkscrew-shores-residential-cleaning/"
+  to = "/house-cleaning-estero"
+  status = 301
+
 # Clean URLs in nav/sitemap point to /about, /residential-cleaning, etc.
 # Static files live under /pages/*.html — rewrite so Netlify serves them (200 = internal rewrite, URL unchanged).
 [[redirects]]
