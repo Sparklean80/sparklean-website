@@ -153,11 +153,11 @@
   status = 301
 [[redirects]]
   from = "/gulf-harbour-residential-cleaning"
-  to = "/house-cleaning-cape-coral"
+  to = "/house-cleaning-fort-myers"
   status = 301
 [[redirects]]
   from = "/gulf-harbour-residential-cleaning/"
-  to = "/house-cleaning-cape-coral"
+  to = "/house-cleaning-fort-myers"
   status = 301
 [[redirects]]
   from = "/the-preserve-at-corkscrew-residential-cleaning"
