@@ -1,10 +1,15 @@
-/* Signal House — full-page flipbook wrapper (PageFlip library handles the book) */
+/* Signal House — luxury magazine flipbook */
 :root {
   --gold: #b8a47a;
-  --dark: #0e0e0e;
+  --gold-lt: #d4bf96;
+  --gold-dk: #8a7350;
+  --dark: #0a0a0a;
+  --dark2: #141414;
   --white: #f9f7f3;
   --serif: "Playfair Display", Georgia, serif;
   --sans: "Montserrat", sans-serif;
+  --book-shadow: 0 28px 70px rgba(0, 0, 0, 0.65), 0 8px 24px rgba(0, 0, 0, 0.4);
+  --frame-pad: clamp(12px, 3vw, 28px);
 }
 
 *,
@@ -23,6 +28,7 @@ body {
   color: var(--white);
   font-family: var(--sans);
   font-weight: 300;
+  -webkit-font-smoothing: antialiased;
 }
 
 .sh-flip-shell {
@@ -30,22 +36,29 @@ body {
   flex-direction: column;
   height: 100dvh;
   height: 100vh;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(184, 164, 122, 0.09), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 10% 100%, rgba(184, 164, 122, 0.04), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(184, 164, 122, 0.04), transparent 50%),
+    linear-gradient(180deg, #0c0c0c 0%, #060606 100%);
 }
 
+/* ── Header ── */
 .sh-flip-top {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px clamp(14px, 4vw, 24px);
-  background: #131313;
-  border-bottom: 1px solid rgba(184, 164, 122, 0.14);
-  z-index: 10;
+  padding: 12px clamp(16px, 4vw, 32px);
+  background: rgba(10, 10, 10, 0.92);
+  border-bottom: 1px solid rgba(184, 164, 122, 0.12);
+  backdrop-filter: blur(8px);
+  z-index: 20;
 }
 
 .sh-flip-brand {
   font-family: var(--serif);
-  font-size: clamp(0.95rem, 3vw, 1.2rem);
+  font-size: clamp(1rem, 3vw, 1.25rem);
   font-weight: 400;
   letter-spacing: 0.04em;
   color: var(--white);
@@ -58,78 +71,285 @@ body {
 }
 
 .sh-flip-edition {
-  font-size: 0.46rem;
-  letter-spacing: 0.2em;
+  font-size: 0.48rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(249, 247, 243, 0.35);
+  color: rgba(249, 247, 243, 0.38);
 }
 
+/* ── Stage ── */
 .sh-flip-stage {
   flex: 1;
   min-height: 0;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(8px, 2vw, 20px);
-  background: radial-gradient(ellipse 70% 50% at 50% 40%, rgba(184, 164, 122, 0.06), transparent 70%), #0a0a0a;
+  padding: var(--frame-pad);
+  perspective: 2200px;
+}
+
+.sh-magazine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(14px, 2.5vh, 22px);
+  width: 100%;
+  max-width: min(720px, 100%);
+  height: 100%;
+  max-height: calc(100dvh - 130px);
+}
+
+/* Outer frame — leather / folio feel */
+.sh-magazine-frame {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(10px, 2vw, 18px);
+  border-radius: 4px;
+  background:
+    linear-gradient(145deg, rgba(184, 164, 122, 0.14) 0%, rgba(184, 164, 122, 0.03) 40%, rgba(0, 0, 0, 0.2) 100%);
+  border: 1px solid rgba(184, 164, 122, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(212, 191, 150, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.sh-magazine-frame::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(184, 164, 122, 0.08);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Spine accent */
+.sh-magazine-spine {
+  position: absolute;
+  left: clamp(8px, 1.5vw, 14px);
+  top: 12%;
+  bottom: 12%;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, transparent, var(--gold-dk), var(--gold), var(--gold-dk), transparent);
+  opacity: 0.55;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Book well — where pages sit */
+.sh-magazine-well {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: clamp(6px, 1.2vw, 12px);
 }
 
 #sh-book {
   width: 100%;
-  max-width: min(920px, 100%);
   height: 100%;
-  max-height: calc(100dvh - 96px);
+  filter: drop-shadow(var(--book-shadow));
+}
+
+/* PageFlip library overrides */
+.stf__parent {
+  margin: 0 auto;
+}
+
+.stf__wrapper {
+  border-radius: 1px;
+}
+
+.stf__block {
+  border-radius: 1px;
 }
 
 .sh-page {
   background: #fff;
   overflow: hidden;
+  box-shadow: inset -3px 0 8px rgba(0, 0, 0, 0.06);
 }
 
 .sh-page img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: center top;
   display: block;
   user-select: none;
   -webkit-user-drag: none;
 }
 
+/* Corner peel hint */
+.sh-peel-hint {
+  position: absolute;
+  bottom: clamp(14px, 3vw, 24px);
+  right: clamp(14px, 3vw, 24px);
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 6;
+  background:
+    linear-gradient(135deg, transparent 50%, rgba(184, 164, 122, 0.5) 50%, rgba(184, 164, 122, 0.15) 100%);
+  border-radius: 0 0 2px 0;
+  animation: sh-peel-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes sh-peel-pulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(1.05); }
+}
+
+.sh-peel-hint.is-hidden {
+  opacity: 0;
+  animation: none;
+}
+
+/* ── Controls ── */
+.sh-magazine-controls {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 4vw, 28px);
+  width: 100%;
+}
+
+.sh-nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(184, 164, 122, 0.35);
+  background: rgba(20, 20, 20, 0.8);
+  color: var(--gold-lt);
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sh-nav-btn:hover:not(:disabled) {
+  background: rgba(184, 164, 122, 0.12);
+  border-color: var(--gold);
+}
+
+.sh-nav-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.sh-nav-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.sh-page-counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 88px;
+}
+
+.sh-page-num {
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 3vw, 1.35rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--white);
+}
+
+.sh-page-num em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+.sh-page-label {
+  font-size: 0.44rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(249, 247, 243, 0.32);
+}
+
+/* ── Footer hint ── */
 .sh-flip-hint {
   flex-shrink: 0;
   text-align: center;
-  font-size: 0.46rem;
-  letter-spacing: 0.18em;
+  font-size: 0.44rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(249, 247, 243, 0.28);
-  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
-  background: #0a0a0a;
-  border-top: 1px solid rgba(184, 164, 122, 0.1);
+  color: rgba(249, 247, 243, 0.22);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
 }
 
 .sh-flip-loading {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   font-family: var(--serif);
   font-style: italic;
+  font-size: 0.95rem;
   color: rgba(249, 247, 243, 0.45);
   pointer-events: none;
+  z-index: 30;
 }
 
-.sh-flip-stage {
-  position: relative;
+.sh-flip-loading::before {
+  content: "";
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(184, 164, 122, 0.25);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: sh-spin 0.9s linear infinite;
 }
 
+@keyframes sh-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Mobile ── */
 @media (max-width: 640px) {
-  .sh-flip-stage {
-    padding: 4px;
+  .sh-magazine {
+    max-height: calc(100dvh - 118px);
   }
 
-  #sh-book {
-    max-height: calc(100dvh - 88px);
+  .sh-magazine-frame {
+    padding: 8px;
+  }
+
+  .sh-nav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .sh-peel-hint {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (min-width: 900px) {
+  .sh-magazine {
+    max-width: min(820px, 72vh * 0.72);
   }
 }
