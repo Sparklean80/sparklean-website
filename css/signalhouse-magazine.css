@@ -50,7 +50,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   padding: 11px clamp(16px, 4vw, 36px);
+  padding-top: calc(11px + env(safe-area-inset-top, 0px));
   background: rgba(10, 10, 10, 0.95);
   border-bottom: 1px solid rgba(184, 164, 122, 0.14);
   z-index: 30;
@@ -198,6 +200,8 @@ body {
   width: 100%;
   height: 100%;
   filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.65)) drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4));
+  touch-action: none;
+  -webkit-touch-callout: none;
 }
 
 .stf__parent {
@@ -271,15 +275,29 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
   padding: 8px 16px 10px;
   background: linear-gradient(0deg, #101010, #161616);
   border-top: 1px solid rgba(184, 164, 122, 0.12);
 }
 
+.sh-bar-nav {
+  display: none;
+}
+
+.sh-bar-pages {
+  display: none;
+}
+
+.sh-bar-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .sh-tool-btn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 4px;
   background: transparent;
@@ -402,30 +420,146 @@ body {
 }
 
 @media (max-width: 720px) {
+  .sh-flip-edition {
+    display: none;
+  }
+
+  .sh-flip-stage {
+    padding: 6px 4px;
+  }
+
   .sh-magazine-wrap {
-    gap: 4px;
+    gap: 0;
+    max-height: calc(100dvh - 96px);
   }
 
-  .sh-side-arrow {
-    width: 36px;
-    height: 36px;
+  .sh-magazine {
+    max-width: 100%;
   }
 
-  .sh-side-arrow svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .sh-flip-badge {
-    width: 58px;
-    height: 58px;
+  .sh-magazine-chrome {
+    border-radius: 3px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
   }
 
   .sh-chrome-top {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .sh-chrome-title {
+    font-size: 0.62rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sh-chrome-pages {
+    font-size: 0.42rem;
+  }
+
+  .sh-magazine-frame {
+    padding: 8px 6px;
+  }
+
+  .sh-page img {
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .sh-side-arrow {
+    display: none;
+  }
+
+  .sh-chrome-bottom {
+    justify-content: space-between;
+    padding: 6px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+    gap: 6px;
+  }
+
+  .sh-bar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgba(184, 164, 122, 0.3);
+    border-radius: 50%;
+    background: rgba(20, 20, 20, 0.9);
+    color: var(--gold-lt);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .sh-bar-nav svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .sh-bar-nav:active:not(:disabled) {
+    background: rgba(184, 164, 122, 0.15);
+    border-color: var(--gold);
+  }
+
+  .sh-bar-nav:disabled {
+    opacity: 0.22;
+    cursor: default;
+  }
+
+  .sh-bar-pages {
+    display: block;
+    flex: 1;
+    text-align: center;
+    font-family: var(--serif);
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+
+  .sh-bar-tools {
+    flex-shrink: 0;
+  }
+
+  .sh-tool-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .sh-flip-badge {
+    width: 52px;
+    height: 52px;
+    top: -4px;
+  }
+
+  .sh-flip-badge-text {
+    font-size: 0.38rem;
+  }
+
+  .sh-flip-hint {
+    font-size: 0.38rem;
+    letter-spacing: 0.14em;
+    line-height: 1.5;
+    padding: 6px 12px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 380px) {
+  .sh-chrome-title {
+    font-size: 0.55rem;
+  }
+
+  .sh-bar-nav {
+    width: 44px;
+    height: 44px;
   }
 }
 

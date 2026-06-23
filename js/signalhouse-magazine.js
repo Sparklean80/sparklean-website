@@ -9,11 +9,14 @@
   var total = pages.length;
   var loading = document.getElementById("sh-loading");
   var chromePages = document.getElementById("sh-chrome-pages");
+  var barPages = document.getElementById("sh-bar-pages");
   var hintEl = document.getElementById("sh-hint");
   var badge = document.getElementById("sh-flip-badge");
   var gutter = document.querySelector(".sh-magazine-gutter");
   var sidePrev = document.getElementById("sh-side-prev");
   var sideNext = document.getElementById("sh-side-next");
+  var barPrev = document.getElementById("sh-bar-prev");
+  var barNext = document.getElementById("sh-bar-next");
   var soundBtn = document.getElementById("sh-sound-btn");
   var fsBtn = document.getElementById("sh-fullscreen-btn");
   var shell = document.querySelector(".sh-flip-shell");
@@ -22,27 +25,56 @@
   var audioCtx = null;
   var pageFlip = null;
   var lastFlipAt = 0;
+  var wasMobile = null;
 
   function isMobile() {
-    return window.innerWidth < 768;
+    return window.matchMedia("(max-width: 720px)").matches;
   }
 
   function bookSettings() {
     var mobile = isMobile();
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+
+    if (mobile) {
+      var pad = 28;
+      var maxW = Math.max(260, vw - pad);
+      var maxH = Math.max(360, vh - 200);
+      return {
+        width: Math.min(maxW, 400),
+        height: Math.min(maxH, Math.round(maxW * 1.42)),
+        size: "stretch",
+        minWidth: Math.max(240, vw - pad),
+        maxWidth: maxW,
+        minHeight: 320,
+        maxHeight: maxH,
+        showCover: true,
+        maxShadowOpacity: 0.65,
+        mobileScrollSupport: false,
+        drawShadow: true,
+        flippingTime: 900,
+        usePortrait: true,
+        startPage: 0,
+        autoSize: true,
+        swipeDistance: 16,
+        useMouseEvents: true,
+      };
+    }
+
     return {
-      width: mobile ? 360 : 420,
-      height: mobile ? 520 : 600,
+      width: 420,
+      height: 600,
       size: "stretch",
-      minWidth: mobile ? 280 : 560,
-      maxWidth: mobile ? 480 : 1280,
-      minHeight: mobile ? 380 : 440,
-      maxHeight: mobile ? 820 : 820,
+      minWidth: 560,
+      maxWidth: 1280,
+      minHeight: 440,
+      maxHeight: 820,
       showCover: true,
       maxShadowOpacity: 0.72,
       mobileScrollSupport: false,
       drawShadow: true,
       flippingTime: 1100,
-      usePortrait: mobile,
+      usePortrait: false,
       startPage: 0,
       autoSize: true,
       swipeDistance: 20,
@@ -53,53 +85,95 @@
     if (loading) loading.hidden = true;
   }
 
-  pageFlip = new PageFlipCtor(bookEl, bookSettings());
-
-  pageFlip.on("init", function () {
-    dismissLoading();
-    syncUI(pageFlip.getCurrentPageIndex());
-    updateGutter();
-  });
-
-  pageFlip.on("flip", function (e) {
-    syncUI(e.data);
-    hideBadge();
-  });
-
-  pageFlip.on("changeState", function (e) {
-    if (e.data === "flipping") {
-      playPageSound();
-    }
-  });
-
-  pageFlip.on("changeOrientation", function () {
-    updateGutter();
-  });
-
-  try {
-    pageFlip.loadFromHTML(pages);
-  } catch (err) {
-    dismissLoading();
-    if (hintEl) hintEl.textContent = "Could not load flipbook. Refresh the page.";
-    return;
+  function bindFlip(btn, fn) {
+    if (!btn) return;
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      fn();
+    });
   }
 
-  setTimeout(function () {
-    dismissLoading();
-    if (pageFlip) {
-      pageFlip.update();
+  function wireControls() {
+    bindFlip(sidePrev, flipPrev);
+    bindFlip(sideNext, flipNext);
+    bindFlip(barPrev, flipPrev);
+    bindFlip(barNext, flipNext);
+  }
+
+  function attachEvents() {
+    pageFlip.on("init", function () {
+      dismissLoading();
       syncUI(pageFlip.getCurrentPageIndex());
+      updateGutter();
+    });
+
+    pageFlip.on("flip", function (e) {
+      syncUI(e.data);
+      hideBadge();
+    });
+
+    pageFlip.on("changeState", function (e) {
+      if (e.data === "flipping") {
+        playPageSound();
+      }
+    });
+
+    pageFlip.on("changeOrientation", function () {
+      updateGutter();
+      syncUI(pageFlip.getCurrentPageIndex());
+    });
+  }
+
+  function createFlipbook() {
+    pageFlip = new PageFlipCtor(bookEl, bookSettings());
+    attachEvents();
+
+    try {
+      pageFlip.loadFromHTML(pages);
+    } catch (err) {
+      dismissLoading();
+      if (hintEl) hintEl.textContent = "Could not load flipbook. Refresh the page.";
+      return;
     }
-  }, 3000);
+
+    setTimeout(function () {
+      dismissLoading();
+      if (pageFlip) {
+        pageFlip.update();
+        syncUI(pageFlip.getCurrentPageIndex());
+      }
+    }, 2500);
+  }
+
+  createFlipbook();
+  wireControls();
 
   var resizeTimer;
   window.addEventListener("resize", function () {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () {
-      pageFlip.update();
-      updateGutter();
-    }, 120);
+      var mobile = isMobile();
+      if (wasMobile === null) wasMobile = mobile;
+
+      if (mobile !== wasMobile) {
+        wasMobile = mobile;
+        var idx = pageFlip.getCurrentPageIndex();
+        pageFlip.destroy();
+        createFlipbook();
+        setTimeout(function () {
+          if (pageFlip && idx > 0) {
+            pageFlip.turnToPage(idx);
+            syncUI(idx);
+          }
+        }, 100);
+      } else {
+        pageFlip.update();
+        updateGutter();
+      }
+    }, 180);
   });
+
+  wasMobile = isMobile();
 
   function flipNext() {
     unlockAudio();
@@ -110,9 +184,6 @@
     unlockAudio();
     pageFlip.flipPrev("bottom");
   }
-
-  bindFlip(sideNext, flipNext);
-  bindFlip(sidePrev, flipPrev);
 
   document.addEventListener("keydown", function (e) {
     if (e.key === "ArrowRight" || e.key === "PageDown") {
@@ -140,21 +211,19 @@
 
   if (fsBtn && shell) {
     fsBtn.addEventListener("click", function () {
-      if (!document.fullscreenElement) {
-        shell.requestFullscreen().catch(function () {});
+      var el = document.documentElement;
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        var req = shell.requestFullscreen || shell.webkitRequestFullscreen;
+        if (req) req.call(shell).catch(function () {});
       } else {
-        document.exitFullscreen();
+        var exit = document.exitFullscreen || document.webkitExitFullscreen;
+        if (exit) exit.call(document);
       }
     });
   }
 
   bookEl.addEventListener("click", unlockAudio, { once: true });
   bookEl.addEventListener("touchstart", unlockAudio, { once: true, passive: true });
-
-  function bindFlip(btn, fn) {
-    if (!btn) return;
-    btn.addEventListener("click", fn);
-  }
 
   function unlockAudio() {
     if (!audioCtx) {
@@ -214,6 +283,10 @@
     }
   }
 
+  function pad(n) {
+    return n < 10 ? "0" + n : "" + n;
+  }
+
   function pageLabel(index) {
     if (index === 0) {
       return "Cover · Page 1 of " + total;
@@ -233,10 +306,21 @@
   }
 
   function syncUI(index) {
-    if (chromePages) chromePages.textContent = pageLabel(index);
+    var label = pageLabel(index);
+    if (chromePages) chromePages.textContent = label;
+    if (barPages) {
+      barPages.textContent = pad(index + 1) + " / " + pad(total);
+    }
 
-    if (sidePrev) sidePrev.disabled = index <= 0;
-    if (sideNext) sideNext.disabled = index >= total - 1;
+    var atStart = index <= 0;
+    var atEnd = index >= total - 1;
+
+    [sidePrev, barPrev].forEach(function (btn) {
+      if (btn) btn.disabled = atStart;
+    });
+    [sideNext, barNext].forEach(function (btn) {
+      if (btn) btn.disabled = atEnd;
+    });
 
     updateHint(index);
     updateGutter();
@@ -246,10 +330,13 @@
     if (!hintEl) return;
     var soundTxt = soundOn ? "Sound on" : "Sound off";
     if (index >= total - 1) {
-      hintEl.textContent = "End of edition · Private client link · " + soundTxt;
+      hintEl.textContent = "End of edition · Private link · " + soundTxt;
+      return;
+    }
+    if (isMobile()) {
+      hintEl.textContent = "Swipe the page or use the arrows below · " + soundTxt;
     } else {
-      hintEl.textContent =
-        "Drag a corner or tap the page edge to turn · " + soundTxt;
+      hintEl.textContent = "Drag a corner or tap the page edge to turn · " + soundTxt;
     }
   }
 
@@ -267,5 +354,5 @@
     if (badge) badge.classList.add("is-hidden");
   }
 
-  setTimeout(hideBadge, 8000);
+  setTimeout(hideBadge, 6000);
 })();

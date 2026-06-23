@@ -35,8 +35,8 @@
             <div class="sh-magazine-well">
               <div id="sh-book">
                 <div class="sh-page" data-density="hard"><img src="/images/signalhouse/post-construction/01.png" alt="Cover" width="1200" height="1600" decoding="async"></div>
-                <div class="sh-page"><img src="/images/signalhouse/post-construction/02.png" alt="Who we are" width="1200" height="1600" loading="lazy" decoding="async"></div>
-                <div class="sh-page"><img src="/images/signalhouse/post-construction/03.png" alt="Pricing philosophy" width="1200" height="1600" loading="lazy" decoding="async"></div>
+                <div class="sh-page"><img src="/images/signalhouse/post-construction/02.png" alt="Who we are" width="1200" height="1600" decoding="async"></div>
+                <div class="sh-page"><img src="/images/signalhouse/post-construction/03.png" alt="Pricing philosophy" width="1200" height="1600" decoding="async"></div>
                 <div class="sh-page"><img src="/images/signalhouse/post-construction/04.png" alt="Rough cleaning" width="1200" height="1600" loading="lazy" decoding="async"></div>
                 <div class="sh-page"><img src="/images/signalhouse/post-construction/05.png" alt="Final cleaning" width="1200" height="1600" loading="lazy" decoding="async"></div>
                 <div class="sh-page"><img src="/images/signalhouse/post-construction/06.png" alt="Fluff / touch-up cleaning" width="1200" height="1600" loading="lazy" decoding="async"></div>
@@ -51,13 +51,22 @@
           </div>
 
           <div class="sh-chrome-bottom">
-            <button type="button" class="sh-tool-btn" id="sh-sound-btn" aria-pressed="true" aria-label="Toggle page turn sound">
-              <svg class="sh-icon-sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4zm10.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/></svg>
-              <svg class="sh-icon-sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4zm10.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zM16.5 12l2.5 2.5-1.5 1.5-2.5-2.5 2.5-2.5 1.5 1.5-2.5 2.5z"/></svg>
+            <button type="button" class="sh-bar-nav" id="sh-bar-prev" aria-label="Previous page" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8"/></svg>
             </button>
-            <button type="button" class="sh-tool-btn" id="sh-fullscreen-btn" aria-label="Fullscreen">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
+            <span class="sh-bar-pages" id="sh-bar-pages">01 / 07</span>
+            <button type="button" class="sh-bar-nav" id="sh-bar-next" aria-label="Next page">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>
             </button>
+            <div class="sh-bar-tools">
+              <button type="button" class="sh-tool-btn" id="sh-sound-btn" aria-pressed="true" aria-label="Toggle page turn sound">
+                <svg class="sh-icon-sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4zm10.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/></svg>
+                <svg class="sh-icon-sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4zm10.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zM16.5 12l2.5 2.5-1.5 1.5-2.5-2.5 2.5-2.5 1.5 1.5-2.5 2.5z"/></svg>
+              </button>
+              <button type="button" class="sh-tool-btn" id="sh-fullscreen-btn" aria-label="Fullscreen">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
