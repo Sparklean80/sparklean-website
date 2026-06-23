@@ -9,45 +9,66 @@
 <link rel="stylesheet" href="/css/signalhouse-magazine.css">
 </head>
 <body>
-<!-- 01–07.png in /images/signalhouse/post-construction/ — cover first -->
 <div class="sh-flip-shell">
   <header class="sh-flip-top">
     <a class="sh-flip-brand" href="/">Signal <em>House</em></a>
-    <span class="sh-flip-edition">Post-construction price book · private</span>
+    <span class="sh-flip-edition">Post-Construction Price Book · Private Edition</span>
   </header>
 
   <div class="sh-flip-stage">
     <p class="sh-flip-loading" id="sh-loading">Opening edition…</p>
 
-    <div class="sh-magazine">
-      <div class="sh-magazine-frame">
-        <div class="sh-magazine-spine" aria-hidden="true"></div>
-        <div class="sh-magazine-well">
-          <div id="sh-book">
-            <div class="sh-page" data-density="hard"><img src="/images/signalhouse/post-construction/01.png" alt="Cover" width="1200" height="1600" decoding="async"></div>
-            <div class="sh-page"><img src="/images/signalhouse/post-construction/02.png" alt="Who we are" width="1200" height="1600" loading="lazy" decoding="async"></div>
-            <div class="sh-page"><img src="/images/signalhouse/post-construction/03.png" alt="Pricing philosophy" width="1200" height="1600" loading="lazy" decoding="async"></div>
-            <div class="sh-page"><img src="/images/signalhouse/post-construction/04.png" alt="Rough cleaning" width="1200" height="1600" loading="lazy" decoding="async"></div>
-            <div class="sh-page"><img src="/images/signalhouse/post-construction/05.png" alt="Final cleaning" width="1200" height="1600" loading="lazy" decoding="async"></div>
-            <div class="sh-page"><img src="/images/signalhouse/post-construction/06.png" alt="Fluff / touch-up cleaning" width="1200" height="1600" loading="lazy" decoding="async"></div>
-            <div class="sh-page" data-density="hard"><img src="/images/signalhouse/post-construction/07.png" alt="Additional notes" width="1200" height="1600" loading="lazy" decoding="async"></div>
+    <div class="sh-magazine-wrap">
+      <button type="button" class="sh-side-arrow sh-side-arrow--prev" id="sh-side-prev" aria-label="Previous page" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8"/></svg>
+      </button>
+
+      <div class="sh-magazine">
+        <div class="sh-magazine-chrome">
+          <div class="sh-chrome-top">
+            <span class="sh-chrome-title">Post-Construction Cleaning Price Book</span>
+            <span class="sh-chrome-pages" id="sh-chrome-pages">Page 1 of 7</span>
           </div>
-          <div class="sh-peel-hint" id="sh-peel-hint" aria-hidden="true"></div>
+
+          <div class="sh-magazine-frame">
+            <div class="sh-magazine-gutter" aria-hidden="true"></div>
+            <div class="sh-magazine-well">
+              <div id="sh-book">
+                <div class="sh-page" data-density="hard"><img src="/images/signalhouse/post-construction/01.png" alt="Cover" width="1200" height="1600" decoding="async"></div>
+                <div class="sh-page"><img src="/images/signalhouse/post-construction/02.png" alt="Who we are" width="1200" height="1600" loading="lazy" decoding="async"></div>
+                <div class="sh-page"><img src="/images/signalhouse/post-construction/03.png" alt="Pricing philosophy" width="1200" height="1600" loading="lazy" decoding="async"></div>
+                <div class="sh-page"><img src="/images/signalhouse/post-construction/04.png" alt="Rough cleaning" width="1200" height="1600" loading="lazy" decoding="async"></div>
+                <div class="sh-page"><img src="/images/signalhouse/post-construction/05.png" alt="Final cleaning" width="1200" height="1600" loading="lazy" decoding="async"></div>
+                <div class="sh-page"><img src="/images/signalhouse/post-construction/06.png" alt="Fluff / touch-up cleaning" width="1200" height="1600" loading="lazy" decoding="async"></div>
+                <div class="sh-page" data-density="hard"><img src="/images/signalhouse/post-construction/07.png" alt="Additional notes" width="1200" height="1600" loading="lazy" decoding="async"></div>
+              </div>
+            </div>
+
+            <div class="sh-flip-badge" id="sh-flip-badge">
+              <span class="sh-flip-badge-ring"></span>
+              <span class="sh-flip-badge-text">Flip<br>the pages</span>
+            </div>
+          </div>
+
+          <div class="sh-chrome-bottom">
+            <button type="button" class="sh-tool-btn" id="sh-sound-btn" aria-pressed="true" aria-label="Toggle page turn sound">
+              <svg class="sh-icon-sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4zm10.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/></svg>
+              <svg class="sh-icon-sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4zm10.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zM16.5 12l2.5 2.5-1.5 1.5-2.5-2.5 2.5-2.5 1.5 1.5-2.5 2.5z"/></svg>
+            </button>
+            <button type="button" class="sh-tool-btn" id="sh-fullscreen-btn" aria-label="Fullscreen">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      <nav class="sh-magazine-controls" aria-label="Page navigation">
-        <button type="button" class="sh-nav-btn" id="sh-prev" aria-label="Previous page">‹</button>
-        <div class="sh-page-counter">
-          <span class="sh-page-num" id="sh-page-num">01 <em>/</em> 07</span>
-          <span class="sh-page-label">Page</span>
-        </div>
-        <button type="button" class="sh-nav-btn" id="sh-next" aria-label="Next page">›</button>
-      </nav>
+      <button type="button" class="sh-side-arrow sh-side-arrow--next" id="sh-side-next" aria-label="Next page">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>
+      </button>
     </div>
   </div>
 
-  <p class="sh-flip-hint">Drag the corner, tap the edge, or use arrows to turn</p>
+  <p class="sh-flip-hint" id="sh-hint">Drag a corner or tap the page edge to turn · Sound on</p>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
