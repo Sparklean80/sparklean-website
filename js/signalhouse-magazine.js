@@ -1,59 +1,58 @@
 (function () {
-  var root = document.querySelector("[data-sh-magazine]");
-  if (!root) return;
+  var bookEl = document.getElementById("sh-book");
+  var PageFlipCtor = window.St && window.St.PageFlip;
+  if (!bookEl || !PageFlipCtor) return;
 
-  var track = root.querySelector(".sh-track");
-  var pages = root.querySelectorAll(".sh-page");
-  var prevBtn = document.getElementById("sh-prev");
-  var nextBtn = document.getElementById("sh-next");
-  var counter = document.getElementById("sh-counter");
-  var total = pages.length;
-  var index = 0;
-  var touchStartX = 0;
-  var touchStartY = 0;
+  var pages = bookEl.querySelectorAll(".sh-page");
+  if (!pages.length) return;
 
-  function render() {
-    track.style.transform = "translateX(-" + index * 100 + "%)";
-    if (counter) counter.textContent = index + 1 + " / " + total;
-    if (prevBtn) prevBtn.disabled = index === 0;
-    if (nextBtn) nextBtn.disabled = index === total - 1;
-  }
+  var hint = document.querySelector(".sh-flip-hint");
+  var loading = document.getElementById("sh-loading");
 
-  function go(delta) {
-    var next = index + delta;
-    if (next < 0 || next >= total) return;
-    index = next;
-    render();
-  }
-
-  if (prevBtn) prevBtn.addEventListener("click", function () { go(-1); });
-  if (nextBtn) nextBtn.addEventListener("click", function () { go(1); });
-
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "ArrowLeft") go(-1);
-    if (e.key === "ArrowRight") go(1);
+  var pageFlip = new PageFlipCtor(bookEl, {
+    width: 550,
+    height: 780,
+    size: "stretch",
+    minWidth: 280,
+    maxWidth: 920,
+    minHeight: 380,
+    maxHeight: 1400,
+    showCover: false,
+    maxShadowOpacity: 0.55,
+    mobileScrollSupport: false,
+    drawShadow: true,
+    flippingTime: 900,
+    usePortrait: true,
+    startPage: 0,
+    autoSize: true,
   });
 
-  root.addEventListener(
-    "touchstart",
-    function (e) {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    },
-    { passive: true }
-  );
+  pageFlip.on("init", function () {
+    if (loading) loading.style.display = "none";
+    updateHint(pageFlip.getCurrentPageIndex() + 1, pages.length);
+  });
 
-  root.addEventListener(
-    "touchend",
-    function (e) {
-      var dx = e.changedTouches[0].screenX - touchStartX;
-      var dy = e.changedTouches[0].screenY - touchStartY;
-      if (Math.abs(dx) < 48 || Math.abs(dy) > Math.abs(dx)) return;
-      if (dx < 0) go(1);
-      else go(-1);
-    },
-    { passive: true }
-  );
+  pageFlip.on("flip", function (e) {
+    updateHint(e.data + 1, pages.length);
+  });
 
-  render();
+  pageFlip.loadFromHtml(pages);
+
+  window.addEventListener("resize", function () {
+    pageFlip.update();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight" || e.key === "PageDown") {
+      pageFlip.flipNext("bottom");
+    } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+      pageFlip.flipPrev("bottom");
+    }
+  });
+
+  function updateHint(current, total) {
+    if (!hint) return;
+    hint.textContent =
+      "Drag corner or tap edge to turn · Page " + current + " of " + total;
+  }
 })();
