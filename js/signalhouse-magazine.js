@@ -130,6 +130,11 @@
 
     try {
       pageFlip.loadFromHTML(pages);
+      requestAnimationFrame(function () {
+        pageFlip.update();
+        dismissLoading();
+        syncUI(pageFlip.getCurrentPageIndex());
+      });
     } catch (err) {
       dismissLoading();
       if (hintEl) hintEl.textContent = "Could not load flipbook. Refresh the page.";
@@ -142,7 +147,7 @@
         pageFlip.update();
         syncUI(pageFlip.getCurrentPageIndex());
       }
-    }, 2500);
+    }, 1200);
   }
 
   createFlipbook();
