@@ -49,10 +49,14 @@
     };
   }
 
+  function dismissLoading() {
+    if (loading) loading.hidden = true;
+  }
+
   pageFlip = new PageFlipCtor(bookEl, bookSettings());
 
   pageFlip.on("init", function () {
-    if (loading) loading.hidden = true;
+    dismissLoading();
     syncUI(pageFlip.getCurrentPageIndex());
     updateGutter();
   });
@@ -72,7 +76,21 @@
     updateGutter();
   });
 
-  pageFlip.loadFromHtml(pages);
+  try {
+    pageFlip.loadFromHTML(pages);
+  } catch (err) {
+    dismissLoading();
+    if (hintEl) hintEl.textContent = "Could not load flipbook. Refresh the page.";
+    return;
+  }
+
+  setTimeout(function () {
+    dismissLoading();
+    if (pageFlip) {
+      pageFlip.update();
+      syncUI(pageFlip.getCurrentPageIndex());
+    }
+  }, 3000);
 
   var resizeTimer;
   window.addEventListener("resize", function () {

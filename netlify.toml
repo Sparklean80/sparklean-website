@@ -381,6 +381,22 @@
 
 # Signal House — private client magazines (not in sitemap; robots disallow)
 [[redirects]]
+  from = "/signal-house"
+  to = "/signalhouse"
+  status = 301
+[[redirects]]
+  from = "/signal-house/"
+  to = "/signalhouse/"
+  status = 301
+[[redirects]]
+  from = "/signal-house/:slug"
+  to = "/signalhouse/:slug"
+  status = 301
+[[redirects]]
+  from = "/signal-house/:slug/"
+  to = "/signalhouse/:slug"
+  status = 301
+[[redirects]]
   from = "/signalhouse"
   to = "/pages/signalhouse/index.html"
   status = 200

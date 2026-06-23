@@ -363,6 +363,10 @@ body {
   padding: 8px 16px calc(8px + env(safe-area-inset-bottom, 0px));
 }
 
+.sh-flip-loading[hidden] {
+  display: none !important;
+}
+
 .sh-flip-loading {
   position: absolute;
   inset: 0;
