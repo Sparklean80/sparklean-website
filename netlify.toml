@@ -378,3 +378,21 @@
   from = "/blog/estero-house-cleaning-when-to-hire-a-pro/"
   to = "/pages/blog/estero-house-cleaning-when-to-hire-a-pro.html"
   status = 200
+
+# Signal House — private client magazines (not in sitemap; robots disallow)
+[[redirects]]
+  from = "/signalhouse"
+  to = "/pages/signalhouse/index.html"
+  status = 200
+[[redirects]]
+  from = "/signalhouse/"
+  to = "/pages/signalhouse/index.html"
+  status = 200
+[[redirects]]
+  from = "/signalhouse/:slug"
+  to = "/pages/signalhouse/:slug.html"
+  status = 200
+[[redirects]]
+  from = "/signalhouse/:slug/"
+  to = "/pages/signalhouse/:slug.html"
+  status = 200

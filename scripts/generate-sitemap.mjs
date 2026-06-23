@@ -87,6 +87,7 @@ function main() {
     if (r.status !== 200) continue;
     if (!r.to || !r.to.startsWith("/pages/") || !r.to.endsWith(".html")) continue;
     const key = normalizePath(r.from);
+    if (key === "/signalhouse" || key.startsWith("/signalhouse/")) continue;
     const diskPath = path.join(ROOT, r.to.replace(/^\//, ""));
     if (!fs.existsSync(diskPath)) {
       console.warn(`[sitemap] missing file for redirect: ${r.from} → ${r.to}`);

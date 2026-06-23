@@ -7,4 +7,7 @@ Disallow: /pages/
 # Netlify build internals (not public content)
 Disallow: /.netlify/
 
+# Private Signal House client magazines — direct links only
+Disallow: /signalhouse
+
 Sitemap: https://www.sparklean.co/sitemap.xml
