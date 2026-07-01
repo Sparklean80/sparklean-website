@@ -386,6 +386,38 @@
   from = "/blog/bonita-springs-house-cleaning-when-to-hire-a-pro/"
   to = "/pages/blog/bonita-springs-house-cleaning-when-to-hire-a-pro.html"
   status = 200
+[[redirects]]
+  from = "/blog/cape-coral-post-construction-cleaning-remodel-new-build"
+  to = "/pages/blog/cape-coral-post-construction-cleaning-remodel-new-build.html"
+  status = 200
+[[redirects]]
+  from = "/blog/cape-coral-post-construction-cleaning-remodel-new-build/"
+  to = "/pages/blog/cape-coral-post-construction-cleaning-remodel-new-build.html"
+  status = 200
+[[redirects]]
+  from = "/blog/fort-myers-commercial-office-cleaning"
+  to = "/pages/blog/fort-myers-commercial-office-cleaning.html"
+  status = 200
+[[redirects]]
+  from = "/blog/fort-myers-commercial-office-cleaning/"
+  to = "/pages/blog/fort-myers-commercial-office-cleaning.html"
+  status = 200
+[[redirects]]
+  from = "/blog/estero-residential-move-out-deep-cleaning"
+  to = "/pages/blog/estero-residential-move-out-deep-cleaning.html"
+  status = 200
+[[redirects]]
+  from = "/blog/estero-residential-move-out-deep-cleaning/"
+  to = "/pages/blog/estero-residential-move-out-deep-cleaning.html"
+  status = 200
+[[redirects]]
+  from = "/blog/bonita-springs-post-construction-cleaning-remodel-new-build"
+  to = "/pages/blog/bonita-springs-post-construction-cleaning-remodel-new-build.html"
+  status = 200
+[[redirects]]
+  from = "/blog/bonita-springs-post-construction-cleaning-remodel-new-build/"
+  to = "/pages/blog/bonita-springs-post-construction-cleaning-remodel-new-build.html"
+  status = 200
 
 # Signal House — private client magazines (not in sitemap; robots disallow)
 [[redirects]]
