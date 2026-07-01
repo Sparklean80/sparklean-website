@@ -378,6 +378,14 @@
   from = "/blog/estero-house-cleaning-when-to-hire-a-pro/"
   to = "/pages/blog/estero-house-cleaning-when-to-hire-a-pro.html"
   status = 200
+[[redirects]]
+  from = "/blog/bonita-springs-house-cleaning-when-to-hire-a-pro"
+  to = "/pages/blog/bonita-springs-house-cleaning-when-to-hire-a-pro.html"
+  status = 200
+[[redirects]]
+  from = "/blog/bonita-springs-house-cleaning-when-to-hire-a-pro/"
+  to = "/pages/blog/bonita-springs-house-cleaning-when-to-hire-a-pro.html"
+  status = 200
 
 # Signal House — private client magazines (not in sitemap; robots disallow)
 [[redirects]]
