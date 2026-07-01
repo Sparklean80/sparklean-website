@@ -51,6 +51,19 @@
   "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"96","bestRating":"5"}
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"What types of businesses does Sparklean clean?","acceptedAnswer":{"@type":"Answer","text":"Sparklean cleans corporate offices, medical and dental practices, law firms, automotive dealerships, schools, churches, retail spaces, and high-rise common areas across Southwest Florida."}},
+    {"@type":"Question","name":"How much does commercial cleaning cost in Southwest Florida?","acceptedAnswer":{"@type":"Answer","text":"Commercial cleaning pricing depends on square footage, visit frequency, industry requirements, and scope. Sparklean builds custom janitorial plans — call (239) 888-3588 or request a free walkthrough quote."}},
+    {"@type":"Question","name":"Do you clean medical and dental offices?","acceptedAnswer":{"@type":"Answer","text":"Yes. Sparklean provides medical and dental office cleaning with focus on waiting areas, exam rooms, restrooms, and high-touch surfaces — on schedules that minimize patient disruption."}},
+    {"@type":"Question","name":"Can Sparklean clean after business hours?","acceptedAnswer":{"@type":"Answer","text":"Yes. We schedule nightly, early-morning, and weekend commercial cleaning so your team and clients are never disrupted during operating hours."}},
+    {"@type":"Question","name":"What cities do you serve for commercial cleaning?","acceptedAnswer":{"@type":"Answer","text":"Sparklean serves Naples, Fort Myers, Bonita Springs, Estero, and Cape Coral — from corporate towers and medical suites to dealerships and retail centers across Collier and Lee County."}}
+  ]
+}
+</script>
 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -204,6 +217,20 @@ h1 em{font-style:italic;color:var(--gold)}
 .comm-city{font-size:.54rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
 .comm-desc{font-family:var(--serif);font-size:.92rem;line-height:1.8;color:var(--w70);}
 
+/* FAQ */
+.faq{padding:100px 80px;background:var(--dark2);border-top:1px solid rgba(201,168,76,.06);}
+.faq-intro{max-width:580px;margin-bottom:52px;}
+.faq-intro p{font-family:var(--serif);font-size:.95rem;line-height:1.9;color:var(--w70);margin-top:14px;}
+.faq-list{max-width:820px;}
+.faq-item{border-bottom:1px solid rgba(201,168,76,.1);}
+.faq-q{width:100%;background:none;border:none;cursor:pointer;padding:24px 0;display:flex;justify-content:space-between;align-items:center;gap:20px;text-align:left;}
+.faq-q span{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--white);line-height:1.4;}
+.faq-icon{width:22px;height:22px;border:1px solid rgba(201,168,76,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.7rem;transition:background .25s,transform .3s;}
+.faq-item.open .faq-icon{background:var(--gold);color:#0E0E0E;transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;}
+.faq-item.open .faq-a{max-height:420px;padding-bottom:22px;}
+.faq-a p{font-family:var(--serif);font-size:.9rem;line-height:1.85;color:var(--w70);}
+
 /* CTA */
 .cta{padding:110px 80px;text-align:center;border-top:1px solid rgba(201,168,76,.08);}
 .cta h2{font-family:var(--serif);font-size:clamp(2rem,4vw,3.4rem);font-weight:400;margin-bottom:14px;}
@@ -238,7 +265,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   .nav-logo img{height:76px;}
   .hero-content{padding:calc(96px + 48px) 28px 64px;}
   .hero-stats{right:24px;gap:22px;padding:14px 18px;}
-  .comm-intro,.industries,.svc-list,.why,.community,.cta{padding-left:32px;padding-right:32px;}
+  .comm-intro,.industries,.svc-list,.why,.community,.faq,.cta{padding-left:32px;padding-right:32px;}
   .ci-grid,.sl-grid{grid-template-columns:1fr;gap:48px;}
   .ind-grid{grid-template-columns:repeat(2,1fr);}
   .why-grid{grid-template-columns:repeat(2,1fr);}
@@ -256,7 +283,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   .nav-phone{display:none;}
   .hero{display:none!important;}
   .hero-mobile{display:flex;}
-  .comm-intro,.industries,.svc-list,.why,.community,.cta{padding-left:20px;padding-right:20px;padding-top:72px;padding-bottom:72px;}
+  .comm-intro,.industries,.svc-list,.why,.community,.faq,.cta{padding-left:20px;padding-right:20px;padding-top:72px;padding-bottom:72px;}
   .ci-grid,.sl-grid{grid-template-columns:1fr;gap:36px;}
   .ind-grid{grid-template-columns:1fr;}
   .why-grid{grid-template-columns:1fr 1fr;}
@@ -448,7 +475,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
       <h2 class="sec-h">A Business Should Look<br>as <em>Polished as It Performs</em></h2>
       <div class="gold-line"></div>
       <p class="ci-body">At Sparklean Cleaning, we believe <strong>a business should look as polished as the service it delivers.</strong> Companies across Naples, Fort Myers, Estero, Bonita Springs, and Cape Coral trust us for consistent, luxury-grade janitorial and commercial cleaning solutions.<br><br>Our role goes beyond simple upkeep — we create environments that reflect professionalism, comfort, and care. A spotless lobby welcomes clients with confidence. A polished showroom sets the tone for sales. A sanitized medical suite protects patients and staff.</p>
-      <p class="ci-xlinks">Many accounts pair janitorial with <a href="/post-construction-cleaning">post-construction cleaning</a> for new suites, <a href="/residential-cleaning">Southwest Florida residential cleaning</a> for executive homes, and recurring visits in <a href="/house-cleaning-naples">Naples</a>, <a href="/house-cleaning-fort-myers">Fort Myers</a>, <a href="/house-cleaning-bonita-springs">Bonita Springs</a>, <a href="/house-cleaning-estero">Estero</a>, and <a href="/house-cleaning-cape-coral">Cape Coral</a>. Explore <a href="/blog">Sparklean on the blog</a> or <a href="/contact">contact scheduling</a>.</p>
+      <p class="ci-xlinks">Many accounts pair janitorial with <a href="/post-construction-cleaning">post-construction cleaning</a> for new suites, <a href="/residential-cleaning">Southwest Florida residential cleaning</a> for executive homes, and recurring visits in <a href="/house-cleaning-naples">Naples</a>, <a href="/house-cleaning-fort-myers">Fort Myers</a>, <a href="/house-cleaning-bonita-springs">Bonita Springs</a>, <a href="/house-cleaning-estero">Estero</a>, and <a href="/house-cleaning-cape-coral">Cape Coral</a>. Read our guides on <a href="/blog/naples-office-cleaning-medical-law-firms">Naples office cleaning</a>, <a href="/blog/fort-myers-commercial-office-cleaning">Fort Myers commercial cleaning</a>, and <a href="/blog/naples-commercial-cleaning-high-traffic-venues">high-traffic venues</a>, browse <a href="/blog">Sparklean on the blog</a>, or <a href="/contact">contact scheduling</a>.</p>
       <ul class="ci-features">
         <li><span class="ci-icon">✦</span><div class="ci-txt"><strong>Tailored Service Plans</strong>Every business is different. We build a custom cleaning program around your schedule, industry, and specific needs.</div></li>
         <li><span class="ci-icon">✦</span><div class="ci-txt"><strong>Uniformed, Background-Checked Teams</strong>Professional, trusted cleaners who arrive on time and follow your tailored checklist — every visit, without exception.</div></li>
@@ -599,6 +626,36 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   </div>
 </section>
 
+<section class="faq" id="faq">
+  <div class="faq-intro">
+    <div class="eyebrow"><div class="ey-line"></div><span>Common Questions</span></div>
+    <h2 class="sec-h">Commercial <em>Cleaning FAQ</em></h2>
+    <p>What facility managers and business owners ask before hiring janitorial service in Southwest Florida.</p>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q"><span>What types of businesses does Sparklean clean?</span><div class="faq-icon">+</div></button>
+      <div class="faq-a"><p>Sparklean cleans corporate offices, medical and dental practices, law firms, automotive dealerships, schools, churches, retail spaces, and high-rise common areas across Southwest Florida.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>How much does commercial cleaning cost in SW Florida?</span><div class="faq-icon">+</div></button>
+      <div class="faq-a"><p>Pricing depends on square footage, visit frequency, industry requirements, and scope. Sparklean builds custom janitorial plans — call (239) 888-3588 or <a href="/contact">request a free walkthrough quote</a>.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Do you clean medical and dental offices?</span><div class="faq-icon">+</div></button>
+      <div class="faq-a"><p>Yes. Sparklean provides medical and dental office cleaning with focus on waiting areas, exam rooms, restrooms, and high-touch surfaces — on schedules that minimize patient disruption.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Can Sparklean clean after business hours?</span><div class="faq-icon">+</div></button>
+      <div class="faq-a"><p>Yes. We schedule nightly, early-morning, and weekend commercial cleaning so your team and clients are never disrupted during operating hours.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>What cities do you serve for commercial cleaning?</span><div class="faq-icon">+</div></button>
+      <div class="faq-a"><p>Sparklean serves <a href="/house-cleaning-naples">Naples</a>, <a href="/house-cleaning-fort-myers">Fort Myers</a>, <a href="/house-cleaning-bonita-springs">Bonita Springs</a>, <a href="/house-cleaning-estero">Estero</a>, and <a href="/house-cleaning-cape-coral">Cape Coral</a> — from corporate towers and medical suites to dealerships and retail centers.</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="cta" id="quote">
   <p class="cta-quote">Trusted across Southwest Florida</p>
@@ -655,6 +712,15 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   </div>
 </footer>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.faq-q').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+});
+</script>
 <script>
 var hb=document.getElementById('hamburger');
 var mm=document.getElementById('mobileMenu');

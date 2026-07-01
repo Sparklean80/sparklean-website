@@ -25,6 +25,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://www.sparklean.co/#localbusiness","name":"Sparklean Cleaning","description":"Luxury post-construction and new build cleaning service serving Naples, Fort Myers, Estero, Bonita Springs, and Cape Coral FL.","url":"https://www.sparklean.co/post-construction-cleaning","telephone":"+1-239-888-3588","email":"info@sparklean.co","image":"https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png","serviceType":"Post-Construction Cleaning","areaServed":["Naples FL","Fort Myers FL","Estero FL","Bonita Springs FL","Cape Coral FL"],"sameAs":["https://www.google.com/maps/search/?api=1&query=Sparklean%20Cleaning%2024221%20Bernwood%20Dr%20Suite%202%20Bonita%20Springs%20FL%2034135"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"96","bestRating":"5"}}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is included in post-construction cleaning?","acceptedAnswer":{"@type":"Answer","text":"Sparklean post-construction cleaning covers multi-pass dust removal on walls, trim, and surfaces; interior windows and tracks; cabinet and closet interiors; fixture polishing; floor care; and kitchen and bathroom sanitization — ready for move-in or owner walkthrough."}},
+  {"@type":"Question","name":"What is the difference between a rough clean and final clean?","acceptedAnswer":{"@type":"Answer","text":"A rough clean happens after major trades exit to clear bulk debris and dust. A final clean follows punch-list touch-ups — before photography, walkthrough, or move-in. Many Southwest Florida projects need both phases."}},
+  {"@type":"Question","name":"How much does post-construction cleaning cost in Southwest Florida?","acceptedAnswer":{"@type":"Answer","text":"Pricing depends on square footage, finish level, dust severity, and whether you need rough clean, final clean, or both. Sparklean provides free custom quotes — call (239) 888-3588 or request a quote online."}},
+  {"@type":"Question","name":"What cities do you serve for post-construction cleaning?","acceptedAnswer":{"@type":"Answer","text":"Sparklean serves Naples, Fort Myers, Bonita Springs, Estero, and Cape Coral — including luxury new builds, remodels, commercial fit-outs, and multi-family developments across Collier and Lee County."}},
+  {"@type":"Question","name":"Is Sparklean licensed and insured for construction sites?","acceptedAnswer":{"@type":"Answer","text":"Yes. Sparklean is licensed, bonded, and insured with workers' compensation coverage. Our teams use PPE when required and follow OSHA-aware protocols on active and completed job sites."}}
+]}
 </script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -146,6 +154,18 @@ h1 em{font-style:italic;color:var(--gold)}
 .comm-card:hover{border-color:rgba(201,168,76,.2);}
 .comm-city{font-size:.54rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
 .comm-desc{font-family:var(--serif);font-size:.92rem;line-height:1.8;color:var(--w70);}
+.faq{padding:100px 80px;background:var(--dark2);border-top:1px solid rgba(201,168,76,.06);}
+.faq-intro{max-width:580px;margin-bottom:52px;}
+.faq-intro p{font-family:var(--serif);font-size:.95rem;line-height:1.9;color:var(--w70);margin-top:14px;}
+.faq-list{max-width:820px;}
+.faq-item{border-bottom:1px solid rgba(201,168,76,.1);}
+.faq-q{width:100%;background:none;border:none;cursor:pointer;padding:24px 0;display:flex;justify-content:space-between;align-items:center;gap:20px;text-align:left;}
+.faq-q span{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--white);line-height:1.4;}
+.faq-icon{width:22px;height:22px;border:1px solid rgba(201,168,76,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.7rem;transition:background .25s,transform .3s;}
+.faq-item.open .faq-icon{background:var(--gold);color:#0E0E0E;transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;}
+.faq-item.open .faq-a{max-height:420px;padding-bottom:22px;}
+.faq-a p{font-family:var(--serif);font-size:.9rem;line-height:1.85;color:var(--w70);}
 .cta{padding:110px 80px;text-align:center;border-top:1px solid rgba(201,168,76,.08);}
 .cta h2{font-family:var(--serif);font-size:clamp(2rem,4vw,3.4rem);font-weight:400;margin-bottom:14px;}
 .cta h2 em{font-style:italic;color:var(--gold);}
@@ -350,7 +370,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
       <h2 class="sec-h">Trusted by Builders,<br><em>Trusted by Designers</em></h2>
       <div class="gold-line"></div>
       <p class="ci-body">At Sparklean Cleaning, we partner with builders, developers, and contractors across <strong>Naples, Fort Myers, Estero, and Bonita Springs</strong> to deliver luxury-level post-construction and final cleanings. Whether it's a new construction home or a full renovation, our team ensures your property is <strong>dust-free, polished, and ready to hand over with confidence.</strong></p>
-      <p class="ci-xlinks">After punch lists wrap, teams often roll into <a href="/commercial-cleaning">commercial fit-out cleaning</a>, <a href="/residential-cleaning">move-in residential cleaning</a>, and recurring care in <a href="/house-cleaning-naples">Naples</a>, <a href="/house-cleaning-fort-myers">Fort Myers</a>, <a href="/house-cleaning-bonita-springs">Bonita Springs</a>, <a href="/house-cleaning-estero">Estero</a>, and <a href="/house-cleaning-cape-coral">Cape Coral</a>. Browse the <a href="/blog">Sparklean blog</a> or <a href="/contact">message estimating</a>.</p>
+      <p class="ci-xlinks">After punch lists wrap, teams often roll into <a href="/commercial-cleaning">commercial fit-out cleaning</a>, <a href="/residential-cleaning">move-in residential cleaning</a>, and recurring care in <a href="/house-cleaning-naples">Naples</a>, <a href="/house-cleaning-fort-myers">Fort Myers</a>, <a href="/house-cleaning-bonita-springs">Bonita Springs</a>, <a href="/house-cleaning-estero">Estero</a>, and <a href="/house-cleaning-cape-coral">Cape Coral</a>. Read local guides for <a href="/blog/naples-post-construction-cleaning-before-move-in">Naples</a>, <a href="/blog/cape-coral-post-construction-cleaning-remodel-new-build">Cape Coral</a>, and <a href="/blog/bonita-springs-post-construction-cleaning-remodel-new-build">Bonita Springs</a>, browse <a href="/blog">all articles</a>, or <a href="/contact">message estimating</a>.</p>
       <ul class="ci-features">
         <li><span class="ci-icon">✦</span><div class="ci-txt"><strong>New Construction Homes</strong>Custom builds, spec homes, and luxury estates.</div></li>
         <li><span class="ci-icon">✦</span><div class="ci-txt"><strong>Remodeling &amp; Renovation Projects</strong>Kitchens, baths, and full interior overhauls.</div></li>
@@ -431,6 +451,36 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
   </div>
 </section>
 
+<section class="faq" id="faq">
+  <div class="faq-intro">
+    <div class="eyebrow"><div class="ey-line"></div><span>Common Questions</span></div>
+    <h2 class="sec-h">Post-Construction <em>Cleaning FAQ</em></h2>
+    <p>What builders, contractors, and homeowners ask before booking a builder&rsquo;s clean in Southwest Florida.</p>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q"><span>What is included in post-construction cleaning?</span><div class="faq-icon">+</div></button>
+      <div class="faq-a"><p>Sparklean post-construction cleaning covers multi-pass dust removal on walls, trim, and surfaces; interior windows and tracks; cabinet and closet interiors; fixture polishing; floor care; and kitchen and bathroom sanitization — ready for move-in or owner walkthrough.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>What&rsquo;s the difference between a rough clean and final clean?</span><div class="faq-icon">+</div></button>
+      <div class="faq-a"><p>A rough clean happens after major trades exit to clear bulk debris and dust. A final clean follows punch-list touch-ups — before photography, walkthrough, or move-in. Many Southwest Florida projects need both phases.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>How much does post-construction cleaning cost in SW Florida?</span><div class="faq-icon">+</div></button>
+      <div class="faq-a"><p>Pricing depends on square footage, finish level, dust severity, and whether you need rough clean, final clean, or both. Sparklean provides free custom quotes — call (239) 888-3588 or <a href="/contact">request a quote online</a>.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>What cities do you serve for post-construction cleaning?</span><div class="faq-icon">+</div></button>
+      <div class="faq-a"><p>Sparklean serves <a href="/house-cleaning-naples">Naples</a>, <a href="/house-cleaning-fort-myers">Fort Myers</a>, <a href="/house-cleaning-bonita-springs">Bonita Springs</a>, <a href="/house-cleaning-estero">Estero</a>, and <a href="/house-cleaning-cape-coral">Cape Coral</a> — luxury new builds, remodels, commercial fit-outs, and multi-family developments across Collier and Lee County.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Is Sparklean licensed and insured for construction sites?</span><div class="faq-icon">+</div></button>
+      <div class="faq-a"><p>Yes. Sparklean is licensed, bonded, and insured with workers&rsquo; compensation coverage. Our teams use PPE when required and follow OSHA-aware protocols on active and completed job sites.</p></div>
+    </div>
+  </div>
+</section>
+
 <section class="cta" id="quote">
   <p class="cta-quote">Trusted across Southwest Florida</p>
   <p class="cta-prelude">Luxury homes require consistency, discretion, and detail. Sparklean was built around all three.</p>
@@ -479,6 +529,15 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
   </div>
 </footer>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.faq-q').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+});
+</script>
 <script>
 var hb=document.getElementById('hamburger');
 var mm=document.getElementById('mobileMenu');
