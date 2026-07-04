@@ -216,6 +216,138 @@
   to = "/house-cleaning-estero"
   status = 301
 
+# More legacy Webflow / shorthand URLs (GSC 404 cleanup — Jul 2026)
+[[redirects]]
+  from = "/locations"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/locations/"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/services"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/services/"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/estero-residential-cleaning"
+  to = "/house-cleaning-estero"
+  status = 301
+[[redirects]]
+  from = "/estero-residential-cleaning/"
+  to = "/house-cleaning-estero"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-naples-fl"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-naples-fl/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-bonita-springs-fl"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-bonita-springs-fl/"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-cape-coral-fl"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/house-cleaning-cape-coral-fl/"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/residential"
+  to = "/residential-cleaning"
+  status = 301
+[[redirects]]
+  from = "/residential/"
+  to = "/residential-cleaning"
+  status = 301
+[[redirects]]
+  from = "/commercial"
+  to = "/commercial-cleaning"
+  status = 301
+[[redirects]]
+  from = "/commercial/"
+  to = "/commercial-cleaning"
+  status = 301
+[[redirects]]
+  from = "/specialized-add-ons"
+  to = "/specialized-cleaning"
+  status = 301
+[[redirects]]
+  from = "/specialized-add-ons/"
+  to = "/specialized-cleaning"
+  status = 301
+[[redirects]]
+  from = "/janitorial-services"
+  to = "/commercial-cleaning"
+  status = 301
+[[redirects]]
+  from = "/janitorial-services/"
+  to = "/commercial-cleaning"
+  status = 301
+[[redirects]]
+  from = "/specialized-cleaning-services"
+  to = "/specialized-cleaning"
+  status = 301
+[[redirects]]
+  from = "/specialized-cleaning-services/"
+  to = "/specialized-cleaning"
+  status = 301
+[[redirects]]
+  from = "/residential-cleaning-services"
+  to = "/residential-cleaning"
+  status = 301
+[[redirects]]
+  from = "/residential-cleaning-services/"
+  to = "/residential-cleaning"
+  status = 301
+
+# Raw /pages/*.html URLs must not stay indexable duplicates — 301 to clean URLs
+[[redirects]]
+  from = "/pages/blog/:slug.html"
+  to = "/blog/:slug"
+  status = 301
+[[redirects]]
+  from = "/pages/blog/:slug.html/"
+  to = "/blog/:slug"
+  status = 301
+[[redirects]]
+  from = "/pages/signalhouse/:slug.html"
+  to = "/signalhouse/:slug"
+  status = 301
+[[redirects]]
+  from = "/pages/signalhouse/:slug.html/"
+  to = "/signalhouse/:slug"
+  status = 301
+[[redirects]]
+  from = "/pages/signalhouse/index.html"
+  to = "/signalhouse"
+  status = 301
+[[redirects]]
+  from = "/pages/signalhouse/index.html/"
+  to = "/signalhouse"
+  status = 301
+[[redirects]]
+  from = "/pages/:slug.html"
+  to = "/:slug"
+  status = 301
+[[redirects]]
+  from = "/pages/:slug.html/"
+  to = "/:slug"
+  status = 301
+
 # Clean URLs in nav/sitemap point to /about, /residential-cleaning, etc.
 # Static files live under /pages/*.html — rewrite so Netlify serves them (200 = internal rewrite, URL unchanged).
 [[redirects]]
