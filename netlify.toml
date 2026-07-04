@@ -248,6 +248,200 @@
   to = "/house-cleaning-cape-coral"
   status = 301
 
+# Legacy neighborhood landing pages (Webflow) → city hubs
+[[redirects]]
+  from = "/grey-oaks-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/grey-oaks-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/port-royal-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/port-royal-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/the-moorings-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/the-moorings-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/park-shore-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/park-shore-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/pelican-bay-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/pelican-bay-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/aqualane-shores-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/aqualane-shores-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/gulf-shore-boulevard-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/gulf-shore-boulevard-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/venetian-village-residential-cleaning"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/venetian-village-residential-cleaning/"
+  to = "/house-cleaning-naples"
+  status = 301
+[[redirects]]
+  from = "/mcgregor-boulevard-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/mcgregor-boulevard-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/gateway-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/gateway-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/whiskey-creek-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/whiskey-creek-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/the-landings-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/the-landings-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/palmetto-point-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/palmetto-point-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/rose-garden-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/rose-garden-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/miromar-lakes-residential-cleaning"
+  to = "/house-cleaning-estero"
+  status = 301
+[[redirects]]
+  from = "/miromar-lakes-residential-cleaning/"
+  to = "/house-cleaning-estero"
+  status = 301
+[[redirects]]
+  from = "/pelican-landing-residential-cleaning"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/pelican-landing-residential-cleaning/"
+  to = "/house-cleaning-bonita-springs"
+  status = 301
+[[redirects]]
+  from = "/sandoval-residential-cleaning"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/sandoval-residential-cleaning/"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/tarpon-point-marina-residential-cleaning"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/tarpon-point-marina-residential-cleaning/"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/cape-harbour-residential-cleaning"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/cape-harbour-residential-cleaning/"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/specialized-add-on-services"
+  to = "/specialized-cleaning"
+  status = 301
+[[redirects]]
+  from = "/specialized-add-on-services/"
+  to = "/specialized-cleaning"
+  status = 301
+[[redirects]]
+  from = "/cost"
+  to = "/contact"
+  status = 301
+[[redirects]]
+  from = "/cost/"
+  to = "/contact"
+  status = 301
+[[redirects]]
+  from = "/privacy-policy"
+  to = "/contact"
+  status = 301
+[[redirects]]
+  from = "/privacy-policy/"
+  to = "/contact"
+  status = 301
+[[redirects]]
+  from = "/sparkleanvision"
+  to = "https://workforcevisionai.com"
+  status = 301
+[[redirects]]
+  from = "/sparkleanvision/"
+  to = "https://workforcevisionai.com"
+  status = 301
+[[redirects]]
+  from = "/SparkleanVision"
+  to = "https://workforcevisionai.com"
+  status = 301
+[[redirects]]
+  from = "/SparkleanVision/"
+  to = "https://workforcevisionai.com"
+  status = 301
+
 # More legacy Webflow / shorthand URLs (GSC 404 cleanup — Jul 2026)
 [[redirects]]
   from = "/locations"
