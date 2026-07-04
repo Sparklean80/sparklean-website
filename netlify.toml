@@ -215,6 +215,38 @@
   from = "/corkscrew-shores-residential-cleaning/"
   to = "/house-cleaning-estero"
   status = 301
+[[redirects]]
+  from = "/river-creek-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/river-creek-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/heritage-palms-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/heritage-palms-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/paseo-residential-cleaning"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/paseo-residential-cleaning/"
+  to = "/house-cleaning-fort-myers"
+  status = 301
+[[redirects]]
+  from = "/eight-lakes-residential-cleaning"
+  to = "/house-cleaning-cape-coral"
+  status = 301
+[[redirects]]
+  from = "/eight-lakes-residential-cleaning/"
+  to = "/house-cleaning-cape-coral"
+  status = 301
 
 # More legacy Webflow / shorthand URLs (GSC 404 cleanup — Jul 2026)
 [[redirects]]
