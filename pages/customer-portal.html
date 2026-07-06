@@ -102,8 +102,12 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
 .footer-cities a{color:inherit;text-decoration:none;}
 .footer-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:52px;width:100%;max-width:800px;margin-top:52px;}
 .footer-col-title{font-size:.56rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;}
-.footer-col a{display:block;font-size:.7rem;color:rgba(249,247,243,.4);text-decoration:none;line-height:1;margin-bottom:14px;transition:color .25s;}
+.footer-col a{display:block;font-size:.7rem;color:rgba(249,247,243,.4);text-decoration:none;line-height:1;margin-bottom:14px;transition:color .25s;letter-spacing:.03em;}
 .footer-col a:hover{color:var(--gold-lt);}
+footer a,footer a:link,footer a:visited{color:rgba(249,247,243,.4);text-decoration:none;}
+footer .footer-cities a,footer .footer-cities a:visited{color:rgba(184,164,122,.45);}
+.cp-cta-meta{font-size:.56rem;line-height:1.65;color:rgba(249,247,243,.42);max-width:28rem;margin:20px auto 0;text-align:center;font-family:var(--sans);font-style:normal;}
+.cp-cta-meta strong{color:rgba(249,247,243,.55);font-weight:500;}
 .footer-bottom{padding:22px 80px;display:flex;justify-content:space-between;align-items:center;}
 .footer-copy{font-size:.58rem;color:rgba(249,247,243,.2);letter-spacing:.06em;}
 .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;}
@@ -114,6 +118,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
 .nav-mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:var(--nav-bg);border-top:1px solid rgba(201,168,76,.12);z-index:899;padding:20px 0;flex-direction:column;}
 .nav-mobile-menu.open{display:flex;}
 .nav-mobile-menu a{font-size:.62rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--w70);text-decoration:none;padding:14px 28px;border-bottom:1px solid rgba(201,168,76,.06);}
+.nav-mobile-menu a:link,.nav-mobile-menu a:visited{color:var(--w70);}
 .nav-mobile-menu a:hover{color:var(--gold);}
 @media(max-width:1024px){
   nav{padding:0 24px;}
@@ -126,17 +131,23 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
   .cp-benefits,.cp-install{grid-template-columns:1fr;}
   .footer-top{padding:52px 20px 40px;}
   .footer-bottom{padding:18px 20px;flex-direction:column;gap:10px;text-align:center;}
-  .footer-cols{grid-template-columns:1fr;gap:30px;}
+  .footer-cols{grid-template-columns:1fr;gap:30px;text-align:center;}
+  .footer-col a{display:block;margin-bottom:12px;}
 }
 @media(max-width:640px){
   :root{--nav-h:70px;}
   nav{height:70px;padding:0 16px;}
   .nav-logo img{height:54px;}
   .footer-logo-wrap img{height:120px !important;}
-  .btn-gold{width:100%;max-width:320px;}
+  .btn-gold{width:100%;max-width:320px;margin-left:auto;margin-right:auto;}
+  .cp-hero-grid > div:first-child{text-align:center;}
+  .cp-sub,.cp-note,.cp-cta-meta{max-width:22rem;margin-left:auto;margin-right:auto;}
+  .cp-note{text-align:center;}
+  .cp-cta-band .btn-gold{display:flex;}
 }
 </style>
 <link rel="stylesheet" href="/css/sparklean-mobile-first.css">
+<link rel="stylesheet" href="/css/sparklean-luxury-flow.css">
 <link rel="stylesheet" href="/css/sparklean-nav-logo.css">
 </head>
 <body>
@@ -253,41 +264,44 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
   <section class="cp-cta-band">
     <p>Already a Sparklean client? Open your app with the email we have on file.</p>
     <a class="btn-gold" href="https://workforce-visionai-qrdpa.ondigitalocean.app/cx/sparklean" rel="noopener noreferrer"><span class="btn-gold-icon" aria-hidden="true"></span>Download Your App</a>
-    <p class="cp-note" style="margin:20px auto 0;text-align:center;">Branded address: <strong style="color:rgba(249,247,243,.55);font-weight:500;">portal.sparklean.co</strong> — use the link from your welcome email or sign in with magic link.</p>
+    <p class="cp-cta-meta">Branded address: <strong>portal.sparklean.co</strong> — use the link from your welcome email or sign in with magic link.</p>
   </section>
 </main>
 
 <footer>
   <div class="footer-top">
-    <div class="footer-logo-wrap">
-      <img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning">
-      <div class="footer-divider"></div>
-      <div class="footer-cities"><a href="/house-cleaning-naples">Naples</a> · <a href="/house-cleaning-estero">Estero</a> · <a href="/house-cleaning-fort-myers">Fort Myers</a> · <a href="/house-cleaning-bonita-springs">Bonita Springs</a> · <a href="/house-cleaning-cape-coral">Cape Coral</a></div>
-    </div>
+    <div class="footer-logo-wrap"><img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning"></div>
+    <div class="footer-divider"></div>
+    <div class="footer-cities"><a href="/house-cleaning-naples">Naples</a> &nbsp;·&nbsp; <a href="/house-cleaning-estero">Estero</a> &nbsp;·&nbsp; <a href="/house-cleaning-fort-myers">Fort Myers</a> &nbsp;·&nbsp; <a href="/house-cleaning-bonita-springs">Bonita Springs</a> &nbsp;·&nbsp; <a href="/house-cleaning-cape-coral">Cape Coral</a></div>
     <div class="footer-cols">
-      <div>
-        <div class="footer-col-title">Quick Links</div>
-        <a href="/">Home</a>
-        <a href="/about">About Us</a>
-        <a href="/blog">Blog</a>
-        <a href="/contact">Contact</a>
-        <a href="/customer-portal">Client App</a>
-      </div>
-      <div>
-        <div class="footer-col-title">Services</div>
-        <a href="/residential-cleaning">Residential</a>
-        <a href="/commercial-cleaning">Commercial</a>
+      <div class="footer-col">
+        <div class="footer-col-title">Our Services</div>
+        <a href="/residential-cleaning">Residential Cleaning</a>
+        <a href="/commercial-cleaning">Commercial &amp; Janitorial</a>
         <a href="/post-construction-cleaning">Post-Construction</a>
+        <a href="/specialized-cleaning">Specialized Add-Ons</a>
+        <a href="/customer-portal">Client App</a>
+        <a href="/inner-circle">Inner Circle</a>
       </div>
-      <div>
+      <div class="footer-col">
+        <div class="footer-col-title">Cities</div>
+        <a href="/house-cleaning-naples">Naples, FL</a>
+        <a href="/house-cleaning-fort-myers">Fort Myers, FL</a>
+        <a href="/house-cleaning-bonita-springs">Bonita Springs, FL</a>
+        <a href="/house-cleaning-estero">Estero, FL</a>
+        <a href="/house-cleaning-cape-coral">Cape Coral, FL</a>
+      </div>
+      <div class="footer-col">
         <div class="footer-col-title">Contact</div>
         <a href="tel:2398883588">(239) 888-3588</a>
         <a href="mailto:info@sparklean.co">info@sparklean.co</a>
+        <a href="https://www.sparklean.co/">sparklean.co</a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2026 Sparklean Cleaning. All Rights Reserved.</div>
+    <span class="footer-copy">© 2026 Sparklean Cleaning. All rights reserved.</span>
+    <span class="footer-copy">Licensed · Bonded · Insured · SW Florida</span>
   </div>
 </footer>
 
@@ -306,5 +320,6 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
   }
 })();
 </script>
+<script src="/js/sparklean-mobile-sticky-cta.js" defer></script>
 </body>
 </html>
