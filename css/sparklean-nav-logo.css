@@ -26,6 +26,56 @@
   background: transparent !important;
 }
 
+.nav-portal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.54rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d4bf96;
+  text-decoration: none;
+  padding: 10px 15px;
+  border: 1px solid rgba(184, 164, 122, 0.42);
+  background: rgba(184, 164, 122, 0.06);
+  transition: color 0.25s, background 0.25s, border-color 0.25s, box-shadow 0.25s;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.nav-portal::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #b8a47a;
+  box-shadow: 0 0 8px rgba(184, 164, 122, 0.55);
+  flex-shrink: 0;
+}
+
+.nav-portal:hover,
+.nav-portal.active {
+  color: #f9f7f3;
+  background: rgba(184, 164, 122, 0.14);
+  border-color: rgba(212, 191, 150, 0.72);
+  box-shadow: 0 0 20px rgba(184, 164, 122, 0.12);
+}
+
+@media (max-width: 1320px) {
+  .nav-portal {
+    padding: 9px 12px;
+    font-size: 0.5rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (max-width: 1200px) {
+  .nav-portal {
+    display: none !important;
+  }
+}
+
 @media (max-width: 1024px) {
   :root {
     --nav-h: 100px;
