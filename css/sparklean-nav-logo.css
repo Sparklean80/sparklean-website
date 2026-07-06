@@ -54,12 +54,20 @@
   flex-shrink: 0;
 }
 
-.nav-portal:hover,
+@media (hover: hover) and (pointer: fine) {
+  .nav-portal:hover,
+  .nav-portal.active {
+    color: #f9f7f3;
+    background: rgba(184, 164, 122, 0.14);
+    border-color: rgba(212, 191, 150, 0.72);
+    box-shadow: 0 0 20px rgba(184, 164, 122, 0.12);
+  }
+}
+
 .nav-portal.active {
   color: #f9f7f3;
   background: rgba(184, 164, 122, 0.14);
   border-color: rgba(212, 191, 150, 0.72);
-  box-shadow: 0 0 20px rgba(184, 164, 122, 0.12);
 }
 
 @media (max-width: 1320px) {

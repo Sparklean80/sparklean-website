@@ -259,3 +259,31 @@ html {
     animation: none;
   }
 }
+
+/* Touch devices: don't steal the first tap for :hover (iOS Safari double-tap bug) */
+@media (hover: none), (pointer: coarse) {
+  .btn-gold:hover,
+  a.btn-gold:hover {
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .nav-portal:hover {
+    color: #d4bf96 !important;
+    background: rgba(184, 164, 122, 0.06) !important;
+    border-color: rgba(184, 164, 122, 0.42) !important;
+    box-shadow: none !important;
+  }
+}
+
+a.btn-gold,
+.portal-app-link {
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+a.btn-gold .btn-gold-icon,
+.portal-app-link .btn-gold-icon,
+.portal-app-link .btn-gold-icon::after {
+  pointer-events: none;
+}
