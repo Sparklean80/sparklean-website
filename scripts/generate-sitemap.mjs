@@ -54,6 +54,7 @@ function metaForPath(p) {
   if (p === "/blog") return { changefreq: "weekly", priority: "0.9" };
   if (p.startsWith("/blog/")) return { changefreq: "monthly", priority: "0.78" };
   if (p === "/inner-circle") return { changefreq: "monthly", priority: "0.75" };
+  if (p === "/customer-portal") return { changefreq: "monthly", priority: "0.75" };
   if (p.startsWith("/house-cleaning")) return { changefreq: "monthly", priority: "0.85" };
   if (["/residential-cleaning", "/commercial-cleaning", "/post-construction-cleaning"].includes(p))
     return { changefreq: "monthly", priority: "0.9" };

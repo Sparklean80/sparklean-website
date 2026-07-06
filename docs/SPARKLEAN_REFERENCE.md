@@ -221,6 +221,10 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
   - **Interim app URL (all CTAs today):** `https://workforce-visionai-qrdpa.ondigitalocean.app/cx/sparklean`
   - **Branded app URL (when DNS live):** `https://portal.sparklean.co` — Namecheap CNAME → DO app, then `CX_PORTAL_HOST_LIVE=1` on DO; swap CTAs + JSON-LD `WebApplication.url` in `pages/customer-portal.html`
   - PWA via Add to Home Screen — **not** App Store; existing customers only (magic link)
+  - **iPhone install:** no Download button (Apple restriction) — Safari → Share (bottom bar) → Add to Home Screen; if link opened in Gmail, Open in Safari first
+  - **DNS (Tony/Namecheap):** CNAME `portal.sparklean.co` → `workforce-visionai-qrdpa.ondigitalocean.app`, then `CX_PORTAL_HOST_LIVE=1` on DO
+  - **Asset TODO:** export **512×512 PNG** app icon (gold Sparklean mark on square) for sharper PWA home screen icon — portal uses logo from CDN today
+  - **Brand tokens:** gold `#B8A47A`, cream `#F9F7F3`, Playfair Display + Montserrat (matches site)
 - Planned: commercial **Trust Shield** section on `/commercial-cleaning` + `/proof` links on commercial invoices
 - Planned: subtle footer link to workforcevisionai.com
 - **Do not** software-ify homepage or residential pages
