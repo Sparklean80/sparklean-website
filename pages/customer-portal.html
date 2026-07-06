@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Customer Portal | Sparklean Cleaning</title>
+<meta name="description" content="Pay invoices, request service, and view your cleaning history with the Sparklean customer portal. Add to your home screen for quick access — for existing customers.">
+<link rel="canonical" href="https://www.sparklean.co/customer-portal">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sparklean Cleaning">
+<meta property="og:title" content="Sparklean Customer Portal">
+<meta property="og:description" content="Pay invoices, request service, view verified service history, and reach our office — all in one place.">
+<meta property="og:url" content="https://www.sparklean.co/customer-portal">
+<meta property="og:image" content="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sparklean Customer Portal">
+<meta name="twitter:description" content="Your Sparklean customer portal — invoices, service requests, and visit history. Add to Home Screen.">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebPage","@id":"https://www.sparklean.co/customer-portal#webpage","name":"Sparklean Customer Portal","url":"https://www.sparklean.co/customer-portal","description":"Customer portal for existing Sparklean clients — pay invoices, request service, view cleaning history.","isPartOf":{"@id":"https://www.sparklean.co/#website"}},
+{"@type":"WebSite","@id":"https://www.sparklean.co/#website","name":"Sparklean Cleaning","url":"https://www.sparklean.co/"},
+{"@type":"WebApplication","@id":"https://www.sparklean.co/customer-portal#app","name":"Sparklean Customer Portal","alternateName":"Sparklean Client Portal","url":"https://portal.sparklean.co","applicationCategory":"BusinessApplication","operatingSystem":"Web","browserRequirements":"Requires a modern web browser (Safari or Chrome). Add to Home Screen for a full-screen app experience. Not an App Store download.","description":"Progressive web app for existing Sparklean customers — pay invoices, request additional cleaning, report issues under the 24-Hour Happiness Guarantee, and view verified service history.","image":"https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png","provider":{"@type":"LocalBusiness","@id":"https://www.sparklean.co/#localbusiness","name":"Sparklean Cleaning","telephone":"+1-239-888-3588","email":"info@sparklean.co","url":"https://www.sparklean.co/","areaServed":["Naples FL","Fort Myers FL","Bonita Springs FL","Estero FL","Cape Coral FL"]},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","description":"Included for existing Sparklean customers — access via invitation or magic link email."},"featureList":["Pay invoices securely online","Request additional cleaning or add-ons","Report an issue after a visit","View verified service history","Contact the Sparklean office"],"audience":{"@type":"Audience","audienceType":"Existing Sparklean residential and commercial customers"}},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Who can access the Sparklean customer portal?","acceptedAnswer":{"@type":"Answer","text":"The portal is for existing Sparklean customers only. You receive access through a welcome email from our office or by signing in with the email address already on your account — we send a secure magic link. There is no public sign-up."}},
+{"@type":"Question","name":"Do I need to download an app from the App Store?","acceptedAnswer":{"@type":"Answer","text":"No. The Sparklean customer portal is a progressive web app. Open the link in Safari or Chrome and use Add to Home Screen for a full-screen experience — no App Store or Google Play download required."}},
+{"@type":"Question","name":"What can I do in the customer portal?","acceptedAnswer":{"@type":"Answer","text":"Pay invoices, request additional cleaning or add-ons, report an issue under our 24-Hour Happiness Guarantee, view verified service history, and contact our office in one place."}}
+]}
+]}
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#B8A47A;--gold-lt:#D4BF96;--dark:#0E0E0E;--dark2:#161616;--nav-bg:#131313;--white:#F9F7F3;--w70:rgba(249,247,243,.7);--serif:'Playfair Display',Georgia,serif;--sans:'Montserrat',sans-serif;--nav-h:120px;--portal-url:https://workforce-visionai-qrdpa.ondigitalocean.app/cx/sparklean;}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--white);font-family:var(--sans);font-weight:300;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:var(--nav-h);background:var(--nav-bg);border-bottom:1px solid rgba(201,168,76,.12);display:flex;align-items:center;justify-content:space-between;padding:0 52px;}
+.nav-logo{display:flex;align-items:center;text-decoration:none;height:100%;padding:8px 0;}
+.nav-logo img{height:104px;width:auto;display:block;}
+.nav-links{display:flex;gap:30px;list-style:none}
+.nav-links a{font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--w70);text-decoration:none;transition:color .25s;}
+.nav-links a:hover,.nav-links a.active{color:var(--white)}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-phone{font-size:.68rem;color:var(--w70);text-decoration:none;letter-spacing:.04em}.nav-phone:hover{color:var(--gold-lt)}
+.nav-btn{font-size:.57rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#0E0E0E;background:var(--gold);padding:11px 22px;text-decoration:none;transition:background .25s}.nav-btn:hover{background:var(--gold-lt)}
+.btn-gold{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:.58rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#0E0E0E;background:linear-gradient(135deg,var(--gold-lt),var(--gold));padding:16px 34px;text-decoration:none;border-radius:2px;transition:transform .22s,box-shadow .22s,filter .22s;box-shadow:0 10px 32px rgba(0,0,0,.35);}
+.btn-gold:hover{transform:translateY(-2px);filter:brightness(1.04);box-shadow:0 14px 40px rgba(0,0,0,.42);}
+.btn-gold-icon{width:36px;height:36px;border-radius:50%;background:rgba(14,14,14,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.btn-gold-icon::after{content:'';width:0;height:0;border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent #0E0E0E;margin-left:2px;}
+.cp-hero{position:relative;min-height:min(82vh,760px);display:flex;align-items:center;padding:calc(var(--nav-h) + 64px) clamp(22px,5vw,80px) clamp(72px,8vw,96px);background:radial-gradient(ellipse 90% 60% at 70% 0%,rgba(184,164,122,.11) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 10% 80%,rgba(184,164,122,.05) 0%,transparent 50%),linear-gradient(180deg,#0c0c0c 0%,#0e0e0e 100%);overflow:hidden;}
+.cp-hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(40px,6vw,72px);max-width:72rem;margin:0 auto;width:100%;align-items:center;}
+.cp-eyebrow{font-size:.52rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:rgba(212,191,150,.8);margin-bottom:18px;}
+.cp-hero h1{font-family:var(--serif);font-size:clamp(2rem,4.2vw,3.2rem);font-weight:400;line-height:1.12;margin-bottom:18px;}
+.cp-hero h1 em{font-style:italic;color:var(--gold-lt);}
+.cp-sub{font-family:var(--serif);font-size:clamp(.95rem,1.9vw,1.08rem);line-height:1.78;color:rgba(249,247,243,.78);margin-bottom:28px;max-width:34ch;}
+.cp-note{font-size:.56rem;line-height:1.65;color:rgba(249,247,243,.42);max-width:36ch;margin-top:16px;}
+.cp-note a{color:var(--gold-lt);text-decoration:none}.cp-note a:hover{text-decoration:underline;}
+.cp-phone-preview{position:relative;border-radius:4px;padding:1px;background:linear-gradient(145deg,rgba(212,191,150,.45),rgba(184,164,122,.08) 40%,rgba(184,164,122,.25));box-shadow:0 40px 100px rgba(0,0,0,.55);}
+.cp-phone-inner{background:var(--white);color:var(--dark);border-radius:3px;overflow:hidden;min-height:320px;}
+.cp-phone-bar{background:var(--dark);padding:14px 18px;display:flex;align-items:center;gap:10px;}
+.cp-phone-bar img{height:28px;width:auto;}
+.cp-phone-bar span{font-family:var(--serif);font-size:.72rem;color:var(--white);letter-spacing:.04em;}
+.cp-phone-body{padding:22px 20px 24px;}
+.cp-mock-label{font-size:.48rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:rgba(14,14,14,.45);margin-bottom:14px;}
+.cp-mock-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(14,14,14,.08);font-size:.62rem;color:rgba(14,14,14,.75);}
+.cp-mock-row strong{color:var(--dark);font-weight:500;}
+.cp-mock-pill{font-size:.48rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#0E0E0E;background:var(--gold);padding:5px 10px;border-radius:999px;}
+.cp-section{padding:clamp(72px,9vw,100px) clamp(22px,5vw,80px);border-top:1px solid rgba(201,168,76,.08);}
+.cp-section--panel{background:linear-gradient(180deg,#121211 0%,#0e0e0e 100%);}
+.cp-wrap{max-width:56rem;margin:0 auto;}
+.cp-label{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-label-line{width:28px;height:1px;background:var(--gold);}
+.cp-label span{font-size:.52rem;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);}
+.cp-h2{font-family:var(--serif);font-size:clamp(1.65rem,3.2vw,2.4rem);font-weight:400;line-height:1.15;margin-bottom:28px;}
+.cp-h2 em{font-style:italic;color:var(--gold-lt);}
+.cp-benefits{display:grid;grid-template-columns:repeat(2,1fr);gap:3px;margin-top:8px;}
+.cp-benefit{background:rgba(22,22,22,.92);border:1px solid rgba(201,168,76,.1);padding:clamp(22px,3vw,32px);transition:border-color .3s;}
+.cp-benefit:hover{border-color:rgba(201,168,76,.28);}
+.cp-benefit h3{font-family:var(--serif);font-size:1rem;font-weight:400;margin-bottom:8px;color:var(--white);}
+.cp-benefit p{font-family:var(--serif);font-size:.84rem;line-height:1.72;color:rgba(249,247,243,.68);}
+.cp-install{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,32px);margin-top:12px;}
+.cp-install-card{border:1px solid rgba(201,168,76,.12);padding:clamp(24px,3.5vw,32px);background:rgba(14,14,14,.6);}
+.cp-install-card h3{font-size:.58rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.cp-install-card ol{margin:0;padding-left:1.15rem;font-family:var(--serif);font-size:.88rem;line-height:1.85;color:rgba(249,247,243,.72);}
+.cp-install-card li{margin-bottom:4px;}
+.cp-install-note{font-family:var(--serif);font-size:.9rem;font-style:italic;line-height:1.7;color:rgba(249,247,243,.55);margin-top:24px;text-align:center;}
+.cp-areas{font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(184,164,122,.55);text-align:center;margin-top:32px;}
+.cp-cta-band{text-align:center;padding:clamp(64px,8vw,88px) clamp(22px,5vw,80px);border-top:1px solid rgba(201,168,76,.1);background:#0a0a0a;}
+.cp-cta-band p{font-family:var(--serif);font-size:clamp(.92rem,1.8vw,1.02rem);font-style:italic;color:rgba(249,247,243,.55);max-width:30rem;margin:0 auto 24px;line-height:1.7;}
+footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
+.footer-top{padding:72px 80px 60px;display:flex;flex-direction:column;align-items:center;border-bottom:1px solid rgba(184,164,122,.08);}
+.footer-logo-wrap img{height:200px;width:auto;display:block;}
+.footer-divider{width:48px;height:1px;background:var(--gold);margin:20px auto 18px;opacity:.5;}
+.footer-cities{font-size:.55rem;letter-spacing:.26em;text-transform:uppercase;color:rgba(184,164,122,.45);text-align:center;line-height:2.4;}
+.footer-cities a{color:inherit;text-decoration:none;}
+.footer-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:52px;width:100%;max-width:800px;margin-top:52px;}
+.footer-col-title{font-size:.56rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;}
+.footer-col a{display:block;font-size:.7rem;color:rgba(249,247,243,.4);text-decoration:none;line-height:1;margin-bottom:14px;transition:color .25s;}
+.footer-col a:hover{color:var(--gold-lt);}
+.footer-bottom{padding:22px 80px;display:flex;justify-content:space-between;align-items:center;}
+.footer-copy{font-size:.58rem;color:rgba(249,247,243,.2);letter-spacing:.06em;}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;}
+.nav-hamburger span{display:block;width:22px;height:1px;background:var(--w70);transition:transform .3s,opacity .3s;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+.nav-mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:var(--nav-bg);border-top:1px solid rgba(201,168,76,.12);z-index:899;padding:20px 0;flex-direction:column;}
+.nav-mobile-menu.open{display:flex;}
+.nav-mobile-menu a{font-size:.62rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--w70);text-decoration:none;padding:14px 28px;border-bottom:1px solid rgba(201,168,76,.06);}
+.nav-mobile-menu a:hover{color:var(--gold);}
+@media(max-width:1024px){
+  nav{padding:0 24px;}
+  .nav-links,.nav-phone{display:none !important;}
+  .nav-logo img{height:76px;}
+  .nav-hamburger{display:flex !important;}
+  .nav-btn{display:none;}
+  .cp-hero-grid{grid-template-columns:1fr;}
+  .cp-phone-preview{max-width:340px;margin:0 auto;}
+  .cp-benefits,.cp-install{grid-template-columns:1fr;}
+  .footer-top{padding:52px 20px 40px;}
+  .footer-bottom{padding:18px 20px;flex-direction:column;gap:10px;text-align:center;}
+  .footer-cols{grid-template-columns:1fr;gap:30px;}
+}
+@media(max-width:640px){
+  :root{--nav-h:70px;}
+  nav{height:70px;padding:0 16px;}
+  .nav-logo img{height:54px;}
+  .footer-logo-wrap img{height:120px !important;}
+  .btn-gold{width:100%;max-width:320px;}
+}
+</style>
+<link rel="stylesheet" href="/css/sparklean-mobile-first.css">
+<link rel="stylesheet" href="/css/sparklean-nav-logo.css">
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <a href="/" class="nav-logo">
+    <img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning" width="200" height="100" decoding="async">
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/residential-cleaning">Residential</a></li>
+    <li><a href="/commercial-cleaning">Commercial</a></li>
+    <li><a href="/post-construction-cleaning">Post-Construction</a></li>
+    <li><a href="/specialized-cleaning">Add-Ons</a></li>
+    <li><a href="/about">About Us</a></li>
+    <li><a href="/blog">Blog</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="tel:2398883588" class="nav-phone">(239) 888-3588</a>
+    <button type="button" class="nav-hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <a href="/contact" class="nav-btn">Get a Quote</a>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile" hidden>
+  <a href="/">Home</a>
+  <a href="/residential-cleaning">Residential Cleaning</a>
+  <a href="/commercial-cleaning">Commercial &amp; Janitorial</a>
+  <a href="/post-construction-cleaning">Post-Construction</a>
+  <a href="/specialized-cleaning">Add-Ons</a>
+  <a href="/about">About Us</a>
+  <a href="/blog">Blog</a>
+  <a href="/contact">Contact</a>
+  <a href="/customer-portal">Customer Portal</a>
+  <a href="tel:2398883588">(239) 888-3588</a>
+</div>
+
+<main>
+  <header class="cp-hero">
+    <div class="cp-hero-grid">
+      <div>
+        <p class="cp-eyebrow">Existing customers</p>
+        <h1>Your Sparklean<br><em>customer portal</em></h1>
+        <p class="cp-sub">Pay invoices, request service, view your cleaning history, and reach our office — all in one place.</p>
+        <a class="btn-gold" id="portal-open-btn" href="https://workforce-visionai-qrdpa.ondigitalocean.app/cx/sparklean" rel="noopener noreferrer">
+          <span class="btn-gold-icon" aria-hidden="true"></span>
+          Open Customer Portal
+        </a>
+        <p class="cp-note">For existing customers only. Use the email on file with Sparklean — we send a secure magic link. No public sign-up.<br><br>Haven&rsquo;t received your welcome email? Call <a href="tel:2398883588">(239) 888-3588</a> or <a href="mailto:info@sparklean.co">info@sparklean.co</a>.</p>
+      </div>
+      <div class="cp-phone-preview" aria-hidden="true">
+        <div class="cp-phone-inner">
+          <div class="cp-phone-bar">
+            <img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="">
+            <span>Sparklean</span>
+          </div>
+          <div class="cp-phone-body">
+            <p class="cp-mock-label">Your account</p>
+            <div class="cp-mock-row"><span>Upcoming visit</span><strong>Thu · 8–12</strong></div>
+            <div class="cp-mock-row"><span>Open invoice</span><span class="cp-mock-pill">Pay now</span></div>
+            <div class="cp-mock-row"><span>Last service</span><strong>Verified ✓</strong></div>
+            <div class="cp-mock-row"><span>Request add-on</span><strong>→</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="cp-section cp-section--panel" aria-labelledby="cp-benefits-h">
+    <div class="cp-wrap">
+      <div class="cp-label"><div class="cp-label-line"></div><span>What you can do</span></div>
+      <h2 class="cp-h2" id="cp-benefits-h">Everything in <em>one place</em></h2>
+      <div class="cp-benefits">
+        <div class="cp-benefit"><h3>Pay invoices securely</h3><p>Review and pay open invoices online — no phone tag with the office.</p></div>
+        <div class="cp-benefit"><h3>Request service &amp; add-ons</h3><p>Ask for additional cleaning, deep cleans, or add-on services from the same account.</p></div>
+        <div class="cp-benefit"><h3>Report an issue</h3><p>Under our 24-Hour Happiness Guarantee — tell us what missed the mark and we&rsquo;ll make it right.</p></div>
+        <div class="cp-benefit"><h3>Verified service history</h3><p>See past visits and completion records tied to your Sparklean account.</p></div>
+        <div class="cp-benefit"><h3>Contact the office</h3><p>One thread with Sparklean — no hunting for the right inbox or extension.</p></div>
+        <div class="cp-benefit"><h3>Add to Home Screen</h3><p>Opens full screen like your own app. No App Store or Google Play required.</p></div>
+      </div>
+      <p class="cp-areas">Service area · Naples · Fort Myers · Bonita Springs · Estero · Cape Coral</p>
+    </div>
+  </section>
+
+  <section class="cp-section" aria-labelledby="cp-install-h">
+    <div class="cp-wrap">
+      <div class="cp-label"><div class="cp-label-line"></div><span>Install on your phone</span></div>
+      <h2 class="cp-h2" id="cp-install-h">Add Sparklean to your <em>Home Screen</em></h2>
+      <div class="cp-install">
+        <div class="cp-install-card">
+          <h3>iPhone (Safari)</h3>
+          <ol>
+            <li>Open the portal link from your invitation email</li>
+            <li>Tap Share (square with arrow)</li>
+            <li>Tap <strong>Add to Home Screen</strong></li>
+            <li>Tap Add</li>
+          </ol>
+        </div>
+        <div class="cp-install-card">
+          <h3>Android (Chrome)</h3>
+          <ol>
+            <li>Open the portal link</li>
+            <li>Tap the menu (⋮)</li>
+            <li>Tap <strong>Install app</strong> or <strong>Add to Home screen</strong></li>
+            <li>Confirm</li>
+          </ol>
+        </div>
+      </div>
+      <p class="cp-install-note">Opens full screen like your own app — no App Store download required.</p>
+    </div>
+  </section>
+
+  <section class="cp-cta-band">
+    <p>Already a Sparklean client? Open the portal with the email we have on file.</p>
+    <a class="btn-gold" href="https://workforce-visionai-qrdpa.ondigitalocean.app/cx/sparklean" rel="noopener noreferrer"><span class="btn-gold-icon" aria-hidden="true"></span>Open Customer Portal</a>
+    <p class="cp-note" style="margin:20px auto 0;text-align:center;">Branded address: <strong style="color:rgba(249,247,243,.55);font-weight:500;">portal.sparklean.co</strong> — use the link from your welcome email or sign in with magic link.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-logo-wrap">
+      <img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning">
+      <div class="footer-divider"></div>
+      <div class="footer-cities"><a href="/house-cleaning-naples">Naples</a> · <a href="/house-cleaning-estero">Estero</a> · <a href="/house-cleaning-fort-myers">Fort Myers</a> · <a href="/house-cleaning-bonita-springs">Bonita Springs</a> · <a href="/house-cleaning-cape-coral">Cape Coral</a></div>
+    </div>
+    <div class="footer-cols">
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <a href="/">Home</a>
+        <a href="/about">About Us</a>
+        <a href="/blog">Blog</a>
+        <a href="/contact">Contact</a>
+        <a href="/customer-portal">Customer Portal</a>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <a href="/residential-cleaning">Residential</a>
+        <a href="/commercial-cleaning">Commercial</a>
+        <a href="/post-construction-cleaning">Post-Construction</a>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <a href="tel:2398883588">(239) 888-3588</a>
+        <a href="mailto:info@sparklean.co">info@sparklean.co</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Sparklean Cleaning. All Rights Reserved.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var hb=document.getElementById('hamburger');
+  var mm=document.getElementById('mobileMenu');
+  if(hb&&mm){
+    hb.addEventListener('click',function(){
+      var open=mm.classList.toggle('open');
+      hb.classList.toggle('open',open);
+      mm.hidden=!open;
+      hb.setAttribute('aria-expanded',open?'true':'false');
+    });
+    mm.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){mm.classList.remove('open');hb.classList.remove('open');mm.hidden=true;hb.setAttribute('aria-expanded','false');});});
+  }
+})();
+</script>
+</body>
+</html>

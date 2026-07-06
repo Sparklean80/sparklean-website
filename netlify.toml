@@ -681,6 +681,14 @@
   to = "/pages/inner-circle.html"
   status = 200
 [[redirects]]
+  from = "/customer-portal"
+  to = "/pages/customer-portal.html"
+  status = 200
+[[redirects]]
+  from = "/customer-portal/"
+  to = "/pages/customer-portal.html"
+  status = 200
+[[redirects]]
   from = "/blog/naples-house-cleaning-when-to-hire-a-pro"
   to = "/pages/blog/naples-house-cleaning-when-to-hire-a-pro.html"
   status = 200
