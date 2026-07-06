@@ -218,8 +218,8 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 - Tony’s **proof infrastructure** product; Sparklean is **customer zero**
 - **Customer portal (live on marketing site):** `/customer-portal` → luxury landing page; CTAs open interim app URL until DNS is live
-  - **Branded app URL (schema + future CTA):** `https://portal.sparklean.co` (CNAME → DigitalOcean app)
-  - **Interim app URL (CTAs today):** `https://workforce-visionai-qrdpa.ondigitalocean.app/cx/sparklean`
+  - **Interim app URL (all CTAs today):** `https://workforce-visionai-qrdpa.ondigitalocean.app/cx/sparklean`
+  - **Branded app URL (when DNS live):** `https://portal.sparklean.co` — Namecheap CNAME → DO app, then `CX_PORTAL_HOST_LIVE=1` on DO; swap CTAs + JSON-LD `WebApplication.url` in `pages/customer-portal.html`
   - PWA via Add to Home Screen — **not** App Store; existing customers only (magic link)
 - Planned: commercial **Trust Shield** section on `/commercial-cleaning` + `/proof` links on commercial invoices
 - Planned: subtle footer link to workforcevisionai.com
