@@ -2,7 +2,116 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-07-05**
+Last updated: **2026-07-14**
+
+---
+
+## Performance + conversion roadmap
+
+**North star:** Click → instant trust → booking → app install → relationship → retention → upsell → referral
+
+**CWV targets:** LCP &lt; 2.0s · INP &lt; 200ms · CLS &lt; 0.1 · TTFB &lt; 500ms
+
+### Repo ownership
+
+| Layer | Owner | URL |
+|-------|--------|-----|
+| Public SEO, leads, service/location pages | **This repo** (`sparklean-website`) | `sparklean.co` |
+| Auth, scheduling, payments, proof, retention | **Workforce Vision** | `portal.sparklean.co` (interim DO host until DNS) |
+
+**Rule:** Never put indexable SEO content behind login. Portal = product; marketing site = acquisition + trust.
+
+### Priority 1 — Core Web Vitals (marketing site)
+
+| Action | Status |
+|--------|--------|
+| Long-cache headers on `/css`, `/js`, `/images`, favicons | **Done** — `netlify.toml` `[[headers]]` |
+| Lazy-load below-fold images | **Partial** — most pages use `loading="lazy"` |
+| Defer non-critical JS | **Partial** — quote intake + sticky CTA use `defer` |
+| Prefetch likely next pages | **Done** — hover prefetch in `js/sparklean-mobile-sticky-cta.js` |
+| Preconnect + preload LCP hero image (homepage) | **Done** — `index.html` |
+| Font preconnect sitewide | **Partial** — homepage + customer-portal; extend to hub pages |
+| Migrate Webflow CDN images → `/images/` + WebP/AVIF | **TODO** — biggest LCP win remaining |
+| Minify inline CSS on hub pages | **TODO** — optional build step |
+| Remove unused JS | **Low priority** — bundles are small (~3 JS files) |
+| Third-party trackers | **None** — keep it that way |
+
+Measure: PageSpeed Insights + GSC Core Web Vitals after each deploy.
+
+### Priority 2 — PWA (portal only)
+
+Service worker, offline shell, post-login asset cache, push notifications → **Workforce Vision repo**, not this site. Marketing `/customer-portal` is a landing page only.
+
+### Priority 3 — Public vs private split
+
+| Public (`sparklean.co`) | Private (`portal.sparklean.co`) |
+|-------------------------|----------------------------------|
+| SEO, sitemap, blogs | Scheduling, payments |
+| Service + city pages | Messaging, history |
+| Quote / contact intake | Proof reports, rebook |
+| Client App landing (`/customer-portal`) | Upsells, push/SMS |
+
+### Priority 4 — Local SEO pages
+
+| Page | Status |
+|------|--------|
+| Naples / Bonita / Estero / Fort Myers / Cape Coral house cleaning | **Live** — `/house-cleaning-{city}` · unique luxury wording pass **2026-07-14** (`660c6f4`) |
+| Post-construction cleaning | **Live** — `/post-construction-cleaning` |
+| Vacation rental cleaning | **TODO** — new page or section |
+| Luxury home cleaning | **Partial** — covered in residential + city copy |
+| Office / dealership / school / janitorial | **Draft local only** — generated, **not pushed** (freeze until city rankings recover) |
+
+**City priority order (business):** Bonita (home base) → Naples → Estero → Fort Myers → Cape Coral (last growth city).
+
+**Wording rules for city pages:** trust + supervision + named communities — not price-led (`$/hr`), not synonym spam; each city gets a unique H1/angle (do not city-swap the same paragraphs).
+
+Each new page: unique copy, local refs, FAQs, internal links, CTA to quote intake.
+
+### Priority 5 — Conversion (marketing site)
+
+| Flow | Status |
+|------|--------|
+| Structured quote intake (`js/quote-intake.js`, `serviceFlows.js`) | **Live** on contact + preset CTAs |
+| One-click call (mobile sticky bar) | **Live** |
+| SMS conversations | **TODO** — Twilio or portal handoff |
+| Fast booking without quote | **Portal** — after first client relationship |
+
+### Priority 6 — Install growth
+
+| Trigger | Owner |
+|---------|--------|
+| Post-booking install prompt + benefits copy | **Portal** (WV deploy) |
+| Marketing explainers (Safari Share, no App Store) | **Done** — `/customer-portal` |
+| Push notifications; SMS fallback | **Portal** |
+
+### Priority 7 — Retention engine
+
+Dashboard features (visits, invoices, photos, rebook, add-ons) → **Portal**. Marketing site links to portal; does not duplicate authenticated UI.
+
+Suggested upsell copy can appear on `/specialized-cleaning` and portal add-on flows.
+
+### Priority 8 — Reuse Workforce Vision
+
+Do **not** rebuild in marketing site: notifications, audit trail, evidence reports, scheduling, document delivery, AI onboarding, proof artifacts. Surface **trust signals** on commercial pages only (Trust Shield — Phase 1).
+
+### Priority 9 — Measurement
+
+Track in portal + analytics (not yet wired on marketing site):
+
+- Page load / CWV (PSI, GSC)
+- Quote submit → book rate (`netlify/functions` quote endpoint)
+- Install rate (portal events)
+- Repeat booking + upsell acceptance (portal)
+- Review conversion (GBP manual + UTM if added)
+
+**Dashboard question:** Which channel produces clients who rebook and upsell? → needs portal CRM + UTM discipline on marketing CTAs.
+
+### Suggested execution order
+
+1. **Now (marketing):** CWV headers, preload, prefetch — shipped; migrate hero/CDN images to local WebP
+2. **Next (marketing):** 1–2 commercial geo pages (Phase 2); vacation rental page if search demand
+3. **Parallel (portal):** PWA shell, post-login cache, install prompt after first booking, push/SMS
+4. **Then:** UTM + conversion events; GSC CWV monitoring loop
 
 ---
 
@@ -180,10 +289,24 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 - `/pages/*.html` → clean URL 301s
 - Tony validated **404** + **redirect error** in GSC (pending recrawl)
 
-### Known GSC state (Jul 2026)
-- Many old URLs show **PENDING** — redirects live; waiting on Google recrawl
-- **Crawled not indexed** — often old neighborhoods + sitemap.xml (normal)
-- **Do not** keep renaming URLs during recovery
+### City money-page wording pass (2026-07-14 — `660c6f4`)
+- Unique title/meta/H1/intro/FAQ for all 5 city pages — **no UI redesign**
+- Angles: Bonita = home base trust · Naples = discretion/estates · Estero = golf communities · Fort Myers = across the city · Cape Coral = canal homes
+- Removed leading `$/hr` from city service cards + cost FAQs; custom-quote language instead
+- Fixed Fort Myers desktop hero communities (was wrongly listing Estero neighborhoods)
+
+### Known GSC state (2026-07-14)
+- **Sitemap view (truth for money pages):** ~**26 indexed** / **1 not indexed** = `/customer-portal` (Client App landing — low SEO urgency; optional Request indexing)
+- **All Pages view (~61 not indexed):** includes legacy 404s/redirects Google hasn’t recrawled since ~April — **not** 61 missing money pages
+- Use **Sitemaps → sitemap.xml → See page indexing**, not the global 61, as the KPI
+- Avg position ~40–60 + ~0.2% CTR on non-brand = **ranking problem**, not indexing problem
+- **Do not** keep renaming URLs during recovery; **do not** push commercial vertical drafts yet
+
+### SEO recovery playbook (active)
+1. GBP + reviews (Bonita home base first)
+2. Request indexing on city URLs after wording deploy
+3. Measure GSC positions for Bonita → Naples → Estero → Fort Myers in 2–3 weeks
+4. Then deepen hubs or carefully add commercial geo — not a page spray
 
 ---
 
@@ -234,19 +357,22 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 ## Deferred / next (approved direction, not built)
 
 ### Phase 0 SEO (ongoing)
-- GSC validate fix on 404 + redirect error
+- GSC: prefer **sitemap indexing** dashboard over global “61 not indexed”
 - No URL churn 30 days
+- City wording live (`660c6f4`); next levers = GBP/reviews + recrawl, not more URLs
 
 ### Phase 1 — Commercial Trust Shield
 - Mid-page section on `/commercial-cleaning` only
 - Proof link screenshot, vertical index grid (medical, dealerships, schools, HOA, etc.)
 
 ### Phase 2 — Commercial money pages (~6–14 max)
-- `/commercial-cleaning-naples`, `/office-cleaning-naples`, `/medical-office-cleaning-naples`, `/dealership-cleaning-naples`, `/school-cleaning-naples`, Fort Myers mirrors, etc.
-- **Not** 40 pages at once
+- Hub drafts exist locally (`office-cleaning`, `dealership-cleaning`, `school-cleaning`, `janitorial-services`) — **hold push** until Phase 0 city rankings stabilize
+- Then `/commercial-cleaning-{city}` and selective vertical+city combos only
+- **Not** 40 pages at once; **not** duplicate city-swapped copy
 
 ### Phase 3 — Reviews + GBP
 - 7–8 real reviews over 2 weeks; neutral ask; target 100+
+- **Now priority** alongside city page recovery
 
 ### Commercial content expansion (Tony deferred)
 - Large Tier 1–5 commercial plan discussed — do **Phase 1 geo commercial only** when resumed
