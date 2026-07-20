@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-07-14**
+Last updated: **2026-07-20**
 
 ---
 
@@ -308,6 +308,13 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 3. Measure GSC positions for Bonita → Naples → Estero → Fort Myers in 2–3 weeks
 4. Then deepen hubs or carefully add commercial geo — not a page spray
 
+### Marketing email asset library (2026-07-20)
+- Stable public folder: `/email-assets/*.jpg` → `https://www.sparklean.co/email-assets/...`
+- Index + usage rules: [`docs/EMAIL_ASSETS.md`](EMAIL_ASSETS.md)
+- Long-cache headers on `/email-assets/*` in `netlify.toml`
+- Do **not** rename deployed filenames (hard-coded into HTML emails / ChatGPT prompts)
+- Prefer Sparklean originals; replace stand-ins noted in `EMAIL_ASSETS.md` when better photos exist
+
 ---
 
 ## Homepage founder video (`#founder-message`)
@@ -408,6 +415,8 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 |------|---------|
 | `index.html` | Homepage + founder video CSS/HTML |
 | `netlify.toml` | **Source of truth for URLs** |
+| `email-assets/` | Permanent marketing email images (stable public URLs) |
+| `docs/EMAIL_ASSETS.md` | Email image URL index for ChatGPT / campaigns |
 | `sitemap.xml` | Generated — don’t hand-edit without running build script |
 | `pages/blog.html` | Blog index + blogPost schema |
 | `pages/commercial-cleaning.html` | Commercial hub (Trust Shield goes here) |

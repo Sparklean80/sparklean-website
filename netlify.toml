@@ -818,3 +818,8 @@
   from = "/signalhouse/:slug/"
   to = "/pages/signalhouse/:slug.html"
   status = 200
+
+[[headers]]
+  for = "/email-assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
