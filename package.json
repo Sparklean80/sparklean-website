@@ -3,7 +3,8 @@
   "private": true,
   "description": "Static site; build step generates sitemap.xml from netlify.toml.",
   "scripts": {
-    "build": "node scripts/generate-sitemap.mjs",
-    "sitemap": "node scripts/generate-sitemap.mjs"
+    "build": "node scripts/generate-pages-redirects.mjs && node scripts/generate-sitemap.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "pages-redirects": "node scripts/generate-pages-redirects.mjs"
   }
 }
