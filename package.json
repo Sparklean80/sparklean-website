@@ -5,6 +5,7 @@
   "scripts": {
     "build": "node scripts/generate-pages-redirects.mjs && node scripts/generate-sitemap.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
-    "pages-redirects": "node scripts/generate-pages-redirects.mjs"
+    "pages-redirects": "node scripts/generate-pages-redirects.mjs",
+    "test:ads": "node scripts/test-google-ads-conversion.mjs"
   }
 }

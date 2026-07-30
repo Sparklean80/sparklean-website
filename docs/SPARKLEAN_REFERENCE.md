@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-07-30**
+Last updated: **2026-07-30** (Google Ads conversion branch)
 
 ---
 

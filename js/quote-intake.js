@@ -304,6 +304,15 @@
         if (!res.ok) {
           throw new Error("INTAKE_FAIL");
         }
+        // Google Ads conversion: only after server confirms persistence + returns leadId.
+        var leadId = res.j && res.j.leadId ? String(res.j.leadId) : "";
+        if (
+          leadId &&
+          window.SparkleanAds &&
+          typeof window.SparkleanAds.trackQuoteRequestCompleted === "function"
+        ) {
+          window.SparkleanAds.trackQuoteRequestCompleted(leadId);
+        }
         stepIndex = steps.length;
         submitting = false;
         render();
@@ -369,10 +378,26 @@
     try {
       var p = new URLSearchParams(window.location.search);
       var o = {};
-      var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+      var keys = [
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_content",
+        "utm_term",
+        "gclid",
+        "gbraid",
+        "wbraid",
+      ];
       for (var i = 0; i < keys.length; i++) {
         var v = p.get(keys[i]);
         if (v) o[keys[i]] = v.slice(0, 200);
+      }
+      // Preserve click ids across in-site navigation / intake open on other pages.
+      if (window.SparkleanAds && typeof window.SparkleanAds.getStoredAdClickIds === "function") {
+        var stored = window.SparkleanAds.getStoredAdClickIds() || {};
+        ["gclid", "gbraid", "wbraid"].forEach(function (k) {
+          if (!o[k] && stored[k]) o[k] = String(stored[k]).slice(0, 200);
+        });
       }
       return Object.keys(o).length ? o : null;
     } catch (e1) {
