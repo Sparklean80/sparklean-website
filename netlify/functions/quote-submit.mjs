@@ -197,11 +197,12 @@ function bedBathSubjectPart(answers) {
 }
 
 function buildEmailSubject({ serviceLabel, answers }) {
+  // Avoid spammy words like "Lead" / "URGENT" in the subject — Gmail filters those hard.
   const loc = displayLocation(answers.location);
-  const parts = [`New ${serviceLabel} Lead`, loc];
+  const parts = [`Sparklean inquiry`, serviceLabel, loc];
   const cat = answers.serviceCategory;
   if (cat === "innerCircle") {
-    parts.push("Membership inquiry");
+    parts.push("Inner Circle");
   } else if (cat === "residential" || cat === "condoHighRise" || cat === "luxuryEstate") {
     const bb = bedBathSubjectPart(answers);
     if (bb) parts.push(bb);
@@ -218,7 +219,7 @@ function buildEmailSubject({ serviceLabel, answers }) {
   } else if (cat === "windowCleaning") {
     parts.push("Windows");
   }
-  return parts.filter(Boolean).join(" • ").slice(0, 200);
+  return parts.filter(Boolean).join(" · ").slice(0, 200);
 }
 
 function humanFrequency(v) {
@@ -517,7 +518,7 @@ ${sectionsHtml}
 <tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(184,164,122,.25);">Internal AI summary</td></tr>
 <tr><td style="padding:14px 0 8px 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.65;color:rgba(249,247,243,.88);font-style:italic;">${escapeHtml(summary)}</td></tr>
 </table>
-<p style="margin:20px 0 0 0;font-family:Arial,sans-serif;font-size:11px;line-height:1.5;color:rgba(249,247,243,.35);">Structured JSON is attached for CRM import. Do not discuss pricing in email threads—coordinate by phone.</p>
+<p style="margin:20px 0 0 0;font-family:Arial,sans-serif;font-size:11px;line-height:1.5;color:rgba(249,247,243,.35);">Use Call / Reply above to reach the client. Do not discuss pricing in email—coordinate by phone.</p>
 </td></tr>
 </table>
 </td></tr></table>
@@ -557,8 +558,6 @@ function buildPlainTextLead({
     formatPlainSection("SCHEDULING NOTES", schedulingNotes),
     "INTERNAL AI SUMMARY",
     summary,
-    "",
-    "JSON attachment: lead-intake.json",
   ]
     .filter((line) => line !== "")
     .join("\n");
@@ -740,7 +739,7 @@ async function brevoPost(apiKey, payload) {
   return { ok: res.ok, status: res.status, text: responseText };
 }
 
-async function sendBrevoTransactionalEmail({ subject, html, text, attachmentJson, replyTo }) {
+async function sendBrevoTransactionalEmail({ subject, html, text }) {
   const apiKey = process.env.BREVO_API_KEY;
   const fromRaw = (process.env.SPARKLEAN_FROM_EMAIL && process.env.SPARKLEAN_FROM_EMAIL.trim()) || "info@sparklean.co";
   const toEmail = (process.env.SPARKLEAN_LEAD_TO && process.env.SPARKLEAN_LEAD_TO.trim()) || "info@sparklean.co";
@@ -755,46 +754,28 @@ async function sendBrevoTransactionalEmail({ subject, html, text, attachmentJson
     throw new Error("MISSING_EMAIL_CONFIG");
   }
 
-  const basePayload = buildBrevoPayload({
-    sender,
-    toEmail,
-    subject,
-    html,
-    text,
-    replyTo,
-    attachment: null,
-  });
-
-  const withAttachmentPayload =
-    attachmentJson &&
+  // Deliverability: no customer Reply-To (mismatched domains → spam) and no JSON attachment.
+  // Client email stays in the body with a Reply button. Reply-To stays the Sparklean sender.
+  const attempt = await brevoPost(
+    apiKey,
     buildBrevoPayload({
       sender,
       toEmail,
       subject,
       html,
       text,
-      replyTo,
-      attachment: {
-        name: "lead-intake.json",
-        content: Buffer.from(attachmentJson, "utf8").toString("base64"),
-      },
-    });
-
-  let attempt = withAttachmentPayload
-    ? await brevoPost(apiKey, withAttachmentPayload)
-    : await brevoPost(apiKey, basePayload);
-
-  if (!attempt.ok && withAttachmentPayload) {
-    console.warn("[quote-submit] Brevo failed with attachment; retrying without.", attempt.status, attempt.text);
-    attempt = await brevoPost(apiKey, basePayload);
-  }
+      replyTo: sender.email,
+      attachment: null,
+    })
+  );
 
   if (!attempt.ok) {
     const detail = parseBrevoFailureText(attempt.text);
     console.error("[quote-submit] Brevo outbound failed", {
       httpStatus: attempt.status,
       parsedMessage: detail,
-      attemptedWithAttachmentFirst: Boolean(withAttachmentPayload),
+      senderEmail: sender.email,
+      leadTo: toEmail,
     });
     console.error("[quote-submit] Brevo raw response (for support):", attempt.text);
     const err = new Error("BREVO_FAILED");
@@ -909,7 +890,9 @@ export default async (request) => {
   }
   dashboardRecord.summary = summary;
 
-  const attachmentJson = JSON.stringify(dashboardRecord, null, 2);
+  // Kept for function logs / future CRM webhook — not emailed (attachments hurt inbox placement).
+  console.log("[quote-submit] intake record", JSON.stringify(dashboardRecord));
+
   const subject = buildEmailSubject({ serviceLabel, answers });
   const detailRows = groupDetailRows(answers);
 
@@ -938,8 +921,6 @@ export default async (request) => {
       subject,
       html,
       text,
-      attachmentJson,
-      replyTo: answers.email,
     });
   } catch (e) {
     console.error("[quote-submit] email path aborted — see logs above for Brevo / config", {

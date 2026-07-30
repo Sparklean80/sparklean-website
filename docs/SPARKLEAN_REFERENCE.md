@@ -339,7 +339,9 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 
 Categories: residential, condo, luxury estate, move-in/out, airbnb, commercial office, medical, facility/janitorial, retail, HOA, post-construction, windows, specialized add-ons.
 
-Contact page + homepage `#quote` use these flows → `netlify/functions/quote-submit.mjs`.
+Contact page + homepage `#quote` use these flows → `netlify/functions/quote-submit.mjs` → Brevo transactional → `SPARKLEAN_LEAD_TO` (default `info@sparklean.co`).
+
+**Lead inbox / spam (2026-07-30):** Lead mail no longer sets Reply-To to the customer or attaches JSON (both spam triggers). Subject uses “Sparklean inquiry …”. In Brevo: **Senders → Domains** must show `sparklean.co` authenticated (same account as marketing). If campaigns inbox but leads spam, add a Gmail filter for subject `Sparklean inquiry` → Never spam.
 
 ---
 
