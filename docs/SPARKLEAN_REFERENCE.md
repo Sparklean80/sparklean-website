@@ -291,7 +291,7 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 
 ### `/pages/*.html` force redirect fix (2026-07-30)
 - Live check found `/pages/*.html` still returning **200** (static file shadowing) despite 301 rules
-- Fix: `force = true` on all `/pages/` → clean-URL 301s in `netlify.toml`
+- Fix: `force = true` + splat syntax (`/pages/*.html` → `/:splat`) — named `:slug` placeholders were emitted literally as `/:slug` on Netlify
 - Legacy Webflow slug 301s (e.g. `*-residential-cleaning`) were already working live
 - Money pages stay **200** via clean-URL rewrites; do not add speculative neighborhood 301s unless they appear in GSC Not found
 

@@ -542,24 +542,15 @@
 
 # Raw /pages/*.html URLs must not stay indexable duplicates — 301 to clean URLs.
 # force=true required: static files exist at these paths, so Netlify skips redirects otherwise.
+# Use splat (*.html → :splat); named :slug placeholders were returned literally as "/:slug".
 [[redirects]]
-  from = "/pages/blog/:slug.html"
-  to = "/blog/:slug"
+  from = "/pages/blog/*.html"
+  to = "/blog/:splat"
   status = 301
   force = true
 [[redirects]]
-  from = "/pages/blog/:slug.html/"
-  to = "/blog/:slug"
-  status = 301
-  force = true
-[[redirects]]
-  from = "/pages/signalhouse/:slug.html"
-  to = "/signalhouse/:slug"
-  status = 301
-  force = true
-[[redirects]]
-  from = "/pages/signalhouse/:slug.html/"
-  to = "/signalhouse/:slug"
+  from = "/pages/blog/*.html/"
+  to = "/blog/:splat"
   status = 301
   force = true
 [[redirects]]
@@ -573,13 +564,23 @@
   status = 301
   force = true
 [[redirects]]
-  from = "/pages/:slug.html"
-  to = "/:slug"
+  from = "/pages/signalhouse/*.html"
+  to = "/signalhouse/:splat"
   status = 301
   force = true
 [[redirects]]
-  from = "/pages/:slug.html/"
-  to = "/:slug"
+  from = "/pages/signalhouse/*.html/"
+  to = "/signalhouse/:splat"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/pages/*.html"
+  to = "/:splat"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/pages/*.html/"
+  to = "/:splat"
   status = 301
   force = true
 
