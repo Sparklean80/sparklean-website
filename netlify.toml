@@ -540,39 +540,48 @@
   to = "/residential-cleaning"
   status = 301
 
-# Raw /pages/*.html URLs must not stay indexable duplicates — 301 to clean URLs
+# Raw /pages/*.html URLs must not stay indexable duplicates — 301 to clean URLs.
+# force=true required: static files exist at these paths, so Netlify skips redirects otherwise.
 [[redirects]]
   from = "/pages/blog/:slug.html"
   to = "/blog/:slug"
   status = 301
+  force = true
 [[redirects]]
   from = "/pages/blog/:slug.html/"
   to = "/blog/:slug"
   status = 301
+  force = true
 [[redirects]]
   from = "/pages/signalhouse/:slug.html"
   to = "/signalhouse/:slug"
   status = 301
+  force = true
 [[redirects]]
   from = "/pages/signalhouse/:slug.html/"
   to = "/signalhouse/:slug"
   status = 301
+  force = true
 [[redirects]]
   from = "/pages/signalhouse/index.html"
   to = "/signalhouse"
   status = 301
+  force = true
 [[redirects]]
   from = "/pages/signalhouse/index.html/"
   to = "/signalhouse"
   status = 301
+  force = true
 [[redirects]]
   from = "/pages/:slug.html"
   to = "/:slug"
   status = 301
+  force = true
 [[redirects]]
   from = "/pages/:slug.html/"
   to = "/:slug"
   status = 301
+  force = true
 
 # Clean URLs in nav/sitemap point to /about, /residential-cleaning, etc.
 # Static files live under /pages/*.html — rewrite so Netlify serves them (200 = internal rewrite, URL unchanged).

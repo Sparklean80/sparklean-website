@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-07-20**
+Last updated: **2026-07-30**
 
 ---
 
@@ -288,6 +288,12 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 - ~50+ missing neighborhood Webflow 301s
 - `/pages/*.html` → clean URL 301s
 - Tony validated **404** + **redirect error** in GSC (pending recrawl)
+
+### `/pages/*.html` force redirect fix (2026-07-30)
+- Live check found `/pages/*.html` still returning **200** (static file shadowing) despite 301 rules
+- Fix: `force = true` on all `/pages/` → clean-URL 301s in `netlify.toml`
+- Legacy Webflow slug 301s (e.g. `*-residential-cleaning`) were already working live
+- Money pages stay **200** via clean-URL rewrites; do not add speculative neighborhood 301s unless they appear in GSC Not found
 
 ### City money-page wording pass (2026-07-14 — `660c6f4`)
 - Unique title/meta/H1/intro/FAQ for all 5 city pages — **no UI redesign**
