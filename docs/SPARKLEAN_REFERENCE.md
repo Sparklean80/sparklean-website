@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-07-30** (Google Ads conversion branch)
+Last updated: **2026-08-05** (entity schema consolidation branch)
 
 ---
 
@@ -271,6 +271,20 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 
 ---
 
+## Entity / JSON-LD (canonical business)
+
+| Item | Value |
+|------|--------|
+| Canonical `@id` | `https://www.sparklean.co/#organization` |
+| Legal name | Sparklean Cleaning LLC (never “corporation”) |
+| Locked description | Professionally managed and supervised residential and commercial cleaning company serving Southwest Florida |
+| Source module | `data/sparklean-entity.mjs` |
+| Sync | `npm run schema:sync` |
+| Tests | `npm run test:schema` |
+| Audit + citation worksheet | `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md`, `docs/seo/SPARKLEAN_CITATION_CONSISTENCY_CHECKLIST.md` |
+
+Rules: one business entity sitewide; city pages are service areas (not branches); no street address on site; no Maps search URLs in `sameAs`; no invented ratings/hours/profiles. After editing entity facts, sync + test.
+
 ## SEO work completed (summary)
 
 ### Internal linking + FAQ schema (`81b779f`)
@@ -428,6 +442,9 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 | `docs/EMAIL_ASSETS.md` | Email image URL index for ChatGPT / campaigns |
 | `sitemap.xml` | Generated — don’t hand-edit without running build script |
 | `pages/blog.html` | Blog index + blogPost schema |
+| `data/sparklean-entity.mjs` | Canonical Organization JSON-LD source of truth |
+| `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md` | Entity audit + before/after matrix |
+| `docs/seo/SPARKLEAN_CITATION_CONSISTENCY_CHECKLIST.md` | Founder NAP / sameAs worksheet |
 | `pages/commercial-cleaning.html` | Commercial hub (Trust Shield goes here) |
 | `pages/house-cleaning-*.html` | City money pages |
 | `scripts/generate-sitemap.mjs` | Sitemap generator |
