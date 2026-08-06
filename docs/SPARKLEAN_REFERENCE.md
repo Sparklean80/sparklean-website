@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-05** (sitewide nav: Why Sparklean + Partners discoverability)
+Last updated: **2026-08-05** (blog → Knowledge Center wording; claim scrub on all 12 posts)
 
 ---
 
@@ -181,26 +181,32 @@ Track in portal + analytics (not yet wired on marketing site):
 
 Cities: `naples`, `fort-myers`, `bonita-springs`, `estero`, `cape-coral`
 
-### Blog URLs
+### Blog / Knowledge Center
+
+**Strategy:** `docs/seo/SPARKLEAN_BLOG_KNOWLEDGE_CENTER.md` — decision/problem articles, not city-swapped tips; city pages own “cleaning service in [city]”.
 
 Pattern: `/blog/{slug}` → `pages/blog/{slug}.html` (200 rewrite in `netlify.toml`)
 
+**Hub wording:** Knowledge Center (choose / manage / verify). UI unchanged. Residential CTAs → recurring intake; partner path → `/partners` / `/refer`.
+
 **All 12 posts (keep `pages/blog.html` cards + JSON-LD `blogPost` array in sync):**
 
-| Slug | Focus |
+| Slug | Cluster |
 |------|--------|
-| `naples-house-cleaning-when-to-hire-a-pro` | Naples residential |
-| `fort-myers-house-cleaning-when-to-hire-a-pro` | Fort Myers residential |
-| `estero-house-cleaning-when-to-hire-a-pro` | Estero residential |
-| `bonita-springs-house-cleaning-when-to-hire-a-pro` | Bonita residential |
-| `cape-coral-house-cleaning-when-to-hire-a-pro` | Cape Coral residential |
-| `naples-post-construction-cleaning-before-move-in` | Naples post-con |
-| `cape-coral-post-construction-cleaning-remodel-new-build` | Cape Coral post-con |
-| `bonita-springs-post-construction-cleaning-remodel-new-build` | Bonita post-con |
-| `estero-residential-move-out-deep-cleaning` | Estero move-out/deep |
-| `naples-office-cleaning-medical-law-firms` | Naples commercial office |
-| `fort-myers-commercial-office-cleaning` | Fort Myers commercial |
-| `naples-commercial-cleaning-high-traffic-venues` | Naples commercial venues |
+| `naples-house-cleaning-when-to-hire-a-pro` | Recurring-home decisions |
+| `fort-myers-house-cleaning-when-to-hire-a-pro` | Recurring-home decisions |
+| `estero-house-cleaning-when-to-hire-a-pro` | Recurring-home decisions |
+| `bonita-springs-house-cleaning-when-to-hire-a-pro` | Recurring-home decisions |
+| `cape-coral-house-cleaning-when-to-hire-a-pro` | Recurring-home decisions |
+| `naples-post-construction-cleaning-before-move-in` | High-intent problems |
+| `cape-coral-post-construction-cleaning-remodel-new-build` | High-intent problems |
+| `bonita-springs-post-construction-cleaning-remodel-new-build` | High-intent problems |
+| `estero-residential-move-out-deep-cleaning` | High-intent problems |
+| `naples-office-cleaning-medical-law-firms` | High-intent problems |
+| `fort-myers-commercial-office-cleaning` | Trust & accountability |
+| `naples-commercial-cleaning-high-traffic-venues` | High-intent problems |
+
+**Claim scrub:** `node scripts/scrub-blog-claims.mjs` — no franchise digs, “healthier home,” or “luxury-grade products” without evidence; 20 future cluster titles are roadmap only (do not auto-generate).
 
 ### Redirects (`netlify.toml`)
 
@@ -264,14 +270,15 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 6. Standard nav + mobile menu (match any blog page)
 7. `<main id="main-content">` → `.article-shell` → breadcrumb → `<article class="article-inner">`
 8. `.article-cat` · `.article-title` · `.article-byline` · `.article-body` (H2s, lists, internal links)
-9. `.article-cta` with `/contact` + phone
+9. `.article-cta` with phone + **recurring** CTA (`data-sparklean-intake-preset="recurringResidential"`) for residential; walkthrough/partner CTA for commercial/post-con
 10. `.article-tags` + `.related-card` grid (3 related posts)
 11. Footer matching other pages
 12. Add **200 redirect** in `netlify.toml` for `/blog/{slug}`
 13. Add card to `pages/blog.html` + extend JSON-LD `blogPost` array
 14. Run `npm run sitemap`
+15. Follow `docs/seo/SPARKLEAN_BLOG_KNOWLEDGE_CENTER.md` (question title, direct answer, no unsupported claims)
 
-**Internal linking rules:** every post links to relevant service page, city page, and 1–2 sibling blogs. City “when to hire” posts link to high-intent commercial/post-con posts where relevant.
+**Internal linking rules:** every post links to relevant service page, city page, and 1–2 sibling blogs. Prefer decision/problem siblings over city-template twins.
 
 ---
 
