@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-05** (factual-claims pass: license wording + remove 20K clients)
+Last updated: **2026-08-05** (testimonials: remove unverified Google-adjacent quotes)
 
 ---
 
@@ -287,7 +287,7 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 
 Rules: one business entity sitewide; city pages are service areas (not branches); no street/partial address in schema; offerings via `Service` + `OfferCatalog`; no Maps search URLs in `sameAs`; no invented ratings/hours/profiles; no rich-result eligibility claims. After editing entity facts, sync + test.
 
-**Factual claims (do not reintroduce):** not “fully licensed” / occupational Florida cleaning license — use registered Florida business + bonding / GL / Workers’ Comp; no “20,000+ clients” unless founder documents the metric; no schema `aggregateRating` until live GBP count verified. Details in `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md`.
+**Factual claims (do not reintroduce):** not “fully licensed” / occupational Florida cleaning license — use registered Florida business + bonding / GL / Workers’ Comp; no “20,000+ clients” unless founder documents the metric; no schema `aggregateRating` / hard-coded review count; no attributed testimonials unless listed in `data/sparklean-testimonials.mjs` with a documented source; never place “Verified on Google” next to private quotes. Sync: `npm run testimonials:sync` · test: `npm run test:testimonials`. Details in `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md`.
 
 ## SEO work completed (summary)
 

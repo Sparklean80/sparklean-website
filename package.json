@@ -7,7 +7,9 @@
     "sitemap": "node scripts/generate-sitemap.mjs",
     "pages-redirects": "node scripts/generate-pages-redirects.mjs",
     "schema:sync": "node scripts/sync-entity-schema.mjs",
+    "testimonials:sync": "node scripts/sync-testimonials.mjs",
     "test:ads": "node scripts/test-google-ads-conversion.mjs",
-    "test:schema": "node scripts/test-entity-schema.mjs"
+    "test:schema": "node scripts/test-entity-schema.mjs",
+    "test:testimonials": "node scripts/test-testimonials.mjs"
   }
 }

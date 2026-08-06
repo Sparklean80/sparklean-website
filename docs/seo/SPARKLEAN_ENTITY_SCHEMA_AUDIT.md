@@ -138,12 +138,24 @@ Authoritative copy was tightened so Google/AI systems are not fed unsupported cr
 | “Fully licensed in Florida” / “Licensed · State of Florida” | No specific Florida occupational cleaning license identified; Sunbiz LLC registration is not an occupational license | Replaced with **registered Florida business** + bonding / GL insurance / Workers’ Comp wording |
 | “20,000+ clients” / “20K+ Clients Served” | No internal source documenting unique customers vs visits/history | **Removed** from meta, visible copy, FAQs, and tests |
 | “9+ Years in Business / Serving SW FL” | No substantiated founding-year source in repo | **Removed** / replaced with non-numeric trust (e.g. Workers’ Comp, 24h guarantee) |
-| Visible “4.9★ Google Rating” | Marketing link to live Google reviews; not a hard-coded review count in schema | **Kept visible**; schema `aggregateRating` remains omitted until founder verifies live count |
+| Visible “4.9★ Google Rating” | Independently corroborated (~4.9 with ~97 Google reviews via third-party listing) | **Kept visible**; **no** schema `aggregateRating` / hard-coded review count |
+| Hard-coded “96+ Google Reviews” chip | Stale vs live count; count belongs on Google | **Removed** from reviews UI |
+| Named testimonials (Castellano, Martinez, Thompson, Alvarez, Fontaine, Williams, Reyes) | No repo or public Google source for those exact quotations; “Verified on Google” sat above them | **Removed**; Google rating card separated; Client Testimonials omitted until documented |
 | 24-Hour Happiness Guarantee | Stated company policy with matching FAQ | **Kept** |
 | Same-day response / 24–48h scheduling | Operational claims on homepage FAQ | **Kept** as service promise; not elevated into schema |
 | Contact page hours (Mon–Sat 8–6) | Visible on `/contact` | Schema still omits `openingHoursSpecification` pending founder confirm that published hours match operations |
 
 No rich-result eligibility is claimed from these corrections.
+
+### Testimonials / Google separation (2026-08-05)
+
+| Item | Status |
+|------|--------|
+| Source manifest | `data/sparklean-testimonials.mjs` — `APPROVED_CLIENT_TESTIMONIALS` empty; unverified attributions blocklisted |
+| Sync | `npm run testimonials:sync` |
+| Regression | `npm run test:testimonials` |
+| Homepage + 5 city money pages | Google-rating card + “Read live Google reviews” only; no attributed quote cards |
+| Fabricated replacement quotes | **Not** added |
 
 ---
 
@@ -152,12 +164,13 @@ No rich-result eligibility is claimed from these corrections.
 Do **not** guess these in code:
 
 1. Direct `sameAs` profile URLs (Facebook, Instagram, LinkedIn, GBP canonical URL, Bing, Apple, BBB, Chamber) — worksheet in `SPARKLEAN_CITATION_CONSISTENCY_CHECKLIST.md`
-2. Live Google review **count** for optional future `aggregateRating` (visible “4.9” marketing may remain; schema rating omitted)
-3. Confirm Contact-page hours before adding `openingHoursSpecification` to schema
-4. Preferred public GBP link that does **not** rely on Maps search query strings (visible “Google reviews” CTAs still use Maps search URLs — replace when founder provides canonical GBP URL)
-5. Confirm Spanish (or other) as `availableLanguage` if desired beyond English
-6. Whether Bonita Springs should ever appear as `addressLocality` without street (currently omitted)
-7. Optional: if a true unique-customer count is later documented, it may be restored with a cited internal source
+2. **Current direct GBP / Google reviews URL** (site still uses a Maps search query string interim link)
+3. Whether published office hours are **Monday–Friday** or **Monday–Saturday** (Contact page currently shows Mon–Sat 8–6; do not sync to schema until confirmed)
+4. Evidence for product claims such as **“proprietary formula,” “non-toxic,” “safe for pets and families,”** and similar Sparklean Green Clean wording (left in place; not verified in this pass)
+5. Whether **Spanish** should be included in `availableLanguage`
+6. Live Google review **count** if/when adding schema `aggregateRating` (must match GBP that day; do not hard-code inventively)
+7. Whether Bonita Springs should ever appear as `addressLocality` without street (currently omitted)
+8. Optional: documented unique-customer count; approved private or Google testimonials for a future “Client Testimonials” section (add only via the manifest with source URL or permission note)
 
 ---
 
@@ -170,4 +183,5 @@ Do **not** guess these in code:
 1. Edit facts only in `data/sparklean-entity.mjs`
 2. Run `node scripts/sync-entity-schema.mjs`
 3. Run `npm run test:schema`
-4. Update this audit if identity fields change
+4. For testimonials: edit `data/sparklean-testimonials.mjs` only with documented sources → `npm run testimonials:sync` → `npm run test:testimonials`
+5. Update this audit if identity or trust claims change
