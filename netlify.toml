@@ -651,6 +651,30 @@
   to = "/pages/inner-circle.html"
   status = 200
 [[redirects]]
+  from = "/why-sparklean"
+  to = "/pages/why-sparklean.html"
+  status = 200
+[[redirects]]
+  from = "/why-sparklean/"
+  to = "/pages/why-sparklean.html"
+  status = 200
+[[redirects]]
+  from = "/refer"
+  to = "/pages/refer.html"
+  status = 200
+[[redirects]]
+  from = "/refer/"
+  to = "/pages/refer.html"
+  status = 200
+[[redirects]]
+  from = "/partners"
+  to = "/pages/partners.html"
+  status = 200
+[[redirects]]
+  from = "/partners/"
+  to = "/pages/partners.html"
+  status = 200
+[[redirects]]
   from = "/customer-portal"
   to = "/pages/customer-portal.html"
   status = 200

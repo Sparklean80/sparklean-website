@@ -113,6 +113,15 @@ const FIELD_LABELS = {
   innerSeasonalPattern: "Occupancy pattern",
   innerSparkleanHistory: "Sparklean history",
   notesInnerCircle: "Household notes",
+  referredName: "Referred person / business",
+  referredPhone: "Referred phone",
+  referredEmail: "Referred email",
+  referralType: "Referral type",
+  referralPermission: "Referral permission",
+  referralConsent: "Referral consent",
+  notesReferral: "Referral notes",
+  leadSource: "Lead source",
+  continueAfterOneTime: "Discuss continuing care",
 };
 
 function newLeadId() {
@@ -158,6 +167,7 @@ function buildPriorityTags(answers) {
   const tags = [];
   const cat = answers.serviceCategory;
   if (cat === "innerCircle") tags.push("INNER CIRCLE");
+  if (cat === "referral" || answers.leadSource === "referral") tags.push("REFERRAL");
   if (cat === "luxuryEstate") tags.push("HIGH VALUE");
   if (
     cat === "commercialOffice" ||
@@ -172,15 +182,17 @@ function buildPriorityTags(answers) {
   if (cat === "hoaCommunity") tags.push("HOA / COMMUNITY");
   if (cat === "retailHospitality") tags.push("RETAIL");
   if (cat === "postConstruction") tags.push("POST-CONSTRUCTION");
-  if (answers.frequency === "weekly" || answers.frequency === "biweekly" || answers.frequencyEstate === "weekly" || answers.frequencyEstate === "biweekly") {
+  if (answers.frequency === "weekly" || answers.frequency === "biweekly" || answers.frequency === "monthly" || answers.frequencyEstate === "weekly" || answers.frequencyEstate === "biweekly") {
     tags.push("RECURRING");
   }
-  if (cat === "innerCircle" && (answers.innerCadence === "weekly" || answers.innerCadence === "biweekly")) {
+  if (cat === "innerCircle" && (answers.innerCadence === "weekly" || answers.innerCadence === "biweekly" || answers.innerCadence === "monthly")) {
     tags.push("RECURRING");
   }
+  if (answers.continueAfterOneTime === "yesDiscuss") tags.push("RECURRING INTEREST");
   if (answers.deepClean === "yes") tags.push("DEEP CLEAN");
   if (answers.cleanPhase === "rough" || answers.dustLevel === "heavy") tags.push("URGENCY");
   if (cat === "moveInOut" || cat === "airbnbRental") tags.push("TURNOVER");
+  if (answers.referralType) tags.push(`REFERRAL:${String(answers.referralType).slice(0, 40)}`);
   return [...new Set(tags)];
 }
 
@@ -203,6 +215,9 @@ function buildEmailSubject({ serviceLabel, answers }) {
   const cat = answers.serviceCategory;
   if (cat === "innerCircle") {
     parts.push("Inner Circle");
+  } else if (cat === "referral") {
+    parts.push("Referral");
+    if (answers.referralType) parts.push(String(answers.referralType).slice(0, 40));
   } else if (cat === "residential" || cat === "condoHighRise" || cat === "luxuryEstate") {
     const bb = bedBathSubjectPart(answers);
     if (bb) parts.push(bb);
@@ -244,6 +259,15 @@ function buildHumanFallbackSummary(answers, serviceLabel) {
     if (answers.innerSeasonalPattern) s += ` Occupancy pattern: ${answers.innerSeasonalPattern}.`;
     if (answers.innerSparkleanHistory) s += ` Prior Sparklean relationship: ${answers.innerSparkleanHistory}.`;
     if (answers.notesInnerCircle) s += ` Notes: ${answers.notesInnerCircle}`;
+    return s.trim();
+  }
+
+  if (cat === "referral" || answers.leadSource === "referral") {
+    let s = `Referral introduction from ${answers.fullName || "a referrer"}.`;
+    if (answers.referredName) s += ` Referred party: ${answers.referredName}.`;
+    if (answers.referralType) s += ` Category: ${answers.referralType}.`;
+    if (answers.referralPermission) s += ` Permission confirmed: ${answers.referralPermission}.`;
+    if (answers.notesReferral) s += ` Note: ${answers.notesReferral}`;
     return s.trim();
   }
 
@@ -812,10 +836,48 @@ export default async (request) => {
 
   const answers = body.answers;
   if (!answers || typeof answers !== "object") return json({ error: "Missing answers" }, 400);
-  const required = ["fullName", "phone", "email", "location", "serviceCategory"];
-  for (const k of required) {
-    if (typeof answers[k] !== "string" || !answers[k].trim()) {
-      return json({ error: `Missing or invalid: ${k}` }, 400);
+
+  const isReferral =
+    answers.serviceCategory === "referral" ||
+    answers.leadSource === "referral" ||
+    body.intakePreset === "referral";
+
+  if (isReferral) {
+    answers.serviceCategory = "referral";
+    answers.leadSource = "referral";
+    if (!answers.location || !String(answers.location).trim()) {
+      answers.location = "Southwest Florida (referral)";
+    }
+    const referralRequired = ["fullName", "referredName", "referralType", "referralPermission", "referralConsent"];
+    for (const k of referralRequired) {
+      if (typeof answers[k] !== "string" || !answers[k].trim()) {
+        return json({ error: `Missing or invalid: ${k}` }, 400);
+      }
+    }
+    if (answers.referralPermission !== "yes" || answers.referralConsent !== "agree") {
+      return json({ error: "Referral permission and consent are required" }, 400);
+    }
+    const referrerContact =
+      (typeof answers.phone === "string" && answers.phone.replace(/\D/g, "").length >= 10) ||
+      (typeof answers.email === "string" && answers.email.includes("@") && !answers.email.includes("sparklean.invalid"));
+    const referredContact =
+      (typeof answers.referredPhone === "string" && answers.referredPhone.replace(/\D/g, "").length >= 10) ||
+      (typeof answers.referredEmail === "string" && answers.referredEmail.includes("@"));
+    if (!referrerContact) return json({ error: "Referrer phone or email required" }, 400);
+    if (!referredContact) return json({ error: "Referred phone or email required" }, 400);
+    // Satisfy shared contact shape for email templates without inventing public PII.
+    if (!answers.phone || String(answers.phone).includes("referral-via")) {
+      answers.phone = answers.referredPhone || answers.phone || "see referred contact";
+    }
+    if (!answers.email || String(answers.email).includes("sparklean.invalid")) {
+      answers.email = answers.referredEmail || answers.email || "referral@sparklean.co";
+    }
+  } else {
+    const required = ["fullName", "phone", "email", "location", "serviceCategory"];
+    for (const k of required) {
+      if (typeof answers[k] !== "string" || !answers[k].trim()) {
+        return json({ error: `Missing or invalid: ${k}` }, 400);
+      }
     }
   }
 
@@ -872,6 +934,9 @@ export default async (request) => {
       userAgent,
       intakeSourceUrl: sourceUrl,
       intakePreset,
+      leadSource: answers.leadSource || null,
+      referralType: answers.referralType || null,
+      // Intentionally omit names/phones/emails/notes from analytics object shape used for future digests.
     },
     reporting: {
       _future:

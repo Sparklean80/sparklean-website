@@ -129,7 +129,7 @@ ${fullCss}
     <div class="hero-tag"><div class="hero-tag-line"></div><span>About Sparklean · Southwest Florida</span></div>
     <h1>About<br><em>Sparklean Cleaning</em></h1>
     <p class="hero-sub">Built from two professional journeys — one belief: people deserve a higher standard of care, professionalism, and trust inside their homes.</p>
-    <p class="hero-guar">✦ Licensed &nbsp;·&nbsp; Bonded &nbsp;·&nbsp; Insured &nbsp;·&nbsp; Supervised Teams</p>
+    <p class="hero-guar">✦ Bonded &nbsp;·&nbsp; Insured &nbsp;·&nbsp; Workers' Comp &nbsp;·&nbsp; Supervised Teams</p>
     <div class="hero-btns">
       <a href="/contact" class="btn-gold">Request Your Personalized Quote →</a>
       <a href="#our-story" class="btn-outline">Read our story</a>
@@ -137,7 +137,7 @@ ${fullCss}
   </div>
   <div class="hero-stats">
     <div><div class="hs-n">4.9★</div><div class="hs-l">Google Rating</div></div>
-    <div><div class="hs-n">20K+</div><div class="hs-l">Clients Served</div></div>
+    <div><div class="hs-n">SW FL</div><div class="hs-l">Service Area</div></div>
     <div><div class="hs-n">✦</div><div class="hs-l">24-Hour Happiness Guarantee</div></div>
   </div>
 </section>
@@ -148,7 +148,7 @@ ${fullCss}
     <div class="hero-mobile-tag"><div class="hero-mobile-tag-line"></div><span>About Sparklean · Southwest Florida</span></div>
     <h1>About<br><em>Sparklean Cleaning</em></h1>
     <p class="hero-sub">Built from two professional journeys — one belief: people deserve a higher standard of care, professionalism, and trust inside their homes.</p>
-    <p class="hero-guar">✦ Licensed · Bonded · Insured · Supervised Teams</p>
+    <p class="hero-guar">✦ Bonded · Insured · Workers' Comp · Supervised Teams</p>
     <div class="hero-btns">
       <a href="/contact" class="btn-gold">Request Your Personalized Quote →</a>
       <a href="tel:2398883588" class="btn-outline">Call (239) 888-3588</a>
@@ -158,7 +158,7 @@ ${fullCss}
 
 <div class="trust">
   <div class="trust-inner">
-    <div class="trust-item"><span class="t-icon">✦</span><div><span class="t-title">Licensed</span><span class="t-sub">State of Florida</span></div></div>
+    <div class="trust-item"><span class="t-icon">✦</span><div><span class="t-title">Registered</span><span class="t-sub">Florida LLC</span></div></div>
     <div class="trust-sep"></div>
     <div class="trust-item"><span class="t-icon">✦</span><div><span class="t-title">Bonded</span><span class="t-sub">Fully Protected</span></div></div>
     <div class="trust-sep"></div>
@@ -166,7 +166,7 @@ ${fullCss}
     <div class="trust-sep"></div>
     <div class="trust-item"><span class="t-icon">✦</span><div><span class="t-title">Workers' Comp</span><span class="t-sub">Full Coverage</span></div></div>
     <div class="trust-sep"></div>
-    <div class="trust-item"><span class="t-icon">★</span><div><span class="t-title">20,000+ Clients</span><span class="t-sub">SW Florida Trusted</span></div></div>
+    <div class="trust-item"><span class="t-icon">★</span><div><span class="t-title">Supervised Teams</span><span class="t-sub">Direct Employees</span></div></div>
   </div>
 </div>
 
@@ -179,7 +179,7 @@ ${fullCss}
     <span class="m-item"><span class="m-dot"></span>Curated add-on services</span>
     <span class="m-item"><span class="m-dot"></span>Naples · Bonita Springs · Estero · Fort Myers</span>
     <span class="m-item"><span class="m-dot"></span>Discretion · Presentation · Consistency</span>
-    <span class="m-item"><span class="m-dot"></span>Licensed · Bonded · Insured</span>
+    <span class="m-item"><span class="m-dot"></span>Bonded · Insured · Workers' Comp</span>
     <span class="m-item"><span class="m-dot"></span>Operational leadership · Genuine care</span>
     <span class="m-item"><span class="m-dot"></span>Elevated residential cleaning</span>
     <span class="m-item"><span class="m-dot"></span>Recurring maintenance &amp; detailing</span>
@@ -187,7 +187,7 @@ ${fullCss}
     <span class="m-item"><span class="m-dot"></span>Curated add-on services</span>
     <span class="m-item"><span class="m-dot"></span>Naples · Bonita Springs · Estero · Fort Myers</span>
     <span class="m-item"><span class="m-dot"></span>Discretion · Presentation · Consistency</span>
-    <span class="m-item"><span class="m-dot"></span>Licensed · Bonded · Insured</span>
+    <span class="m-item"><span class="m-dot"></span>Bonded · Insured · Workers' Comp</span>
   </div>
 </div>
 
@@ -302,7 +302,7 @@ ${fullCss}
   <p class="cta-prelude">Luxury is consistency — and the calm of knowing your home was handled with intention.</p>
   <h2>Meet the standard<br><em>in your own residence</em></h2>
   <p class="cta-sub">Request a personalized quote and discover what elevated cleaning feels like when communication, accountability, and presentation are never optional.</p>
-  <p class="cta-guar">✦ Licensed · Bonded · Insured · Same-day response</p>
+  <p class="cta-guar">✦ Bonded · Insured · Workers' Comp · Same-day response</p>
   <div class="cta-btns">
     <a href="/contact" class="btn-gold">Request Your Personalized Quote →</a>
     <a href="tel:2398883588" class="btn-outline">Call (239) 888-3588</a>
@@ -340,7 +340,7 @@ ${fullCss}
   </div>
   <div class="footer-bottom">
     <span class="footer-copy">© 2026 Sparklean Cleaning. All rights reserved.</span>
-    <span class="footer-copy">Licensed · Bonded · Insured · SW Florida</span>
+    <span class="footer-copy">Bonded · Insured · Workers' Comp · SW Florida</span>
   </div>
 </footer>
 

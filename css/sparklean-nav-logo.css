@@ -26,6 +26,47 @@
   background: transparent !important;
 }
 
+/* Gold quote CTA — always available next to Client App (overrides page inline hide rules). */
+.nav-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.57rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  color: #0e0e0e !important;
+  background: #b8a47a !important;
+  padding: 11px 22px !important;
+  text-decoration: none !important;
+  border: none !important;
+  white-space: nowrap;
+  transition: background 0.25s, transform 0.2s, box-shadow 0.3s !important;
+  line-height: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-btn:hover {
+    background: #d4bf96 !important;
+  }
+}
+
+.nav-mobile-menu a.nav-mobile-quote,
+a.nav-mobile-quote {
+  font-size: 0.62rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  color: #0e0e0e !important;
+  background: #b8a47a !important;
+  text-decoration: none !important;
+  padding: 16px 28px !important;
+  border-bottom: none !important;
+  margin: 8px 16px 14px !important;
+  text-align: center;
+  display: block !important;
+}
+
 .nav-portal {
   display: inline-flex;
   align-items: center;
@@ -76,6 +117,12 @@
     font-size: 0.5rem;
     letter-spacing: 0.12em;
   }
+
+  .nav-btn {
+    padding: 10px 16px !important;
+    font-size: 0.52rem !important;
+    letter-spacing: 0.14em !important;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -97,6 +144,23 @@
     height: 90px !important;
     max-width: min(300px, 52vw);
   }
+
+  /* Keep quote CTA in the header bar on tablet/mobile; Client App remains in the menu. */
+  .nav-btn {
+    display: inline-flex !important;
+    padding: 10px 14px !important;
+    font-size: 0.5rem !important;
+    letter-spacing: 0.12em !important;
+    order: 3;
+  }
+
+  .nav-right {
+    gap: 10px !important;
+  }
+
+  .nav-hamburger {
+    order: 2;
+  }
 }
 
 @media (max-width: 640px) {
@@ -111,6 +175,12 @@
   .nav-logo img {
     height: 62px !important;
     max-width: min(240px, 58vw);
+  }
+
+  .nav-btn {
+    padding: 9px 12px !important;
+    font-size: 0.48rem !important;
+    letter-spacing: 0.1em !important;
   }
 }
 

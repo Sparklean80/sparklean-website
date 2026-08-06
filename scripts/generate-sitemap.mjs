@@ -5,6 +5,7 @@
  */
 import fs from "fs";
 import path from "path";
+import { execSync } from "child_process";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -63,10 +64,31 @@ function metaForPath(p) {
   return { changefreq: "monthly", priority: "0.65" };
 }
 
+/**
+ * Prefer last git commit date for the source file so routine builds do not
+ * refresh every lastmod from filesystem mtime. If the working tree has local
+ * modifications to that file, use today's UTC date.
+ */
 function lastmodYmd(filePath) {
+  const rel = path.relative(ROOT, filePath).split(path.sep).join("/");
   try {
-    const st = fs.statSync(filePath);
-    return st.mtime.toISOString().slice(0, 10);
+    const porcelain = execSync(`git status --porcelain -- "${rel}"`, {
+      cwd: ROOT,
+      encoding: "utf8",
+    }).trim();
+    if (porcelain) {
+      return new Date().toISOString().slice(0, 10);
+    }
+    const committed = execSync(`git log -1 --format=%cs -- "${rel}"`, {
+      cwd: ROOT,
+      encoding: "utf8",
+    }).trim();
+    if (committed) return committed;
+  } catch {
+    /* fall through */
+  }
+  try {
+    return fs.statSync(filePath).mtime.toISOString().slice(0, 10);
   } catch {
     return null;
   }

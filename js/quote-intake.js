@@ -25,8 +25,21 @@
     intro:
       "A brief private intake so our team can review fit, continuity, and availability—this is not the public quote calculator.",
   };
+  var INTAKE_CHROME_REFERRAL = {
+    eyebrow: "Referral",
+    title: "Introduce someone to Sparklean",
+    intro:
+      "A short introduction form. Referral details are used only for follow-up—they are not published or sent to advertising analytics.",
+  };
+  var INTAKE_CHROME_RECURRING = {
+    eyebrow: "Recurring residential care",
+    title: "Start with a personalized first visit",
+    intro:
+      "Tell us about the home and preferred cadence. Most clients continue weekly, biweekly, or monthly with supervised recurring care.",
+  };
   var INTAKE_FAILURE_MSG =
     "We're having trouble submitting your request right now. Please call Sparklean directly at (239) 888-3588.";
+  var referralTypePrefill = "";
 
   function esc(s) {
     return String(s == null ? "" : s)
@@ -69,7 +82,12 @@
         if (!shouldInterceptAnchor(a)) return;
         e.preventDefault();
         var pr = (a.getAttribute("data-sparklean-intake-preset") || "").trim();
-        open({ sourceUrl: window.location.href, preset: pr || null });
+        var rType = (a.getAttribute("data-sparklean-referral-type") || "").trim();
+        open({
+          sourceUrl: window.location.href,
+          preset: pr || null,
+          referralType: rType || null,
+        });
       },
       true
     );
@@ -107,7 +125,9 @@
       var doneText =
         intakePreset === "innerCircle"
           ? "Thank you. A member of our private-client team will contact you soon to discuss membership fit, cadence, and availability."
-          : "Thank you. Your request has been received and a Sparklean team member will contact you shortly to discuss the best service approach for your property.";
+          : intakePreset === "referral"
+            ? "Thank you. Your introduction has been received. A Sparklean team member will follow up with the referred contact and keep you informed as appropriate."
+            : "Thank you. Your request has been received and a Sparklean team member will contact you shortly to discuss the best service approach for your property.";
       elStep.innerHTML = '<p class="sq-intake__done">' + esc(doneText) + "</p>";
       var doneBar = root.querySelector("[data-intake-progress-bar]");
       if (doneBar) doneBar.style.width = "100%";
@@ -202,12 +222,50 @@
     return true;
   }
 
+  function referralContactOk() {
+    var hasReferrer =
+      (answers.phone && String(answers.phone).replace(/\D/g, "").length >= 10) ||
+      (answers.email && /@/.test(String(answers.email)));
+    var hasReferred =
+      (answers.referredPhone && String(answers.referredPhone).replace(/\D/g, "").length >= 10) ||
+      (answers.referredEmail && /@/.test(String(answers.referredEmail)));
+    return { hasReferrer: !!hasReferrer, hasReferred: !!hasReferred };
+  }
+
   function advance() {
     if (!validateCurrent()) {
       root.querySelector("[data-intake-error]").textContent = "Please complete this item before continuing.";
       return;
     }
     var q = currentQuestion();
+    if (intakePreset === "referral") {
+      if (q && q.id === "email") {
+        var rc = referralContactOk();
+        if (!rc.hasReferrer) {
+          root.querySelector("[data-intake-error]").textContent =
+            "Please provide your phone or email so we can confirm the introduction.";
+          return;
+        }
+      }
+      if (q && q.id === "referredEmail") {
+        var rr = referralContactOk();
+        if (!rr.hasReferred) {
+          root.querySelector("[data-intake-error]").textContent =
+            "Please provide their phone or email so we can follow up.";
+          return;
+        }
+      }
+      if (q && q.id === "referralPermission" && answers.referralPermission === "no") {
+        root.querySelector("[data-intake-error]").textContent =
+          "Permission is required before Sparklean can contact the person you are introducing.";
+        return;
+      }
+      if (q && q.id === "referralConsent" && answers.referralConsent !== "agree") {
+        root.querySelector("[data-intake-error]").textContent =
+          "Consent is required to submit a referral.";
+        return;
+      }
+    }
     if (q && q.id === "serviceCategory") {
       var keep = ["fullName", "phone", "email", "location", "serviceCategory"];
       var na = {};
@@ -234,6 +292,16 @@
       if (stepIndex < 4) {
         steps = F.flows.universal.slice(0, 4).concat(F.flows.innerCircleMembership);
       }
+      render();
+      return;
+    }
+    if (intakePreset === "referral") {
+      steps = F.flows.referralIntro.slice();
+      render();
+      return;
+    }
+    if (intakePreset === "recurringResidential") {
+      steps = F.flows.universal.slice(0, 4).concat(F.flows.residential);
       render();
       return;
     }
@@ -270,8 +338,14 @@
     } catch (e0) {
       intakeEntry = "";
     }
+    var submitAnswers = Object.assign({}, answers);
+    if (intakePreset === "referral") {
+      submitAnswers.serviceCategory = "referral";
+      submitAnswers.leadSource = "referral";
+      submitAnswers.location = submitAnswers.location || "Southwest Florida (referral)";
+    }
     var payload = {
-      answers: answers,
+      answers: submitAnswers,
       sourceUrl: sourceUrl || window.location.href,
       landingPage: sourceUrl || window.location.href,
       intakeEntryUrl: intakeEntry || sourceUrl || window.location.href,
@@ -282,7 +356,7 @@
       userAgent: (navigator.userAgent || "").slice(0, 400),
       submittedAt: new Date().toISOString(),
       intakePreset: intakePreset || null,
-      serviceLabel: F.categoryLabel(answers.serviceCategory || ""),
+      serviceLabel: F.categoryLabel(submitAnswers.serviceCategory || ""),
     };
     fetch("/.netlify/functions/quote-submit", {
       method: "POST",
@@ -313,6 +387,25 @@
         ) {
           window.SparkleanAds.trackQuoteRequestCompleted(leadId);
         }
+        if (window.SparkleanEvents && typeof window.SparkleanEvents.track === "function") {
+          if (intakePreset === "referral") {
+            window.SparkleanEvents.track("referral_submitted", {
+              referral_type: String(submitAnswers.referralType || "").slice(0, 40),
+              intake_preset: "referral",
+            });
+          } else if (
+            intakePreset === "recurringResidential" ||
+            submitAnswers.frequency === "weekly" ||
+            submitAnswers.frequency === "biweekly" ||
+            submitAnswers.frequency === "monthly"
+          ) {
+            window.SparkleanEvents.track("recurring_quote_submitted", {
+              intake_preset: intakePreset || "standard",
+              cadence: String(submitAnswers.frequency || "").slice(0, 40),
+              service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
+            });
+          }
+        }
         stepIndex = steps.length;
         submitting = false;
         render();
@@ -327,7 +420,10 @@
 
   function applyIntakeChrome(preset) {
     if (!root) return;
-    var pack = preset === "innerCircle" ? INTAKE_CHROME_INNER_CIRCLE : INTAKE_CHROME_DEFAULT;
+    var pack = INTAKE_CHROME_DEFAULT;
+    if (preset === "innerCircle") pack = INTAKE_CHROME_INNER_CIRCLE;
+    else if (preset === "referral") pack = INTAKE_CHROME_REFERRAL;
+    else if (preset === "recurringResidential") pack = INTAKE_CHROME_RECURRING;
     var ey = root.querySelector(".sq-intake__eyebrow");
     var ti = root.querySelector("#sq-intake-title");
     var intro = root.querySelector(".sq-intake__intro");
@@ -416,7 +512,17 @@
     if (!ensureFlows()) return;
     sourceUrl = (opts && opts.sourceUrl) || window.location.href;
     var preset = (opts && opts.preset && String(opts.preset).trim()) || "";
-    intakePreset = preset === "innerCircle" ? "innerCircle" : null;
+    var fromAttr = "";
+    try {
+      if (opts && opts.referralType) fromAttr = String(opts.referralType).trim();
+    } catch (eR) {
+      fromAttr = "";
+    }
+    referralTypePrefill = fromAttr;
+    if (preset === "innerCircle") intakePreset = "innerCircle";
+    else if (preset === "referral") intakePreset = "referral";
+    else if (preset === "recurringResidential") intakePreset = "recurringResidential";
+    else intakePreset = null;
     try {
       if (!sessionStorage.getItem("sparklean_intake_entry")) {
         sessionStorage.setItem("sparklean_intake_entry", sourceUrl || window.location.href);
@@ -429,6 +535,17 @@
     if (intakePreset === "innerCircle") {
       answers = { serviceCategory: "innerCircle" };
       steps = F.flows.universal.slice(0, 4).concat(F.flows.innerCircleMembership);
+    } else if (intakePreset === "referral") {
+      answers = {
+        serviceCategory: "referral",
+        leadSource: "referral",
+        location: "Southwest Florida (referral)",
+      };
+      if (referralTypePrefill) answers.referralType = referralTypePrefill;
+      steps = F.flows.referralIntro.slice();
+    } else if (intakePreset === "recurringResidential") {
+      answers = { serviceCategory: "residential" };
+      steps = F.flows.universal.slice(0, 4).concat(F.flows.residential);
     } else {
       answers = {};
       steps = F.flows.universal.slice();
@@ -441,6 +558,18 @@
     document.body.classList.add("sq-intake-open");
     document.addEventListener("keydown", onKey);
     applySkipsForward();
+    if (window.SparkleanEvents && typeof window.SparkleanEvents.track === "function") {
+      if (intakePreset === "referral") {
+        var refParams = { intake_preset: "referral" };
+        if (referralTypePrefill) refParams.referral_type = referralTypePrefill;
+        window.SparkleanEvents.track("referral_started", refParams);
+      } else if (intakePreset === "recurringResidential") {
+        window.SparkleanEvents.track("recurring_quote_started", {
+          intake_preset: "recurringResidential",
+          service_category: "residential",
+        });
+      }
+    }
     render();
     requestAnimationFrame(function () {
       var inp = root.querySelector(".sq-intake__input");

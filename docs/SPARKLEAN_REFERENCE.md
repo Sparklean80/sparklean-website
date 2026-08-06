@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-07-30** (Google Ads conversion branch)
+Last updated: **2026-08-05** (referral + recurring trust layer on `feat/referral-recurring-machine`)
 
 ---
 
@@ -72,6 +72,10 @@ Each new page: unique copy, local refs, FAQs, internal links, CTA to quote intak
 | Flow | Status |
 |------|--------|
 | Structured quote intake (`js/quote-intake.js`, `serviceFlows.js`) | **Live** on contact + preset CTAs |
+| Recurring residential primary journey | **Branch** — preset `recurringResidential`; home/residential/city CTAs |
+| Why Sparklean checklist | **Branch** — `/why-sparklean` |
+| Referral intake | **Branch** — `/refer` + preset `referral` (Brevo via `quote-submit`; tags `REFERRAL`) |
+| Partner hub | **Branch** — `/partners` → `/refer?type=…` |
 | One-click call (mobile sticky bar) | **Live** |
 | SMS conversations | **TODO** — Twilio or portal handoff |
 | Fast booking without quote | **Portal** — after first client relationship |
@@ -271,6 +275,42 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 
 ---
 
+## Entity / JSON-LD (canonical business)
+
+| Item | Value |
+|------|--------|
+| Canonical `@id` | `https://www.sparklean.co/#organization` |
+| `@type` | `Organization` + `LocalBusiness` only (not deprecated `ProfessionalService`) |
+| Legal name | Sparklean Cleaning LLC (never “corporation”) |
+| Locked description | Professionally managed and supervised residential and commercial cleaning company serving Southwest Florida |
+| Address in schema | **None** — service-area business; no partial PostalAddress |
+| Source module | `data/sparklean-entity.mjs` |
+| Sync | `npm run schema:sync` |
+| Tests | `npm run test:schema` |
+| Audit + citation worksheet | `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md`, `docs/seo/SPARKLEAN_CITATION_CONSISTENCY_CHECKLIST.md` |
+
+Rules: one business entity sitewide; city pages are service areas (not branches); no street/partial address in schema; offerings via `Service` + `OfferCatalog`; no Maps search URLs in `sameAs`; no invented ratings/hours/profiles; no rich-result eligibility claims. After editing entity facts, sync + test.
+
+**Factual claims (do not reintroduce):** not “fully licensed” / occupational Florida cleaning license — use registered Florida business + bonding / GL / Workers’ Comp; no “20,000+ clients” unless founder documents the metric; no schema `aggregateRating` / hard-coded review count; no attributed testimonials unless listed in `data/sparklean-testimonials.mjs` with a documented source; never place “Verified on Google” next to private quotes. Sync: `npm run testimonials:sync` · test: `npm run test:testimonials`. Details in `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md`.
+
+### Referral / recurring machine (branch)
+
+| Route | File |
+|-------|------|
+| `/why-sparklean` | `pages/why-sparklean.html` |
+| `/refer` | `pages/refer.html` |
+| `/partners` | `pages/partners.html` |
+
+| Tooling | Command |
+|---------|---------|
+| Regenerate trust pages | `npm run gen:trust-pages` then `npm run schema:sync` |
+| Tests | `npm run test:referral` (+ schema + testimonials) |
+| Case-study manifest | `data/sparklean-case-studies.mjs` (empty = no public stories) |
+| Privacy-safe events | `js/sparklean-events.js` |
+| External authority worksheet | `docs/seo/SPARKLEAN_EXTERNAL_AUTHORITY_CHECKLIST.md` |
+
+Intake presets: `recurringResidential`, `referral`, `innerCircle`. Referral payload uses existing `quote-submit` with `leadSource=referral`, `referralType`, referrer/referred contacts, permission/consent — PII stays in email/lead record, not analytics/schema.
+
 ## SEO work completed (summary)
 
 ### Internal linking + FAQ schema (`81b779f`)
@@ -428,6 +468,9 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 | `docs/EMAIL_ASSETS.md` | Email image URL index for ChatGPT / campaigns |
 | `sitemap.xml` | Generated — don’t hand-edit without running build script |
 | `pages/blog.html` | Blog index + blogPost schema |
+| `data/sparklean-entity.mjs` | Canonical Organization JSON-LD source of truth |
+| `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md` | Entity audit + before/after matrix |
+| `docs/seo/SPARKLEAN_CITATION_CONSISTENCY_CHECKLIST.md` | Founder NAP / sameAs worksheet |
 | `pages/commercial-cleaning.html` | Commercial hub (Trust Shield goes here) |
 | `pages/house-cleaning-*.html` | City money pages |
 | `scripts/generate-sitemap.mjs` | Sitemap generator |

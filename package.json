@@ -6,6 +6,12 @@
     "build": "node scripts/generate-pages-redirects.mjs && node scripts/generate-sitemap.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "pages-redirects": "node scripts/generate-pages-redirects.mjs",
-    "test:ads": "node scripts/test-google-ads-conversion.mjs"
+    "schema:sync": "node scripts/sync-entity-schema.mjs",
+    "testimonials:sync": "node scripts/sync-testimonials.mjs",
+    "test:ads": "node scripts/test-google-ads-conversion.mjs",
+    "test:schema": "node scripts/test-entity-schema.mjs",
+    "test:testimonials": "node scripts/test-testimonials.mjs",
+    "test:referral": "node scripts/test-referral-recurring.mjs",
+    "gen:trust-pages": "node scripts/gen-trust-layer-pages.mjs"
   }
 }
