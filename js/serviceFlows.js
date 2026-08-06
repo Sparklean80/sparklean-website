@@ -56,7 +56,7 @@
       assist: "The next questions will follow from your selection.",
       required: true,
       options: [
-        { value: "residential", label: "Residential cleaning" },
+        { value: "residential", label: "Recurring residential care" },
         { value: "condoHighRise", label: "Condo / high-rise" },
         { value: "luxuryEstate", label: "Luxury estate" },
         { value: "moveInOut", label: "Move-in / move-out" },
@@ -78,7 +78,25 @@
     { id: "bathrooms", type: "select", label: "Bathrooms", assist: "Full baths, powder rooms — round to the nearest whole number.", required: true, options: opts("1", "1", "2", "2", "3", "3", "4", "4", "5+", "5 or more") },
     { id: "sqftBand", type: "select", label: "Approximate square footage", required: true, options: opts("lt2500", "Under 2,500", "2500-4000", "2,500 – 4,000", "4000-6000", "4,000 – 6,000", "6000plus", "6,000+") },
     { id: "pets", type: "select", label: "Pets in the home?", required: true, options: opts("none", "None", "dogs", "Dogs", "cats", "Cats", "other", "Other / multiple") },
-    { id: "frequency", type: "select", label: "Preferred cadence", required: true, options: opts("weekly", "Weekly", "biweekly", "Every two weeks", "monthly", "Monthly", "oneTime", "One-time / as needed") },
+    { id: "frequency", type: "select", label: "Preferred cadence", assist: "Most homes continue weekly, biweekly, or monthly after a personalized first visit.", required: true, options: opts("weekly", "Weekly recurring", "biweekly", "Every two weeks", "monthly", "Monthly recurring", "oneTime", "One-time first visit / as needed") },
+    {
+      id: "continueAfterOneTime",
+      type: "select",
+      label: "Would you like us to discuss continuing care after the first visit?",
+      assist: "Optional path — not required. Weekly, biweekly, or monthly plans remain available.",
+      required: true,
+      skipIf: function (a) {
+        return a.frequency !== "oneTime";
+      },
+      options: opts(
+        "yesDiscuss",
+        "Yes — discuss recurring options",
+        "notNow",
+        "Not right now",
+        "unsure",
+        "Not sure yet"
+      ),
+    },
     { id: "deepClean", type: "select", label: "Do you need a first-time or deep clean to start?", required: true, options: opts("yes", "Yes", "no", "No", "unsure", "Not sure yet") },
     { id: "occupied", type: "select", label: "Will the home be occupied during service?", required: true, options: opts("occupied", "Occupied", "vacant", "Vacant", "flexible", "Flexible") },
     { id: "notesResidential", type: "textarea", label: "Anything else we should know?", assist: "Access notes, priorities, sensitivities — optional.", required: false, maxLength: 1200, placeholder: "Optional details" },
@@ -323,6 +341,119 @@
     { id: "notesAddons", type: "textarea", label: "Scope notes", assist: "Optional.", required: false, maxLength: 1200, placeholder: "Optional" },
   ];
 
+  /** Client / partner referral — separate from Inner Circle membership */
+  flows.referralIntro = [
+    {
+      id: "fullName",
+      type: "text",
+      label: "Your name",
+      assist: "The person making the introduction.",
+      placeholder: "Full name",
+      required: true,
+      maxLength: 120,
+    },
+    {
+      id: "phone",
+      type: "tel",
+      label: "Your phone (or leave blank if email is better)",
+      assist: "Provide phone or email—at least one is required.",
+      placeholder: "(239) 555-0100",
+      required: false,
+      maxLength: 32,
+    },
+    {
+      id: "email",
+      type: "email",
+      label: "Your email (or leave blank if phone is better)",
+      assist: "Provide phone or email—at least one is required.",
+      placeholder: "you@example.com",
+      required: false,
+      maxLength: 160,
+    },
+    {
+      id: "referredName",
+      type: "text",
+      label: "Who are you introducing?",
+      assist: "Person or business name.",
+      placeholder: "Name or business",
+      required: true,
+      maxLength: 160,
+    },
+    {
+      id: "referredPhone",
+      type: "tel",
+      label: "Their phone (optional if email is provided)",
+      placeholder: "(239) 555-0100",
+      required: false,
+      maxLength: 32,
+    },
+    {
+      id: "referredEmail",
+      type: "email",
+      label: "Their email (optional if phone is provided)",
+      placeholder: "them@example.com",
+      required: false,
+      maxLength: 160,
+    },
+    {
+      id: "referralType",
+      type: "select",
+      label: "Referral type",
+      required: true,
+      options: opts(
+        "homeowner",
+        "Homeowner",
+        "realtor",
+        "Realtor",
+        "builder",
+        "Builder / remodeler",
+        "property_manager",
+        "Property manager / HOA",
+        "home_watch",
+        "Home-watch professional",
+        "interior_designer",
+        "Interior designer",
+        "commercial",
+        "Commercial business"
+      ),
+    },
+    {
+      id: "referralPermission",
+      type: "select",
+      label: "Do you have permission to share their contact details with Sparklean?",
+      assist: "Required before we make the introduction.",
+      required: true,
+      options: opts(
+        "yes",
+        "Yes — I have a relationship and permission to introduce them",
+        "no",
+        "No"
+      ),
+    },
+    {
+      id: "notesReferral",
+      type: "textarea",
+      label: "Optional note for our team",
+      assist: "Timing, property type, or context — optional. Do not include passwords or gate codes here.",
+      required: false,
+      maxLength: 1200,
+      placeholder: "Optional",
+    },
+    {
+      id: "referralConsent",
+      type: "select",
+      label: "Privacy confirmation",
+      assist: "Referral details are used only for follow-up. They are not published or sent to advertising analytics.",
+      required: true,
+      options: opts(
+        "agree",
+        "I agree Sparklean may use these details to introduce and follow up",
+        "disagree",
+        "I do not agree"
+      ),
+    },
+  ];
+
   /** Private recurring membership — not the standard service quote branch */
   flows.innerCircleMembership = [
     {
@@ -375,7 +506,7 @@
 
   function categoryLabel(key) {
     var map = {
-      residential: "Residential cleaning",
+      residential: "Recurring residential care",
       condoHighRise: "Condo / high-rise",
       luxuryEstate: "Luxury estate",
       moveInOut: "Move-in / move-out",
@@ -389,6 +520,7 @@
       windowCleaning: "Window cleaning",
       specializedAddons: "Specialized add-ons",
       innerCircle: "Inner Circle membership",
+      referral: "Client / partner referral",
     };
     return map[key] || key;
   }

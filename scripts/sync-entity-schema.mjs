@@ -478,6 +478,58 @@ function syncInnerCircle() {
   ]);
 }
 
+function syncTrustWebPage({ relPath, pageUrl, pageName, pageDescription, includeServiceLink }) {
+  const graph = [
+    getCanonicalOrganization(),
+    ...founderNodesInline(),
+    getWebsiteNode(),
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: pageName,
+      description: pageDescription,
+      isPartOf: { "@id": WEBSITE_ID },
+      about: orgRef(),
+      publisher: orgRef(),
+      inLanguage: "en-US",
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.sparklean.co/",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: pageName,
+          item: pageUrl,
+        },
+      ],
+    },
+  ];
+  if (includeServiceLink) {
+    graph.push({
+      "@type": "Service",
+      "@id": `${pageUrl}#service-relationship`,
+      name: "Professionally managed residential and commercial cleaning",
+      description: LOCKED_DESCRIPTION,
+      provider: orgRef(),
+      url: "https://www.sparklean.co/residential-cleaning",
+      areaServed: {
+        "@type": "AdministrativeArea",
+        name: "Southwest Florida",
+      },
+    });
+  }
+  writePage(relPath, graph);
+}
+
 // --- run ---
 syncHomepage();
 syncAbout();
@@ -653,5 +705,30 @@ syncBlogIndex();
 syncBlogArticles();
 syncCustomerPortal();
 syncInnerCircle();
+
+syncTrustWebPage({
+  relPath: "pages/why-sparklean.html",
+  pageUrl: "https://www.sparklean.co/why-sparklean",
+  pageName: "Why Sparklean",
+  pageDescription:
+    "What to verify before allowing a cleaning provider into your home, and how Sparklean remains accountable.",
+  includeServiceLink: true,
+});
+syncTrustWebPage({
+  relPath: "pages/refer.html",
+  pageUrl: "https://www.sparklean.co/refer",
+  pageName: "Refer Sparklean",
+  pageDescription:
+    "Introduce a homeowner or professional partner to Sparklean’s professionally managed cleaning standard.",
+  includeServiceLink: false,
+});
+syncTrustWebPage({
+  relPath: "pages/partners.html",
+  pageUrl: "https://www.sparklean.co/partners",
+  pageName: "Sparklean Referral Partners",
+  pageDescription:
+    "How referring Sparklean protects partner reputations with supervised, insured, Workers’ Comp–covered teams.",
+  includeServiceLink: false,
+});
 
 console.log("Entity schema sync complete. Canonical @id:", ORG_ID);

@@ -184,4 +184,9 @@ Do **not** guess these in code:
 2. Run `node scripts/sync-entity-schema.mjs`
 3. Run `npm run test:schema`
 4. For testimonials: edit `data/sparklean-testimonials.mjs` only with documented sources → `npm run testimonials:sync` → `npm run test:testimonials`
-5. Update this audit if identity or trust claims change
+5. Trust layer pages (`/why-sparklean`, `/refer`, `/partners`): after `npm run gen:trust-pages`, always re-run `npm run schema:sync` and `npm run test:referral`
+6. Update this audit if identity or trust claims change
+
+## Referral / recurring pages (branch)
+
+Synced as WebPage (+ breadcrumb; Why page also includes a Service relationship to the canonical org). No referral PII in JSON-LD. No invented AggregateRating / Review nodes.

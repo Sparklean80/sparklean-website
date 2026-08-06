@@ -10,6 +10,8 @@
     "testimonials:sync": "node scripts/sync-testimonials.mjs",
     "test:ads": "node scripts/test-google-ads-conversion.mjs",
     "test:schema": "node scripts/test-entity-schema.mjs",
-    "test:testimonials": "node scripts/test-testimonials.mjs"
+    "test:testimonials": "node scripts/test-testimonials.mjs",
+    "test:referral": "node scripts/test-referral-recurring.mjs",
+    "gen:trust-pages": "node scripts/gen-trust-layer-pages.mjs"
   }
 }
