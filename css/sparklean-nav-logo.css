@@ -26,18 +26,34 @@
   background: transparent !important;
 }
 
+/* Extra trust-nav items (Why Sparklean / Partners) — keep row from clipping. */
+.nav-links {
+  gap: 18px !important;
+}
+
+@media (max-width: 1480px) {
+  .nav-links {
+    gap: 14px !important;
+  }
+
+  .nav-phone {
+    display: none !important;
+  }
+}
+
 /* Gold quote CTA — always available next to Client App (overrides page inline hide rules). */
 .nav-btn {
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0 !important;
   font-size: 0.57rem !important;
   font-weight: 600 !important;
-  letter-spacing: 0.18em !important;
+  letter-spacing: 0.16em !important;
   text-transform: uppercase !important;
   color: #0e0e0e !important;
   background: #b8a47a !important;
-  padding: 11px 22px !important;
+  padding: 11px 18px !important;
   text-decoration: none !important;
   border: none !important;
   white-space: nowrap;

@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-05** (referral + recurring trust layer on `feat/referral-recurring-machine`)
+Last updated: **2026-08-05** (sitewide nav: Why Sparklean + Partners discoverability)
 
 ---
 
