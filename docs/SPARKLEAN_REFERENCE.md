@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-05** (referral + recurring trust layer on `feat/referral-recurring-machine`)
+Last updated: **2026-08-05** (referral/recurring IR PASS frozen @ `3baa24b` — merge/deploy runbook only; no further referral engineering)
 
 ---
 
@@ -293,7 +293,14 @@ Rules: one business entity sitewide; city pages are service areas (not branches)
 
 **Factual claims (do not reintroduce):** not “fully licensed” / occupational Florida cleaning license — use registered Florida business + bonding / GL / Workers’ Comp; no “20,000+ clients” unless founder documents the metric; no schema `aggregateRating` / hard-coded review count; no attributed testimonials unless listed in `data/sparklean-testimonials.mjs` with a documented source; never place “Verified on Google” next to private quotes. Sync: `npm run testimonials:sync` · test: `npm run test:testimonials`. Details in `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md`.
 
-### Referral / recurring machine (branch)
+### Referral / recurring machine (FROZEN)
+
+| Item | Value |
+|------|--------|
+| Branch | `feat/referral-recurring-machine` |
+| Frozen tip | **`3baa24b`** (Founder IR PASS) |
+| Merge/deploy | **Not authorized** until separate approval — follow `docs/seo/SPARKLEAN_REFERRAL_MERGE_DEPLOY_RUNBOOK.md` |
+| Scope lock | Do not add referral engineering or broaden scope on this tip |
 
 | Route | File |
 |-------|------|
@@ -308,6 +315,7 @@ Rules: one business entity sitewide; city pages are service areas (not branches)
 | Case-study manifest | `data/sparklean-case-studies.mjs` (empty = no public stories) |
 | Privacy-safe events | `js/sparklean-events.js` |
 | External authority worksheet | `docs/seo/SPARKLEAN_EXTERNAL_AUTHORITY_CHECKLIST.md` |
+| Merge/deploy runbook | `docs/seo/SPARKLEAN_REFERRAL_MERGE_DEPLOY_RUNBOOK.md` |
 
 Intake presets: `recurringResidential`, `referral`, `innerCircle`. Referral payload uses existing `quote-submit` with `leadSource=referral`, allowlisted `referralType`, separate referrer/referred identities (never copied), permission/consent — PII stays in Brevo/lead record only; referrals skip OpenAI summarization; analytics stay privacy-safe. **Not closed-loop:** Brevo + Netlify logs ≠ durable referral CRM (source/owner/status/contacted/booked/recurring/partner attribution still required — see `docs/seo/SPARKLEAN_EXTERNAL_AUTHORITY_CHECKLIST.md`).
 
