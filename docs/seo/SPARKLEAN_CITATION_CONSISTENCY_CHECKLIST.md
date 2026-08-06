@@ -19,7 +19,7 @@ This file is documentation. Completing rows is a **manual** founder task outside
 | Email | info@sparklean.co | ☐ | |
 | Positioning | Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Southwest Florida. | ☐ | Adapt tone; keep facts |
 | Service territory | Naples · Bonita Springs · Estero · Fort Myers · Cape Coral · Marco Island | ☐ | All six |
-| Street address on marketing site | **Intentionally unpublished** (service-area business) | ☐ | Do not invent for directories that require it without founder decision |
+| Street address on marketing site | **Intentionally unpublished** (service-area business) | ☐ | Do not invent for directories that require it without founder decision. Site schema has **no** `address` object (including no region-only stub). LocalBusiness rich results may be limited without a complete public address — accepted. |
 | Founders | Tony Giuliano; Roxana “Roxy” Tellez | ☐ | |
 
 ---

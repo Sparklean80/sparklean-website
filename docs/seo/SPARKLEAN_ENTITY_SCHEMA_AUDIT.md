@@ -18,12 +18,16 @@
 | Description | Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Southwest Florida. |
 | Phone | `+1-239-888-3588` |
 | Email | `info@sparklean.co` |
-| Types | `Organization` + `LocalBusiness` + `ProfessionalService` |
+| Types | `Organization` + `LocalBusiness` |
 | Code module | `data/sparklean-entity.mjs` |
 | Sync | `node scripts/sync-entity-schema.mjs` |
 | Tests | `npm run test:schema` |
 
-`ProfessionalService` is included because it accurately describes a supervised professional cleaning company on Schema.org. It is **not** presented as a Google ranking feature.
+### Why not `ProfessionalService`
+
+Schema.org **deprecated** the general [`ProfessionalService`](https://schema.org/ProfessionalService) type because it caused confusion with `Service`. It was briefly included on this branch and **removed** after independent review. Cleaning offerings are represented with page-level `Service` objects and the org `OfferCatalog` — not a deprecated subtype chosen for specificity theater.
+
+No Google rich-result eligibility is claimed for any `@type` choice.
 
 ---
 
@@ -31,11 +35,11 @@
 
 Sparklean operates as a **service-area business**. The marketing site intentionally **does not publish a street address** (home/office privacy). Schema therefore:
 
-- Omits `streetAddress` / full PostalAddress locality lines that would expose a private address
-- Uses region-level `addressRegion: FL` + `addressCountry: US` only
-- Relies on `areaServed` (six markets) instead of fake branch `LocalBusiness` entities
+- Omits any `address` / `PostalAddress` object entirely (including region-only stubs)
+- Relies on truthful six-city `areaServed` instead of fake branch `LocalBusiness` entities
+- Accepts that **LocalBusiness rich-result eligibility may be limited** without a complete public address
 
-Do **not** invent an address to satisfy a schema linter recommendation.
+Do **not** invent or partially fabricate an address to satisfy a schema linter or rich-result checklist. Never expose a private home/office address.
 
 ---
 
@@ -56,6 +60,8 @@ Pages audited: homepage, About, Residential, Commercial, Post-construction, Spec
 | Opening hours | Missing / unpublished | Still omitted (not inventing) |
 | Post-construction JSON-LD | Broken (missing `</script>`) | Fixed via sync |
 | Canonical generator | Inline per-page HTML (drift-prone) | `data/sparklean-entity.mjs` + sync script |
+| `ProfessionalService` | Briefly added on this branch | **Removed** — Schema.org deprecated type |
+| Partial `PostalAddress` (FL/US only) | Briefly added on this branch | **Removed** — no manufactured address |
 
 ### Name / phone / rating conflicts (before)
 
@@ -74,7 +80,7 @@ No dedicated `/house-cleaning-marco-island` page exists (by design — no thin d
 ## Entity linking model (after)
 
 ```
-#organization  (Organization + LocalBusiness + ProfessionalService)
+#organization  (Organization + LocalBusiness)
     ↑ publisher / about / provider / worksFor
 WebSite (#website)
 WebPage (page-specific #webpage)
@@ -106,11 +112,13 @@ City pages = **service areas**, not physical Sparklean branches.
 | No Maps search in `sameAs` | **Pass** |
 | No “corporation” in JSON-LD | **Pass** |
 | City `Service.provider` → `#organization` | **Pass** |
-| Schema.org type URLs resolve | **Pass** — Organization / LocalBusiness / ProfessionalService HTTP 200 |
+| No `ProfessionalService` anywhere | **Pass** (deprecated type rejected) |
+| No org `address` / partial PostalAddress | **Pass** |
+| Schema.org type URLs resolve | **Pass** — Organization / LocalBusiness HTTP 200 |
 | Logo + live site URLs resolve | **Pass** — logo CDN 200; sparklean.co `/`, `/about`, `/house-cleaning-naples` 200 |
 | `npm run build` | **Pass** |
-| Schema.org Validator (live fetch) | **Deferred** — branch not deployed; fetch URL test cannot see unmerged HTML. Paste JSON-LD from this branch or use Netlify preview after push. |
-| Google Rich Results Test | **Deferred to preview/prod** — entity work does **not** guarantee rich results |
+| Schema.org Validator (live fetch) | **Deferred** — branch not deployed; fetch URL test cannot see unmerged HTML. |
+| Google Rich Results Test | **Deferred to preview/prod** — **no rich-result eligibility claimed**; LocalBusiness eligibility may be limited without a public address |
 
 ### Suggested manual validator steps (after preview deploy)
 
@@ -132,6 +140,10 @@ Do **not** guess these in code:
 6. Whether Bonita Springs should ever appear as `addressLocality` without street (currently omitted)
 
 ---
+
+## Sitemap `lastmod` policy
+
+`scripts/generate-sitemap.mjs` uses **git last-commit date** per source file (or today only if that file has local uncommitted changes). Routine builds must not refresh every URL’s `lastmod` from filesystem mtime. Dates should move only when the underlying page/schema content actually changes.
 
 ## How to maintain
 

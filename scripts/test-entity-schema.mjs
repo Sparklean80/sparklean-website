@@ -76,8 +76,7 @@ function collectOrgNodes(blocks) {
       if (
         id === ORG_ID ||
         types.includes("Organization") ||
-        types.includes("LocalBusiness") ||
-        types.includes("ProfessionalService")
+        types.includes("LocalBusiness")
       ) {
         if (o.name || id === ORG_ID) nodes.push(o);
       }
@@ -95,7 +94,8 @@ assert(org.telephone === PHONE_E164, "phone E.164");
 assert(!String(org.legalName).toLowerCase().includes("corporation"), "legalName not corporation");
 assert(!JSON.stringify(org).toLowerCase().includes("corporation"), "org JSON has no corporation");
 assert(!org.sameAs || !org.sameAs.some((u) => String(u).includes("maps/search")), "no maps/search sameAs");
-assert(!org.streetAddress && !org.address?.streetAddress, "no street address published");
+assert(!org.address, "no address object (service-area; no partial PostalAddress)");
+assert(!org.streetAddress, "no street address published");
 assert(!org.aggregateRating, "no aggregateRating until founder verifies count");
 for (const city of SERVICE_AREA_NAMES) {
   assert(
@@ -104,9 +104,14 @@ for (const city of SERVICE_AREA_NAMES) {
   );
 }
 assert(SERVICE_AREA_NAMES.length === 6, "six service areas");
+const orgTypes = [].concat(org["@type"]);
+assert(orgTypes.includes("Organization"), "Organization type");
+assert(orgTypes.includes("LocalBusiness"), "LocalBusiness type");
+assert(!orgTypes.includes("ProfessionalService"), "no deprecated ProfessionalService");
 assert(
-  [].concat(org["@type"]).includes("ProfessionalService"),
-  "ProfessionalService included as accurate type"
+  JSON.stringify(org).includes('"@type":"Service"') ||
+    JSON.stringify(org.hasOfferCatalog).includes("Service"),
+  "offerings use Service objects in OfferCatalog"
 );
 
 const keyPages = [
@@ -188,6 +193,22 @@ assert(corporationHits === 0, "no corporation in JSON-LD");
 assert([...phones].length === 1 && phones.has(PHONE_E164), "single phone across org nodes");
 assert([...names].every((n) => n === "Sparklean Cleaning" || n === "Sparklean"), "consistent business names");
 assert([...orgIds].length === 1 && orgIds.has(ORG_ID), "single org @id");
+
+// Sitewide: no deprecated ProfessionalService; no manufactured address on org
+for (const rel of listPublicHtml()) {
+  const html = fs.readFileSync(path.join(root, rel), "utf8");
+  const ldBlocks = html.match(
+    /<script[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi
+  );
+  if (!ldBlocks) continue;
+  const ldText = ldBlocks.join("\n");
+  assert(!ldText.includes("ProfessionalService"), `${rel} has no ProfessionalService`);
+  walk(extractJsonLd(html), (o) => {
+    if (o["@id"] === ORG_ID && o.legalName) {
+      assert(!o.address, `${rel} canonical org has no address`);
+    }
+  });
+}
 
 // City pages: Service.provider -> canonical org
 for (const cfg of Object.values(CITY_PAGES)) {

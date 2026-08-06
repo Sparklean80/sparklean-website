@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-05** (entity schema consolidation branch)
+Last updated: **2026-08-05** (entity schema consolidation — P0/P1 review fixes)
 
 ---
 
@@ -276,14 +276,16 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 | Item | Value |
 |------|--------|
 | Canonical `@id` | `https://www.sparklean.co/#organization` |
+| `@type` | `Organization` + `LocalBusiness` only (not deprecated `ProfessionalService`) |
 | Legal name | Sparklean Cleaning LLC (never “corporation”) |
 | Locked description | Professionally managed and supervised residential and commercial cleaning company serving Southwest Florida |
+| Address in schema | **None** — service-area business; no partial PostalAddress |
 | Source module | `data/sparklean-entity.mjs` |
 | Sync | `npm run schema:sync` |
 | Tests | `npm run test:schema` |
 | Audit + citation worksheet | `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md`, `docs/seo/SPARKLEAN_CITATION_CONSISTENCY_CHECKLIST.md` |
 
-Rules: one business entity sitewide; city pages are service areas (not branches); no street address on site; no Maps search URLs in `sameAs`; no invented ratings/hours/profiles. After editing entity facts, sync + test.
+Rules: one business entity sitewide; city pages are service areas (not branches); no street/partial address in schema; offerings via `Service` + `OfferCatalog`; no Maps search URLs in `sameAs`; no invented ratings/hours/profiles; no rich-result eligibility claims. After editing entity facts, sync + test.
 
 ## SEO work completed (summary)
 

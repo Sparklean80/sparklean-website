@@ -185,18 +185,19 @@ export function offerCatalog() {
 }
 
 /**
- * Canonical organization / local business / professional service node.
- * ProfessionalService is included as an accurate Schema.org type for a
- * supervised professional cleaning company — not a Google ranking feature.
+ * Canonical Organization + LocalBusiness node.
  *
- * Street address intentionally omitted (service-area business).
- * aggregateRating omitted until founder verifies live GBP count.
- * openingHours omitted until published hours are confirmed on-site.
- * sameAs omitted until direct profile URLs are verified.
+ * ProfessionalService is intentionally omitted — Schema.org deprecated the
+ * general type (confusion with Service). Offerings use Service + OfferCatalog.
+ *
+ * No address object: service-area business; street address unpublished.
+ * Do not invent a partial PostalAddress. LocalBusiness rich-result eligibility
+ * may be limited without a complete public address — that is accepted.
+ * aggregateRating / openingHours / sameAs omitted until founder-verified.
  */
 export function getCanonicalOrganization() {
   const org = {
-    "@type": ["Organization", "LocalBusiness", "ProfessionalService"],
+    "@type": ["Organization", "LocalBusiness"],
     "@id": ORG_ID,
     name: "Sparklean Cleaning",
     legalName: "Sparklean Cleaning LLC",
@@ -230,12 +231,6 @@ export function getCanonicalOrganization() {
     ],
     areaServed: areaServedNodes(),
     hasOfferCatalog: offerCatalog(),
-    // Region-level only — no streetAddress (intentionally unpublished).
-    address: {
-      "@type": "PostalAddress",
-      addressRegion: "FL",
-      addressCountry: "US",
-    },
   };
 
   if (SAME_AS.length) {
