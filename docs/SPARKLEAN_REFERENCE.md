@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-05** (entity schema consolidation — P0/P1 review fixes)
+Last updated: **2026-08-05** (factual-claims pass: license wording + remove 20K clients)
 
 ---
 
@@ -286,6 +286,8 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 | Audit + citation worksheet | `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md`, `docs/seo/SPARKLEAN_CITATION_CONSISTENCY_CHECKLIST.md` |
 
 Rules: one business entity sitewide; city pages are service areas (not branches); no street/partial address in schema; offerings via `Service` + `OfferCatalog`; no Maps search URLs in `sameAs`; no invented ratings/hours/profiles; no rich-result eligibility claims. After editing entity facts, sync + test.
+
+**Factual claims (do not reintroduce):** not “fully licensed” / occupational Florida cleaning license — use registered Florida business + bonding / GL / Workers’ Comp; no “20,000+ clients” unless founder documents the metric; no schema `aggregateRating` until live GBP count verified. Details in `docs/seo/SPARKLEAN_ENTITY_SCHEMA_AUDIT.md`.
 
 ## SEO work completed (summary)
 

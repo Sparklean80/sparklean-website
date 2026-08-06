@@ -18,6 +18,8 @@ This file is documentation. Completing rows is a **manual** founder task outside
 | Phone | (239) 888-3588 / +1-239-888-3588 | ☐ | |
 | Email | info@sparklean.co | ☐ | |
 | Positioning | Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Southwest Florida. | ☐ | Adapt tone; keep facts |
+| Credentials wording | Registered Florida business + bonding + GL insurance + Workers’ Comp (not “fully licensed” / occupational license) | ☐ | |
+| Client-count marketing | Do **not** use “20,000+ clients” unless founder documents the metric | ☐ | Currently removed sitewide |
 | Service territory | Naples · Bonita Springs · Estero · Fort Myers · Cape Coral · Marco Island | ☐ | All six |
 | Street address on marketing site | **Intentionally unpublished** (service-area business) | ☐ | Do not invent for directories that require it without founder decision. Site schema has **no** `address` object (including no region-only stub). LocalBusiness rich results may be limited without a complete public address — accepted. |
 | Founders | Tony Giuliano; Roxana “Roxy” Tellez | ☐ | |

@@ -261,6 +261,22 @@ assert(homeOrg, "homepage embeds full canonical org");
 assert(homeOrg.legalName === org.legalName, "homepage legalName matches module");
 assert(homeOrg.description === org.description, "homepage description matches module");
 
+// Factual-claims guards (authoritative copy for search/AI)
+for (const rel of listPublicHtml()) {
+  const html = fs.readFileSync(path.join(root, rel), "utf8");
+  assert(!/fully licensed/i.test(html), `${rel} has no "fully licensed" claim`);
+  assert(!/20,?000/.test(html), `${rel} has no unsubstantiated 20,000 claim`);
+  assert(!/20K\+/.test(html), `${rel} has no unsubstantiated 20K+ claim`);
+}
+const homeHtml = fs.readFileSync(path.join(root, "index.html"), "utf8");
+assert(
+  homeHtml.includes(
+    "Sparklean Cleaning LLC is a registered Florida business and carries general liability insurance, bonding, and active Workers' Compensation coverage."
+  ),
+  "homepage uses registered-business insurance wording"
+);
+assert(!/aggregateRating/.test(homeHtml), "homepage JSON-LD has no aggregateRating");
+
 if (failed) {
   console.error(`\n${failed} assertion(s) failed`);
   process.exit(1);

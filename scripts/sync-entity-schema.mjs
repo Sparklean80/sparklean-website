@@ -84,10 +84,10 @@ function homepageFaqs() {
     },
     {
       "@type": "Question",
-      name: "Is Sparklean licensed, bonded, insured and Workers' Comp covered?",
+      name: "Is Sparklean bonded, insured, and Workers' Comp covered?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. Sparklean is fully licensed in Florida, bonded, covered by general liability insurance, and carries active Workers' Compensation for every team member.",
+        text: "Sparklean Cleaning LLC is a registered Florida business and carries general liability insurance, bonding, and active Workers' Compensation coverage.",
       },
     },
     {
