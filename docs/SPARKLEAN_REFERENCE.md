@@ -309,7 +309,7 @@ Rules: one business entity sitewide; city pages are service areas (not branches)
 | Privacy-safe events | `js/sparklean-events.js` |
 | External authority worksheet | `docs/seo/SPARKLEAN_EXTERNAL_AUTHORITY_CHECKLIST.md` |
 
-Intake presets: `recurringResidential`, `referral`, `innerCircle`. Referral payload uses existing `quote-submit` with `leadSource=referral`, `referralType`, referrer/referred contacts, permission/consent — PII stays in email/lead record, not analytics/schema.
+Intake presets: `recurringResidential`, `referral`, `innerCircle`. Referral payload uses existing `quote-submit` with `leadSource=referral`, allowlisted `referralType`, separate referrer/referred identities (never copied), permission/consent — PII stays in Brevo/lead record only; referrals skip OpenAI summarization; analytics stay privacy-safe. **Not closed-loop:** Brevo + Netlify logs ≠ durable referral CRM (source/owner/status/contacted/booked/recurring/partner attribution still required — see `docs/seo/SPARKLEAN_EXTERNAL_AUTHORITY_CHECKLIST.md`).
 
 ## SEO work completed (summary)
 

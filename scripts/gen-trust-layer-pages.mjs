@@ -339,7 +339,7 @@ const whyMain = `
         <p>Deep cleans, move-in/out, and one-time services remain valid entry paths. After a one-time inquiry, we can discuss continuing care when it fits—without pressure.</p>
       </div>
       <div class="tl-hero-actions" style="justify-content:flex-start;margin-top:28px;">
-        <a href="/residential-cleaning#recurring" class="btn-gold" data-sparklean-intake-preset="recurringResidential">Begin recurring residential care →</a>
+        <a href="/residential-cleaning#pane-recurring" class="btn-gold" data-sparklean-intake-preset="recurringResidential">Begin recurring residential care →</a>
         <a href="/refer" class="btn-outline">Introduce someone →</a>
       </div>
     </div>

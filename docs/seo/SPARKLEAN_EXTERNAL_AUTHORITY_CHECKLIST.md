@@ -52,6 +52,24 @@ Privacy-safe events (no names/phones/emails/notes/addresses):
 
 Implemented in `js/sparklean-events.js`. Ads conversion remains leadId-only via `js/sparklean-ads.js`.
 
+### Referral lifecycle machine gap (do not claim closed-loop)
+
+Current delivery is **Brevo transactional email to Sparklean** plus **Netlify function logs**. That supports operational follow-up only. It is **not** a durable referral CRM or closed-loop attribution system.
+
+Future requirement (retain; do not invent UI or metrics yet):
+
+| Field | Purpose |
+|-------|---------|
+| Referral source | Channel / page / partner category that originated the intro |
+| Owner | Who on the Sparklean team owns follow-up |
+| Status | New → contacted → qualified → declined / booked |
+| Contacted | Timestamp of first human outreach |
+| Booked | Whether the referred party booked service |
+| Recurring conversion | Whether the referred party became recurring |
+| Referring-partner attribution | Durable link from booked/recurring outcome back to referrer / partner type |
+
+Do **not** claim closed-loop referral measurement, partner ROI, or conversion rates until those records exist in an owned system (not email alone).
+
 ## Case studies
 
 Use `data/sparklean-case-studies.mjs`. Empty published set = no public case-study section. Do not copy third-party Google review text onto the site until verified + permissioned.

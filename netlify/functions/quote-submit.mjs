@@ -15,6 +15,19 @@ const LOGO_URL =
 
 const CONTACT_KEYS = new Set(["fullName", "phone", "email", "location"]);
 
+/** Fail-closed server taxonomy — must match intake select values exactly. */
+export const REFERRAL_TYPES = Object.freeze([
+  "homeowner",
+  "realtor",
+  "builder",
+  "property_manager",
+  "home_watch",
+  "interior_designer",
+  "commercial",
+]);
+
+const REFERRAL_TYPE_SET = new Set(REFERRAL_TYPES);
+
 const ZIP_CITY = {
   34102: "Naples",
   34103: "Naples",
@@ -163,7 +176,67 @@ function displayLocation(locRaw) {
   return loc;
 }
 
-function buildPriorityTags(answers) {
+export function isValidReferralType(v) {
+  return typeof v === "string" && REFERRAL_TYPE_SET.has(v);
+}
+
+export function isReferralAnswers(answers, body = null) {
+  if (!answers || typeof answers !== "object") return false;
+  return (
+    answers.serviceCategory === "referral" ||
+    answers.leadSource === "referral" ||
+    (body && body.intakePreset === "referral")
+  );
+}
+
+function hasUsablePhone(v) {
+  return typeof v === "string" && v.replace(/\D/g, "").length >= 10;
+}
+
+function hasUsableEmail(v) {
+  return (
+    typeof v === "string" &&
+    v.includes("@") &&
+    !v.includes("sparklean.invalid") &&
+    !/^referral@sparklean\.co$/i.test(v.trim())
+  );
+}
+
+function contactOrNotProvided(v) {
+  const s = typeof v === "string" ? v.trim() : "";
+  return s || "Not provided";
+}
+
+/**
+ * Validate referral payload. Never copies referrer ↔ referred identity fields.
+ * Returns { ok:true } or { ok:false, error, status }.
+ */
+export function validateReferralAnswers(answers) {
+  if (!answers || typeof answers !== "object") {
+    return { ok: false, error: "Missing answers", status: 400 };
+  }
+  const required = ["fullName", "referredName", "referralType", "referralPermission", "referralConsent"];
+  for (const k of required) {
+    if (typeof answers[k] !== "string" || !answers[k].trim()) {
+      return { ok: false, error: `Missing or invalid: ${k}`, status: 400 };
+    }
+  }
+  if (!isValidReferralType(answers.referralType.trim())) {
+    return { ok: false, error: "Invalid referralType", status: 400 };
+  }
+  if (answers.referralPermission !== "yes" || answers.referralConsent !== "agree") {
+    return { ok: false, error: "Referral permission and consent are required", status: 400 };
+  }
+  if (!hasUsablePhone(answers.phone) && !hasUsableEmail(answers.email)) {
+    return { ok: false, error: "Referrer phone or email required", status: 400 };
+  }
+  if (!hasUsablePhone(answers.referredPhone) && !hasUsableEmail(answers.referredEmail)) {
+    return { ok: false, error: "Referred phone or email required", status: 400 };
+  }
+  return { ok: true };
+}
+
+export function buildPriorityTags(answers) {
   const tags = [];
   const cat = answers.serviceCategory;
   if (cat === "innerCircle") tags.push("INNER CIRCLE");
@@ -192,7 +265,9 @@ function buildPriorityTags(answers) {
   if (answers.deepClean === "yes") tags.push("DEEP CLEAN");
   if (answers.cleanPhase === "rough" || answers.dustLevel === "heavy") tags.push("URGENCY");
   if (cat === "moveInOut" || cat === "airbnbRental") tags.push("TURNOVER");
-  if (answers.referralType) tags.push(`REFERRAL:${String(answers.referralType).slice(0, 40)}`);
+  if (isValidReferralType(answers.referralType)) {
+    tags.push(`REFERRAL:${answers.referralType}`);
+  }
   return [...new Set(tags)];
 }
 
@@ -208,16 +283,22 @@ function bedBathSubjectPart(answers) {
   return "";
 }
 
+export function buildReferralEmailSubject(answers) {
+  const type = isValidReferralType(answers.referralType) ? answers.referralType : "referral";
+  const loc = displayLocation(answers.location);
+  return [`Sparklean referral`, type, loc].filter(Boolean).join(" · ").slice(0, 200);
+}
+
 function buildEmailSubject({ serviceLabel, answers }) {
   // Avoid spammy words like "Lead" / "URGENT" in the subject — Gmail filters those hard.
+  if (answers.serviceCategory === "referral" || answers.leadSource === "referral") {
+    return buildReferralEmailSubject(answers);
+  }
   const loc = displayLocation(answers.location);
   const parts = [`Sparklean inquiry`, serviceLabel, loc];
   const cat = answers.serviceCategory;
   if (cat === "innerCircle") {
     parts.push("Inner Circle");
-  } else if (cat === "referral") {
-    parts.push("Referral");
-    if (answers.referralType) parts.push(String(answers.referralType).slice(0, 40));
   } else if (cat === "residential" || cat === "condoHighRise" || cat === "luxuryEstate") {
     const bb = bedBathSubjectPart(answers);
     if (bb) parts.push(bb);
@@ -248,7 +329,7 @@ function humanFrequency(v) {
   return m[v] || v || "";
 }
 
-function buildHumanFallbackSummary(answers, serviceLabel) {
+export function buildHumanFallbackSummary(answers, serviceLabel) {
   const loc = displayLocation(answers.location);
   const cat = answers.serviceCategory;
 
@@ -263,10 +344,12 @@ function buildHumanFallbackSummary(answers, serviceLabel) {
   }
 
   if (cat === "referral" || answers.leadSource === "referral") {
-    let s = `Referral introduction from ${answers.fullName || "a referrer"}.`;
-    if (answers.referredName) s += ` Referred party: ${answers.referredName}.`;
-    if (answers.referralType) s += ` Category: ${answers.referralType}.`;
-    if (answers.referralPermission) s += ` Permission confirmed: ${answers.referralPermission}.`;
+    const type = isValidReferralType(answers.referralType) ? answers.referralType : "unspecified";
+    let s = `Referral introduction from ${answers.fullName || "a referrer"} (${type}).`;
+    s += ` Referred party: ${answers.referredName || "not named"}.`;
+    s += ` Referrer contact on file: phone ${contactOrNotProvided(answers.phone)}; email ${contactOrNotProvided(answers.email)}.`;
+    s += ` Referred contact on file: phone ${contactOrNotProvided(answers.referredPhone)}; email ${contactOrNotProvided(answers.referredEmail)}.`;
+    if (answers.referralPermission === "yes") s += " Permission to introduce confirmed.";
     if (answers.notesReferral) s += ` Note: ${answers.notesReferral}`;
     return s.trim();
   }
@@ -484,6 +567,156 @@ function buildDetailTableRows(rows) {
     .join("");
 }
 
+function emailIdentityBlock(title, rows) {
+  const inner = rows
+    .map(
+      (r) =>
+        `<tr><td style="padding:8px 0;color:rgba(249,247,243,.55);font-size:12px;letter-spacing:.06em;text-transform:uppercase;width:34%;">${escapeHtml(r.label)}</td>` +
+        `<td style="padding:8px 0;color:#f9f7f3;font-size:14px;">${escapeHtml(r.value)}</td></tr>`
+    )
+    .join("");
+  return (
+    `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">` +
+    `<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(184,164,122,.25);">${escapeHtml(title)}</td></tr>` +
+    `<tr><td style="padding:10px 0 0 0;font-family:Arial,sans-serif;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${inner}</table></td></tr></table>`
+  );
+}
+
+function referralActionButtons(answers) {
+  const buttons = [];
+  const refTel = digitsTel(answers.phone);
+  const partyTel = digitsTel(answers.referredPhone);
+  if (refTel) {
+    buttons.push(
+      `<tr><td align="center" style="border-radius:4px;background:linear-gradient(165deg,#d4bf96,#b8a47a);">` +
+        `<a href="tel:${refTel}" style="display:block;padding:14px 20px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase;color:#0e0e0e;text-decoration:none;">Call referrer ${escapeHtml(answers.phone)}</a></td></tr>` +
+        `<tr><td height="10"></td></tr>`
+    );
+  }
+  if (partyTel) {
+    buttons.push(
+      `<tr><td align="center" style="border-radius:4px;border:1px solid #b8a47a;">` +
+        `<a href="tel:${partyTel}" style="display:block;padding:14px 20px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase;color:#d4bf96;text-decoration:none;">Call referred party ${escapeHtml(answers.referredPhone)}</a></td></tr>` +
+        `<tr><td height="10"></td></tr>`
+    );
+  }
+  if (hasUsableEmail(answers.email)) {
+    const href = `mailto:${encodeURIComponent(answers.email)}?subject=${encodeURIComponent("Re: Sparklean referral")}`;
+    buttons.push(
+      `<tr><td align="center" style="border-radius:4px;border:1px solid rgba(184,164,122,.45);">` +
+        `<a href="${href}" style="display:block;padding:14px 20px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase;color:#d4bf96;text-decoration:none;">Email referrer</a></td></tr>` +
+        `<tr><td height="10"></td></tr>`
+    );
+  }
+  if (hasUsableEmail(answers.referredEmail)) {
+    const href = `mailto:${encodeURIComponent(answers.referredEmail)}?subject=${encodeURIComponent("Re: Sparklean introduction")}`;
+    buttons.push(
+      `<tr><td align="center" style="border-radius:4px;border:1px solid rgba(184,164,122,.45);">` +
+        `<a href="${href}" style="display:block;padding:14px 20px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase;color:#d4bf96;text-decoration:none;">Email referred party</a></td></tr>`
+    );
+  }
+  if (!buttons.length) return "";
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0;">${buttons.join("")}</table>`;
+}
+
+/** Referral-only internal email — two explicit identities, never mixed. */
+export function buildReferralHtmlEmail({
+  leadId,
+  submittedAtEst,
+  priorityTags,
+  answers,
+  summary,
+}) {
+  const tagsHtml = priorityTags.length
+    ? `<tr><td style="padding:0 0 20px 0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#d4bf96;">${priorityTags.map((t) => escapeHtml(t)).join(" · ")}</td></tr>`
+    : "";
+  const type = isValidReferralType(answers.referralType) ? answers.referralType : "—";
+  const referrerBlock = emailIdentityBlock("Referrer", [
+    { label: "Name", value: contactOrNotProvided(answers.fullName) },
+    { label: "Phone", value: contactOrNotProvided(answers.phone) },
+    { label: "Email", value: contactOrNotProvided(answers.email) },
+  ]);
+  const referredBlock = emailIdentityBlock("Referred party", [
+    { label: "Name", value: contactOrNotProvided(answers.referredName) },
+    { label: "Phone", value: contactOrNotProvided(answers.referredPhone) },
+    { label: "Email", value: contactOrNotProvided(answers.referredEmail) },
+  ]);
+  const metaBlock = emailIdentityBlock("Referral details", [
+    { label: "Type", value: type },
+    { label: "Permission", value: contactOrNotProvided(answers.referralPermission) },
+    { label: "Consent", value: contactOrNotProvided(answers.referralConsent) },
+    { label: "Location context", value: contactOrNotProvided(answers.location) },
+    ...(answers.notesReferral
+      ? [{ label: "Notes", value: String(answers.notesReferral) }]
+      : []),
+  ]);
+
+  return `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Referral</title></head>
+<body style="margin:0;padding:0;background:#0a0a0a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0a0a0a;padding:24px 12px;">
+<tr><td align="center">
+<table role="presentation" width="100%" style="max-width:600px;background:#121212;border:1px solid rgba(184,164,122,.25);border-radius:4px;overflow:hidden;">
+<tr><td style="padding:28px 28px 20px 28px;text-align:center;border-bottom:1px solid rgba(184,164,122,.2);">
+<img src="${LOGO_URL}" alt="Sparklean" width="180" style="display:block;margin:0 auto 16px auto;height:auto;">
+<p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#d4bf96;">Private referral brief</p>
+<p style="margin:8px 0 0 0;font-family:Georgia,serif;font-size:20px;color:#f9f7f3;">Referral introduction</p>
+<p style="margin:10px 0 0 0;font-family:Arial,sans-serif;font-size:12px;color:rgba(249,247,243,.45);">Lead ID <span style="color:#b8a47a;">${escapeHtml(leadId)}</span> · ${escapeHtml(submittedAtEst)}</p>
+</td></tr>
+<tr><td style="padding:20px 24px 8px 24px;">${tagsHtml}
+${referrerBlock}
+${referredBlock}
+${metaBlock}
+${referralActionButtons(answers)}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(184,164,122,.25);">Internal summary</td></tr>
+<tr><td style="padding:14px 0 8px 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.65;color:rgba(249,247,243,.88);font-style:italic;">${escapeHtml(summary)}</td></tr>
+</table>
+<p style="margin:20px 0 0 0;font-family:Arial,sans-serif;font-size:11px;line-height:1.5;color:rgba(249,247,243,.35);">Referrer and referred party are separate contacts. Do not discuss pricing in email—coordinate by phone.</p>
+</td></tr>
+</table>
+</td></tr></table>
+</body></html>`;
+}
+
+export function buildReferralPlainText({
+  leadId,
+  submittedAtEst,
+  priorityTags,
+  answers,
+  summary,
+}) {
+  const type = isValidReferralType(answers.referralType) ? answers.referralType : "—";
+  return [
+    "SPARKLEAN — REFERRAL INTRODUCTION",
+    `Lead ID: ${leadId}`,
+    `Received (EST): ${submittedAtEst}`,
+    priorityTags.length ? `Tags: ${priorityTags.join(" · ")}` : "",
+    "",
+    "REFERRER",
+    `Name: ${contactOrNotProvided(answers.fullName)}`,
+    `Phone: ${contactOrNotProvided(answers.phone)}`,
+    `Email: ${contactOrNotProvided(answers.email)}`,
+    "",
+    "REFERRED PARTY",
+    `Name: ${contactOrNotProvided(answers.referredName)}`,
+    `Phone: ${contactOrNotProvided(answers.referredPhone)}`,
+    `Email: ${contactOrNotProvided(answers.referredEmail)}`,
+    "",
+    "REFERRAL DETAILS",
+    `Type: ${type}`,
+    `Permission: ${contactOrNotProvided(answers.referralPermission)}`,
+    `Consent: ${contactOrNotProvided(answers.referralConsent)}`,
+    `Location context: ${contactOrNotProvided(answers.location)}`,
+    answers.notesReferral ? `Notes: ${answers.notesReferral}` : "",
+    "",
+    "INTERNAL SUMMARY",
+    summary,
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+}
+
 function buildLuxuryHtmlEmail({
   leadId,
   submittedAtEst,
@@ -641,7 +874,8 @@ function escapeHtml(s) {
     .replace(/'/g, "&#39;");
 }
 
-async function summarizeLead({ serviceLabel, answers, sourceUrl, submittedAt }) {
+/** External AI summarization — never call for referral submissions (third-party PII). */
+export async function summarizeLead({ serviceLabel, answers, sourceUrl, submittedAt }) {
   const key = process.env.OPENAI_API_KEY;
   if (!key) return null;
 
@@ -837,10 +1071,7 @@ export default async (request) => {
   const answers = body.answers;
   if (!answers || typeof answers !== "object") return json({ error: "Missing answers" }, 400);
 
-  const isReferral =
-    answers.serviceCategory === "referral" ||
-    answers.leadSource === "referral" ||
-    body.intakePreset === "referral";
+  const isReferral = isReferralAnswers(answers, body);
 
   if (isReferral) {
     answers.serviceCategory = "referral";
@@ -848,30 +1079,11 @@ export default async (request) => {
     if (!answers.location || !String(answers.location).trim()) {
       answers.location = "Southwest Florida (referral)";
     }
-    const referralRequired = ["fullName", "referredName", "referralType", "referralPermission", "referralConsent"];
-    for (const k of referralRequired) {
-      if (typeof answers[k] !== "string" || !answers[k].trim()) {
-        return json({ error: `Missing or invalid: ${k}` }, 400);
-      }
+    const referralCheck = validateReferralAnswers(answers);
+    if (!referralCheck.ok) {
+      return json({ error: referralCheck.error }, referralCheck.status || 400);
     }
-    if (answers.referralPermission !== "yes" || answers.referralConsent !== "agree") {
-      return json({ error: "Referral permission and consent are required" }, 400);
-    }
-    const referrerContact =
-      (typeof answers.phone === "string" && answers.phone.replace(/\D/g, "").length >= 10) ||
-      (typeof answers.email === "string" && answers.email.includes("@") && !answers.email.includes("sparklean.invalid"));
-    const referredContact =
-      (typeof answers.referredPhone === "string" && answers.referredPhone.replace(/\D/g, "").length >= 10) ||
-      (typeof answers.referredEmail === "string" && answers.referredEmail.includes("@"));
-    if (!referrerContact) return json({ error: "Referrer phone or email required" }, 400);
-    if (!referredContact) return json({ error: "Referred phone or email required" }, 400);
-    // Satisfy shared contact shape for email templates without inventing public PII.
-    if (!answers.phone || String(answers.phone).includes("referral-via")) {
-      answers.phone = answers.referredPhone || answers.phone || "see referred contact";
-    }
-    if (!answers.email || String(answers.email).includes("sparklean.invalid")) {
-      answers.email = answers.referredEmail || answers.email || "referral@sparklean.co";
-    }
+    // Identities stay explicit and separate — never copy referrer ↔ referred fields.
   } else {
     const required = ["fullName", "phone", "email", "location", "serviceCategory"];
     for (const k of required) {
@@ -944,42 +1156,66 @@ export default async (request) => {
     },
   };
 
-  let summary = await summarizeLead({
-    serviceLabel,
-    answers,
-    sourceUrl,
-    submittedAt,
-  });
-  if (!summary) {
+  // Referrals: skip OpenAI entirely — third-party PII must not leave the function via AI APIs.
+  let summary;
+  if (isReferral) {
     summary = buildHumanFallbackSummary(answers, serviceLabel);
+  } else {
+    summary = await summarizeLead({
+      serviceLabel,
+      answers,
+      sourceUrl,
+      submittedAt,
+    });
+    if (!summary) {
+      summary = buildHumanFallbackSummary(answers, serviceLabel);
+    }
   }
   dashboardRecord.summary = summary;
 
   // Kept for function logs / future CRM webhook — not emailed (attachments hurt inbox placement).
+  // Note: Brevo transactional + function logs are not a closed referral CRM lifecycle.
   console.log("[quote-submit] intake record", JSON.stringify(dashboardRecord));
 
   const subject = buildEmailSubject({ serviceLabel, answers });
-  const detailRows = groupDetailRows(answers);
-
-  const html = buildLuxuryHtmlEmail({
-    leadId,
-    submittedAtEst,
-    priorityTags,
-    serviceLabel,
-    answers,
-    summary,
-    detailRows,
-  });
-
-  const text = buildPlainTextLead({
-    leadId,
-    submittedAtEst,
-    priorityTags,
-    serviceLabel,
-    answers,
-    summary,
-    detailRows,
-  });
+  let html;
+  let text;
+  if (isReferral) {
+    html = buildReferralHtmlEmail({
+      leadId,
+      submittedAtEst,
+      priorityTags,
+      answers,
+      summary,
+    });
+    text = buildReferralPlainText({
+      leadId,
+      submittedAtEst,
+      priorityTags,
+      answers,
+      summary,
+    });
+  } else {
+    const detailRows = groupDetailRows(answers);
+    html = buildLuxuryHtmlEmail({
+      leadId,
+      submittedAtEst,
+      priorityTags,
+      serviceLabel,
+      answers,
+      summary,
+      detailRows,
+    });
+    text = buildPlainTextLead({
+      leadId,
+      submittedAtEst,
+      priorityTags,
+      serviceLabel,
+      answers,
+      summary,
+      detailRows,
+    });
+  }
 
   try {
     await sendBrevoTransactionalEmail({
@@ -999,4 +1235,11 @@ export default async (request) => {
   await notifySlackOptional({ leadId, serviceLabel, summary, priorityTags });
 
   return json({ ok: true, receivedAt: new Date().toISOString(), leadId });
+};
+
+export {
+  buildEmailSubject,
+  buildLuxuryHtmlEmail,
+  buildPlainTextLead,
+  groupDetailRows,
 };
