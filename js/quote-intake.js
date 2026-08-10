@@ -3,8 +3,14 @@
  * Deterministic steps only; no client-side model, no freeform chat.
  * Depends on: /js/serviceFlows.js (window.SparkleanQuoteFlows)
  *
- * Paid mode (?quote=1 | gclid | paid UTMs): minimum viable lead only
- * (name, phone, email, location, service) — no mandatory property details.
+ * Paid mode (?quote=1 | gclid | paid UTMs | stored click ids): minimum viable
+ * lead only (name, phone, email, location, service) — no property expansion.
+ *
+ * Triggers:
+ * - ?quote=1 → may open intake immediately (explicit).
+ * - gclid / gbraid / wbraid / paid UTM → soft concierge prompt after 10s OR
+ *   35% scroll (never auto-open full-screen). Hero/nav/sticky still open now.
+ * - Organic → click-triggered only.
  */
 (function () {
   var F = null;
@@ -53,6 +59,12 @@
     "We're having trouble submitting your request right now. Please call Sparklean directly at (239) 888-3588.";
   var referralTypePrefill = "";
   var PAID_UTM_MEDIUMS = /^(cpc|ppc|paid|paidsearch|display|cpm|cpa|ads|ad)$/i;
+  var PROMPT_DELAY_MS = 10000;
+  var PROMPT_SCROLL_RATIO = 0.35;
+  var softPromptEl = null;
+  var softPromptTimer = null;
+  var softPromptBound = false;
+  var softPromptShown = false;
 
   function esc(s) {
     return String(s == null ? "" : s)
@@ -82,15 +94,22 @@
     return false;
   }
 
-  /** True when this page load URL carries paid / forced-quote signals (auto-open). */
-  function isPaidLandingQuery(search) {
-    var p;
+  function parseSearch(search) {
     try {
-      p = search != null ? new URLSearchParams(search) : readQuery();
+      return search != null ? new URLSearchParams(search) : readQuery();
     } catch (e1) {
-      return false;
+      return new URLSearchParams();
     }
-    if (p.get("quote") === "1") return true;
+  }
+
+  /** Explicit instruction — may open intake immediately. */
+  function isForcedQuoteQuery(search) {
+    return parseSearch(search).get("quote") === "1";
+  }
+
+  /** Paid click / campaign params that keep paid mode but must not auto-open. */
+  function isSoftPaidLandingQuery(search) {
+    var p = parseSearch(search);
     if (p.get("gclid") || p.get("gbraid") || p.get("wbraid")) return true;
     var medium = String(p.get("utm_medium") || "").trim();
     if (medium && PAID_UTM_MEDIUMS.test(medium)) return true;
@@ -100,12 +119,49 @@
     return false;
   }
 
+  /** True when URL carries any paid / forced-quote signal (mode, not trigger). */
+  function isPaidLandingQuery(search) {
+    return isForcedQuoteQuery(search) || isSoftPaidLandingQuery(search);
+  }
+
   /** Short paid flow for Ads visitors (URL paid params or stored click ids). */
   function shouldUsePaidMode(opts) {
     if (opts && opts.paid === true) return true;
     if (opts && opts.paid === false) return false;
     if (isPaidLandingQuery()) return true;
     return hasStoredAdClickIds();
+  }
+
+  function softPromptStorageKey() {
+    return "sparklean_paid_soft_prompt:" + window.location.pathname + window.location.search;
+  }
+
+  function forceOpenStorageKey() {
+    return "sparklean_paid_force_open:" + window.location.pathname + window.location.search;
+  }
+
+  function getSoftPromptState() {
+    try {
+      return sessionStorage.getItem(softPromptStorageKey()) || "";
+    } catch (e2) {
+      return softPromptShown ? "shown" : "";
+    }
+  }
+
+  function setSoftPromptState(state) {
+    try {
+      sessionStorage.setItem(softPromptStorageKey(), state);
+    } catch (e3) {
+      /* ignore */
+    }
+    if (state === "shown" || state === "dismissed" || state === "opened") {
+      softPromptShown = true;
+    }
+  }
+
+  function softPromptBlocked() {
+    var s = getSoftPromptState();
+    return s === "dismissed" || s === "opened" || s === "shown";
   }
 
   function shouldInterceptAnchor(a) {
@@ -239,7 +295,13 @@
           : intakePreset === "referral"
             ? "Thank you. Your introduction has been received. A Sparklean team member will follow up with the referred contact and keep you informed as appropriate."
             : "Thank you. Your request has been received and a Sparklean team member will contact you shortly to discuss the best service approach for your property.";
-      elStep.innerHTML = '<p class="sq-intake__done">' + esc(doneText) + "</p>";
+      elStep.innerHTML =
+        '<p class="sq-intake__done">' +
+        esc(doneText) +
+        "</p>" +
+        '<p class="sq-intake__done-call">' +
+        '<a class="sq-intake__done-call-link" href="tel:+12398883588" data-sparklean-event="phone_click">' +
+        "Call Sparklean · (239) 888-3588</a></p>";
       var doneBar = root.querySelector("[data-intake-progress-bar]");
       if (doneBar) doneBar.style.width = "100%";
       elProg.textContent = "Complete";
@@ -544,6 +606,11 @@
               referral_type: String(submitAnswers.referralType || "").slice(0, 40),
               intake_preset: "referral",
             });
+          } else if (paidMode) {
+            window.SparkleanEvents.track("paid_quote_submitted", {
+              intake_preset: "paidMinimum",
+              service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
+            });
           } else if (
             intakePreset === "recurringResidential" ||
             submitAnswers.frequency === "weekly" ||
@@ -553,11 +620,6 @@
             window.SparkleanEvents.track("recurring_quote_submitted", {
               intake_preset: intakePreset || "standard",
               cadence: String(submitAnswers.frequency || "").slice(0, 40),
-              service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
-            });
-          } else if (paidMode) {
-            window.SparkleanEvents.track("paid_quote_submitted", {
-              intake_preset: "paidMinimum",
               service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
             });
           }
@@ -668,6 +730,7 @@
 
   function open(opts) {
     if (!ensureFlows()) return;
+    markSoftPromptOpened();
     sourceUrl = (opts && opts.sourceUrl) || window.location.href;
     var preset = (opts && opts.preset && String(opts.preset).trim()) || "";
     var fromAttr = "";
@@ -753,17 +816,7 @@
     });
   }
 
-  function maybeAutoOpenPaid() {
-    if (!isPaidLandingQuery()) return;
-    var key = "sparklean_paid_auto_open:" + window.location.pathname + window.location.search;
-    try {
-      if (sessionStorage.getItem(key) === "1") return;
-      sessionStorage.setItem(key, "1");
-    } catch (e3) {
-      /* continue even if storage blocked */
-    }
-    // Prefer residential short path on residential landings; otherwise generic paid minimum.
-    var preset = null;
+  function paidLandingPreset() {
     var path = (window.location.pathname || "").toLowerCase();
     if (
       path.indexOf("residential") !== -1 ||
@@ -771,13 +824,142 @@
       path === "/" ||
       path === "/index.html"
     ) {
-      preset = "recurringResidential";
+      return "recurringResidential";
     }
+    return null;
+  }
+
+  function openPaidIntake(sourceTag) {
     open({
-      sourceUrl: window.location.href,
+      sourceUrl: window.location.href + (sourceTag || ""),
       paid: true,
-      preset: preset,
+      preset: paidLandingPreset(),
     });
+  }
+
+  function ensureSoftPromptEl() {
+    if (softPromptEl) return softPromptEl;
+    softPromptEl = document.createElement("aside");
+    softPromptEl.className = "sq-paid-prompt";
+    softPromptEl.setAttribute("hidden", "");
+    softPromptEl.setAttribute("role", "dialog");
+    softPromptEl.setAttribute("aria-label", "Personalized cleaning plan");
+    softPromptEl.innerHTML =
+      '<div class="sq-paid-prompt__inner">' +
+      '<p class="sq-paid-prompt__copy">Ready for a personalized cleaning plan?</p>' +
+      '<div class="sq-paid-prompt__actions">' +
+      '<button type="button" class="sq-paid-prompt__cta" data-paid-prompt-open>Get a quote</button>' +
+      '<button type="button" class="sq-paid-prompt__dismiss" data-paid-prompt-dismiss aria-label="Dismiss">×</button>' +
+      "</div></div>";
+    document.body.appendChild(softPromptEl);
+    softPromptEl.addEventListener("click", function (e) {
+      if (e.target.closest("[data-paid-prompt-dismiss]")) {
+        e.preventDefault();
+        dismissSoftPrompt();
+        return;
+      }
+      if (e.target.closest("[data-paid-prompt-open]")) {
+        e.preventDefault();
+        openPaidIntake("#paid-soft-prompt");
+      }
+    });
+    return softPromptEl;
+  }
+
+  function hideSoftPromptDom() {
+    if (!softPromptEl) return;
+    softPromptEl.setAttribute("hidden", "");
+    softPromptEl.classList.remove("is-visible");
+  }
+
+  function dismissSoftPrompt() {
+    setSoftPromptState("dismissed");
+    hideSoftPromptDom();
+    clearSoftPromptListeners();
+  }
+
+  function markSoftPromptOpened() {
+    if (!isSoftPaidLandingQuery() && !isForcedQuoteQuery()) return;
+    var s = getSoftPromptState();
+    if (s !== "dismissed") setSoftPromptState("opened");
+    hideSoftPromptDom();
+    clearSoftPromptListeners();
+  }
+
+  function clearSoftPromptListeners() {
+    if (softPromptTimer) {
+      clearTimeout(softPromptTimer);
+      softPromptTimer = null;
+    }
+    if (softPromptBound) {
+      window.removeEventListener("scroll", onSoftPromptScroll);
+      softPromptBound = false;
+    }
+  }
+
+  function onSoftPromptScroll() {
+    try {
+      var doc = document.documentElement;
+      var body = document.body;
+      var scrollTop = window.pageYOffset || doc.scrollTop || body.scrollTop || 0;
+      var scrollHeight = Math.max(doc.scrollHeight, body.scrollHeight || 0);
+      var clientHeight = window.innerHeight || doc.clientHeight || 0;
+      var maxScroll = Math.max(1, scrollHeight - clientHeight);
+      if (scrollTop / maxScroll >= PROMPT_SCROLL_RATIO) {
+        showSoftPrompt();
+      }
+    } catch (e4) {
+      /* ignore */
+    }
+  }
+
+  function showSoftPrompt() {
+    if (!isSoftPaidLandingQuery()) return;
+    if (softPromptBlocked()) return;
+    if (root && root.classList.contains("is-open")) return;
+    ensureSoftPromptEl();
+    setSoftPromptState("shown");
+    softPromptEl.removeAttribute("hidden");
+    softPromptEl.classList.add("is-visible");
+    clearSoftPromptListeners();
+    if (window.SparkleanEvents && typeof window.SparkleanEvents.track === "function") {
+      window.SparkleanEvents.track("paid_quote_prompt_shown", { intake_preset: "paidMinimum" });
+    }
+  }
+
+  function schedulePaidSoftPrompt() {
+    if (!isSoftPaidLandingQuery()) return;
+    if (isForcedQuoteQuery()) return;
+    if (softPromptBlocked()) return;
+    if (softPromptBound || softPromptTimer) return;
+    softPromptBound = true;
+    window.addEventListener("scroll", onSoftPromptScroll, { passive: true });
+    softPromptTimer = setTimeout(function () {
+      softPromptTimer = null;
+      showSoftPrompt();
+    }, PROMPT_DELAY_MS);
+  }
+
+  function resetSoftPromptForTest() {
+    clearSoftPromptListeners();
+    softPromptShown = false;
+    hideSoftPromptDom();
+    try {
+      sessionStorage.removeItem(softPromptStorageKey());
+    } catch (e6) {
+      /* ignore */
+    }
+  }
+
+  function maybeForceOpenQuote() {
+    if (!isForcedQuoteQuery()) return;
+    try {
+      if (sessionStorage.getItem(forceOpenStorageKey()) === "1") return;
+      sessionStorage.setItem(forceOpenStorageKey(), "1");
+    } catch (e5) {
+      /* continue even if storage blocked */
+    }
+    openPaidIntake("?quote=1");
   }
 
   window.SparkleanQuoteIntake = {
@@ -785,7 +967,26 @@
     close: close,
     _test: {
       isPaidLandingQuery: isPaidLandingQuery,
+      isForcedQuoteQuery: isForcedQuoteQuery,
+      isSoftPaidLandingQuery: isSoftPaidLandingQuery,
       shouldUsePaidMode: shouldUsePaidMode,
+      showSoftPrompt: showSoftPrompt,
+      dismissSoftPrompt: dismissSoftPrompt,
+      schedulePaidSoftPrompt: schedulePaidSoftPrompt,
+      resetSoftPromptForTest: resetSoftPromptForTest,
+      getSoftPromptState: getSoftPromptState,
+      getSoftPromptEl: function () {
+        return softPromptEl;
+      },
+      setPromptDelayMs: function (ms) {
+        PROMPT_DELAY_MS = Number(ms) || 0;
+      },
+      getPromptDelayMs: function () {
+        return PROMPT_DELAY_MS;
+      },
+      getPromptScrollRatio: function () {
+        return PROMPT_SCROLL_RATIO;
+      },
       willExpandAfterServiceCategory: function () {
         return willExpandAfterServiceCategory();
       },
@@ -805,6 +1006,9 @@
             : "",
           nextText: root && root.querySelector("[data-intake-next]")
             ? root.querySelector("[data-intake-next]").textContent
+            : "",
+          doneHtml: root && root.querySelector("[data-intake-step]")
+            ? root.querySelector("[data-intake-step]").innerHTML
             : "",
         };
       },
@@ -827,16 +1031,17 @@
         open({ sourceUrl: window.location.href + "#sticky-quote" });
       }
     });
-    // Auto-open after page + flows are ready (paid landings only).
-    var tryOpen = function () {
+    var tryPaidLanding = function () {
       if (!ensureFlows()) return;
-      maybeAutoOpenPaid();
+      // Explicit ?quote=1 may open immediately; paid click IDs never auto-open.
+      maybeForceOpenQuote();
+      schedulePaidSoftPrompt();
     };
     if (document.readyState === "complete") {
-      setTimeout(tryOpen, 0);
+      setTimeout(tryPaidLanding, 0);
     } else {
       window.addEventListener("load", function () {
-        setTimeout(tryOpen, 0);
+        setTimeout(tryPaidLanding, 0);
       });
     }
   }
