@@ -2,6 +2,9 @@
  * Sparklean — guided concierge intake (single overlay, sitewide).
  * Deterministic steps only; no client-side model, no freeform chat.
  * Depends on: /js/serviceFlows.js (window.SparkleanQuoteFlows)
+ *
+ * Paid mode (?quote=1 | gclid | paid UTMs): minimum viable lead only
+ * (name, phone, email, location, service) — no mandatory property details.
  */
 (function () {
   var F = null;
@@ -13,11 +16,20 @@
   var submitting = false;
   /** When set (e.g. "innerCircle"), skips generic "which service" branching and uses a dedicated flow. */
   var intakePreset = null;
+  /** Paid Ads / quote=1 short path — submit after contact + service. */
+  var paidMode = false;
+  var leadDelivered = false;
   var INTAKE_CHROME_DEFAULT = {
     eyebrow: "Service request",
     title: "A few brief questions",
     intro:
       "One question at a time. Pricing is not reviewed here; a Sparklean team member will reach out to you directly.",
+  };
+  var INTAKE_CHROME_PAID = {
+    eyebrow: "Quick quote request",
+    title: "Five brief questions",
+    intro:
+      "Share your contact details and the service you need. A Sparklean team member will follow up shortly — no pricing calculator on this page.",
   };
   var INTAKE_CHROME_INNER_CIRCLE = {
     eyebrow: "Inner Circle",
@@ -40,6 +52,7 @@
   var INTAKE_FAILURE_MSG =
     "We're having trouble submitting your request right now. Please call Sparklean directly at (239) 888-3588.";
   var referralTypePrefill = "";
+  var PAID_UTM_MEDIUMS = /^(cpc|ppc|paid|paidsearch|display|cpm|cpa|ads|ad)$/i;
 
   function esc(s) {
     return String(s == null ? "" : s)
@@ -47,6 +60,52 @@
       .replace(/</g, "&lt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
+  }
+
+  function readQuery() {
+    try {
+      return new URLSearchParams(window.location.search || "");
+    } catch (e) {
+      return new URLSearchParams();
+    }
+  }
+
+  function hasStoredAdClickIds() {
+    try {
+      if (window.SparkleanAds && typeof window.SparkleanAds.getStoredAdClickIds === "function") {
+        var s = window.SparkleanAds.getStoredAdClickIds() || {};
+        return !!(s.gclid || s.gbraid || s.wbraid);
+      }
+    } catch (e0) {
+      /* ignore */
+    }
+    return false;
+  }
+
+  /** True when this page load URL carries paid / forced-quote signals (auto-open). */
+  function isPaidLandingQuery(search) {
+    var p;
+    try {
+      p = search != null ? new URLSearchParams(search) : readQuery();
+    } catch (e1) {
+      return false;
+    }
+    if (p.get("quote") === "1") return true;
+    if (p.get("gclid") || p.get("gbraid") || p.get("wbraid")) return true;
+    var medium = String(p.get("utm_medium") || "").trim();
+    if (medium && PAID_UTM_MEDIUMS.test(medium)) return true;
+    var source = String(p.get("utm_source") || "").trim().toLowerCase();
+    // Explicit ad-network sources only (not bare utm_source=google + organic).
+    if (source === "googleads" || source === "adwords") return true;
+    return false;
+  }
+
+  /** Short paid flow for Ads visitors (URL paid params or stored click ids). */
+  function shouldUsePaidMode(opts) {
+    if (opts && opts.paid === true) return true;
+    if (opts && opts.paid === false) return false;
+    if (isPaidLandingQuery()) return true;
+    return hasStoredAdClickIds();
   }
 
   function shouldInterceptAnchor(a) {
@@ -64,12 +123,18 @@
     }
     if (href !== "/contact") return false;
     if (tLower === "contact") return false;
-    if (/contact estimating|estimating team|message estimating|contact scheduling|reach us directly/i.test(txt)) return false;
+    if (/contact estimating|estimating team|message estimating|contact scheduling|reach us directly/i.test(txt))
+      return false;
     if (a.classList.contains("nav-btn")) return true;
     if (a.classList.contains("btn-gold")) return true;
     if (a.classList.contains("btn-outline") && /quote|estimate/i.test(tLower)) return true;
     if (a.classList.contains("founder-soft-cta")) return true;
-    if (/quote|estimate|personalized|schedule|set up|join|construction|commercial quote|discuss add-ons|window cleaning quote/i.test(tLower)) return true;
+    if (
+      /quote|estimate|personalized|schedule|set up|join|construction|commercial quote|discuss add-ons|window cleaning quote/i.test(
+        tLower
+      )
+    )
+      return true;
     if (tLower === "get a quote" || tLower === "get quote") return true;
     return false;
   }
@@ -114,6 +179,52 @@
     }
   }
 
+  /** Count remaining steps that will actually be shown (skipIf-aware). */
+  function visibleStepCountFrom(startIdx, ans) {
+    var a = Object.assign({}, ans || answers);
+    var count = 0;
+    for (var i = startIdx; i < steps.length; i++) {
+      var q = steps[i];
+      if (!q) continue;
+      if (q.skipIf && q.skipIf(a)) continue;
+      count++;
+    }
+    return count;
+  }
+
+  function totalVisibleSteps() {
+    return visibleStepCountFrom(0, answers);
+  }
+
+  function visibleStepNumber() {
+    var n = 0;
+    for (var i = 0; i <= stepIndex && i < steps.length; i++) {
+      var q = steps[i];
+      if (!q) continue;
+      if (q.skipIf && q.skipIf(answers)) continue;
+      n++;
+    }
+    return Math.max(1, n);
+  }
+
+  /** Organic universal flow expands after serviceCategory — never claim final step before then. */
+  function willExpandAfterServiceCategory() {
+    if (paidMode) return false;
+    if (intakePreset === "referral" || intakePreset === "innerCircle") return false;
+    if (intakePreset === "recurringResidential") return false;
+    var q = currentQuestion();
+    return !!(q && q.id === "serviceCategory");
+  }
+
+  function isFinalMandatoryStep() {
+    if (willExpandAfterServiceCategory()) return false;
+    if (paidMode) {
+      var q = currentQuestion();
+      return !!(q && q.id === "serviceCategory");
+    }
+    return visibleStepCountFrom(stepIndex + 1, answers) === 0;
+  }
+
   function render() {
     if (!root) return;
     var q = currentQuestion();
@@ -137,11 +248,26 @@
       root.querySelector("[data-intake-next]").setAttribute("data-intake-done", "1");
       return;
     }
-    var n = steps.length;
-    var pct = n ? Math.round(((stepIndex + 1) / n) * 100) : 0;
+
+    var nextBtn = root.querySelector("[data-intake-next]");
+    var finalStep = isFinalMandatoryStep();
     var bar = root.querySelector("[data-intake-progress-bar]");
-    if (bar) bar.style.width = pct + "%";
-    elProg.textContent = "Step " + (stepIndex + 1) + " of " + n;
+
+    if (willExpandAfterServiceCategory()) {
+      // Honest progress: more questions follow after service selection.
+      elProg.textContent = "Step " + visibleStepNumber();
+      if (bar) bar.style.width = Math.min(90, Math.round((visibleStepNumber() / 6) * 100)) + "%";
+      nextBtn.textContent = "Continue";
+    } else {
+      var total = totalVisibleSteps();
+      var cur = visibleStepNumber();
+      var pct = total ? Math.round((cur / total) * 100) : 0;
+      if (bar) bar.style.width = pct + "%";
+      elProg.textContent = "Step " + cur + " of " + total;
+      nextBtn.textContent = finalStep ? "Send request" : "Continue";
+    }
+    nextBtn.removeAttribute("data-intake-done");
+
     var html = "";
     html += '<h2 class="sq-intake__q" id="sq-intake-qh">' + esc(q.label) + "</h2>";
     if (q.assist) html += '<p class="sq-intake__assist">' + esc(q.assist) + "</p>";
@@ -188,9 +314,6 @@
     }
     elStep.innerHTML = html;
     root.querySelector("[data-intake-back]").style.display = stepIndex > 0 ? "" : "none";
-    var nextBtn = root.querySelector("[data-intake-next]");
-    nextBtn.textContent = stepIndex >= steps.length - 1 ? "Send request" : "Continue";
-    nextBtn.removeAttribute("data-intake-done");
 
     if (q.type === "select") {
       elStep.querySelectorAll(".sq-intake__opt").forEach(function (btn) {
@@ -266,7 +389,14 @@
         return;
       }
     }
-    if (q && q.id === "serviceCategory") {
+
+    // Paid mode: submit immediately after service selection — no property-detail branch.
+    if (paidMode && q && q.id === "serviceCategory") {
+      submitLead();
+      return;
+    }
+
+    if (q && q.id === "serviceCategory" && !paidMode) {
       var keep = ["fullName", "phone", "email", "location", "serviceCategory"];
       var na = {};
       for (var ki = 0; ki < keep.length; ki++) {
@@ -276,10 +406,20 @@
       answers = na;
       steps = F.flows.universal.concat(F.flows[answers.serviceCategory] || []);
     }
-    if (stepIndex >= steps.length - 1) {
+
+    if (isFinalMandatoryStep()) {
       submitLead();
       return;
     }
+
+    // After expanding organic branch, leave serviceCategory and continue.
+    if (q && q.id === "serviceCategory" && !paidMode) {
+      stepIndex++;
+      applySkipsForward();
+      render();
+      return;
+    }
+
     stepIndex++;
     applySkipsForward();
     render();
@@ -288,6 +428,11 @@
   function goBack() {
     if (stepIndex <= 0) return;
     stepIndex--;
+    if (paidMode) {
+      steps = F.flows.universal.slice();
+      render();
+      return;
+    }
     if (intakePreset === "innerCircle") {
       if (stepIndex < 4) {
         steps = F.flows.universal.slice(0, 4).concat(F.flows.innerCircleMembership);
@@ -317,6 +462,7 @@
       root.classList.remove("is-open");
     }
     intakePreset = null;
+    paidMode = false;
     applyIntakeChrome(null);
     document.body.classList.remove("sq-intake-open");
     document.removeEventListener("keydown", onKey);
@@ -344,6 +490,10 @@
       submitAnswers.leadSource = "referral";
       submitAnswers.location = submitAnswers.location || "Southwest Florida (referral)";
     }
+    if (paidMode) {
+      submitAnswers.leadSource = submitAnswers.leadSource || "paid_intake";
+      submitAnswers.intakeMode = "paid_minimum";
+    }
     var payload = {
       answers: submitAnswers,
       sourceUrl: sourceUrl || window.location.href,
@@ -355,7 +505,7 @@
       deviceType: deviceTypeGuess(),
       userAgent: (navigator.userAgent || "").slice(0, 400),
       submittedAt: new Date().toISOString(),
-      intakePreset: intakePreset || null,
+      intakePreset: paidMode ? "paidMinimum" : intakePreset || null,
       serviceLabel: F.categoryLabel(submitAnswers.serviceCategory || ""),
     };
     fetch("/.netlify/functions/quote-submit", {
@@ -387,6 +537,7 @@
         ) {
           window.SparkleanAds.trackQuoteRequestCompleted(leadId);
         }
+        leadDelivered = true;
         if (window.SparkleanEvents && typeof window.SparkleanEvents.track === "function") {
           if (intakePreset === "referral") {
             window.SparkleanEvents.track("referral_submitted", {
@@ -402,6 +553,11 @@
             window.SparkleanEvents.track("recurring_quote_submitted", {
               intake_preset: intakePreset || "standard",
               cadence: String(submitAnswers.frequency || "").slice(0, 40),
+              service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
+            });
+          } else if (paidMode) {
+            window.SparkleanEvents.track("paid_quote_submitted", {
+              intake_preset: "paidMinimum",
               service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
             });
           }
@@ -421,7 +577,8 @@
   function applyIntakeChrome(preset) {
     if (!root) return;
     var pack = INTAKE_CHROME_DEFAULT;
-    if (preset === "innerCircle") pack = INTAKE_CHROME_INNER_CIRCLE;
+    if (paidMode) pack = INTAKE_CHROME_PAID;
+    else if (preset === "innerCircle") pack = INTAKE_CHROME_INNER_CIRCLE;
     else if (preset === "referral") pack = INTAKE_CHROME_REFERRAL;
     else if (preset === "recurringResidential") pack = INTAKE_CHROME_RECURRING;
     var ey = root.querySelector(".sq-intake__eyebrow");
@@ -483,18 +640,19 @@
         "gclid",
         "gbraid",
         "wbraid",
+        "quote",
       ];
       for (var i = 0; i < keys.length; i++) {
         var v = p.get(keys[i]);
         if (v) o[keys[i]] = v.slice(0, 200);
       }
-      // Preserve click ids across in-site navigation / intake open on other pages.
       if (window.SparkleanAds && typeof window.SparkleanAds.getStoredAdClickIds === "function") {
         var stored = window.SparkleanAds.getStoredAdClickIds() || {};
         ["gclid", "gbraid", "wbraid"].forEach(function (k) {
           if (!o[k] && stored[k]) o[k] = String(stored[k]).slice(0, 200);
         });
       }
+      if (paidMode) o.intake_mode = "paid_minimum";
       return Object.keys(o).length ? o : null;
     } catch (e1) {
       return null;
@@ -523,6 +681,12 @@
     else if (preset === "referral") intakePreset = "referral";
     else if (preset === "recurringResidential") intakePreset = "recurringResidential";
     else intakePreset = null;
+
+    // Referral / Inner Circle keep their dedicated flows even on paid landings.
+    paidMode =
+      shouldUsePaidMode(opts) && intakePreset !== "referral" && intakePreset !== "innerCircle";
+    leadDelivered = false;
+
     try {
       if (!sessionStorage.getItem("sparklean_intake_entry")) {
         sessionStorage.setItem("sparklean_intake_entry", sourceUrl || window.location.href);
@@ -543,6 +707,16 @@
       };
       if (referralTypePrefill) answers.referralType = referralTypePrefill;
       steps = F.flows.referralIntro.slice();
+    } else if (paidMode) {
+      // Minimum viable lead only — never concatenate property-detail flows.
+      answers = {};
+      if (intakePreset === "recurringResidential") {
+        answers.serviceCategory = "residential";
+        steps = F.flows.universal.slice();
+      } else {
+        steps = F.flows.universal.slice();
+      }
+      intakePreset = null;
     } else if (intakePreset === "recurringResidential") {
       answers = { serviceCategory: "residential" };
       steps = F.flows.universal.slice(0, 4).concat(F.flows.residential);
@@ -563,6 +737,8 @@
         var refParams = { intake_preset: "referral" };
         if (referralTypePrefill) refParams.referral_type = referralTypePrefill;
         window.SparkleanEvents.track("referral_started", refParams);
+      } else if (paidMode) {
+        window.SparkleanEvents.track("paid_quote_started", { intake_preset: "paidMinimum" });
       } else if (intakePreset === "recurringResidential") {
         window.SparkleanEvents.track("recurring_quote_started", {
           intake_preset: "recurringResidential",
@@ -577,7 +753,71 @@
     });
   }
 
-  window.SparkleanQuoteIntake = { open: open, close: close };
+  function maybeAutoOpenPaid() {
+    if (!isPaidLandingQuery()) return;
+    var key = "sparklean_paid_auto_open:" + window.location.pathname + window.location.search;
+    try {
+      if (sessionStorage.getItem(key) === "1") return;
+      sessionStorage.setItem(key, "1");
+    } catch (e3) {
+      /* continue even if storage blocked */
+    }
+    // Prefer residential short path on residential landings; otherwise generic paid minimum.
+    var preset = null;
+    var path = (window.location.pathname || "").toLowerCase();
+    if (
+      path.indexOf("residential") !== -1 ||
+      path.indexOf("house-cleaning") !== -1 ||
+      path === "/" ||
+      path === "/index.html"
+    ) {
+      preset = "recurringResidential";
+    }
+    open({
+      sourceUrl: window.location.href,
+      paid: true,
+      preset: preset,
+    });
+  }
+
+  window.SparkleanQuoteIntake = {
+    open: open,
+    close: close,
+    _test: {
+      isPaidLandingQuery: isPaidLandingQuery,
+      shouldUsePaidMode: shouldUsePaidMode,
+      willExpandAfterServiceCategory: function () {
+        return willExpandAfterServiceCategory();
+      },
+      isFinalMandatoryStep: function () {
+        return isFinalMandatoryStep();
+      },
+      getState: function () {
+        return {
+          paidMode: paidMode,
+          intakePreset: intakePreset,
+          stepIndex: stepIndex,
+          stepsLen: steps.length,
+          leadDelivered: leadDelivered,
+          currentId: currentQuestion() && currentQuestion().id,
+          progressText: root && root.querySelector("[data-intake-progress]")
+            ? root.querySelector("[data-intake-progress]").textContent
+            : "",
+          nextText: root && root.querySelector("[data-intake-next]")
+            ? root.querySelector("[data-intake-next]").textContent
+            : "",
+        };
+      },
+      setPaidModeForTest: function (v) {
+        paidMode = !!v;
+      },
+      setStepsForTest: function (s, idx, ans) {
+        steps = s || [];
+        stepIndex = idx || 0;
+        answers = ans || {};
+      },
+    },
+  };
 
   function boot() {
     bindGlobalClicks();
@@ -587,6 +827,18 @@
         open({ sourceUrl: window.location.href + "#sticky-quote" });
       }
     });
+    // Auto-open after page + flows are ready (paid landings only).
+    var tryOpen = function () {
+      if (!ensureFlows()) return;
+      maybeAutoOpenPaid();
+    };
+    if (document.readyState === "complete") {
+      setTimeout(tryOpen, 0);
+    } else {
+      window.addEventListener("load", function () {
+        setTimeout(tryOpen, 0);
+      });
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

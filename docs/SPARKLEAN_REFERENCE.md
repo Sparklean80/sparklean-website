@@ -388,6 +388,8 @@ Categories: residential, condo, luxury estate, move-in/out, airbnb, commercial o
 
 Contact page + homepage `#quote` use these flows → `netlify/functions/quote-submit.mjs` → Brevo transactional → `SPARKLEAN_LEAD_TO` (default `info@sparklean.co`).
 
+**Paid Ads intake (2026-08-10, review branch):** `js/quote-intake.js` paid mode activates on `?quote=1`, `gclid`/`gbraid`/`wbraid`, or paid `utm_medium` (cpc/ppc/paid/…). Auto-opens guided intake on paid landings. Paid path collects only name, phone, email, city/ZIP, service — then submits (no mandatory property-detail expansion). Organic flow still expands after service selection, but never shows “Step 5 of 5” / “Send request” before that expansion. Google Ads conversion still fires only after Brevo success + `leadId`. Tests: `npm run test:funnel`. Preferred paid LP: `/residential-cleaning?gclid=…` or `?quote=1`.
+
 **Lead inbox / spam (2026-07-30):** Lead mail no longer sets Reply-To to the customer or attaches JSON (both spam triggers). Subject uses “Sparklean inquiry …”. In Brevo: **Senders → Domains** must show `sparklean.co` authenticated (same account as marketing). If campaigns inbox but leads spam, add a Gmail filter for subject `Sparklean inquiry` → Never spam.
 
 ---

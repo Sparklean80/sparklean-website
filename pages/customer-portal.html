@@ -147,6 +147,7 @@ footer .footer-cities a,footer .footer-cities a:visited{color:rgba(184,164,122,.
 @media(prefers-reduced-motion:reduce){.cp-hero::before{display:none;}}
 </style>
 <link rel="stylesheet" href="/css/sparklean-mobile-first.css">
+<link rel="stylesheet" href="/css/quote-intake.css">
 <link rel="stylesheet" href="/css/sparklean-luxury-flow.css">
 <link rel="stylesheet" href="/css/sparklean-nav-logo.css">
 <!-- Google tag (gtag.js) -->
@@ -159,6 +160,7 @@ footer .footer-cities a,footer .footer-cities a:visited{color:rgba(184,164,122,.
   gtag('config', 'AW-17027441328');
 </script>
 <script src="/js/sparklean-ads.js"></script>
+<script src="/js/sparklean-events.js"></script>
 </head>
 <!-- Portal app URL: interim DO host until portal.sparklean.co DNS + CX_PORTAL_HOST_LIVE. Swap .portal-app-link href + JSON-LD WebApplication url when live. -->
 <body>
@@ -183,11 +185,11 @@ footer .footer-cities a,footer .footer-cities a:visited{color:rgba(184,164,122,.
     <a href="tel:2398883588" class="nav-phone">(239) 888-3588</a>
     <a href="/customer-portal" class="nav-portal active" aria-current="page">Client App</a>
     <button type="button" class="nav-hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
-    <a href="/contact" class="nav-btn">Get a Quote</a>
+    <a href="/contact" class="nav-btn" data-sparklean-intake>Get a Quote</a>
   </div>
 </nav>
 <div class="nav-mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile" hidden>
-  <a href="/contact" class="nav-mobile-quote">Get a Quote</a>
+  <a href="/contact" class="nav-mobile-quote" data-sparklean-intake>Get a Quote</a>
   <a href="/">Home</a>
   <a href="/residential-cleaning">Residential Cleaning</a>
   <a href="/commercial-cleaning">Commercial &amp; Janitorial</a>
@@ -342,6 +344,8 @@ footer .footer-cities a,footer .footer-cities a:visited{color:rgba(184,164,122,.
   }
 })();
 </script>
+<script src="/js/serviceFlows.js"></script>
+<script src="/js/quote-intake.js" defer></script>
 <script src="/js/sparklean-mobile-sticky-cta.js" defer></script>
 </body>
 </html>
