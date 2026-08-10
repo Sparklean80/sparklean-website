@@ -8,12 +8,26 @@
   var bar = null;
   var resizeTimer = null;
 
+  function quoteButtonLabel() {
+    try {
+      var custom = (document.body.getAttribute("data-sparklean-mcta-quote") || "").trim();
+      if (custom) return custom.slice(0, 40);
+    } catch (e0) {
+      /* ignore */
+    }
+    return "Get quote";
+  }
+
   function buildBar() {
     var el = document.createElement("div");
     el.id = "sparklean-mcta";
     el.className = "sparklean-mcta";
     el.setAttribute("role", "region");
     el.setAttribute("aria-label", "Call Sparklean Cleaning");
+    var quoteLabel = quoteButtonLabel()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/"/g, "&quot;");
     el.innerHTML =
       '<div class="sparklean-mcta__inner">' +
         '<a class="sparklean-mcta__call" href="tel:2398883588">' +
@@ -23,7 +37,7 @@
             '<span class="sparklean-mcta__call-num">(239) 888-3588</span>' +
           "</span>" +
         "</a>" +
-        '<button type="button" class="sparklean-mcta__quote">Get quote</button>' +
+        '<button type="button" class="sparklean-mcta__quote">' + quoteLabel + "</button>" +
       "</div>";
     return el;
   }
