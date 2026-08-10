@@ -3,7 +3,7 @@
 **Date:** 2026-08-10  
 **Branch:** `review/google-ads-paid-intake-funnel`  
 **Base SHA:** `a27ae9b3136f2056398ca607a55aef9ed1cdb7c7`  
-**Tip SHA:** `90e781094ea29c716335084244e8d2029e752a63`  
+**Tip SHA:** `e71de103858c758392b7fddaec8006d220d15f7f`  
 **Repo:** `Sparklean80/sparklean-website`  
 **Mode:** Review branch only — no merge / deploy in this workstream.
 
