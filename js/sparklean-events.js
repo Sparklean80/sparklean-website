@@ -11,6 +11,10 @@
     recurring_quote_started: true,
     recurring_quote_submitted: true,
     google_reviews_clicked: true,
+    paid_quote_prompt_shown: true,
+    paid_quote_started: true,
+    paid_quote_submitted: true,
+    phone_click: true,
   };
 
   var ALLOWED_PARAM_KEYS = {
@@ -85,6 +89,11 @@
         }
         var a = e.target.closest("a.rev-google-proof, a.hero-google-proof, .rev-google-cta a");
         if (a) track("google_reviews_clicked");
+        // Analytics only — never a Google Ads lead conversion.
+        var tel = e.target.closest('a[href^="tel:"]');
+        if (tel && !tel.hasAttribute("data-sparklean-event")) {
+          track("phone_click");
+        }
       },
       true
     );
