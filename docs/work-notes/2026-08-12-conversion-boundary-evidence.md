@@ -1,30 +1,29 @@
-# Conversion boundary evidence — 2026-08-12 (lease / outbox correction)
+# Conversion boundary evidence — 2026-08-12 (lease-fence / reconciliation)
 
 **Review branch:** `review/lead-conversion-boundary`  
 **Baseline pin:** `76633d0507be579694f19e8b531c77045e3f4ce5`  
-**Control Room:** Final correction — claim lease recovery + material hash + durable Brevo outbox.  
-**Status:** Stop for independent re-review — **no merge, deploy, Netlify preview claim, Ads changes, or production submissions.**
+**Product SHA (this correction):** `b18a49f726f596c9b8e6b5e9b5f362807480ddb7`  
+**Control Room:** Additional correction on `ff0562b` — real claim leases, outbox fencing, no false durable success.  
+**Status:** Stop for independent re-review — **no merge, deploy, preview, production submissions, or Google Ads changes.**
 
 ## Corrections landed
 
-1. **Claim lease + orphan recovery** — Idempotency claim is leased (`LEASED`) with material hash before `createLead`. Crash after claim / before create leaves an orphan; identical retry (including after fresh module reload) reclaims the lease, creates exactly one lead, returns a **usable** `reportToken`. Never HTTP 200 with `pendingHydration` for a missing lead (`IDEMPOTENCY_IN_FLIGHT` → 503).
-2. **Material binding** — Same idempotency key + different canonical material → `IDEMPOTENCY_MATERIAL_CONFLICT` (409).
-3. **Durable notification outbox** — `outbox:{leadId}` states `PENDING` → `SENDING` (send lease) → `DELIVERED`. Crash before Brevo: restart sends once. Crash after Brevo before ack: lease expiry allows controlled recovery to `DELIVERED` without uncontrolled duplicates; subsequent delivers are no-ops.
-4. **Handlers** — `contact-submit` / `quote-submit` pass material hash, enqueue outbox, deliver via `deliverOutbox`, mark claim `COMPLETE`.
-5. **BlobsServer proofs** — `test:idempotency-lease` (fresh module restart) + existing `test:blob-concurrency`.
+1. **Real claim-lease ownership** — Missing lead cannot be reclaimed while lease is active (`IDEMPOTENCY_IN_FLIGHT`). Reclaim only after verified expiry via `onlyIfMatch` on the exact prior ETag. Controllable clock proofs: deny before expiry; succeed after.
+2. **Outbox fencing** — `SENDING` → `DELIVERED` / `FAILED` / `RECONCILIATION_REQUIRED` requires exact `sendLeaseOwner`, `sendFence`, and unexpired send lease. Stale sender success/failure cannot mutate a newer lease.
+3. **No false durable success** — Brevo accept without durable `DELIVERED` → `RECONCILIATION_REQUIRED`; HTTP `ok: false` + `DELIVERY_RECONCILIATION_REQUIRED`; claim not marked complete; ops alert (no PII/secrets/tokens).
+4. **Full quote material hash** — Recursive normalize of all customer answers (bedrooms, bathrooms, frequency, notes, consents, etc.). Attribution keys excluded and documented (`MATERIAL_EXCLUDED_ATTR_KEYS`). Any answer mutation → `IDEMPOTENCY_MATERIAL_CONFLICT`.
+5. **Outbox payload bind** — Existing outbox with different `payloadHash` → `OUTBOX_PAYLOAD_CONFLICT` (never silent reuse).
+6. **Honest Brevo semantics** — `BREVO_DELIVERY_SEMANTICS`: at-least-once-ambiguous; `exactlyOnce: false`. After-send-before-ack may duplicate; reconciliation required.
 
-## Language
+## BlobsServer proofs (`test:idempotency-lease` 33/0)
 
-**BROWSER_SENT** only — no Google-confirmed attribution state.
-
-## Local tests
-
-| Suite | Result |
-|-------|--------|
-| test:funnel (incl. lease recovery) | green |
-| test:idempotency-lease | 23/0 |
-| test:blob-concurrency | 30/0 |
+- Active lease cannot be reclaimed  
+- Expired orphan reclaimed; twelve concurrent post-expiry reclaimers → one lead  
+- Stale sender cannot mark DELIVERED or FAILED  
+- Brevo success + failed ack → RECONCILIATION_REQUIRED; reconcile idempotent  
+- Quote field mutations conflict; outbox payload mismatch rejected  
+- Contact vs quote material distinct; forged/cross/expired + monotonic suites remain green via `test:funnel`
 
 ## Stop
 
-No merge · no deploy · no preview-as-proof · no campaign changes · no production submissions until independent review and authorized genuine preview proof.
+No merge · no deploy · no Netlify preview · no production lead submissions · no Google Ads changes.
