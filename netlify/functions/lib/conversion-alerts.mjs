@@ -130,3 +130,42 @@ export async function alertConversionGap(lead) {
     text: built.text,
   });
 }
+
+/**
+ * Honest alert when Brevo may have accepted but durable DELIVERED was not persisted.
+ * Allowlisted fields only — no PII, secrets, or report tokens.
+ * Semantics: at-least-once / ambiguous (not exactly-once).
+ */
+export function buildDeliveryAmbiguousAlertText({ leadId, intakeSource }) {
+  const title = "Sparklean delivery reconciliation required";
+  const text = [
+    title,
+    `leadId: ${leadId}`,
+    `source: ${intakeSource || "unknown"}`,
+    `status: RECONCILIATION_REQUIRED`,
+    `deliveryFinality: unknown`,
+    `semantics: at-least-once-ambiguous (Brevo has no proven provider idempotency for this call)`,
+    "Action: verify inbox / Brevo message log; mark outbox DELIVERED only after confirmed delivery.",
+  ].join("\n");
+  const leaks = findSensitiveLeak(text);
+  if (leaks.length) {
+    console.error("[conversion-alert] blocked sensitive leak", leaks);
+    throw new Error("ALERT_SENSITIVE_LEAK");
+  }
+  return { title, text };
+}
+
+export async function alertDeliveryAmbiguous({ leadId, intakeSource }) {
+  let built;
+  try {
+    built = buildDeliveryAmbiguousAlertText({ leadId, intakeSource });
+  } catch (e) {
+    console.error("[conversion-alert] refused ambiguous alert", e && e.message);
+    return;
+  }
+  await slackAlert(`*${built.title}*\n\`\`\`\n${built.text}\n\`\`\``);
+  await brevoOpsEmail({
+    subject: `${built.title} · ${leadId}`,
+    text: built.text,
+  });
+}

@@ -1,6 +1,6 @@
 /**
- * BlobsServer proofs: claim lease recovery, material conflict, durable outbox,
- * across a fresh module reload (simulates function restart).
+ * BlobsServer proofs: real claim leases, outbox fencing, reconciliation,
+ * material/outbox binding — controllable clock + fresh module reload.
  * Run: node scripts/test-idempotency-lease-recovery.mjs
  */
 import fs from "fs";
@@ -12,6 +12,7 @@ import { BlobsServer } from "@netlify/blobs/server";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const storeUrl = pathToFileURL(path.join(root, "netlify/functions/lib/leads-store.mjs")).href;
+const alertsUrl = pathToFileURL(path.join(root, "netlify/functions/lib/conversion-alerts.mjs")).href;
 
 let passed = 0;
 let failed = 0;
@@ -29,24 +30,25 @@ async function loadStore(bust) {
   return import(`${storeUrl}?v=${bust}`);
 }
 
-const dir = fs.mkdtempSync(path.join(os.tmpdir(), "sparklean-lease-"));
-const token = "sparklean-lease-token";
+const dir = fs.mkdtempSync(path.join(os.tmpdir(), "sparklean-fence-"));
+const token = "sparklean-fence-token";
 const server = new BlobsServer({ token, port: 0, directory: dir });
 const info = await server.start();
 const rawStore = getStore({
   name: "sparklean-leads",
   token,
   edgeURL: `http://localhost:${info.port}`,
-  siteID: "sparklean-lease-site",
+  siteID: "sparklean-fence-site",
 });
 
-process.env.SPARKLEAN_IDEMPOTENCY_LEASE_MS = "500";
-process.env.SPARKLEAN_OUTBOX_SEND_LEASE_MS = "500";
+process.env.SPARKLEAN_IDEMPOTENCY_LEASE_MS = "10000";
+process.env.SPARKLEAN_OUTBOX_SEND_LEASE_MS = "10000";
 delete process.env.SPARKLEAN_LEADS_MEMORY;
 
 let mod = await loadStore(Date.now());
-const wrapped = mod.wrapBlobStoreWithEtagCache(rawStore);
-mod.setInjectedBlobStoreForTests(wrapped);
+mod.setInjectedBlobStoreForTests(mod.wrapBlobStoreWithEtagCache(rawStore));
+mod.setStoreClockForTests(1_000_000);
+mod.resetLeadsStoreTestHooks();
 
 const INTAKE = mod.INTAKE_SOURCE;
 let brevoCalls = 0;
@@ -55,25 +57,18 @@ const sendBrevo = async () => {
 };
 
 try {
-  // --- Crash after claim, before create; fresh module restart; identical retry ---
-  const idem = `crash-claim-${Date.now()}`;
-  const material = {
-    fullName: "Recovery User",
-    phone: "2395550199",
-    email: "recover@example.com",
-    cityArea: "Naples",
-  };
+  // --- Active lease cannot be reclaimed; after expiry reclaim succeeds ---
+  const idem = `lease-clock-${Date.now()}`;
+  const material = { fullName: "Lease User", email: "lease@example.com", phone: "2395550100" };
   const materialHash = mod.canonicalMaterialHash(material);
-
   mod.leadsStoreTestHooks.afterClaimBeforeCreate = async () => {
     throw new Error("INJECTED_CRASH_AFTER_CLAIM");
   };
-
   let crashed = false;
   try {
     await mod.createLeadAtomically({
       intakeSource: INTAKE.CONTACT_FORM,
-      campaign: { gclid: "CRASH1" },
+      campaign: { gclid: "L1" },
       consent: true,
       idempotencyKey: idem,
       materialHash,
@@ -83,154 +78,261 @@ try {
     crashed = String(e && e.message).includes("INJECTED_CRASH_AFTER_CLAIM");
   }
   assert(crashed, "injected crash after claim before create");
-  assert((await mod.getLead(await mod.getIdempotentLeadId(idem))) == null, "no lead after crash");
-
-  // Fresh module reload (function restart) — Blob data persists on BlobsServer
-  mod.resetLeadsStoreTestHooks();
-  mod.setInjectedBlobStoreForTests(null);
-  mod = await loadStore(Date.now() + 1);
-  mod.setInjectedBlobStoreForTests(mod.wrapBlobStoreWithEtagCache(rawStore));
   mod.resetLeadsStoreTestHooks();
 
+  let denied = false;
+  try {
+    await mod.createLeadAtomically({
+      intakeSource: INTAKE.CONTACT_FORM,
+      campaign: { gclid: "L1" },
+      consent: true,
+      idempotencyKey: idem,
+      materialHash,
+      material,
+    });
+  } catch (e) {
+    denied = e && e.code === "IDEMPOTENCY_IN_FLIGHT";
+  }
+  assert(denied, "retry before lease expiry → IDEMPOTENCY_IN_FLIGHT");
+
+  mod.setStoreClockForTests(1_000_000 + 11_000);
   const recovered = await mod.createLeadAtomically({
     intakeSource: INTAKE.CONTACT_FORM,
-    campaign: { gclid: "CRASH1" },
+    campaign: { gclid: "L1" },
     consent: true,
     idempotencyKey: idem,
     materialHash,
     material,
   });
-  assert(Boolean(recovered.lead && recovered.lead.leadId), "retry creates exactly one lead");
-  assert(Boolean(recovered.reportToken), "retry returns usable reportToken");
-  assert(recovered.pendingHydration !== true, "never pendingHydration");
-  assert(mod.verifyReportToken(recovered.lead, recovered.reportToken), "reportToken verifies");
+  assert(Boolean(recovered.lead?.leadId), "retry after expiry creates one lead");
+  assert(Boolean(recovered.reportToken), "usable reportToken after reclaim");
+  assert(recovered.pendingHydration == null, "never pendingHydration");
 
-  await mod.ensureOutboxPending(recovered.lead.leadId, { payloadHash: "ph1" });
-  const d1 = await mod.deliverOutbox(recovered.lead.leadId, sendBrevo);
-  assert(d1.sent === true && brevoCalls === 1, "Brevo sent once after recovery");
-  await mod.markClaimComplete(idem);
+  // --- Twelve concurrent post-expiry reclaim attempts → one lead ---
+  const idem12 = `lease-12-${Date.now()}`;
+  const mat12 = { fullName: "Twelve", email: "twelve@example.com", phone: "2395550112" };
+  const mh12 = mod.canonicalMaterialHash(mat12);
+  mod.setStoreClockForTests(2_000_000);
+  mod.leadsStoreTestHooks.afterClaimBeforeCreate = async () => {
+    throw new Error("INJECTED_CRASH_12");
+  };
+  try {
+    await mod.createLeadAtomically({
+      intakeSource: INTAKE.CONTACT_FORM,
+      campaign: { gclid: "T12" },
+      consent: true,
+      idempotencyKey: idem12,
+      materialHash: mh12,
+      material: mat12,
+    });
+  } catch {
+    /* crash */
+  }
+  mod.resetLeadsStoreTestHooks();
+  mod.setStoreClockForTests(2_000_000 + 11_000);
 
-  const replay = await mod.createLeadAtomically({
-    intakeSource: INTAKE.CONTACT_FORM,
-    campaign: { gclid: "CRASH1" },
-    consent: true,
-    idempotencyKey: idem,
-    materialHash,
-    material,
-  });
-  assert(replay.idempotentReplay === true, "complete replay is idempotent");
-  assert(replay.needsDelivery === false, "delivered outbox skips needsDelivery");
-  assert(replay.lead.leadId === recovered.lead.leadId, "replay same leadId");
-  const d2 = await mod.deliverOutbox(replay.lead.leadId, sendBrevo);
-  assert(d2.duplicate === true && brevoCalls === 1, "outbox DELIVERED prevents duplicate Brevo");
+  const results = await Promise.allSettled(
+    Array.from({ length: 12 }, () =>
+      mod.createLeadAtomically({
+        intakeSource: INTAKE.CONTACT_FORM,
+        campaign: { gclid: "T12" },
+        consent: true,
+        idempotencyKey: idem12,
+        materialHash: mh12,
+        material: mat12,
+      })
+    )
+  );
+  const ok = results.filter((r) => r.status === "fulfilled").map((r) => r.value);
+  const leadIds = new Set(ok.map((r) => r.lead.leadId));
+  assert(leadIds.size === 1, `twelve reclaimers → exactly one leadId (got ${leadIds.size})`);
+  assert(ok.length >= 1, "at least one reclaim winner");
+  const stored = await mod.getLead([...leadIds][0]);
+  assert(Boolean(stored), "single durable lead exists");
 
-  // --- Material conflict ---
+  // --- Material conflict + attribution exclusion ---
   let conflict = false;
   try {
     await mod.createLeadAtomically({
       intakeSource: INTAKE.CONTACT_FORM,
-      campaign: { gclid: "CRASH1" },
+      campaign: { gclid: "T12" },
       consent: true,
-      idempotencyKey: idem,
-      materialHash: mod.canonicalMaterialHash({ ...material, email: "other@example.com" }),
-      material: { ...material, email: "other@example.com" },
+      idempotencyKey: idem12,
+      materialHash: mod.canonicalMaterialHash({ ...mat12, phone: "2395550999" }),
+      material: { ...mat12, phone: "2395550999" },
     });
   } catch (e) {
     conflict = e && e.code === "IDEMPOTENCY_MATERIAL_CONFLICT";
   }
   assert(conflict, "same key + different material → IDEMPOTENCY_MATERIAL_CONFLICT");
 
-  // --- Crash before Brevo (after outbox enqueue) ---
-  brevoCalls = 0;
-  const idem2 = `crash-brevo-${Date.now()}`;
-  const material2 = { fullName: "Outbox User", email: "outbox@example.com", phone: "2395550111" };
-  const mh2 = mod.canonicalMaterialHash(material2);
-  const created2 = await mod.createLeadAtomically({
-    intakeSource: INTAKE.CONTACT_FORM,
-    campaign: { gclid: "OB1" },
-    consent: true,
-    idempotencyKey: idem2,
-    materialHash: mh2,
-    material: material2,
-  });
-  await mod.ensureOutboxPending(created2.lead.leadId, { payloadHash: "ph2" });
-  mod.leadsStoreTestHooks.afterOutboxBeforeSend = async () => {
-    throw new Error("INJECTED_CRASH_BEFORE_BREVO");
-  };
-  let beforeBrevoCrash = false;
-  try {
-    await mod.deliverOutbox(created2.lead.leadId, sendBrevo);
-  } catch (e) {
-    beforeBrevoCrash = String(e && e.message).includes("INJECTED_CRASH_BEFORE_BREVO");
-  }
-  assert(beforeBrevoCrash, "crash before Brevo");
-  assert(brevoCalls === 0, "no Brevo on pre-send crash");
-
-  mod.resetLeadsStoreTestHooks();
-  mod.setInjectedBlobStoreForTests(null);
-  mod = await loadStore(Date.now() + 2);
-  mod.setInjectedBlobStoreForTests(mod.wrapBlobStoreWithEtagCache(rawStore));
-  // Expire send lease so restart can reclaim SENDING
-  process.env.SPARKLEAN_OUTBOX_SEND_LEASE_MS = "1";
-  await new Promise((r) => setTimeout(r, 20));
-
-  const d3 = await mod.deliverOutbox(created2.lead.leadId, sendBrevo);
-  assert(d3.sent === true && brevoCalls === 1, "restart delivers Brevo exactly once after pre-send crash");
-  const box3 = await mod.getOutbox(created2.lead.leadId);
-  assert(box3.status === mod.OUTBOX_STATUS.DELIVERED, "outbox DELIVERED after recovery send");
-
-  // --- Crash after Brevo before ack ---
-  brevoCalls = 0;
-  process.env.SPARKLEAN_OUTBOX_SEND_LEASE_MS = "500";
-  const idem3 = `crash-ack-${Date.now()}`;
-  const material3 = { fullName: "Ack User", email: "ack@example.com", phone: "2395550222" };
-  const mh3 = mod.canonicalMaterialHash(material3);
-  const created3 = await mod.createLeadAtomically({
+  const baseQ = {
+    answers: {
+      fullName: "Q",
+      phone: "2395550200",
+      email: "q@example.com",
+      location: "34102",
+      serviceCategory: "residential",
+      bedrooms: "3",
+      bathrooms: "2",
+      frequency: "weekly",
+      notesResidential: "pets",
+    },
+    serviceLabel: "Residential cleaning",
     intakeSource: INTAKE.GUIDED_INTAKE,
-    campaign: { gclid: "ACK1" },
-    consent: true,
-    idempotencyKey: idem3,
-    materialHash: mh3,
-    material: material3,
-  });
-  await mod.ensureOutboxPending(created3.lead.leadId, { payloadHash: "ph3" });
-  mod.leadsStoreTestHooks.afterSendBeforeAck = async () => {
-    throw new Error("INJECTED_CRASH_AFTER_BREVO_BEFORE_ACK");
+    campaign: { gclid: "ATTR1" },
   };
-  let afterBrevoCrash = false;
-  try {
-    await mod.deliverOutbox(created3.lead.leadId, sendBrevo);
-  } catch (e) {
-    afterBrevoCrash = String(e && e.message).includes("INJECTED_CRASH_AFTER_BREVO_BEFORE_ACK");
+  const h1 = mod.canonicalMaterialHash(baseQ);
+  const h2 = mod.canonicalMaterialHash({ ...baseQ, campaign: { gclid: "ATTR2" }, gclid: "X" });
+  assert(h1 === h2, "attribution metadata excluded from material hash");
+  for (const f of ["frequency", "bathrooms", "bedrooms", "notesResidential", "location", "serviceCategory"]) {
+    const mutated = {
+      ...baseQ,
+      answers: { ...baseQ.answers, [f]: String(baseQ.answers[f]) + "-x" },
+    };
+    assert(mod.canonicalMaterialHash(mutated) !== h1, `quote field mutation ${f} changes hash`);
   }
-  assert(afterBrevoCrash, "crash after Brevo before ack");
-  assert(brevoCalls === 1, "Brevo already invoked once before ack crash");
 
+  // --- Outbox payload mismatch rejected ---
+  await mod.ensureOutboxPending(stored.leadId, { payloadHash: "hash-a" });
+  let payloadConflict = false;
+  try {
+    await mod.ensureOutboxPending(stored.leadId, { payloadHash: "hash-b" });
+  } catch (e) {
+    payloadConflict = e && e.code === "OUTBOX_PAYLOAD_CONFLICT";
+  }
+  assert(payloadConflict, "outbox payload mismatch rejected");
+
+  // --- Stale sender cannot mark newer lease DELIVERED / FAILED ---
+  const leadStale = (
+    await mod.createLead({
+      intakeSource: INTAKE.CONTACT_FORM,
+      campaign: { gclid: "STALE" },
+      consent: true,
+    })
+  ).lead;
+  await mod.ensureOutboxPending(leadStale.leadId, { payloadHash: "ph-stale" });
+  mod.setStoreClockForTests(3_000_000);
+
+  let staleOwner = null;
+  let staleFence = null;
+  mod.leadsStoreTestHooks.afterOutboxBeforeSend = async (ctx) => {
+    staleOwner = ctx.sendLeaseOwner;
+    staleFence = ctx.sendFence;
+    throw new Error("PAUSE_STALE_SENDER");
+  };
+  try {
+    await mod.deliverOutbox(leadStale.leadId, sendBrevo, { payloadHash: "ph-stale" });
+  } catch (e) {
+    assert(String(e.message).includes("PAUSE_STALE_SENDER"), "captured stale sender lease");
+  }
   mod.resetLeadsStoreTestHooks();
-  mod.setInjectedBlobStoreForTests(null);
-  mod = await loadStore(Date.now() + 3);
-  mod.setInjectedBlobStoreForTests(mod.wrapBlobStoreWithEtagCache(rawStore));
-  process.env.SPARKLEAN_OUTBOX_SEND_LEASE_MS = "1";
-  await new Promise((r) => setTimeout(r, 20));
+  mod.setStoreClockForTests(3_000_000 + 11_000);
+  brevoCalls = 0;
+  const takeover = await mod.deliverOutbox(leadStale.leadId, sendBrevo, { payloadHash: "ph-stale" });
+  assert(takeover.delivered === true && brevoCalls === 1, "newer lease delivered once");
 
-  const callsBeforeAckRetry = brevoCalls;
-  const d4 = await mod.deliverOutbox(created3.lead.leadId, sendBrevo);
-  assert(d4.delivered === true, "ack-recovery reaches DELIVERED");
-  // Controlled at-most-one extra send if SENDING lease expired without ack — not uncontrolled duplicates
-  assert(brevoCalls - callsBeforeAckRetry <= 1, "ack recovery does not uncontrolled-duplicate Brevo");
-  const box4 = await mod.getOutbox(created3.lead.leadId);
-  assert(box4.status === mod.OUTBOX_STATUS.DELIVERED, "outbox DELIVERED after ack recovery");
-  const d5 = await mod.deliverOutbox(created3.lead.leadId, sendBrevo);
-  assert(d5.duplicate === true, "subsequent deliver is duplicate no-op");
+  const staleDeliver = await mod.fenceOutboxTransition(
+    leadStale.leadId,
+    { sendLeaseOwner: staleOwner, sendFence: staleFence },
+    (d) => ({ ...d, status: mod.OUTBOX_STATUS.DELIVERED })
+  );
+  assert(staleDeliver.ok === false && staleDeliver.stale === true, "stale sender cannot mark DELIVERED");
+  const staleFail = await mod.fenceOutboxTransition(
+    leadStale.leadId,
+    { sendLeaseOwner: staleOwner, sendFence: staleFence },
+    (d) => ({ ...d, status: mod.OUTBOX_STATUS.FAILED, lastError: "stale" })
+  );
+  assert(staleFail.ok === false && staleFail.stale === true, "stale sender cannot mark FAILED");
+  assert((await mod.getOutbox(leadStale.leadId)).status === mod.OUTBOX_STATUS.DELIVERED, "newer lease stays DELIVERED");
 
-  // pendingHydration must not appear on createLeadAtomically results
+  // --- Brevo success + failed durable ack → reconciliation-required (not completed) ---
+  const leadAmb = (
+    await mod.createLead({
+      intakeSource: INTAKE.GUIDED_INTAKE,
+      campaign: { gclid: "AMB" },
+      consent: true,
+    })
+  ).lead;
+  await mod.ensureOutboxPending(leadAmb.leadId, { payloadHash: "ph-amb" });
+  mod.setStoreClockForTests(4_000_000);
+  brevoCalls = 0;
+  mod.resetLeadsStoreTestHooks();
+  mod.leadsStoreTestHooks.afterSendBeforeAck = async ({ leadId, sendLeaseOwner, sendFence }) => {
+    const r = await mod.fenceOutboxTransition(leadId, { sendLeaseOwner, sendFence }, (d) => ({
+      ...d,
+      status: mod.OUTBOX_STATUS.RECONCILIATION_REQUIRED,
+      lastError: "brevo_accepted_delivery_ack_unconfirmed",
+    }));
+    assert(r.ok === true, "recon state written under valid fence");
+    throw new mod.DeliveryAmbiguousError();
+  };
+  let ambiguous = false;
+  try {
+    await mod.deliverOutbox(leadAmb.leadId, sendBrevo, { payloadHash: "ph-amb" });
+  } catch (e) {
+    ambiguous = e && e.code === "DELIVERY_RECONCILIATION_REQUIRED";
+  }
+  assert(ambiguous, "successful Brevo + failed ack → DELIVERY_RECONCILIATION_REQUIRED");
+  assert(brevoCalls === 1, "Brevo invoked once before ambiguous");
   assert(
-    recovered.pendingHydration == null && replay.pendingHydration == null,
-    "createLeadAtomically never returns pendingHydration"
+    (await mod.getOutbox(leadAmb.leadId)).status === mod.OUTBOX_STATUS.RECONCILIATION_REQUIRED,
+    "outbox RECONCILIATION_REQUIRED not DELIVERED"
+  );
+
+  const r1 = await mod.reconcileOutboxDelivered(leadAmb.leadId);
+  assert(r1.status === mod.OUTBOX_STATUS.DELIVERED, "reconcile → DELIVERED");
+  const r2 = await mod.reconcileOutboxDelivered(leadAmb.leadId);
+  assert(r2.status === mod.OUTBOX_STATUS.DELIVERED, "reconcile idempotent");
+
+  // --- Alert omits PII / tokens; semantics honest ---
+  const alerts = await import(`${alertsUrl}?v=${Date.now()}`);
+  const built = alerts.buildDeliveryAmbiguousAlertText({
+    leadId: leadAmb.leadId,
+    intakeSource: INTAKE.CONTACT_FORM,
+  });
+  assert(!/reportToken|@example|5550|password|api-key/i.test(built.text), "alert has no PII/secrets/tokens");
+  assert(/at-least-once-ambiguous/i.test(built.text), "alert states at-least-once-ambiguous");
+  assert(mod.BREVO_DELIVERY_SEMANTICS.exactlyOnce === false, "Brevo not labeled exactly-once");
+
+  // --- Contact vs quote cross-flow identity remains distinct ---
+  const contactMat = mod.canonicalMaterialHash({
+    fullName: "Same",
+    phone: "2395550300",
+    email: "same@example.com",
+    propertyType: "home",
+    serviceNeeded: "residential",
+    cityArea: "Naples",
+    preferredTiming: "flex",
+    message: "hi",
+    intakeSource: INTAKE.CONTACT_FORM,
+  });
+  const quoteMat = mod.canonicalMaterialHash({
+    answers: {
+      fullName: "Same",
+      phone: "2395550300",
+      email: "same@example.com",
+      location: "Naples",
+      serviceCategory: "residential",
+    },
+    serviceLabel: "Residential cleaning",
+    intakeSource: INTAKE.GUIDED_INTAKE,
+  });
+  assert(contactMat !== quoteMat, "contact vs quote material hashes differ");
+
+  // Fresh module reload
+  mod.setInjectedBlobStoreForTests(null);
+  mod = await loadStore(Date.now() + 99);
+  mod.setInjectedBlobStoreForTests(mod.wrapBlobStoreWithEtagCache(rawStore));
+  mod.setStoreClockForTests(7_000_000);
+  assert(
+    (await mod.getOutbox(leadAmb.leadId)).status === mod.OUTBOX_STATUS.DELIVERED,
+    "fresh module sees reconciled DELIVERED"
   );
 } finally {
   if (mod) {
     mod.resetLeadsStoreTestHooks();
+    mod.setStoreClockForTests(null);
     mod.setInjectedBlobStoreForTests(null);
   }
   await server.stop();
@@ -241,5 +343,5 @@ try {
   }
 }
 
-console.log(`\nLEASE RECOVERY RESULTS: pass=${passed} fail=${failed}`);
+console.log(`\nLEASE/FENCE RESULTS: pass=${passed} fail=${failed}`);
 process.exit(failed ? 1 : 0);

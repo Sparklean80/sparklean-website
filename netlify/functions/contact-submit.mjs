@@ -9,6 +9,7 @@ import {
   INTAKE_SOURCE,
   TRACKING_STATUS,
   OUTBOX_STATUS,
+  BREVO_DELIVERY_SEMANTICS,
   canonicalMaterialHash,
   createLeadAtomically,
   ensureOutboxPending,
@@ -18,7 +19,10 @@ import {
   updateLead,
   IdempotencyMaterialConflictError,
   IdempotencyInFlightError,
+  OutboxPayloadConflictError,
+  DeliveryAmbiguousError,
 } from "./lib/leads-store.mjs";
+import { alertDeliveryAmbiguous } from "./lib/conversion-alerts.mjs";
 import {
   assertSameSiteOrigin,
   clientIp,
@@ -207,6 +211,8 @@ export default async (request, context) => {
     cityArea,
     preferredTiming,
     message,
+    consentContact: true,
+    consentMarketing: Boolean(consentMarketing),
     intakeSource: INTAKE_SOURCE.CONTACT_FORM,
   };
   const materialHash = canonicalMaterialHash(material);
@@ -235,6 +241,20 @@ export default async (request, context) => {
 
   const lead = created.lead;
   let reportToken = created.reportToken;
+
+  if (created.reconciliationRequired) {
+    return json(
+      {
+        ok: false,
+        leadId: lead.leadId,
+        code: "DELIVERY_RECONCILIATION_REQUIRED",
+        error: PUBLIC_FAILURE,
+        deliveryFinality: "unknown",
+        semantics: BREVO_DELIVERY_SEMANTICS,
+      },
+      503
+    );
+  }
 
   if (created.idempotentReplay && !created.needsDelivery) {
     return json({
@@ -284,18 +304,60 @@ export default async (request, context) => {
   const payloadHash = hashToken(`${subject}\n${text}`);
   try {
     await ensureOutboxPending(lead.leadId, { payloadHash, channel: "brevo" });
-    const delivery = await deliverOutbox(lead.leadId, async () => {
-      await sendBrevo({ subject, html, text });
-    });
+    const delivery = await deliverOutbox(
+      lead.leadId,
+      async () => {
+        await sendBrevo({ subject, html, text });
+      },
+      { payloadHash }
+    );
+    if (delivery.reconciliationRequired || delivery.ambiguous) {
+      await alertDeliveryAmbiguous({ leadId: lead.leadId, intakeSource: INTAKE_SOURCE.CONTACT_FORM });
+      return json(
+        {
+          ok: false,
+          leadId: lead.leadId,
+          code: "DELIVERY_RECONCILIATION_REQUIRED",
+          error: PUBLIC_FAILURE,
+          deliveryFinality: "unknown",
+          semantics: BREVO_DELIVERY_SEMANTICS,
+        },
+        503
+      );
+    }
     if (idemKey) await markClaimComplete(idemKey);
     if (delivery.duplicate && created.idempotentReplay) {
       reportToken = null;
     }
   } catch (e) {
+    if (e instanceof OutboxPayloadConflictError || (e && e.code === "OUTBOX_PAYLOAD_CONFLICT")) {
+      return json({ error: "OUTBOX_PAYLOAD_CONFLICT" }, 409);
+    }
+    if (e instanceof DeliveryAmbiguousError || (e && e.code === "DELIVERY_RECONCILIATION_REQUIRED")) {
+      try {
+        await alertDeliveryAmbiguous({ leadId: lead.leadId, intakeSource: INTAKE_SOURCE.CONTACT_FORM });
+      } catch {
+        /* alert best-effort */
+      }
+      return json(
+        {
+          ok: false,
+          leadId: lead.leadId,
+          code: "DELIVERY_RECONCILIATION_REQUIRED",
+          error: PUBLIC_FAILURE,
+          deliveryFinality: "unknown",
+          semantics: BREVO_DELIVERY_SEMANTICS,
+        },
+        503
+      );
+    }
     console.error("[contact-submit] email aborted", e && e.message);
     try {
       const box = await getOutbox(lead.leadId);
-      if (!box || box.status !== OUTBOX_STATUS.DELIVERED) {
+      if (
+        !box ||
+        (box.status !== OUTBOX_STATUS.DELIVERED && box.status !== OUTBOX_STATUS.RECONCILIATION_REQUIRED)
+      ) {
         await updateLead(lead.leadId, {
           trackingStatus: TRACKING_STATUS.FAILED,
           failureReason: "email_delivery_failed",

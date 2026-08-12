@@ -92,6 +92,23 @@ export class IdempotencyInFlightError extends Error {
   }
 }
 
+export class OutboxPayloadConflictError extends Error {
+  constructor(message = "OUTBOX_PAYLOAD_CONFLICT") {
+    super(message);
+    this.name = "OutboxPayloadConflictError";
+    this.code = "OUTBOX_PAYLOAD_CONFLICT";
+  }
+}
+
+/** Brevo accepted (or may have) but durable DELIVERED ack failed — not completed success. */
+export class DeliveryAmbiguousError extends Error {
+  constructor(message = "DELIVERY_RECONCILIATION_REQUIRED") {
+    super(message);
+    this.name = "DeliveryAmbiguousError";
+    this.code = "DELIVERY_RECONCILIATION_REQUIRED";
+  }
+}
+
 export const CLAIM_STATUS = Object.freeze({
   CLAIMING: "claiming",
   LEASED: "leased",
@@ -104,23 +121,73 @@ export const OUTBOX_STATUS = Object.freeze({
   SENDING: "SENDING",
   DELIVERED: "DELIVERED",
   FAILED: "FAILED",
+  RECONCILIATION_REQUIRED: "RECONCILIATION_REQUIRED",
 });
 
 export const OUTBOX_PREFIX = "outbox:";
 export const DEFAULT_CLAIM_LEASE_MS = 45_000;
 export const DEFAULT_SEND_LEASE_MS = 60_000;
 
+/**
+ * Attribution / analytics keys intentionally excluded from idempotency material.
+ * Changing these alone must NOT cause IDEMPOTENCY_MATERIAL_CONFLICT.
+ */
+export const MATERIAL_EXCLUDED_ATTR_KEYS = Object.freeze([
+  "gclid",
+  "gbraid",
+  "wbraid",
+  "campaign",
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "landingPage",
+  "intakeEntryUrl",
+  "submitPageUrl",
+  "referrer",
+  "userAgent",
+  "deviceType",
+  "sourceUrl",
+  "submittedAt",
+  "netlifyReceiptId",
+]);
+
+/**
+ * Brevo transactional send has no proven provider-side idempotency for this integration.
+ * after-send-before-ack is therefore ambiguous / at-least-once (may duplicate), never exactly-once.
+ */
+export const BREVO_DELIVERY_SEMANTICS = Object.freeze({
+  model: "at-least-once-ambiguous",
+  exactlyOnce: false,
+  note: "Provider ack is not durable store ack; reconciliation required when DELIVERED cannot be persisted after send.",
+});
+
 /** Test-only crash injection points (cleared between suites). */
 export const leadsStoreTestHooks = {
   afterClaimBeforeCreate: null,
   afterOutboxBeforeSend: null,
   afterSendBeforeAck: null,
+  afterSendAckPersist: null,
 };
+
+/** @type {number | null} */
+let clockNowMs = null;
+
+/** Controllable clock for lease proofs. Pass null to restore Date.now(). */
+export function setStoreClockForTests(ms) {
+  clockNowMs = ms == null ? null : Number(ms);
+}
+
+export function nowMs() {
+  return clockNowMs == null ? Date.now() : clockNowMs;
+}
 
 export function resetLeadsStoreTestHooks() {
   leadsStoreTestHooks.afterClaimBeforeCreate = null;
   leadsStoreTestHooks.afterOutboxBeforeSend = null;
   leadsStoreTestHooks.afterSendBeforeAck = null;
+  leadsStoreTestHooks.afterSendAckPersist = null;
 }
 
 export function claimLeaseMs() {
@@ -455,10 +522,40 @@ function outboxKeyFor(leadId) {
   return OUTBOX_PREFIX + String(leadId);
 }
 
-function leaseExpired(iso, now = Date.now()) {
+function leaseExpired(iso, now = nowMs()) {
   if (!iso) return true;
   const t = Date.parse(iso);
   return !Number.isFinite(t) || t <= now;
+}
+
+/**
+ * Deterministic recursive normalize before hashing.
+ * Drops MATERIAL_EXCLUDED_ATTR_KEYS at every object level.
+ */
+export function normalizeMaterialValue(value) {
+  if (value == null) return undefined;
+  if (typeof value === "boolean" || typeof value === "number") {
+    if (typeof value === "number" && !Number.isFinite(value)) return undefined;
+    return value;
+  }
+  if (typeof value === "string") {
+    const t = value.trim().toLowerCase();
+    return t === "" ? undefined : t;
+  }
+  if (Array.isArray(value)) {
+    const arr = value.map((v) => normalizeMaterialValue(v)).filter((v) => v !== undefined);
+    return arr.length ? arr : undefined;
+  }
+  if (typeof value === "object") {
+    const out = {};
+    for (const k of Object.keys(value).sort()) {
+      if (MATERIAL_EXCLUDED_ATTR_KEYS.includes(k)) continue;
+      const nv = normalizeMaterialValue(value[k]);
+      if (nv !== undefined) out[k] = nv;
+    }
+    return Object.keys(out).length ? out : undefined;
+  }
+  return String(value);
 }
 
 /**
@@ -466,25 +563,13 @@ function leaseExpired(iso, now = Date.now()) {
  * Same key + different material → IDEMPOTENCY_MATERIAL_CONFLICT.
  */
 export function canonicalMaterialHash(material) {
-  if (!material || typeof material !== "object") return hashToken("");
-  const sorted = {};
-  for (const k of Object.keys(material).sort()) {
-    let v = material[k];
-    if (v == null) continue;
-    if (typeof v === "string") {
-      v = v.trim().toLowerCase();
-      if (!v) continue;
-    } else if (typeof v === "object") {
-      v = JSON.parse(JSON.stringify(v));
-    }
-    sorted[k] = v;
-  }
-  return hashToken(JSON.stringify(sorted));
+  const normalized = normalizeMaterialValue(material);
+  return hashToken(JSON.stringify(normalized === undefined ? {} : normalized));
 }
 
 async function waitForRecord(key, { timeoutMs = 4000, intervalMs = 20 } = {}) {
-  const start = Date.now();
-  while (Date.now() - start < timeoutMs) {
+  const start = nowMs();
+  while (nowMs() - start < timeoutMs) {
     try {
       const rec = await getRecord(key);
       if (rec && rec.data) return rec;
@@ -497,8 +582,8 @@ async function waitForRecord(key, { timeoutMs = 4000, intervalMs = 20 } = {}) {
 }
 
 async function waitForLead(leadId, { timeoutMs = 8000, intervalMs = 25 } = {}) {
-  const start = Date.now();
-  while (Date.now() - start < timeoutMs) {
+  const start = nowMs();
+  while (nowMs() - start < timeoutMs) {
     const lead = await getLead(leadId);
     if (lead) return lead;
     await new Promise((r) => setTimeout(r, intervalMs));
@@ -514,14 +599,15 @@ function assertMaterial(claimData, materialHash) {
 
 /**
  * Acquire or recover idempotency lease bound to materialHash.
- * Orphaned sealed claims (no lead) are reclaimable when the lease expires.
+ * Missing lead cannot be reclaimed while the claim lease is still active.
+ * Reclaim only after verified lease expiry via onlyIfMatch on the exact prior ETag.
  * @returns {Promise<{ won: boolean, leadId: string, recovered?: boolean, leadReady?: boolean }>}
  */
 export async function claimIdempotency(idemKey, leadId, materialHash) {
   if (!idemKey || !leadId) throw new Error("IDEMPOTENCY_ARGS");
   if (!materialHash) throw new Error("IDEMPOTENCY_MATERIAL_REQUIRED");
   const key = idemKeyFor(idemKey);
-  const now = Date.now();
+  const now = nowMs();
   const leaseUntil = new Date(now + claimLeaseMs()).toISOString();
   const createdAt = new Date(now).toISOString();
   const leaseOwner = randomBytes(8).toString("hex");
@@ -538,6 +624,7 @@ export async function claimIdempotency(idemKey, leadId, materialHash) {
     createdAt,
     leaseOwner,
     leaseExpiresAt: leaseUntil,
+    claimVersion: 1,
   };
   try {
     await writeCas(key, payload, null);
@@ -545,24 +632,38 @@ export async function claimIdempotency(idemKey, leadId, materialHash) {
     if (!(e && e.code === "CAS_CONFLICT")) throw e;
     const raced = await waitForRecord(key, { timeoutMs: 4000 });
     if (!raced) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
-    return recoverOrJoinClaim(key, raced, { leadId, materialHash, leaseUntil, leaseOwner, now: Date.now() });
+    return recoverOrJoinClaim(key, raced, {
+      leadId,
+      materialHash,
+      leaseUntil: new Date(nowMs() + claimLeaseMs()).toISOString(),
+      leaseOwner: randomBytes(8).toString("hex"),
+      now: nowMs(),
+    });
   }
 
   const sealed = await waitForRecord(key, { timeoutMs: 4000 });
   if (!sealed || !sealed.data.leadId) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
   assertMaterial(sealed.data, materialHash);
   if (sealed.data.leadId !== leadId) {
-    return joinExistingClaim(sealed.data, materialHash);
+    return joinExistingClaim(key, sealed, materialHash);
   }
   return { won: true, leadId, recovered: false };
 }
 
-async function joinExistingClaim(data, materialHash) {
-  assertMaterial(data, materialHash);
-  const lead = await waitForLead(data.leadId, { timeoutMs: 2500 });
-  if (lead) return { won: false, leadId: data.leadId, leadReady: true };
-  // Peer reserved leadId but create not durable yet — co-create with same id.
-  return { won: true, leadId: data.leadId, recovered: true };
+async function joinExistingClaim(key, sealed, materialHash) {
+  assertMaterial(sealed.data, materialHash);
+  const lead = await getLead(sealed.data.leadId);
+  if (lead) return { won: false, leadId: sealed.data.leadId, leadReady: true };
+  if (!leaseExpired(sealed.data.leaseExpiresAt, nowMs())) {
+    throw new IdempotencyInFlightError();
+  }
+  return recoverOrJoinClaim(key, sealed, {
+    leadId: sealed.data.leadId,
+    materialHash,
+    leaseUntil: new Date(nowMs() + claimLeaseMs()).toISOString(),
+    leaseOwner: randomBytes(8).toString("hex"),
+    now: nowMs(),
+  });
 }
 
 async function recoverOrJoinClaim(key, existing, ctx) {
@@ -575,7 +676,11 @@ async function recoverOrJoinClaim(key, existing, ctx) {
     return { won: false, leadId: data.leadId, leadReady: true };
   }
 
-  // No durable lead yet (in-flight create or crash orphan). CAS-refresh the lease.
+  // Active lease + missing lead → bounded in-flight (no reclaim).
+  if (!leaseExpired(data.leaseExpiresAt, now)) {
+    throw new IdempotencyInFlightError();
+  }
+
   const reclaimLeadId = data.leadId || ctx.leadId;
   const next = {
     leadId: reclaimLeadId,
@@ -584,23 +689,26 @@ async function recoverOrJoinClaim(key, existing, ctx) {
     createdAt: data.createdAt || new Date(now).toISOString(),
     leaseOwner,
     leaseExpiresAt: leaseUntil,
-    recoveredAt: new Date().toISOString(),
+    claimVersion: (Number(data.claimVersion) || 1) + 1,
+    recoveredAt: new Date(now).toISOString(),
   };
   try {
+    // Conditional CAS against the exact prior claim ETag only.
     await writeCas(key, next, existing.etag);
   } catch (e) {
     if (!(e && e.code === "CAS_CONFLICT")) throw e;
     const again = await waitForRecord(key, { timeoutMs: 4000 });
     if (!again) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
     assertMaterial(again.data, materialHash);
-    const lead2 = await waitForLead(again.data.leadId, { timeoutMs: 3000 });
+    const lead2 = await getLead(again.data.leadId);
     if (lead2) return { won: false, leadId: again.data.leadId, leadReady: true };
+    if (!leaseExpired(again.data.leaseExpiresAt, nowMs())) throw new IdempotencyInFlightError();
     throw new IdempotencyInFlightError();
   }
 
   const sealed = await waitForRecord(key, { timeoutMs: 4000 });
-  if (!sealed || sealed.data.leadId !== reclaimLeadId) {
-    const lead3 = sealed && (await waitForLead(sealed.data.leadId, { timeoutMs: 3000 }));
+  if (!sealed || sealed.data.leadId !== reclaimLeadId || sealed.data.leaseOwner !== leaseOwner) {
+    const lead3 = sealed && (await getLead(sealed.data.leadId));
     if (lead3) return { won: false, leadId: sealed.data.leadId, leadReady: true };
     throw new IdempotencyInFlightError();
   }
@@ -623,7 +731,7 @@ export async function markClaimLeadReady(idemKey, leadId, materialHash) {
           leadId,
           materialHash: rec.data.materialHash || materialHash,
           status: CLAIM_STATUS.LEAD_READY,
-          leaseExpiresAt: new Date(Date.now() + claimLeaseMs()).toISOString(),
+          leaseExpiresAt: new Date(nowMs() + claimLeaseMs()).toISOString(),
         },
         rec.etag
       );
@@ -666,7 +774,7 @@ export async function reissueReportToken(leadId) {
   const updated = await mutateLeadCas(leadId, (lead) => ({
     ...lead,
     reportTokenHash: hashToken(reportToken),
-    reportTokenExpiresAt: new Date(Date.now() + REPORT_TOKEN_TTL_MS).toISOString(),
+    reportTokenExpiresAt: new Date(nowMs() + REPORT_TOKEN_TTL_MS).toISOString(),
   }));
   return { lead: updated, reportToken };
 }
@@ -679,21 +787,32 @@ export async function getOutbox(leadId) {
 
 /**
  * Durable notification outbox — enqueue before Brevo.
+ * Existing outbox with a different payloadHash is rejected (never silent reuse).
  */
 export async function ensureOutboxPending(leadId, { payloadHash, channel = "brevo" } = {}) {
   const key = outboxKeyFor(leadId);
   const existing = await getRecord(key);
-  if (existing) return existing.data;
+  if (existing) {
+    if (
+      payloadHash &&
+      existing.data.payloadHash &&
+      existing.data.payloadHash !== payloadHash
+    ) {
+      throw new OutboxPayloadConflictError();
+    }
+    return existing.data;
+  }
   const row = {
     leadId,
     channel,
     payloadHash: payloadHash || null,
     status: OUTBOX_STATUS.PENDING,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(nowMs()).toISOString(),
+    updatedAt: new Date(nowMs()).toISOString(),
     attempts: 0,
     sendLeaseOwner: null,
     sendLeaseExpiresAt: null,
+    sendFence: 0,
     lastError: null,
   };
   try {
@@ -701,42 +820,99 @@ export async function ensureOutboxPending(leadId, { payloadHash, channel = "brev
   } catch (e) {
     if (!(e && e.code === "CAS_CONFLICT")) throw e;
     const again = await getRecord(key);
+    if (
+      again &&
+      payloadHash &&
+      again.data.payloadHash &&
+      again.data.payloadHash !== payloadHash
+    ) {
+      throw new OutboxPayloadConflictError();
+    }
     return again ? again.data : row;
   }
   return row;
 }
 
 /**
- * Deliver outbox with SENDING lease. DELIVERED short-circuits (no duplicate send).
- * Expired SENDING lease may retry once (at-least-once, controlled).
+ * Fence-gated outbox mutation. Requires exact sendLeaseOwner, sendFence, and unexpired lease.
+ * Stale senders cannot mark DELIVERED / FAILED / RECONCILIATION_REQUIRED.
  */
-export async function deliverOutbox(leadId, sendFn) {
+export async function fenceOutboxTransition(leadId, { sendLeaseOwner, sendFence }, mutator) {
+  const key = outboxKeyFor(leadId);
+  const rec = await getRecord(key);
+  if (!rec) return { ok: false, reason: "missing" };
+  const d = rec.data;
+  if (d.sendLeaseOwner !== sendLeaseOwner || Number(d.sendFence) !== Number(sendFence)) {
+    return { ok: false, reason: "stale_sender", stale: true };
+  }
+  if (leaseExpired(d.sendLeaseExpiresAt, nowMs())) {
+    return { ok: false, reason: "lease_expired", expired: true };
+  }
+  const next = mutator(clone(d));
+  next.updatedAt = new Date(nowMs()).toISOString();
+  try {
+    await writeCas(key, next, rec.etag);
+  } catch (e) {
+    if (e && e.code === "CAS_CONFLICT") return { ok: false, reason: "cas_conflict" };
+    throw e;
+  }
+  const verify = await getRecord(key);
+  if (!verify || contentFingerprint(verify.data) !== contentFingerprint(next)) {
+    return { ok: false, reason: "verify_failed" };
+  }
+  return { ok: true, outbox: verify.data };
+}
+
+/**
+ * Deliver outbox with fenced SENDING lease.
+ * Brevo has no proven provider idempotency — after-send-before-ack is at-least-once / ambiguous.
+ * If send succeeds but DELIVERED cannot be persisted → RECONCILIATION_REQUIRED (not completed).
+ */
+export async function deliverOutbox(leadId, sendFn, { payloadHash } = {}) {
   const key = outboxKeyFor(leadId);
   for (let attempt = 0; attempt < 16; attempt++) {
     let rec = await getRecord(key);
     if (!rec) {
-      await ensureOutboxPending(leadId, {});
+      await ensureOutboxPending(leadId, { payloadHash });
       rec = await getRecord(key);
       if (!rec) throw new Error("OUTBOX_MISSING");
+    }
+    if (
+      payloadHash &&
+      rec.data.payloadHash &&
+      rec.data.payloadHash !== payloadHash
+    ) {
+      throw new OutboxPayloadConflictError();
     }
     const data = rec.data;
     if (data.status === OUTBOX_STATUS.DELIVERED) {
       return { delivered: true, sent: false, duplicate: true };
     }
-    const now = Date.now();
+    if (data.status === OUTBOX_STATUS.RECONCILIATION_REQUIRED) {
+      return {
+        delivered: false,
+        sent: false,
+        ambiguous: true,
+        reconciliationRequired: true,
+        duplicate: true,
+      };
+    }
+    const now = nowMs();
     if (data.status === OUTBOX_STATUS.SENDING && !leaseExpired(data.sendLeaseExpiresAt, now)) {
       await new Promise((r) => setTimeout(r, 30));
       continue;
     }
 
     const leaseOwner = randomBytes(8).toString("hex");
+    const fence = (Number(data.sendFence) || 0) + 1;
     const sending = {
       ...data,
       status: OUTBOX_STATUS.SENDING,
       attempts: (data.attempts || 0) + 1,
       sendLeaseOwner: leaseOwner,
+      sendFence: fence,
       sendLeaseExpiresAt: new Date(now + sendLeaseMs()).toISOString(),
-      updatedAt: new Date().toISOString(),
+      updatedAt: new Date(now).toISOString(),
       lastError: null,
     };
     try {
@@ -746,68 +922,133 @@ export async function deliverOutbox(leadId, sendFn) {
       throw e;
     }
 
+    const confirmed = await getRecord(key);
+    if (
+      !confirmed ||
+      confirmed.data.sendLeaseOwner !== leaseOwner ||
+      Number(confirmed.data.sendFence) !== fence
+    ) {
+      continue;
+    }
+
     if (typeof leadsStoreTestHooks.afterOutboxBeforeSend === "function") {
-      await leadsStoreTestHooks.afterOutboxBeforeSend({ leadId, outbox: sending });
+      await leadsStoreTestHooks.afterOutboxBeforeSend({
+        leadId,
+        outbox: confirmed.data,
+        sendLeaseOwner: leaseOwner,
+        sendFence: fence,
+      });
     }
 
     try {
       await sendFn();
     } catch (err) {
-      const failRec = await getRecord(key);
-      if (failRec) {
-        try {
-          await writeCas(
-            key,
-            {
-              ...failRec.data,
-              status: OUTBOX_STATUS.FAILED,
-              lastError: String(err && err.message ? err.message : err).slice(0, 300),
-              updatedAt: new Date().toISOString(),
-            },
-            failRec.etag
-          );
-        } catch {
-          /* best-effort */
-        }
+      const fail = await fenceOutboxTransition(
+        leadId,
+        { sendLeaseOwner: leaseOwner, sendFence: fence },
+        (d) => ({
+          ...d,
+          status: OUTBOX_STATUS.FAILED,
+          lastError: String(err && err.message ? err.message : err).slice(0, 300),
+        })
+      );
+      if (!fail.ok && fail.stale) {
+        // Stale failure must not mutate newer lease — surface original error.
+        throw err;
       }
       throw err;
     }
 
     if (typeof leadsStoreTestHooks.afterSendBeforeAck === "function") {
-      await leadsStoreTestHooks.afterSendBeforeAck({ leadId });
+      await leadsStoreTestHooks.afterSendBeforeAck({
+        leadId,
+        sendLeaseOwner: leaseOwner,
+        sendFence: fence,
+      });
     }
 
-    for (let j = 0; j < 12; j++) {
-      const ackRec = await getRecord(key);
-      if (!ackRec) break;
-      if (ackRec.data.status === OUTBOX_STATUS.DELIVERED) {
-        return { delivered: true, sent: true, duplicate: false };
-      }
-      try {
-        await writeCas(
-          key,
-          {
-            ...ackRec.data,
-            status: OUTBOX_STATUS.DELIVERED,
-            sendLeaseOwner: null,
-            sendLeaseExpiresAt: null,
-            updatedAt: new Date().toISOString(),
-          },
-          ackRec.etag
-        );
-        return { delivered: true, sent: true, duplicate: false };
-      } catch (e) {
-        if (!(e && e.code === "CAS_CONFLICT")) throw e;
-      }
+    const ack = await fenceOutboxTransition(
+      leadId,
+      { sendLeaseOwner: leaseOwner, sendFence: fence },
+      (d) => ({
+        ...d,
+        status: OUTBOX_STATUS.DELIVERED,
+        sendLeaseOwner: null,
+        sendLeaseExpiresAt: null,
+        lastError: null,
+      })
+    );
+
+    if (typeof leadsStoreTestHooks.afterSendAckPersist === "function") {
+      await leadsStoreTestHooks.afterSendAckPersist({
+        leadId,
+        sendLeaseOwner: leaseOwner,
+        sendFence: fence,
+        ackOk: ack.ok,
+      });
     }
-    return { delivered: true, sent: true, duplicate: false };
+
+    if (ack.ok) {
+      return { delivered: true, sent: true, duplicate: false, semantics: BREVO_DELIVERY_SEMANTICS };
+    }
+
+    // Brevo accepted but durable DELIVERED failed — explicit ambiguous state (not completed).
+    const recon = await fenceOutboxTransition(
+      leadId,
+      { sendLeaseOwner: leaseOwner, sendFence: fence },
+      (d) => ({
+        ...d,
+        status: OUTBOX_STATUS.RECONCILIATION_REQUIRED,
+        lastError: "brevo_accepted_delivery_ack_unconfirmed",
+      })
+    );
+    throw new DeliveryAmbiguousError(
+      recon.ok
+        ? "DELIVERY_RECONCILIATION_REQUIRED"
+        : "DELIVERY_RECONCILIATION_REQUIRED_FENCE_LOST"
+    );
   }
   throw new CasConflictError("OUTBOX_CAS_EXHAUSTED");
 }
 
 /**
+ * Idempotent reconciliation helper: RECONCILIATION_REQUIRED → DELIVERED when ops confirm.
+ */
+export async function reconcileOutboxDelivered(leadId) {
+  const key = outboxKeyFor(leadId);
+  for (let i = 0; i < 12; i++) {
+    const rec = await getRecord(key);
+    if (!rec) return null;
+    if (rec.data.status === OUTBOX_STATUS.DELIVERED) return rec.data;
+    if (rec.data.status !== OUTBOX_STATUS.RECONCILIATION_REQUIRED) {
+      return rec.data;
+    }
+    try {
+      await writeCas(
+        key,
+        {
+          ...rec.data,
+          status: OUTBOX_STATUS.DELIVERED,
+          sendLeaseOwner: null,
+          sendLeaseExpiresAt: null,
+          lastError: null,
+          reconciledAt: new Date(nowMs()).toISOString(),
+          updatedAt: new Date(nowMs()).toISOString(),
+        },
+        rec.etag
+      );
+      const v = await getOutbox(leadId);
+      return v;
+    } catch (e) {
+      if (!(e && e.code === "CAS_CONFLICT")) throw e;
+    }
+  }
+  throw new CasConflictError("RECONCILE_CAS_EXHAUSTED");
+}
+
+/**
  * Create lead with lease-backed idempotency. Never returns pendingHydration for a missing lead.
- * Orphaned claims (crash after claim, before create) are reclaimed on retry.
+ * Orphan reclaim only after lease expiry.
  */
 export async function createLeadAtomically(input) {
   const leadId = input.leadId || newLeadId();
@@ -829,6 +1070,15 @@ export async function createLeadAtomically(input) {
     const outbox = await getOutbox(claim.leadId);
     if (outbox && outbox.status === OUTBOX_STATUS.DELIVERED) {
       return { lead, reportToken: null, idempotentReplay: true, needsDelivery: false };
+    }
+    if (outbox && outbox.status === OUTBOX_STATUS.RECONCILIATION_REQUIRED) {
+      return {
+        lead,
+        reportToken: null,
+        idempotentReplay: true,
+        needsDelivery: false,
+        reconciliationRequired: true,
+      };
     }
     const reissued = await reissueReportToken(claim.leadId);
     return {
@@ -875,17 +1125,17 @@ export async function createLeadAtomically(input) {
  * @returns {Promise<{ lead: object, reportToken: string }>}
  */
 export async function createLead(input) {
-  const nowMs = Date.now();
-  const now = new Date(nowMs).toISOString();
+  const now = nowMs();
+  const nowIso = new Date(now).toISOString();
   const leadId = input.leadId || newLeadId();
   const reportToken = newReportToken();
   const clicks = pickClickIds(input.campaign, Boolean(input.consent));
   const lead = {
     leadId,
     reportTokenHash: hashToken(reportToken),
-    reportTokenExpiresAt: new Date(nowMs + REPORT_TOKEN_TTL_MS).toISOString(),
-    createdAt: now,
-    updatedAt: now,
+    reportTokenExpiresAt: new Date(now + REPORT_TOKEN_TTL_MS).toISOString(),
+    createdAt: nowIso,
+    updatedAt: nowIso,
     intakeSource: input.intakeSource,
     netlifyReceiptId: input.netlifyReceiptId || leadId,
     gclid: clicks.gclid,
@@ -898,7 +1148,7 @@ export async function createLead(input) {
     attemptHistory: [
       {
         attemptId: newAttemptId(),
-        at: now,
+        at: nowIso,
         status: TRACKING_STATUS.PENDING,
         note: "lead_accepted",
       },
@@ -911,7 +1161,6 @@ export async function createLead(input) {
     await writeLeadCas(lead, null);
   } catch (e) {
     if (e && e.code === "CAS_CONFLICT") {
-      // Recovered claim may race a twin create — load winner.
       const existing = await getLead(leadId);
       if (existing) return { lead: existing, reportToken: null, alreadyExisted: true };
     }

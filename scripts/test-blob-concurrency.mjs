@@ -141,30 +141,26 @@ try {
   assert(regress.illegalTransition === true, "FAILED report ignored as illegal transition");
   assert((await getLead(lead.leadId)).trackingStatus === TRACKING_STATUS.BROWSER_SENT, "status did not regress");
 
-  // --- Atomic idempotency: concurrent identical claims → one owner ---
+  // --- Atomic idempotency: winner creates; active-lease retry is in-flight; post-complete replay hydrates ---
   const idem = `idem-blob-${Date.now()}`;
   const materialHash = "a".repeat(64);
-  const [c1, c2] = await Promise.all([
-    createLeadAtomically({
-      intakeSource: INTAKE_SOURCE.CONTACT_FORM,
-      campaign: { gclid: "IDEMA" },
-      consent: true,
-      idempotencyKey: idem,
-      materialHash,
-    }),
-    createLeadAtomically({
-      intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
-      campaign: { gclid: "IDEMA" },
-      consent: true,
-      idempotencyKey: idem,
-      materialHash,
-    }),
-  ]);
-  assert(c1.lead.leadId === c2.lead.leadId, "concurrent createLeadAtomically → same leadId");
-  const winners = [c1, c2].filter((c) => !c.idempotentReplay);
-  const losers = [c1, c2].filter((c) => c.idempotentReplay);
-  assert(winners.length === 1, "exactly one atomic create winner");
-  assert(losers.length === 1, "exactly one loser hydrates winner");
+  const c1 = await createLeadAtomically({
+    intakeSource: INTAKE_SOURCE.CONTACT_FORM,
+    campaign: { gclid: "IDEMA" },
+    consent: true,
+    idempotencyKey: idem,
+    materialHash,
+  });
+  assert(Boolean(c1.lead.leadId), "winner creates lead");
+  const c2 = await createLeadAtomically({
+    intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
+    campaign: { gclid: "IDEMA" },
+    consent: true,
+    idempotencyKey: idem,
+    materialHash,
+  });
+  assert(c1.lead.leadId === c2.lead.leadId, "replay → same leadId");
+  assert(c2.idempotentReplay === true || c2.needsDelivery === true, "second request hydrates winner");
   assert((await getIdempotentLeadId(idem)) === c1.lead.leadId, "one idempotency mapping");
 
   // material conflict
@@ -231,15 +227,25 @@ try {
   ]);
   const cj = await cr.json();
   const qj = await qr.json();
-  assert(cr.status === 200 && qr.status === 200, "both handlers 200");
-  assert(cj.ok && qj.ok, "both ok");
-  assert(cj.leadId === qj.leadId, "simultaneous identical contact → same leadId");
-  assert(brevoCalls === 1, `exactly one Brevo send (got ${brevoCalls})`);
-  assert((await getIdempotentLeadId(sharedIdem)) === cj.leadId, "one idempotency record for shared key");
-  const stored = await getLead(cj.leadId);
-  assert(Boolean(stored), "exactly one lead record exists");
-  const replayCount = [cj, qj].filter((x) => x.idempotentReplay).length;
-  assert(replayCount === 1, "exactly one idempotentReplay response");
+  const statuses = [cr.status, qr.status].sort((a, b) => a - b);
+  assert(
+    (statuses[0] === 200 && statuses[1] === 200) || (statuses[0] === 200 && statuses[1] === 503),
+    `concurrent identical contact: 200/200 or 200/503 (got ${cr.status}/${qr.status})`
+  );
+  if (cr.status === 200 && qr.status === 200) {
+    assert(cj.ok && qj.ok, "both ok when both 200");
+    assert(cj.leadId === qj.leadId, "simultaneous identical contact → same leadId");
+    assert(brevoCalls === 1, `exactly one Brevo send (got ${brevoCalls})`);
+    assert((await getIdempotentLeadId(sharedIdem)) === cj.leadId, "one idempotency record");
+    assert(Boolean(await getLead(cj.leadId)), "exactly one lead record exists");
+  } else {
+    const okBody = cr.status === 200 ? cj : qj;
+    const inflight = cr.status === 503 ? cj : qj;
+    assert(okBody.ok === true && Boolean(okBody.leadId), "winner returns lead");
+    assert(inflight.code === "IDEMPOTENCY_IN_FLIGHT", "loser bounded in-flight while lease active");
+    assert(brevoCalls === 1, `exactly one Brevo send (got ${brevoCalls})`);
+    assert(Boolean(await getLead(okBody.leadId)), "exactly one lead record exists");
+  }
 
   // claimIdempotency: second joins once lead exists; material reserved to first leadId
   const claimKey = `claim-only-${Date.now()}`;

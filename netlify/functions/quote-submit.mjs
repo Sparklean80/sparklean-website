@@ -10,6 +10,7 @@ import {
   INTAKE_SOURCE,
   TRACKING_STATUS,
   OUTBOX_STATUS,
+  BREVO_DELIVERY_SEMANTICS,
   canonicalMaterialHash,
   createLeadAtomically,
   ensureOutboxPending,
@@ -19,7 +20,10 @@ import {
   updateLead,
   IdempotencyMaterialConflictError,
   IdempotencyInFlightError,
+  OutboxPayloadConflictError,
+  DeliveryAmbiguousError,
 } from "./lib/leads-store.mjs";
+import { alertDeliveryAmbiguous } from "./lib/conversion-alerts.mjs";
 import {
   assertSameSiteOrigin,
   clientIp,
@@ -932,12 +936,9 @@ export default async (request, context) => {
     `intake_${Date.now()}`;
 
   const material = {
-    fullName: answers.fullName,
-    phone: answers.phone,
-    email: answers.email,
-    location: answers.location,
-    serviceCategory: answers.serviceCategory,
+    answers: { ...answers },
     serviceLabel,
+    intakePreset,
     intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
   };
   const materialHash = canonicalMaterialHash(material);
@@ -967,6 +968,20 @@ export default async (request, context) => {
   const lead = created.lead;
   const leadId = lead.leadId;
   let reportToken = created.reportToken;
+
+  if (created.reconciliationRequired) {
+    return json(
+      {
+        ok: false,
+        leadId,
+        code: "DELIVERY_RECONCILIATION_REQUIRED",
+        error: PUBLIC_EMAIL_FAILURE,
+        deliveryFinality: "unknown",
+        semantics: BREVO_DELIVERY_SEMANTICS,
+      },
+      503
+    );
+  }
 
   if (created.idempotentReplay && !created.needsDelivery) {
     return json({
@@ -1064,18 +1079,57 @@ export default async (request, context) => {
   try {
     const payloadHash = hashToken(`${subject}\n${text}`);
     await ensureOutboxPending(leadId, { payloadHash, channel: "brevo" });
-    const delivery = await deliverOutbox(leadId, async () => {
-      await sendBrevoTransactionalEmail({
-        subject,
-        html,
-        text,
-      });
-    });
+    const delivery = await deliverOutbox(
+      leadId,
+      async () => {
+        await sendBrevoTransactionalEmail({
+          subject,
+          html,
+          text,
+        });
+      },
+      { payloadHash }
+    );
+    if (delivery.reconciliationRequired || delivery.ambiguous) {
+      await alertDeliveryAmbiguous({ leadId, intakeSource: INTAKE_SOURCE.GUIDED_INTAKE });
+      return json(
+        {
+          ok: false,
+          leadId,
+          code: "DELIVERY_RECONCILIATION_REQUIRED",
+          error: PUBLIC_EMAIL_FAILURE,
+          deliveryFinality: "unknown",
+          semantics: BREVO_DELIVERY_SEMANTICS,
+        },
+        503
+      );
+    }
     if (idemKey) await markClaimComplete(idemKey);
     if (delivery.duplicate && created.idempotentReplay) {
       reportToken = null;
     }
   } catch (e) {
+    if (e instanceof OutboxPayloadConflictError || (e && e.code === "OUTBOX_PAYLOAD_CONFLICT")) {
+      return json({ error: "OUTBOX_PAYLOAD_CONFLICT" }, 409);
+    }
+    if (e instanceof DeliveryAmbiguousError || (e && e.code === "DELIVERY_RECONCILIATION_REQUIRED")) {
+      try {
+        await alertDeliveryAmbiguous({ leadId, intakeSource: INTAKE_SOURCE.GUIDED_INTAKE });
+      } catch {
+        /* alert best-effort */
+      }
+      return json(
+        {
+          ok: false,
+          leadId,
+          code: "DELIVERY_RECONCILIATION_REQUIRED",
+          error: PUBLIC_EMAIL_FAILURE,
+          deliveryFinality: "unknown",
+          semantics: BREVO_DELIVERY_SEMANTICS,
+        },
+        503
+      );
+    }
     console.error("[quote-submit] email path aborted — see logs above for Brevo / config", {
       code: e && e.message,
       brevoStatus: e && e.brevoStatus,
@@ -1083,7 +1137,10 @@ export default async (request, context) => {
     });
     try {
       const box = await getOutbox(leadId);
-      if (!box || box.status !== OUTBOX_STATUS.DELIVERED) {
+      if (
+        !box ||
+        (box.status !== OUTBOX_STATUS.DELIVERED && box.status !== OUTBOX_STATUS.RECONCILIATION_REQUIRED)
+      ) {
         await updateLead(leadId, {
           trackingStatus: TRACKING_STATUS.FAILED,
           failureReason: "email_delivery_failed",
