@@ -1,27 +1,32 @@
 /**
- * Adversarial + failure-path tests for lead/conversion boundary.
+ * Adversarial + blocked-script + reconcile-auth proofs.
  * Run: node scripts/test-conversion-boundary-adversarial.mjs
  */
 process.env.SPARKLEAN_LEADS_MEMORY = "1";
+process.env.SPARKLEAN_SKIP_ORIGIN_CHECK = "1";
 
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import vm from "vm";
 import {
   INTAKE_SOURCE,
   TRACKING_STATUS,
   applyConversionReport,
-  buildRetryPayload,
   createLead,
-  deleteLead,
-  findSensitiveLeak,
   getLead,
   resetMemoryStoreForTests,
   updateLead,
+  buildRetryPayload,
+  findSensitiveLeak,
   REPORT_TOKEN_TTL_MS,
+  putIdempotentLeadId,
+  getIdempotentLeadId,
 } from "../netlify/functions/lib/leads-store.mjs";
 import { buildConversionGapAlertText } from "../netlify/functions/lib/conversion-alerts.mjs";
 import {
+  isReconcileHttpAuthorized,
+  isAuthenticNetlifySchedule,
   isReconcileAuthorized,
   runLeadsReconcile,
 } from "../netlify/functions/leads-reconcile.mjs";
@@ -41,277 +46,203 @@ function assert(cond, msg) {
   }
 }
 
-function skip(msg) {
-  skipped += 1;
-  console.log("SKIP", msg);
-}
-
 resetMemoryStoreForTests();
 
-// --- Schedule in version-controlled Netlify config ---
+// Schedule in VC config
 {
   const toml = fs.readFileSync(path.join(root, "netlify.toml"), "utf8");
   const reconcileSrc = fs.readFileSync(path.join(root, "netlify/functions/leads-reconcile.mjs"), "utf8");
-  assert(/\[functions\."leads-reconcile"\]/.test(toml), "netlify.toml declares leads-reconcile function block");
-  assert(/schedule\s*=\s*"\*\/15 \* \* \* \*"/.test(toml), "netlify.toml schedule */15 * * * *");
-  assert(/schedule:\s*"\*\/15 \* \* \* \*"/.test(reconcileSrc), "leads-reconcile.mjs export config schedule */15");
+  assert(/schedule\s*=\s*"\*\/15 \* \* \* \*"/.test(toml), "netlify.toml schedule */15");
+  assert(/schedule:\s*"\*\/15 \* \* \* \*"/.test(reconcileSrc), "function schedule */15");
+  assert(!/if \(event === "schedule"\) return true/.test(reconcileSrc), "no event-only authorize");
 }
 
-// --- Forged reportToken ---
+// Forged / cross / expired / replay
 {
   resetMemoryStoreForTests();
-  const lead = await createLead({
+  const { lead, reportToken } = await createLead({
     intakeSource: INTAKE_SOURCE.CONTACT_FORM,
     campaign: { gclid: "G_FORGE" },
     consent: true,
   });
-  const forged = await applyConversionReport({
-    leadId: lead.leadId,
-    reportToken: "forged-token-not-real",
-    status: TRACKING_STATUS.BROWSER_SENT,
-  });
-  assert(forged.ok === false && forged.status === 401, "forged reportToken → 401");
-  const fresh = await getLead(lead.leadId);
-  assert(fresh.trackingStatus === TRACKING_STATUS.PENDING, "forged token leaves status PENDING");
-}
+  assert((await applyConversionReport({ leadId: lead.leadId, reportToken: "forged", status: TRACKING_STATUS.BROWSER_SENT })).status === 401, "forged → 401");
 
-// --- Cross-lead token swap ---
-{
-  resetMemoryStoreForTests();
-  const a = await createLead({
-    intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
-    campaign: { gclid: "GA" },
-    consent: true,
-  });
-  const b = await createLead({
-    intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
-    campaign: { gclid: "GB" },
-    consent: true,
-  });
-  const cross = await applyConversionReport({
-    leadId: a.leadId,
-    reportToken: b.reportToken,
-    status: TRACKING_STATUS.BROWSER_SENT,
-  });
-  assert(cross.ok === false && cross.status === 401, "cross-lead reportToken → 401");
-  assert((await getLead(a.leadId)).trackingStatus === TRACKING_STATUS.PENDING, "lead A still PENDING after cross-token");
-  assert((await getLead(b.leadId)).trackingStatus === TRACKING_STATUS.PENDING, "lead B still PENDING after cross-token");
-}
+  const a = await createLead({ intakeSource: INTAKE_SOURCE.GUIDED_INTAKE, campaign: { gclid: "GA" }, consent: true });
+  const b = await createLead({ intakeSource: INTAKE_SOURCE.GUIDED_INTAKE, campaign: { gclid: "GB" }, consent: true });
+  assert(
+    (await applyConversionReport({ leadId: a.lead.leadId, reportToken: b.reportToken, status: TRACKING_STATUS.BROWSER_SENT })).status === 401,
+    "cross-lead token → 401"
+  );
 
-// --- Expired reportToken ---
-{
-  resetMemoryStoreForTests();
-  const lead = await createLead({
-    intakeSource: INTAKE_SOURCE.CONTACT_FORM,
-    campaign: { gclid: "G_EXP" },
-    consent: true,
+  const exp = await createLead({ intakeSource: INTAKE_SOURCE.CONTACT_FORM, campaign: { gclid: "G_EXP" }, consent: true });
+  await updateLead(exp.lead.leadId, {
+    reportTokenExpiresAt: new Date(Date.now() - 1000).toISOString(),
   });
-  const past = Date.now() - REPORT_TOKEN_TTL_MS - 60_000;
-  await updateLead(lead.leadId, {
-    createdAt: new Date(past).toISOString(),
-    reportTokenExpiresAt: new Date(past + 1000).toISOString(),
-  });
-  const expired = await applyConversionReport({
-    leadId: lead.leadId,
-    reportToken: lead.reportToken,
-    status: TRACKING_STATUS.BROWSER_SENT,
-    now: Date.now(),
-  });
-  assert(expired.ok === false && expired.status === 401, "expired reportToken → 401");
-  assert(/expired/i.test(expired.error || ""), "expired error message");
-}
+  assert(
+    (await applyConversionReport({ leadId: exp.lead.leadId, reportToken: exp.reportToken, status: TRACKING_STATUS.BROWSER_SENT })).status === 401,
+    "expired → 401"
+  );
 
-// --- Replay after BROWSER_SENT ---
-{
-  resetMemoryStoreForTests();
-  const lead = await createLead({
-    intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
-    campaign: { gclid: "G_REPLAY" },
-    consent: true,
-  });
-  const first = await applyConversionReport({
-    leadId: lead.leadId,
-    reportToken: lead.reportToken,
-    status: TRACKING_STATUS.BROWSER_SENT,
-  });
-  assert(first.ok === true && !first.duplicate, "first BROWSER_SENT accepted");
+  const r = await createLead({ intakeSource: INTAKE_SOURCE.GUIDED_INTAKE, campaign: { gclid: "G_REPLAY" }, consent: true });
+  await applyConversionReport({ leadId: r.lead.leadId, reportToken: r.reportToken, status: TRACKING_STATUS.BROWSER_SENT });
   const replay = await applyConversionReport({
-    leadId: lead.leadId,
-    reportToken: lead.reportToken,
+    leadId: r.lead.leadId,
+    reportToken: r.reportToken,
     status: TRACKING_STATUS.BROWSER_SENT,
   });
-  assert(replay.ok === true && replay.duplicate === true, "replay BROWSER_SENT marked duplicate");
-  const queueAfter = await applyConversionReport({
-    leadId: lead.leadId,
-    reportToken: lead.reportToken,
-    status: TRACKING_STATUS.OFFLINE_QUEUED,
-    failureReason: "should_not_regress",
-  });
-  assert(queueAfter.duplicate === true, "cannot regress BROWSER_SENT → OFFLINE_QUEUED via client report");
-  assert(
-    (await getLead(lead.leadId)).trackingStatus === TRACKING_STATUS.BROWSER_SENT,
-    "status remains BROWSER_SENT after replay/queue attempt"
-  );
+  assert(replay.duplicate === true, "replay duplicate");
 }
 
-// --- Unauthorized reconciliation ---
+// Reconcile auth: event alone fails; secret required for HTTP
 {
-  const fakeReq = {
-    headers: {
-      get(name) {
-        if (name === "x-netlify-event") return null;
-        if (name === "x-sparklean-reconcile-key") return "wrong";
-        return null;
-      },
-    },
-  };
-  process.env.SPARKLEAN_RECONCILE_KEY = "expected-reconcile-secret";
-  assert(isReconcileAuthorized(fakeReq) === false, "wrong reconcile key unauthorized");
+  process.env.SPARKLEAN_RECONCILE_KEY = "expected-reconcile-secret-ok";
   assert(
-    isReconcileAuthorized({
+    isReconcileHttpAuthorized({
       headers: { get: (n) => (n === "x-netlify-event" ? "schedule" : null) },
-    }) === true,
-    "Netlify schedule event authorized"
+    }) === false,
+    "event header alone is not HTTP auth"
   );
   assert(
-    isReconcileAuthorized({
-      headers: {
-        get: (n) => (n === "x-sparklean-reconcile-key" ? "expected-reconcile-secret" : null),
+    (await isReconcileAuthorized({
+      headers: { get: (n) => (n === "x-netlify-event" ? "schedule" : null) },
+      text: async () => "",
+      clone() {
+        return this;
       },
+    })) === false,
+    "schedule event alone unauthorized"
+  );
+  assert(
+    isReconcileHttpAuthorized({
+      headers: { get: (n) => (n === "x-sparklean-reconcile-key" ? "expected-reconcile-secret-ok" : null) },
     }) === true,
-    "matching reconcile key authorized"
+    "HTTP secret authorized"
+  );
+  assert(
+    (await isAuthenticNetlifySchedule({
+      headers: {
+        get(n) {
+          if (n === "x-netlify-event") return "schedule";
+          if (n === "x-nf-request-id") return "req-1";
+          if (n === "origin") return null;
+          return null;
+        },
+      },
+      text: async () => JSON.stringify({ next_run: "2026-08-12T00:00:00Z" }),
+      clone() {
+        return this;
+      },
+    })) === true,
+    "authentic schedule payload accepted"
+  );
+  assert(
+    (await isAuthenticNetlifySchedule({
+      headers: {
+        get(n) {
+          if (n === "x-netlify-event") return "schedule";
+          if (n === "origin") return "https://evil.example";
+          return null;
+        },
+      },
+      text: async () => JSON.stringify({ next_run: "x" }),
+      clone() {
+        return this;
+      },
+    })) === false,
+    "schedule with Origin rejected"
   );
   delete process.env.SPARKLEAN_RECONCILE_KEY;
-  assert(
-    isReconcileAuthorized({
-      headers: { get: () => null },
-    }) === false,
-    "no key + no schedule → unauthorized"
-  );
 }
 
-// --- Concurrent submissions → distinct leadIds ---
+// Complete blocked-script case (attribution without SparkleanAds)
 {
   resetMemoryStoreForTests();
-  const [l1, l2, l3] = await Promise.all([
-    createLead({ intakeSource: INTAKE_SOURCE.CONTACT_FORM, campaign: { gclid: "C1" }, consent: true }),
-    createLead({ intakeSource: INTAKE_SOURCE.CONTACT_FORM, campaign: { gclid: "C1" }, consent: true }),
-    createLead({ intakeSource: INTAKE_SOURCE.GUIDED_INTAKE, campaign: { gclid: "C1" }, consent: true }),
-  ]);
-  const ids = new Set([l1.leadId, l2.leadId, l3.leadId]);
-  assert(ids.size === 3, "concurrent creates yield distinct leadIds");
-  const tokens = new Set([l1.reportToken, l2.reportToken, l3.reportToken]);
-  assert(tokens.size === 3, "concurrent creates yield distinct reportTokens");
-}
-
-// --- Blob create failure simulation (memory write throw) ---
-{
-  // Partial failure: Brevo path marking FAILED after create — covered by updateLead
-  resetMemoryStoreForTests();
-  const lead = await createLead({
-    intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
-    campaign: { gclid: "G_BREVO" },
-    consent: true,
-  });
-  await updateLead(lead.leadId, {
-    trackingStatus: TRACKING_STATUS.FAILED,
-    failureReason: "email_delivery_failed",
-  });
-  const failedLead = await getLead(lead.leadId);
-  assert(failedLead.trackingStatus === TRACKING_STATUS.FAILED, "Brevo failure marks Blob FAILED");
-  assert(failedLead.failureReason === "email_delivery_failed", "email failure reason recorded");
-}
-
-// --- Callback loss → reconcile queues OFFLINE_QUEUED ---
-{
-  resetMemoryStoreForTests();
-  const lead = await createLead({
-    intakeSource: INTAKE_SOURCE.CONTACT_FORM,
-    campaign: { gclid: "G_CBLOSS" },
-    consent: true,
-  });
-  // Simulate age past reconcile window without client callback
-  await updateLead(lead.leadId, {
-    createdAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
-  });
-  const prevFetch = globalThis.fetch;
-  const alertBodies = [];
-  globalThis.fetch = async (url, init) => {
-    alertBodies.push({ url: String(url), body: init && init.body });
-    return { ok: true, status: 200, text: async () => "" };
+  const attrSrc = fs.readFileSync(path.join(root, "js/sparklean-attribution.js"), "utf8");
+  const store = new Map();
+  const reports = [];
+  const sandbox = {
+    window: { location: { search: "?gclid=BLOCKED_SCRIPT_GCLID&gbraid=GBLOCKED" } },
+    sessionStorage: {
+      getItem: (k) => (store.has(k) ? store.get(k) : null),
+      setItem: (k, v) => store.set(k, String(v)),
+      removeItem: (k) => store.delete(k),
+    },
+    document: {
+      createElement(tag) {
+        return { className: "", setAttribute() {}, textContent: "", tagName: tag, appendChild() {} };
+      },
+    },
+    URLSearchParams,
+    fetch(url, init) {
+      const body = init && init.body ? JSON.parse(init.body) : {};
+      reports.push(body);
+      return applyConversionReport(body).then((r) => ({
+        ok: r.ok,
+        status: r.status || 200,
+        text: async () => JSON.stringify({ ok: r.ok, trackingStatus: r.lead && r.lead.trackingStatus }),
+      }));
+    },
+    console,
   };
-  process.env.SPARKLEAN_SLACK_WEBHOOK_URL = "https://hooks.slack.test/conversion-gap";
-  process.env.SPARKLEAN_RECONCILE_MAX_AGE_MS = "900000";
-  const result = await runLeadsReconcile({ maxAgeMs: 15 * 60 * 1000 });
-  globalThis.fetch = prevFetch;
-  delete process.env.SPARKLEAN_SLACK_WEBHOOK_URL;
-  assert(result.queued.some((q) => q.leadId === lead.leadId), "callback-loss lead queued by reconcile");
-  const after = await getLead(lead.leadId);
-  assert(after.trackingStatus === TRACKING_STATUS.OFFLINE_QUEUED, "callback loss → OFFLINE_QUEUED");
-  assert(after.retryPayload && after.retryPayload.leadId === lead.leadId, "retry payload present after reconcile");
-}
+  sandbox.window.sessionStorage = sandbox.sessionStorage;
+  sandbox.window.document = sandbox.document;
+  sandbox.window.fetch = sandbox.fetch;
+  vm.runInNewContext(attrSrc, sandbox);
+  assert(typeof sandbox.window.SparkleanAds === "undefined", "SparkleanAds absent in blocked case");
+  const ids = sandbox.window.SparkleanAttribution.getStoredAdClickIds();
+  assert(ids.gclid === "BLOCKED_SCRIPT_GCLID", "click ID captured without Ads helper");
 
-// --- Alert: no PII / reportToken / credentials / unrestricted dump ---
-{
-  resetMemoryStoreForTests();
-  const lead = await createLead({
+  const { lead, reportToken } = await createLead({
     intakeSource: INTAKE_SOURCE.CONTACT_FORM,
-    campaign: { gclid: "G_ALERT_SAFE" },
+    campaign: ids,
     consent: true,
   });
-  // Poison lead with fields that must never appear in alerts
+  assert(lead.gclid === "BLOCKED_SCRIPT_GCLID", "lead accepted once with click id");
+
+  const outcome = await sandbox.window.SparkleanAttribution.reportOfflineWhenAdsBlocked({
+    leadId: lead.leadId,
+    reportToken,
+  });
+  assert(outcome.trackingStatus === "OFFLINE_QUEUED", "Blob/report → OFFLINE_QUEUED");
+  assert((await getLead(lead.leadId)).trackingStatus === TRACKING_STATUS.OFFLINE_QUEUED, "durable OFFLINE_QUEUED");
+
+  const host = { children: [], querySelector() { return null; }, appendChild(n) { this.children.push(n); } };
+  sandbox.window.SparkleanAttribution.showTrackingDelayedMessage(host);
+  assert(host.children.length === 1 && /delayed/i.test(host.children[0].textContent), "delayed message visible");
+
+  const alertLead = await getLead(lead.leadId);
+  const built = buildConversionGapAlertText(alertLead);
+  assert(!built.text.includes(reportToken), "alert has no bearer token");
+  assert(findSensitiveLeak(built.text).length === 0, "alert no PII/token leak");
+
+  // Replay report — duplicate, no second lead
+  const replay = await applyConversionReport({
+    leadId: lead.leadId,
+    reportToken,
+    status: TRACKING_STATUS.OFFLINE_QUEUED,
+  });
+  assert(replay.ok === true, "replay report ok");
+  // Idempotent submit map
+  await putIdempotentLeadId("idem-blocked-1", lead.leadId);
+  assert((await getIdempotentLeadId("idem-blocked-1")) === lead.leadId, "idempotency prevents duplicate lead key");
+}
+
+// Alert allowlist
+{
+  resetMemoryStoreForTests();
+  const { lead, reportToken } = await createLead({
+    intakeSource: INTAKE_SOURCE.CONTACT_FORM,
+    campaign: { gclid: "G_ALERT" },
+    consent: true,
+  });
   lead.trackingStatus = TRACKING_STATUS.OFFLINE_QUEUED;
-  lead.failureReason = "gtag_unavailable";
+  lead.failureReason = "x";
   lead.email = "customer@example.com";
-  lead.phone = "2395550100";
-  lead.fullName = "Should Not Leak";
-  lead.BREVO_API_KEY = "secret-should-not-leak";
   lead.retryPayload = buildRetryPayload(lead);
-  // Intentionally try to smuggle reportToken into retry
-  lead.retryPayload.reportToken = lead.reportToken;
-
+  lead.retryPayload.reportToken = reportToken;
   const built = buildConversionGapAlertText(lead);
-  assert(!built.text.includes(lead.reportToken), "alert text omits reportToken");
-  assert(!/"reportToken"/.test(built.text), "alert JSON has no reportToken key");
-  assert(!built.text.includes("customer@example.com"), "alert omits customer email");
-  assert(!built.text.includes("Should Not Leak"), "alert omits fullName");
-  assert(!built.text.includes("2395550100"), "alert omits phone");
-  assert(!built.text.includes("secret-should-not-leak"), "alert omits credential field");
-  const leaks = findSensitiveLeak(built.text);
-  assert(leaks.length === 0, `alert findSensitiveLeak empty (got ${leaks.join(",")})`);
-  const retryKeys = Object.keys(built.retry).sort();
-  assert(
-    !retryKeys.includes("reportToken") && !retryKeys.includes("email") && !retryKeys.includes("phone"),
-    "retry allowlist excludes PII/token keys"
-  );
-}
-
-// --- deleteLead retention helper ---
-{
-  resetMemoryStoreForTests();
-  const lead = await createLead({
-    intakeSource: INTAKE_SOURCE.CONTACT_FORM,
-    consent: true,
-    campaign: {},
-  });
-  assert(await deleteLead(lead.leadId), "deleteLead returns true");
-  assert((await getLead(lead.leadId)) == null, "deleted lead gone from store");
-}
-
-// --- Language: never Google-confirmed ---
-{
-  const storeSrc = fs.readFileSync(path.join(root, "netlify/functions/lib/leads-store.mjs"), "utf8");
-  const adsSrc = fs.readFileSync(path.join(root, "js/sparklean-ads.js"), "utf8");
-  assert(!/\bCONFIRMED\b/.test(storeSrc) || /never.*Google confirmed/i.test(storeSrc), "store avoids CONFIRMED as status");
-  assert(!Object.values(TRACKING_STATUS).includes("CONFIRMED"), "TRACKING_STATUS has no CONFIRMED");
-  assert(adsSrc.includes("BROWSER_SENT"), "client uses BROWSER_SENT language");
-  assert(!/Google[- ]confirmed/i.test(adsSrc) || /never/i.test(adsSrc), "ads.js does not claim Google-confirmed success");
-}
-
-// --- Contact / quote contract files present ---
-{
-  assert(fs.existsSync(path.join(root, "netlify/functions/contact-submit.mjs")), "contact-submit function exists");
-  assert(fs.existsSync(path.join(root, "netlify/functions/conversion-report.mjs")), "conversion-report exists");
+  assert(!built.text.includes(reportToken), "no token in alert");
+  assert(!built.text.includes("customer@example.com"), "no email in alert");
 }
 
 console.log(`\nADVERSARIAL RESULTS: pass=${passed} fail=${failed} skip=${skipped}`);

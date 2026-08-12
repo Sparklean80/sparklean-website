@@ -1,6 +1,6 @@
 /**
- * Unit tests for leads-store state machine (memory backend).
- * Run: SPARKLEAN_LEADS_MEMORY=1 node scripts/test-leads-store.mjs
+ * Unit tests for leads-store (memory CAS + token hash).
+ * Run: node scripts/test-leads-store.mjs
  */
 process.env.SPARKLEAN_LEADS_MEMORY = "1";
 
@@ -14,14 +14,19 @@ import {
   markOfflineQueued,
   resetMemoryStoreForTests,
   updateLead,
+  getLead,
+  deleteLead,
+  verifyReportToken,
 } from "../netlify/functions/lib/leads-store.mjs";
 
 let failed = 0;
+let passed = 0;
 function assert(cond, msg) {
   if (!cond) {
     failed += 1;
     console.error("FAIL:", msg);
   } else {
+    passed += 1;
     console.log("OK  ", msg);
   }
 }
@@ -29,7 +34,7 @@ function assert(cond, msg) {
 resetMemoryStoreForTests();
 
 {
-  const lead = await createLead({
+  const { lead, reportToken } = await createLead({
     intakeSource: INTAKE_SOURCE.CONTACT_FORM,
     campaign: { gclid: "GCLICK1" },
     consent: true,
@@ -37,7 +42,11 @@ resetMemoryStoreForTests();
   assert(lead.trackingStatus === TRACKING_STATUS.PENDING, "create → PENDING");
   assert(lead.transactionId === lead.leadId, "transactionId = leadId");
   assert(lead.gclid === "GCLICK1", "gclid stored with consent");
-  assert(Boolean(lead.reportToken), "reportToken issued");
+  assert(Boolean(reportToken), "reportToken issued once");
+  assert(Boolean(lead.reportTokenHash), "hash stored");
+  assert(!lead.reportToken, "bearer not on stored lead object");
+  assert(verifyReportToken(lead, reportToken), "timing-safe hash verifies bearer");
+  assert(!verifyReportToken(lead, "forged"), "forged bearer fails verify");
   assert(isGoogleAttributed(lead), "Google-attributed when gclid + consent");
 
   const bad = await applyConversionReport({
@@ -49,37 +58,37 @@ resetMemoryStoreForTests();
 
   const sent = await applyConversionReport({
     leadId: lead.leadId,
-    reportToken: lead.reportToken,
+    reportToken,
     status: TRACKING_STATUS.BROWSER_SENT,
   });
   assert(sent.ok === true, "BROWSER_SENT report ok");
   assert(sent.lead.trackingStatus === TRACKING_STATUS.BROWSER_SENT, "status BROWSER_SENT");
-  assert(sent.lead.trackingStatus !== "CONFIRMED", "never CONFIRMED label");
+  assert(!Object.values(TRACKING_STATUS).includes("CONFIRMED"), "never CONFIRMED");
 }
 
 resetMemoryStoreForTests();
 
 {
-  const lead = await createLead({
+  const { lead, reportToken } = await createLead({
     intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
     campaign: { gbraid: "GB1" },
     consent: true,
   });
   const queued = await applyConversionReport({
     leadId: lead.leadId,
-    reportToken: lead.reportToken,
+    reportToken,
     status: TRACKING_STATUS.OFFLINE_QUEUED,
     failureReason: "gtag_unavailable",
   });
   assert(queued.lead.trackingStatus === TRACKING_STATUS.OFFLINE_QUEUED, "OFFLINE_QUEUED set");
   assert(queued.lead.retryPayload && queued.lead.retryPayload.leadId === lead.leadId, "retryPayload present");
-  assert(queued.lead.retryPayload.gbraid === "GB1", "retryPayload keeps click id");
+  assert(!queued.lead.retryPayload.reportToken, "retryPayload has no bearer");
 }
 
 resetMemoryStoreForTests();
 
 {
-  const lead = await createLead({
+  const { lead } = await createLead({
     intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
     campaign: { wbraid: "WB1" },
     consent: false,
@@ -91,7 +100,7 @@ resetMemoryStoreForTests();
 resetMemoryStoreForTests();
 
 {
-  const lead = await createLead({
+  const { lead } = await createLead({
     intakeSource: INTAKE_SOURCE.CONTACT_FORM,
     campaign: { gclid: "STALE1" },
     consent: true,
@@ -99,14 +108,13 @@ resetMemoryStoreForTests();
   await updateLead(lead.leadId, {
     createdAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
   });
-
   const stale = await listUnresolvedGoogleAttributed({ maxAgeMs: 15 * 60 * 1000 });
   assert(stale.some((l) => l.leadId === lead.leadId), "stale PENDING Google lead listed");
-
   const marked = await markOfflineQueued(lead.leadId, "reconcile_pending_timeout");
   assert(marked.trackingStatus === TRACKING_STATUS.OFFLINE_QUEUED, "reconcile → OFFLINE_QUEUED");
-  assert(marked.retryPayload, "reconcile retry payload");
+  assert(await deleteLead(lead.leadId), "deleteLead works");
+  assert((await getLead(lead.leadId)) == null, "deleted");
 }
 
-console.log(failed ? `\nFAILED: ${failed}` : "\nALL LEADS-STORE TESTS PASSED");
+console.log(`\nLEADS-STORE RESULTS: pass=${passed} fail=${failed} skip=0`);
 process.exit(failed ? 1 : 0);

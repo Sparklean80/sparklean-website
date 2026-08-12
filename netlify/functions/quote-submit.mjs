@@ -10,8 +10,17 @@ import {
   INTAKE_SOURCE,
   TRACKING_STATUS,
   createLead,
+  getIdempotentLeadId,
+  getLead,
+  putIdempotentLeadId,
   updateLead,
 } from "./lib/leads-store.mjs";
+import {
+  assertSameSiteOrigin,
+  clientIp,
+  parseIdempotencyKey,
+  rateLimitCheck,
+} from "./lib/request-guard.mjs";
 
 const MAX_BODY = 120_000;
 
@@ -619,22 +628,13 @@ function json(data, status = 200) {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Cache-Control": "no-store",
     },
   });
 }
 
 function cors204() {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+  return new Response(null, { status: 204 });
 }
 
 function escapeHtml(s) {
@@ -823,6 +823,12 @@ export default async (request, context) => {
   if (request.method === "OPTIONS") return cors204();
   if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
+  const originGate = assertSameSiteOrigin(request);
+  if (!originGate.ok) return json({ error: originGate.error }, originGate.status || 403);
+
+  const rl = rateLimitCheck(`quote:${clientIp(request)}`, { windowMs: 60_000, max: 12 });
+  if (!rl.ok) return json({ error: rl.error }, rl.status);
+
   let raw;
   try {
     raw = await request.text();
@@ -836,6 +842,23 @@ export default async (request, context) => {
     body = JSON.parse(raw);
   } catch {
     return json({ error: "Invalid JSON" }, 400);
+  }
+
+  const idemKey = parseIdempotencyKey(request, body);
+  if (idemKey) {
+    const existingId = await getIdempotentLeadId(idemKey);
+    if (existingId) {
+      const existing = await getLead(existingId);
+      if (existing) {
+        return json({
+          ok: true,
+          leadId: existing.leadId,
+          reportToken: null,
+          idempotentReplay: true,
+          receivedAt: new Date().toISOString(),
+        });
+      }
+    }
   }
 
   const answers = body.answers;
@@ -917,21 +940,23 @@ export default async (request, context) => {
     request.headers.get("x-nf-request-id") ||
     `intake_${Date.now()}`;
 
-  let lead;
+  let created;
   try {
-    lead = await createLead({
+    created = await createLead({
       intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
-      netlifyReceiptId: String(receiptId),
+      netlifyReceiptId: String(receiptId).slice(0, 120),
       campaign,
       consent: true,
     });
   } catch (e) {
-    console.error("[quote-submit] Blob create failed", e);
+    console.error("[quote-submit] Blob create failed", e && e.code);
     return json({ error: PUBLIC_EMAIL_FAILURE }, 500);
   }
 
+  const lead = created.lead;
   const leadId = lead.leadId;
-  const reportToken = lead.reportToken;
+  const reportToken = created.reportToken;
+  if (idemKey) await putIdempotentLeadId(idemKey, leadId);
   const trackingMeta = [
     `trackingStatus: ${TRACKING_STATUS.PENDING}`,
     `conversionAction: ${CONVERSION_ACTION}`,

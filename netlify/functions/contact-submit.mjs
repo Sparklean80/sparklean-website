@@ -1,6 +1,7 @@
 /**
  * Sparklean — POST /.netlify/functions/contact-submit
- * Server-accepted contact lead: Blob PENDING + Brevo (+ optional Slack) → { ok, leadId, reportToken }.
+ * Server-accepted contact lead: Blob PENDING + Brevo → { ok, leadId, reportToken }.
+ * reportToken returned once; only hash stored on Blob.
  */
 
 import {
@@ -8,8 +9,18 @@ import {
   INTAKE_SOURCE,
   TRACKING_STATUS,
   createLead,
+  getIdempotentLeadId,
+  getLead,
+  putIdempotentLeadId,
   updateLead,
 } from "./lib/leads-store.mjs";
+import {
+  assertSameSiteOrigin,
+  clientIp,
+  clipStr,
+  parseIdempotencyKey,
+  rateLimitCheck,
+} from "./lib/request-guard.mjs";
 
 const MAX_BODY = 80_000;
 const PUBLIC_FAILURE =
@@ -20,22 +31,13 @@ function json(data, status = 200) {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Cache-Control": "no-store",
     },
   });
 }
 
 function cors204() {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+  return new Response(null, { status: 204 });
 }
 
 function escapeHtml(s) {
@@ -58,14 +60,8 @@ function parseSender(fromRaw) {
   return { name: "Sparklean Cleaning", email: s || "info@sparklean.co" };
 }
 
-function clip(v, n) {
-  return typeof v === "string" ? v.trim().slice(0, n) : "";
-}
-
 function parseFormBody(raw, contentType) {
-  if (contentType.includes("application/json")) {
-    return JSON.parse(raw);
-  }
+  if (contentType.includes("application/json")) return JSON.parse(raw);
   const params = new URLSearchParams(raw);
   const o = {};
   for (const [k, v] of params.entries()) o[k] = v;
@@ -98,19 +94,17 @@ async function sendBrevo({ subject, html, text }) {
     }),
   });
   if (!res.ok) {
-    const t = await res.text();
-    console.error("[contact-submit] Brevo failed", res.status, t);
+    console.error("[contact-submit] Brevo failed", res.status);
     throw new Error("BREVO_FAILED");
   }
 }
 
-async function notifySlackOptional({ leadId, fullName, serviceNeeded, cityArea }) {
+async function notifySlackOptional({ leadId, serviceNeeded, cityArea }) {
   const url = process.env.SPARKLEAN_SLACK_WEBHOOK_URL;
   if (!url) return;
   const text = [
     `*Sparklean contact form*`,
     `ID: \`${leadId}\``,
-    fullName ? `Name: ${fullName}` : "",
     serviceNeeded ? `Service: ${serviceNeeded}` : "",
     cityArea ? `Area: ${cityArea}` : "",
   ]
@@ -131,6 +125,12 @@ export default async (request, context) => {
   if (request.method === "OPTIONS") return cors204();
   if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
+  const originGate = assertSameSiteOrigin(request);
+  if (!originGate.ok) return json({ error: originGate.error }, originGate.status || 403);
+
+  const rl = rateLimitCheck(`contact:${clientIp(request)}`, { windowMs: 60_000, max: 12 });
+  if (!rl.ok) return json({ error: rl.error }, rl.status);
+
   let raw;
   try {
     raw = await request.text();
@@ -147,37 +147,58 @@ export default async (request, context) => {
     return json({ error: "Invalid body" }, 400);
   }
 
-  // Honeypot
   if (body["bot-field"] || body.botField) {
     return json({ ok: true, leadId: "ignored", reportToken: "ignored" }, 200);
   }
 
-  const fullName = clip(body.fullName, 120);
-  const phone = clip(body.phone, 32);
-  const email = clip(body.email, 160);
-  const propertyType = clip(body.propertyType, 80);
-  const serviceNeeded = clip(body.serviceNeeded, 200);
-  const cityArea = clip(body.cityArea, 120);
-  const preferredTiming = clip(body.preferredTiming, 80);
-  const message = clip(body.message, 4000);
-  const consentContact = body.consentContact === "yes" || body.consentContact === true || body.consentContact === "on";
+  const idemKey = parseIdempotencyKey(request, body);
+  if (idemKey) {
+    const existingId = await getIdempotentLeadId(idemKey);
+    if (existingId) {
+      const existing = await getLead(existingId);
+      if (existing) {
+        return json({
+          ok: true,
+          leadId: existing.leadId,
+          reportToken: null,
+          idempotentReplay: true,
+          receivedAt: new Date().toISOString(),
+        });
+      }
+    }
+  }
+
+  const fullName = clipStr(body.fullName, 120);
+  const phone = clipStr(body.phone, 32);
+  const email = clipStr(body.email, 160);
+  const propertyType = clipStr(body.propertyType, 80);
+  const serviceNeeded = clipStr(body.serviceNeeded, 200);
+  const cityArea = clipStr(body.cityArea, 120);
+  const preferredTiming = clipStr(body.preferredTiming, 80);
+  const message = clipStr(body.message, 4000);
+  const consentContact =
+    body.consentContact === "yes" || body.consentContact === true || body.consentContact === "on";
   const consentMarketing =
     body.consentMarketing === "yes" || body.consentMarketing === true || body.consentMarketing === "on";
 
   if (!fullName || !phone || !email || !propertyType || !serviceNeeded || !cityArea || !preferredTiming) {
     return json({ error: "Missing required fields" }, 400);
   }
-  if (!email.includes("@")) return json({ error: "Invalid email" }, 400);
+  if (!email.includes("@") || email.length > 160) return json({ error: "Invalid email" }, 400);
   if (!consentContact) return json({ error: "Consent required" }, 400);
 
   let campaign = null;
   if (body.campaign && typeof body.campaign === "object") {
-    campaign = body.campaign;
+    campaign = {
+      gclid: clipStr(body.campaign.gclid, 200) || null,
+      gbraid: clipStr(body.campaign.gbraid, 200) || null,
+      wbraid: clipStr(body.campaign.wbraid, 200) || null,
+    };
   } else {
     campaign = {
-      gclid: clip(body.gclid, 200) || null,
-      gbraid: clip(body.gbraid, 200) || null,
-      wbraid: clip(body.wbraid, 200) || null,
+      gclid: clipStr(body.gclid, 200) || null,
+      gbraid: clipStr(body.gbraid, 200) || null,
+      wbraid: clipStr(body.wbraid, 200) || null,
     };
   }
 
@@ -186,18 +207,22 @@ export default async (request, context) => {
     request.headers.get("x-nf-request-id") ||
     `contact_${Date.now()}`;
 
-  let lead;
+  let created;
   try {
-    lead = await createLead({
+    created = await createLead({
       intakeSource: INTAKE_SOURCE.CONTACT_FORM,
-      netlifyReceiptId: String(receiptId),
+      netlifyReceiptId: String(receiptId).slice(0, 120),
       campaign,
       consent: true,
     });
   } catch (e) {
-    console.error("[contact-submit] Blob create failed", e);
+    console.error("[contact-submit] Blob create failed", e && e.code);
     return json({ error: PUBLIC_FAILURE }, 500);
   }
+
+  const lead = created.lead;
+  const reportToken = created.reportToken;
+  if (idemKey) await putIdempotentLeadId(idemKey, lead.leadId);
 
   const trackingMeta = [
     `Lead ID: ${lead.leadId}`,
@@ -244,17 +269,17 @@ export default async (request, context) => {
         failureReason: "email_delivery_failed",
       });
     } catch (e2) {
-      console.error("[contact-submit] failed to mark FAILED", e2);
+      console.error("[contact-submit] failed to mark FAILED");
     }
     return json({ error: PUBLIC_FAILURE }, 500);
   }
 
-  await notifySlackOptional({ leadId: lead.leadId, fullName, serviceNeeded, cityArea });
+  await notifySlackOptional({ leadId: lead.leadId, serviceNeeded, cityArea });
 
   return json({
     ok: true,
     leadId: lead.leadId,
-    reportToken: lead.reportToken,
+    reportToken,
     receivedAt: new Date().toISOString(),
   });
 };

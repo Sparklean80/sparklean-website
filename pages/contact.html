@@ -159,6 +159,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 
   gtag('config', 'AW-17027441328');
 </script>
+<script src="/js/sparklean-attribution.js"></script>
 <script src="/js/sparklean-ads.js"></script>
 <script src="/js/sparklean-events.js"></script>
 </head>
@@ -465,10 +466,20 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
       th.classList.add("is-visible");
     }
     if(fm)fm.style.display="none";
-    if(trackingDelayed&&window.SparkleanAds&&typeof window.SparkleanAds.showTrackingDelayedMessage==="function"){
+    if(trackingDelayed){
       var host=th&&th.parentNode?th.parentNode:th;
       if(host&&!host.querySelector(".sparklean-tracking-delayed")){
-        window.SparkleanAds.showTrackingDelayedMessage(host);
+        if(window.SparkleanAttribution&&typeof window.SparkleanAttribution.showTrackingDelayedMessage==="function"){
+          window.SparkleanAttribution.showTrackingDelayedMessage(host);
+        }else if(window.SparkleanAds&&typeof window.SparkleanAds.showTrackingDelayedMessage==="function"){
+          window.SparkleanAds.showTrackingDelayedMessage(host);
+        }else{
+          var note=document.createElement("p");
+          note.className="sparklean-tracking-delayed";
+          note.setAttribute("role","status");
+          note.textContent="Your request was received. Conversion tracking was delayed on this device — our team has been notified. Your lead is preserved.";
+          host.appendChild(note);
+        }
       }
     }
   }
@@ -492,16 +503,20 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
       var fd=new FormData(fm);
       var payload={};
       fd.forEach(function(v,k){payload[k]=typeof v==="string"?v:String(v);});
-      if(window.SparkleanAds&&typeof window.SparkleanAds.getStoredAdClickIds==="function"){
-        var ids=window.SparkleanAds.getStoredAdClickIds()||{};
-        payload.campaign=ids;
-        if(ids.gclid)payload.gclid=ids.gclid;
-        if(ids.gbraid)payload.gbraid=ids.gbraid;
-        if(ids.wbraid)payload.wbraid=ids.wbraid;
+      var ids={};
+      if(window.SparkleanAttribution&&typeof window.SparkleanAttribution.getStoredAdClickIds==="function"){
+        ids=window.SparkleanAttribution.getStoredAdClickIds()||{};
+      }else if(window.SparkleanAds&&typeof window.SparkleanAds.getStoredAdClickIds==="function"){
+        ids=window.SparkleanAds.getStoredAdClickIds()||{};
       }
+      payload.campaign=ids;
+      if(ids.gclid)payload.gclid=ids.gclid;
+      if(ids.gbraid)payload.gbraid=ids.gbraid;
+      if(ids.wbraid)payload.wbraid=ids.wbraid;
       fetch("/.netlify/functions/contact-submit",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
+        credentials:"same-origin",
         body:JSON.stringify(payload)
       })
         .then(function(r){
@@ -518,21 +533,31 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
           var leadId=String(res.j.leadId);
           var reportToken=String(res.j.reportToken);
           showThanks(false);
+          function afterOutcome(outcome){
+            if(outcome&&(outcome.delayed||!outcome.browserSent||!outcome.reportOk)) showThanks(true);
+          }
           if(window.SparkleanAds&&typeof window.SparkleanAds.fireAndReportConversion==="function"){
             return window.SparkleanAds.fireAndReportConversion({
               leadId:leadId,
               reportToken:reportToken
-            }).then(function(outcome){
-              if(outcome&&!outcome.browserSent) showThanks(true);
-            });
+            }).then(afterOutcome);
           }
-          if(window.SparkleanAds&&typeof window.SparkleanAds.reportConversionOutcome==="function"){
-            return window.SparkleanAds.reportConversionOutcome({
+          // Ads helper blocked — report via first-party attribution (not Ads).
+          if(window.SparkleanAttribution&&typeof window.SparkleanAttribution.reportOfflineWhenAdsBlocked==="function"){
+            return window.SparkleanAttribution.reportOfflineWhenAdsBlocked({
+              leadId:leadId,
+              reportToken:reportToken
+            }).then(afterOutcome);
+          }
+          if(window.SparkleanAttribution&&typeof window.SparkleanAttribution.reportConversionOutcome==="function"){
+            return window.SparkleanAttribution.reportConversionOutcome({
               leadId:leadId,
               reportToken:reportToken,
               status:"OFFLINE_QUEUED",
               failureReason:"sparklean_ads_unavailable"
-            }).then(function(){showThanks(true);});
+            }).then(function(rep){
+              afterOutcome({ browserSent:false, delayed:true, reportOk:!!(rep&&rep.ok) });
+            });
           }
           showThanks(true);
         })

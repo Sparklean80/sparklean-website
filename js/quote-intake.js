@@ -13,6 +13,24 @@
  * - Organic → click-triggered only.
  */
 (function () {
+  /** First-party click-id capture (works even if sparklean-ads.js is blocked). */
+  (function persistClickIds() {
+    try {
+      if (window.SparkleanAttribution && typeof window.SparkleanAttribution.persistAdClickIds === "function") {
+        window.SparkleanAttribution.persistAdClickIds();
+        return;
+      }
+      var keys = ["gclid", "gbraid", "wbraid"];
+      var p = new URLSearchParams(window.location.search);
+      for (var i = 0; i < keys.length; i++) {
+        var v = p.get(keys[i]);
+        if (v) sessionStorage.setItem("sparklean_" + keys[i], String(v).slice(0, 200));
+      }
+    } catch (ePersist) {
+      /* ignore */
+    }
+  })();
+
   var F = null;
   var root = null;
   var steps = [];
@@ -85,9 +103,13 @@
 
   function hasStoredAdClickIds() {
     try {
-      if (window.SparkleanAds && typeof window.SparkleanAds.getStoredAdClickIds === "function") {
-        var s = window.SparkleanAds.getStoredAdClickIds() || {};
+      if (window.SparkleanAttribution && typeof window.SparkleanAttribution.getStoredAdClickIds === "function") {
+        var s = window.SparkleanAttribution.getStoredAdClickIds() || {};
         return !!(s.gclid || s.gbraid || s.wbraid);
+      }
+      if (window.SparkleanAds && typeof window.SparkleanAds.getStoredAdClickIds === "function") {
+        var sAds = window.SparkleanAds.getStoredAdClickIds() || {};
+        return !!(sAds.gclid || sAds.gbraid || sAds.wbraid);
       }
     } catch (e0) {
       /* ignore */
@@ -303,7 +325,8 @@
         (trackingDelayed
           ? '<p class="sq-intake__done sparklean-tracking-delayed" role="status">' +
             esc(
-              (window.SparkleanAds && window.SparkleanAds.TRACKING_DELAYED_MSG) ||
+              (window.SparkleanAttribution && window.SparkleanAttribution.TRACKING_DELAYED_MSG) ||
+                (window.SparkleanAds && window.SparkleanAds.TRACKING_DELAYED_MSG) ||
                 "Your request was received. Conversion tracking was delayed on this device — our team has been notified. Your lead is preserved."
             ) +
             "</p>"
@@ -599,7 +622,6 @@
         if (!res.ok) {
           throw new Error("INTAKE_FAIL");
         }
-        // Google Ads: after server leadId + reportToken; report BROWSER_SENT or OFFLINE_QUEUED.
         var leadId = res.j && res.j.leadId ? String(res.j.leadId) : "";
         var reportToken = res.j && res.j.reportToken ? String(res.j.reportToken) : "";
         leadDelivered = true;
@@ -635,29 +657,56 @@
           render();
         }
 
+        function reportDirect(opts) {
+          if (window.SparkleanAttribution && typeof window.SparkleanAttribution.reportConversionOutcome === "function") {
+            return window.SparkleanAttribution.reportConversionOutcome(opts);
+          }
+          return fetch("/.netlify/functions/conversion-report", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            body: JSON.stringify({
+              leadId: opts.leadId,
+              reportToken: opts.reportToken,
+              status: opts.status,
+              failureReason: opts.failureReason || undefined,
+            }),
+          })
+            .then(function (r) {
+              return r.text().then(function (t) {
+                var j = {};
+                try {
+                  j = t ? JSON.parse(t) : {};
+                } catch (e) {
+                  j = {};
+                }
+                return { ok: r.ok && j && j.ok === true, status: r.status, j: j };
+              });
+            })
+            .catch(function () {
+              return { ok: false, error: "network" };
+            });
+        }
+
         if (leadId && reportToken && window.SparkleanAds && typeof window.SparkleanAds.fireAndReportConversion === "function") {
           return window.SparkleanAds.fireAndReportConversion({ leadId: leadId, reportToken: reportToken }).then(function (outcome) {
-            if (outcome && !outcome.browserSent) trackingDelayed = true;
+            if (outcome && (outcome.delayed || !outcome.browserSent || !outcome.reportOk)) trackingDelayed = true;
             finishSuccessUi();
           });
         }
-        if (leadId && reportToken && window.SparkleanAds && typeof window.SparkleanAds.reportConversionOutcome === "function") {
-          return window.SparkleanAds
-            .reportConversionOutcome({
-              leadId: leadId,
-              reportToken: reportToken,
-              status: "OFFLINE_QUEUED",
-              failureReason: "sparklean_ads_unavailable",
-            })
-            .then(function () {
-              trackingDelayed = true;
-              finishSuccessUi();
-            });
+        if (leadId && reportToken) {
+          return reportDirect({
+            leadId: leadId,
+            reportToken: reportToken,
+            status: "OFFLINE_QUEUED",
+            failureReason: "sparklean_ads_unavailable",
+          }).then(function (rep) {
+            trackingDelayed = true;
+            if (!rep || !rep.ok) trackingDelayed = true;
+            finishSuccessUi();
+          });
         }
-        if (leadId && window.SparkleanAds && typeof window.SparkleanAds.trackQuoteRequestCompleted === "function") {
-          window.SparkleanAds.trackQuoteRequestCompleted(leadId);
-        }
-        if (leadId && !reportToken) trackingDelayed = true;
+        trackingDelayed = true;
         finishSuccessUi();
       })
       .catch(function () {
@@ -740,7 +789,12 @@
         var v = p.get(keys[i]);
         if (v) o[keys[i]] = v.slice(0, 200);
       }
-      if (window.SparkleanAds && typeof window.SparkleanAds.getStoredAdClickIds === "function") {
+      if (window.SparkleanAttribution && typeof window.SparkleanAttribution.getStoredAdClickIds === "function") {
+        var storedA = window.SparkleanAttribution.getStoredAdClickIds() || {};
+        ["gclid", "gbraid", "wbraid"].forEach(function (k) {
+          if (!o[k] && storedA[k]) o[k] = String(storedA[k]).slice(0, 200);
+        });
+      } else if (window.SparkleanAds && typeof window.SparkleanAds.getStoredAdClickIds === "function") {
         var stored = window.SparkleanAds.getStoredAdClickIds() || {};
         ["gclid", "gbraid", "wbraid"].forEach(function (k) {
           if (!o[k] && stored[k]) o[k] = String(stored[k]).slice(0, 200);

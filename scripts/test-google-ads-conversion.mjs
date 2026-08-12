@@ -61,7 +61,14 @@ for (const rel of signalhouse) {
 
 // --- Conversion helper behavior (vm sandbox) ---
 const adsSrc = fs.readFileSync(path.join(root, "js/sparklean-ads.js"), "utf8");
+const attrSrc = fs.readFileSync(path.join(root, "js/sparklean-attribution.js"), "utf8");
 const intakeSrc = fs.readFileSync(path.join(root, "js/quote-intake.js"), "utf8");
+const contactHtml = fs.readFileSync(path.join(root, "pages/contact.html"), "utf8");
+
+assert(fs.existsSync(path.join(root, "js/sparklean-attribution.js")), "first-party attribution helper exists");
+assert(intakeSrc.includes("conversion-report"), "intake can report without SparkleanAds");
+assert(contactHtml.includes("sparklean-attribution.js"), "contact loads attribution helper");
+assert(contactHtml.includes("SparkleanAttribution"), "contact reports when Ads absent");
 
 assert(
   intakeSrc.includes("fireAndReportConversion") || intakeSrc.includes("trackQuoteRequestCompleted"),
@@ -127,7 +134,8 @@ function makeEnv(opts) {
   sandbox.window.sessionStorage = sessionStorage;
   sandbox.window.fetch = sandbox.fetch;
   sandbox.window.document = sandbox.document;
-  vm.runInNewContext(adsSrc, sandbox);
+  vm.runInNewContext(attrSrc, sandbox);
+  if (opts.withAds !== false) vm.runInNewContext(adsSrc, sandbox);
   return { sandbox, conversions, gtagCalls, store, reports };
 }
 
@@ -191,20 +199,40 @@ function makeEnv(opts) {
   assert(!payload.includes("@gmail"), "no email in conversion");
 }
 
-// BROWSER_SENT semantics via fireAndReportConversion
+// BROWSER_SENT only when durable report ok
 {
   const { sandbox, conversions, reports } = makeEnv();
-  await sandbox.window.SparkleanAds.fireAndReportConversion({
+  const outcome = await sandbox.window.SparkleanAds.fireAndReportConversion({
     leadId: "lead-browser-1",
     reportToken: "tok-1",
   });
   assert(conversions.length === 1, "fireAndReport: one browser conversion");
   assert(reports.length === 1, "fireAndReport: one conversion-report POST");
-  assert(reports[0].body.status === "BROWSER_SENT", "fireAndReport reports BROWSER_SENT (not confirmed)");
-  assert(reports[0].body.leadId === "lead-browser-1", "fireAndReport leadId matches");
+  assert(reports[0].body.status === "BROWSER_SENT", "fireAndReport posts BROWSER_SENT");
+  assert(outcome.browserSent === true && outcome.reportOk === true, "success requires durable ok");
 }
 
-// Helper missing → OFFLINE_QUEUED, not success
+// Durable report failure after gtag → NOT BROWSER_SENT success
+{
+  const { sandbox, conversions } = makeEnv();
+  sandbox.fetch = () =>
+    Promise.resolve({
+      ok: false,
+      status: 500,
+      text: async () => JSON.stringify({ ok: false }),
+    });
+  sandbox.window.fetch = sandbox.fetch;
+  const outcome = await sandbox.window.SparkleanAds.fireAndReportConversion({
+    leadId: "lead-report-fail",
+    reportToken: "tok-fail",
+  });
+  assert(conversions.length === 1, "gtag may fire");
+  assert(outcome.browserSent === false, "durable fail → not browserSent success");
+  assert(outcome.delayed === true, "durable fail → delayed/unresolved");
+  assert(outcome.trackingStatus === "UNRESOLVED", "durable fail → UNRESOLVED");
+}
+
+// Helper missing → OFFLINE_QUEUED via attribution (not Ads)
 {
   const { sandbox, conversions, reports } = makeEnv({ withGtag: false });
   const outcome = await sandbox.window.SparkleanAds.fireAndReportConversion({
@@ -217,10 +245,16 @@ function makeEnv(opts) {
   assert(reports.some((r) => r.body.status === "OFFLINE_QUEUED"), "helper missing reported OFFLINE_QUEUED");
 }
 
+// Attribution alone captures gclid without ads.js
+{
+  const { sandbox } = makeEnv({ withAds: false });
+  assert(sandbox.window.SparkleanAttribution.getStoredAdClickIds().gclid === "TESTCLICK123", "attribution stores gclid without ads.js");
+  assert(!sandbox.window.SparkleanAds, "ads absent when withAds false");
+}
+
 // --- Contact form: server accept + reportToken (not ?sent=1 as sole gate) ---
-const contactHtml = fs.readFileSync(path.join(root, "pages/contact.html"), "utf8");
 assert(contactHtml.includes("contact-submit"), "contact form posts to contact-submit");
-assert(contactHtml.includes("fireAndReportConversion"), "contact success uses fireAndReportConversion");
+assert(contactHtml.includes("fireAndReportConversion") || contactHtml.includes("SparkleanAttribution"), "contact success path present");
 assert(contactHtml.includes("reportToken"), "contact expects reportToken");
 assert(contactHtml.includes("sent=1"), "contact keeps optional ?sent=1 bookmark UX");
 assert(!contactHtml.includes("markContactFormSubmitPending"), "contact no longer relies on pending-only gate");

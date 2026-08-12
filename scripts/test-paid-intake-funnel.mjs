@@ -111,6 +111,9 @@ function makeWindow(url, ua, opts) {
     };
   };
   window.eval(eventsSrc);
+  // Attribution before ads — click ids survive Ads being blocked
+  const attrPath = path.join(root, "js/sparklean-attribution.js");
+  if (fs.existsSync(attrPath)) window.eval(fs.readFileSync(attrPath, "utf8"));
   window.eval(adsSrc);
   window.eval(flowsSrc);
   window.eval(intakeSrc);
