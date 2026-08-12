@@ -6,6 +6,10 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Lead conversion reconcile — every 15 minutes (also declared on leads-reconcile.mjs export config).
+[functions."leads-reconcile"]
+  schedule = "*/15 * * * *"
+
 # Legacy URLs (old host) → current clean URLs. 301 passes ranking signals to the new pages.
 [[redirects]]
   from = "/home"

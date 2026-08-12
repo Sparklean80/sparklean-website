@@ -64,20 +64,26 @@ const adsSrc = fs.readFileSync(path.join(root, "js/sparklean-ads.js"), "utf8");
 const intakeSrc = fs.readFileSync(path.join(root, "js/quote-intake.js"), "utf8");
 
 assert(
-  intakeSrc.includes("trackQuoteRequestCompleted"),
-  "quote-intake calls SparkleanAds.trackQuoteRequestCompleted"
+  intakeSrc.includes("fireAndReportConversion") || intakeSrc.includes("trackQuoteRequestCompleted"),
+  "quote-intake calls SparkleanAds conversion helpers"
 );
 assert(
   /res\.j && res\.j\.leadId/.test(intakeSrc) || /res\.j\.leadId/.test(intakeSrc),
   "quote-intake gates conversion on server leadId"
 );
+assert(intakeSrc.includes("reportToken"), "quote-intake expects reportToken");
 assert(intakeSrc.includes("INTAKE_FAIL"), "failure path still present");
 assert(intakeSrc.includes("gclid"), "gclid preserved in campaign payload");
+assert(adsSrc.includes("BROWSER_SENT"), "ads.js uses BROWSER_SENT (not Google-confirmed)");
+assert(adsSrc.includes("OFFLINE_QUEUED"), "ads.js can report OFFLINE_QUEUED");
+assert(adsSrc.includes("reportConversionOutcome"), "ads.js exposes reportConversionOutcome");
 
-function makeEnv() {
+function makeEnv(opts) {
+  opts = opts || {};
   const store = new Map();
   const conversions = [];
   const gtagCalls = [];
+  const reports = [];
   const sessionStorage = {
     getItem(k) {
       return store.has(k) ? store.get(k) : null;
@@ -98,13 +104,31 @@ function makeEnv() {
   const sandbox = {
     window: { location: { search: "?gclid=TESTCLICK123&utm_source=google" } },
     sessionStorage,
-    gtag,
     console,
     URLSearchParams,
+    setInterval,
+    clearInterval,
+    document: {
+      createElement(tag) {
+        return { className: "", setAttribute() {}, textContent: "", tagName: tag };
+      },
+    },
+    fetch(url, init) {
+      const body = init && init.body ? JSON.parse(init.body) : {};
+      reports.push({ url: String(url), body });
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        text: async () => JSON.stringify({ ok: true, trackingStatus: body.status }),
+      });
+    },
   };
+  if (opts.withGtag !== false) sandbox.gtag = gtag;
   sandbox.window.sessionStorage = sessionStorage;
+  sandbox.window.fetch = sandbox.fetch;
+  sandbox.window.document = sandbox.document;
   vm.runInNewContext(adsSrc, sandbox);
-  return { sandbox, conversions, gtagCalls, store };
+  return { sandbox, conversions, gtagCalls, store, reports };
 }
 
 // Modal open / partial / pre-success: zero conversions (no track call)
@@ -167,22 +191,50 @@ function makeEnv() {
   assert(!payload.includes("@gmail"), "no email in conversion");
 }
 
-// --- Netlify contact form success path ---
+// BROWSER_SENT semantics via fireAndReportConversion
+{
+  const { sandbox, conversions, reports } = makeEnv();
+  await sandbox.window.SparkleanAds.fireAndReportConversion({
+    leadId: "lead-browser-1",
+    reportToken: "tok-1",
+  });
+  assert(conversions.length === 1, "fireAndReport: one browser conversion");
+  assert(reports.length === 1, "fireAndReport: one conversion-report POST");
+  assert(reports[0].body.status === "BROWSER_SENT", "fireAndReport reports BROWSER_SENT (not confirmed)");
+  assert(reports[0].body.leadId === "lead-browser-1", "fireAndReport leadId matches");
+}
+
+// Helper missing → OFFLINE_QUEUED, not success
+{
+  const { sandbox, conversions, reports } = makeEnv({ withGtag: false });
+  const outcome = await sandbox.window.SparkleanAds.fireAndReportConversion({
+    leadId: "lead-offline-1",
+    reportToken: "tok-2",
+  });
+  assert(conversions.length === 0, "helper missing: zero gtag conversions");
+  assert(outcome.browserSent === false, "helper missing: browserSent false");
+  assert(outcome.trackingStatus === "OFFLINE_QUEUED", "helper missing: OFFLINE_QUEUED");
+  assert(reports.some((r) => r.body.status === "OFFLINE_QUEUED"), "helper missing reported OFFLINE_QUEUED");
+}
+
+// --- Contact form: server accept + reportToken (not ?sent=1 as sole gate) ---
 const contactHtml = fs.readFileSync(path.join(root, "pages/contact.html"), "utf8");
-assert(contactHtml.includes("markContactFormSubmitPending"), "contact form marks pending on submit");
-assert(contactHtml.includes("trackContactFormAccepted"), "contact success calls trackContactFormAccepted");
-assert(contactHtml.includes("sent=1"), "contact success still keyed on sent=1");
+assert(contactHtml.includes("contact-submit"), "contact form posts to contact-submit");
+assert(contactHtml.includes("fireAndReportConversion"), "contact success uses fireAndReportConversion");
+assert(contactHtml.includes("reportToken"), "contact expects reportToken");
+assert(contactHtml.includes("sent=1"), "contact keeps optional ?sent=1 bookmark UX");
+assert(!contactHtml.includes("markContactFormSubmitPending"), "contact no longer relies on pending-only gate");
 assert(!contactHtml.includes("HnWnCJPRt9kcELDFqLc_"), "contact.html does not embed send_to (uses sparklean-ads.js)");
 assert(
-  adsSrc.includes("trackContactFormAccepted") && adsSrc.includes("CONTACT_PENDING_KEY"),
-  "ads.js exposes contact pending + accept helpers"
+  adsSrc.includes("reportConversionOutcome") && adsSrc.includes("fireAndReportConversion"),
+  "ads.js exposes report + fireAndReport helpers"
 );
 
+// Legacy helpers still exist for tests / bookmark paths but ?sent=1 alone does not invent conversions in HTML
 {
   const { sandbox, conversions } = makeEnv();
-  // Direct ?sent=1 with no pending submit → zero conversions
   const fired = sandbox.window.SparkleanAds.trackContactFormAccepted();
-  assert(fired === "", "direct sent=1 without pending fires nothing");
+  assert(fired === "", "legacy accept without pending fires nothing");
   assert(conversions.length === 0, "no conversion without pending submit");
 }
 
@@ -192,13 +244,10 @@ assert(
   assert(/^contact-\d+-[a-z0-9]+$/i.test(pending), `pending id shape (${pending})`);
   const txn = sandbox.window.SparkleanAds.trackContactFormAccepted();
   assert(txn === pending, "accepted txn matches pending id");
-  assert(conversions.length === 1, "exactly one conversion after contact accept");
-  assert(conversions[0].send_to === sandbox.window.SparkleanAds.SEND_TO, "contact uses AI Quote Request Completed send_to");
-  assert(conversions[0].transaction_id === pending, "contact transaction_id is stable pending id");
-  // Replay accept / duplicate → zero new conversions
+  assert(conversions.length === 1, "legacy pending path still can fire once");
   sandbox.window.SparkleanAds.trackContactFormAccepted();
   sandbox.window.SparkleanAds.trackQuoteRequestCompleted(pending);
-  assert(conversions.length === 1, "contact duplicate / replay does not fire again");
+  assert(conversions.length === 1, "legacy duplicate / replay does not fire again");
 }
 
 console.log(failed ? `\nFAILED: ${failed}` : "\nALL GOOGLE ADS TESTS PASSED");

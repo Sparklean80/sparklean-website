@@ -53,9 +53,13 @@ assert(eventsSrc.includes("paid_quote_started"), "events allowlist: started");
 assert(eventsSrc.includes("paid_quote_submitted"), "events allowlist: submitted");
 assert(eventsSrc.includes("phone_click"), "events allowlist: phone_click");
 assert(
-  /trackQuoteRequestCompleted/.test(intakeSrc) && /res\.j && res\.j\.leadId/.test(intakeSrc),
-  "conversion still gated on leadId"
+  /fireAndReportConversion/.test(intakeSrc) && /res\.j && res\.j\.leadId/.test(intakeSrc),
+  "conversion gated on leadId via fireAndReportConversion"
 );
+assert(intakeSrc.includes("reportToken"), "intake uses reportToken from quote-submit");
+assert(contactHtml.includes("contact-submit"), "contact posts to contact-submit function");
+assert(contactHtml.includes("fireAndReportConversion"), "contact uses fireAndReportConversion");
+assert(adsSrc.includes("BROWSER_SENT") || adsSrc.includes("reportConversionOutcome"), "ads helper reports outcomes");
 
 function makeWindow(url, ua, opts) {
   const width = (opts && opts.width) || 1280;
@@ -90,11 +94,22 @@ function makeWindow(url, ua, opts) {
   };
   window.conversions = conversions;
   window.analytics = analytics;
-  window.fetch = async () => ({
-    ok: true,
-    status: 200,
-    text: async () => JSON.stringify({ ok: true, leadId: "lead-paid-test-1" }),
-  });
+  window.fetch = async (url) => {
+    const u = String(url || "");
+    if (u.includes("conversion-report")) {
+      return {
+        ok: true,
+        status: 200,
+        text: async () => JSON.stringify({ ok: true, trackingStatus: "BROWSER_SENT" }),
+      };
+    }
+    return {
+      ok: true,
+      status: 200,
+      text: async () =>
+        JSON.stringify({ ok: true, leadId: "lead-paid-test-1", reportToken: "tok-paid-test-1" }),
+    };
+  };
   window.eval(eventsSrc);
   window.eval(adsSrc);
   window.eval(flowsSrc);
@@ -314,7 +329,7 @@ async function runPaidSubmitScenario(label, ua, width) {
   assert(!!opt, `${label}: residential option`);
   opt.click();
   w.document.querySelector("[data-intake-next]").click();
-  await new Promise((r) => setTimeout(r, 50));
+  await new Promise((r) => setTimeout(r, 120));
 
   const stDone = w.SparkleanQuoteIntake._test.getState();
   assert(stDone.leadDelivered === true, `${label}: lead delivered after Brevo-success mock`);
@@ -334,7 +349,13 @@ async function runPaidSubmitScenario(label, ua, width) {
   // Failure gating
   w.conversions.length = 0;
   w.SparkleanQuoteIntake.close();
-  w.fetch = async () => ({ ok: false, status: 500, text: async () => JSON.stringify({ error: "fail" }) });
+  w.fetch = async (url) => {
+    const u = String(url || "");
+    if (u.includes("conversion-report")) {
+      return { ok: true, status: 200, text: async () => JSON.stringify({ ok: true }) };
+    }
+    return { ok: false, status: 500, text: async () => JSON.stringify({ error: "fail" }) };
+  };
   w.SparkleanQuoteIntake.open({ paid: true, sourceUrl: w.location.href });
   await new Promise((r) => setTimeout(r, 10));
   const failVals = ["Fail User", "2395550199", "fail@example.com", "33901"];

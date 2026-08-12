@@ -222,6 +222,31 @@
   display: block;
 }
 
+.cp-form-error {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: rgba(249, 247, 243, 0.88);
+  border: 1px solid rgba(184, 164, 122, 0.35);
+  background: rgba(184, 164, 122, 0.08);
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+
+.cp-form-error[hidden] {
+  display: none;
+}
+
+.sparklean-tracking-delayed {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: rgba(249, 247, 243, 0.62);
+  margin: 12px 0 20px;
+  text-align: center;
+}
+
 .cp-hp {
   position: absolute;
   left: -9999px;

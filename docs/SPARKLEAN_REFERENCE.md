@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-05** (blog → Knowledge Center wording; claim scrub on all 12 posts)
+Last updated: **2026-08-12** (lead/conversion reconciliation boundary on review branch; baseline pin `76633d0`)
 
 ---
 
@@ -390,7 +390,9 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **Residential LP positioning (2026-08-10, copy-only on `/residential-cleaning`):** Professional accountability — not “expensive luxury.” Protected lines: “Local care. Large-company discipline.” / “House cleaning you don’t have to manage.” / “Anyone can start a cleaning company. Sparklean built a system to deliver cleaning consistently.” Hero CTA: Build My Cleaning Plan + Call. Trust strip leads with visible **4.9★ Google** (live reviews link; no invented review count). Homepage + city pages adapt later after paid LP performance.
 
-**Contact Netlify form → Ads (2026-08-12):** Successful `/contact?sent=1` now fires the same conversion as AI Quote Request Completed (`AW-17027441328/HnWnCJPRt9kcELDFqLc_`) via `SparkleanAds.trackContactFormAccepted`, only when a real submit set a pending `contact-*` transaction id (blocks direct-URL / refresh duplicates). Consent still required by the form checkbox. `phone_click` remains analytics-only — not “Calls from ads.”
+**Contact form → Ads (2026-08-12 baseline `76633d0`):** Browser `?sent=1` + pending `contact-*` only — no Blobs, no `BROWSER_SENT` vs Google confirmation.
+
+**Lead / conversion reconciliation boundary (2026-08-12, review `review/lead-conversion-boundary`):** Netlify Blobs store `sparklean-leads` with truthful states `PENDING` | `BROWSER_SENT` | `OFFLINE_QUEUED` | `OFFLINE_IMPORTED` (stub) | `FAILED` — **never** a Google-confirmed attribution label. `contact-submit` and `quote-submit` create PENDING leads and return `{ leadId, reportToken }` (token TTL 24h). Client `fireAndReportConversion` reports `BROWSER_SENT` or `OFFLINE_QUEUED`/`FAILED`. Scheduled `leads-reconcile` every 15 minutes (`netlify.toml` + function `config.schedule`); HTTP reconcile requires Netlify schedule event or `SPARKLEAN_RECONCILE_KEY`. Conversion-gap alerts use allowlisted retry fields only (no PII / `reportToken` / credentials). Retention: ops may delete Blob keys after import/window; see evidence work note. Tests: `npm run test:funnel` (includes adversarial suite). Out of scope: Ads Offline Import API, campaign changes, merge-to-main acceptance.
 
 **Paid Ads intake (2026-08-10, review branch):** `js/quote-intake.js` paid mode activates on `?quote=1`, `gclid`/`gbraid`/`wbraid`, paid `utm_medium` (cpc/ppc/paid/…), or stored click ids. **Do not** auto-open the full-screen intake for `gclid`/paid UTM — after 10s or 35% scroll, show a small non-blocking prompt (“Ready for a personalized cleaning plan?”). `?quote=1` may still open immediately. Hero/nav/sticky quote CTAs open the five-field paid flow immediately. Analytics (not Ads conversions): `paid_quote_prompt_shown`, `paid_quote_started`, `paid_quote_submitted`, `phone_click`. Google Ads conversion still fires only after Brevo success + `leadId`. Confirmation includes Call Sparklean (no invented SLA). Tests: `npm run test:funnel`. Preferred paid LP: `/residential-cleaning?gclid=…` (soft prompt) or `?quote=1` (force open).
 

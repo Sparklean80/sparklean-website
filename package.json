@@ -10,7 +10,9 @@
     "testimonials:sync": "node scripts/sync-testimonials.mjs",
     "test:ads": "node scripts/test-google-ads-conversion.mjs",
     "test:paid-intake": "node scripts/test-paid-intake-funnel.mjs",
-    "test:funnel": "npm run test:ads && npm run test:paid-intake",
+    "test:leads-store": "node scripts/test-leads-store.mjs",
+    "test:conversion-adversarial": "node scripts/test-conversion-boundary-adversarial.mjs",
+    "test:funnel": "npm run test:ads && npm run test:paid-intake && npm run test:leads-store && npm run test:conversion-adversarial",
     "test:schema": "node scripts/test-entity-schema.mjs",
     "test:testimonials": "node scripts/test-testimonials.mjs",
     "test:referral": "node scripts/test-referral-recurring.mjs",
@@ -18,5 +20,8 @@
   },
   "devDependencies": {
     "jsdom": "^29.1.1"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^10.7.12"
   }
 }

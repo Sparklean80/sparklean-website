@@ -25,6 +25,7 @@
   /** Paid Ads / quote=1 short path — submit after contact + service. */
   var paidMode = false;
   var leadDelivered = false;
+  var trackingDelayed = false;
   var INTAKE_CHROME_DEFAULT = {
     eyebrow: "Service request",
     title: "A few brief questions",
@@ -299,6 +300,14 @@
         '<p class="sq-intake__done">' +
         esc(doneText) +
         "</p>" +
+        (trackingDelayed
+          ? '<p class="sq-intake__done sparklean-tracking-delayed" role="status">' +
+            esc(
+              (window.SparkleanAds && window.SparkleanAds.TRACKING_DELAYED_MSG) ||
+                "Your request was received. Conversion tracking was delayed on this device — our team has been notified. Your lead is preserved."
+            ) +
+            "</p>"
+          : "") +
         '<p class="sq-intake__done-call">' +
         '<a class="sq-intake__done-call-link" href="tel:+12398883588" data-sparklean-event="phone_click">' +
         "Call Sparklean · (239) 888-3588</a></p>";
@@ -590,43 +599,66 @@
         if (!res.ok) {
           throw new Error("INTAKE_FAIL");
         }
-        // Google Ads conversion: only after server confirms persistence + returns leadId.
+        // Google Ads: after server leadId + reportToken; report BROWSER_SENT or OFFLINE_QUEUED.
         var leadId = res.j && res.j.leadId ? String(res.j.leadId) : "";
-        if (
-          leadId &&
-          window.SparkleanAds &&
-          typeof window.SparkleanAds.trackQuoteRequestCompleted === "function"
-        ) {
+        var reportToken = res.j && res.j.reportToken ? String(res.j.reportToken) : "";
+        leadDelivered = true;
+        trackingDelayed = false;
+
+        function finishSuccessUi() {
+          if (window.SparkleanEvents && typeof window.SparkleanEvents.track === "function") {
+            if (intakePreset === "referral") {
+              window.SparkleanEvents.track("referral_submitted", {
+                referral_type: String(submitAnswers.referralType || "").slice(0, 40),
+                intake_preset: "referral",
+              });
+            } else if (paidMode) {
+              window.SparkleanEvents.track("paid_quote_submitted", {
+                intake_preset: "paidMinimum",
+                service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
+              });
+            } else if (
+              intakePreset === "recurringResidential" ||
+              submitAnswers.frequency === "weekly" ||
+              submitAnswers.frequency === "biweekly" ||
+              submitAnswers.frequency === "monthly"
+            ) {
+              window.SparkleanEvents.track("recurring_quote_submitted", {
+                intake_preset: intakePreset || "standard",
+                cadence: String(submitAnswers.frequency || "").slice(0, 40),
+                service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
+              });
+            }
+          }
+          stepIndex = steps.length;
+          submitting = false;
+          render();
+        }
+
+        if (leadId && reportToken && window.SparkleanAds && typeof window.SparkleanAds.fireAndReportConversion === "function") {
+          return window.SparkleanAds.fireAndReportConversion({ leadId: leadId, reportToken: reportToken }).then(function (outcome) {
+            if (outcome && !outcome.browserSent) trackingDelayed = true;
+            finishSuccessUi();
+          });
+        }
+        if (leadId && reportToken && window.SparkleanAds && typeof window.SparkleanAds.reportConversionOutcome === "function") {
+          return window.SparkleanAds
+            .reportConversionOutcome({
+              leadId: leadId,
+              reportToken: reportToken,
+              status: "OFFLINE_QUEUED",
+              failureReason: "sparklean_ads_unavailable",
+            })
+            .then(function () {
+              trackingDelayed = true;
+              finishSuccessUi();
+            });
+        }
+        if (leadId && window.SparkleanAds && typeof window.SparkleanAds.trackQuoteRequestCompleted === "function") {
           window.SparkleanAds.trackQuoteRequestCompleted(leadId);
         }
-        leadDelivered = true;
-        if (window.SparkleanEvents && typeof window.SparkleanEvents.track === "function") {
-          if (intakePreset === "referral") {
-            window.SparkleanEvents.track("referral_submitted", {
-              referral_type: String(submitAnswers.referralType || "").slice(0, 40),
-              intake_preset: "referral",
-            });
-          } else if (paidMode) {
-            window.SparkleanEvents.track("paid_quote_submitted", {
-              intake_preset: "paidMinimum",
-              service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
-            });
-          } else if (
-            intakePreset === "recurringResidential" ||
-            submitAnswers.frequency === "weekly" ||
-            submitAnswers.frequency === "biweekly" ||
-            submitAnswers.frequency === "monthly"
-          ) {
-            window.SparkleanEvents.track("recurring_quote_submitted", {
-              intake_preset: intakePreset || "standard",
-              cadence: String(submitAnswers.frequency || "").slice(0, 40),
-              service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
-            });
-          }
-        }
-        stepIndex = steps.length;
-        submitting = false;
-        render();
+        if (leadId && !reportToken) trackingDelayed = true;
+        finishSuccessUi();
       })
       .catch(function () {
         root.querySelector("[data-intake-error]").textContent = INTAKE_FAILURE_MSG;
@@ -749,6 +781,7 @@
     paidMode =
       shouldUsePaidMode(opts) && intakePreset !== "referral" && intakePreset !== "innerCircle";
     leadDelivered = false;
+    trackingDelayed = false;
 
     try {
       if (!sessionStorage.getItem("sparklean_intake_entry")) {

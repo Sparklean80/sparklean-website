@@ -2,7 +2,16 @@
  * Sparklean — POST /.netlify/functions/quote-submit
  * Outbound only: Netlify function → Brevo transactional API → your inbox (e.g. info@sparklean.co).
  * Structured lead body is authoritative; optional OpenAI summary never blocks email.
+ * Creates a PENDING Blob lead before Brevo; client reports BROWSER_SENT / OFFLINE_QUEUED.
  */
+
+import {
+  CONVERSION_ACTION,
+  INTAKE_SOURCE,
+  TRACKING_STATUS,
+  createLead,
+  updateLead,
+} from "./lib/leads-store.mjs";
 
 const MAX_BODY = 120_000;
 
@@ -123,15 +132,6 @@ const FIELD_LABELS = {
   leadSource: "Lead source",
   continueAfterOneTime: "Discuss continuing care",
 };
-
-function newLeadId() {
-  try {
-    if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
-  } catch {
-    /* ignore */
-  }
-  return `lead_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-}
 
 function formatEst(iso) {
   try {
@@ -492,6 +492,7 @@ function buildLuxuryHtmlEmail({
   answers,
   summary,
   detailRows,
+  trackingMeta,
 }) {
   const tel = digitsTel(answers.phone);
   const telHref = tel ? `tel:${tel}` : "tel:2398883588";
@@ -519,6 +520,7 @@ function buildLuxuryHtmlEmail({
 <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#d4bf96;">Private intake brief</p>
 <p style="margin:8px 0 0 0;font-family:Georgia,serif;font-size:20px;color:#f9f7f3;">${escapeHtml(serviceLabel)}</p>
 <p style="margin:10px 0 0 0;font-family:Arial,sans-serif;font-size:12px;color:rgba(249,247,243,.45);">Lead ID <span style="color:#b8a47a;">${escapeHtml(leadId)}</span> · ${escapeHtml(submittedAtEst)}</p>
+${trackingMeta ? `<p style="margin:8px 0 0 0;font-family:Arial,sans-serif;font-size:11px;color:rgba(249,247,243,.4);">${escapeHtml(trackingMeta)}</p>` : ""}
 </td></tr>
 <tr><td style="padding:20px 24px 8px 24px;">${tagsHtml}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">
@@ -562,6 +564,7 @@ function buildPlainTextLead({
   answers,
   summary,
   detailRows,
+  trackingMeta,
 }) {
   const { property, services, scheduling, notes } = partitionIntakeRows(detailRows);
   const schedulingNotes = [...scheduling, ...notes];
@@ -569,6 +572,7 @@ function buildPlainTextLead({
     `SPARKLEAN — ${serviceLabel.toUpperCase()}`,
     `Lead ID: ${leadId}`,
     `Received (EST): ${submittedAtEst}`,
+    trackingMeta || "",
     priorityTags.length ? `Tags: ${priorityTags.join(" · ")}` : "",
     "",
     "CONTACT INFORMATION",
@@ -815,7 +819,7 @@ async function sendBrevoTransactionalEmail({ subject, html, text }) {
   }
 }
 
-export default async (request) => {
+export default async (request, context) => {
   if (request.method === "OPTIONS") return cors204();
   if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
@@ -908,7 +912,34 @@ export default async (request) => {
       ? body.serviceLabel.trim()
       : answers.serviceCategory;
 
-  const leadId = newLeadId();
+  const receiptId =
+    (context && context.requestId) ||
+    request.headers.get("x-nf-request-id") ||
+    `intake_${Date.now()}`;
+
+  let lead;
+  try {
+    lead = await createLead({
+      intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
+      netlifyReceiptId: String(receiptId),
+      campaign,
+      consent: true,
+    });
+  } catch (e) {
+    console.error("[quote-submit] Blob create failed", e);
+    return json({ error: PUBLIC_EMAIL_FAILURE }, 500);
+  }
+
+  const leadId = lead.leadId;
+  const reportToken = lead.reportToken;
+  const trackingMeta = [
+    `trackingStatus: ${TRACKING_STATUS.PENDING}`,
+    `conversionAction: ${CONVERSION_ACTION}`,
+    lead.gclid ? "gclid: present" : "gclid: none",
+    lead.gbraid ? "gbraid: present" : "gbraid: none",
+    lead.wbraid ? "wbraid: present" : "wbraid: none",
+  ].join(" · ");
+
   const submittedAtEst = formatEst(submittedAt);
   const priorityTags = buildPriorityTags(answers);
 
@@ -936,6 +967,7 @@ export default async (request) => {
       intakePreset,
       leadSource: answers.leadSource || null,
       referralType: answers.referralType || null,
+      trackingStatus: TRACKING_STATUS.PENDING,
       // Intentionally omit names/phones/emails/notes from analytics object shape used for future digests.
     },
     reporting: {
@@ -969,6 +1001,7 @@ export default async (request) => {
     answers,
     summary,
     detailRows,
+    trackingMeta,
   });
 
   const text = buildPlainTextLead({
@@ -979,6 +1012,7 @@ export default async (request) => {
     answers,
     summary,
     detailRows,
+    trackingMeta,
   });
 
   try {
@@ -993,10 +1027,23 @@ export default async (request) => {
       brevoStatus: e && e.brevoStatus,
       brevoDetail: e && e.brevoDetail,
     });
+    try {
+      await updateLead(leadId, {
+        trackingStatus: TRACKING_STATUS.FAILED,
+        failureReason: "email_delivery_failed",
+      });
+    } catch (e2) {
+      console.error("[quote-submit] failed to mark FAILED after Brevo error", e2);
+    }
     return json({ error: PUBLIC_EMAIL_FAILURE }, 500);
   }
 
   await notifySlackOptional({ leadId, serviceLabel, summary, priorityTags });
 
-  return json({ ok: true, receivedAt: new Date().toISOString(), leadId });
+  return json({
+    ok: true,
+    receivedAt: new Date().toISOString(),
+    leadId,
+    reportToken,
+  });
 };

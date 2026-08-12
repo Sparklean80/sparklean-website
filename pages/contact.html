@@ -257,6 +257,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
     <div class="cp-grid">
       <div class="cp-form-card">
         <p id="cp-thanks" class="cp-thanks" role="status">Thank you. Your message has been received. A Sparklean team member will follow up shortly.</p>
+        <p id="cp-form-error" class="cp-form-error" role="alert" hidden></p>
         <h2 class="cp-form-title">Write to us <em>directly</em></h2>
         <p class="cp-form-lede">Share a few details below, or use the guided request experience for structured scheduling notes. Either path reaches the same attentive team.</p>
 
@@ -455,24 +456,91 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
     mm.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(){hb.classList.remove("open");mm.classList.remove("open");});});
   }
   var fm=document.getElementById("sparklean-contact-form");
-  // Real submit only (required consent already enforced by the form). Sets a pending
-  // transaction id so ?sent=1 alone / refresh / direct URL cannot invent conversions.
-  if(fm){
-    fm.addEventListener("submit",function(){
-      if(window.SparkleanAds&&typeof window.SparkleanAds.markContactFormSubmitPending==="function"){
-        window.SparkleanAds.markContactFormSubmitPending();
-      }
-    });
-  }
-  if(/[?&]sent=1(?:&|$)/.test(location.search)){
-    var th=document.getElementById("cp-thanks");
-    if(th)th.classList.add("is-visible");
-    if(fm)fm.style.display="none";
-    // Confirmed Netlify acceptance → same Ads conversion as AI Quote Request Completed.
-    if(window.SparkleanAds&&typeof window.SparkleanAds.trackContactFormAccepted==="function"){
-      window.SparkleanAds.trackContactFormAccepted();
+  var th=document.getElementById("cp-thanks");
+  var errEl=document.getElementById("cp-form-error");
+  var PUBLIC_FAIL="We're having trouble submitting your request right now. Please call Sparklean directly at (239) 888-3588.";
+
+  function showThanks(trackingDelayed){
+    if(th){
+      th.classList.add("is-visible");
     }
+    if(fm)fm.style.display="none";
+    if(trackingDelayed&&window.SparkleanAds&&typeof window.SparkleanAds.showTrackingDelayedMessage==="function"){
+      var host=th&&th.parentNode?th.parentNode:th;
+      if(host&&!host.querySelector(".sparklean-tracking-delayed")){
+        window.SparkleanAds.showTrackingDelayedMessage(host);
+      }
+    }
+  }
+
+  // Bookmark / legacy Netlify Forms redirect: thank-you only (no Ads invent from ?sent=1 alone).
+  if(/[?&]sent=1(?:&|$)/.test(location.search)){
+    showThanks(false);
     try{history.replaceState(null,"",location.pathname+location.hash);}catch(e){}
+  }
+
+  if(fm){
+    fm.addEventListener("submit",function(ev){
+      ev.preventDefault();
+      if(errEl){errEl.hidden=true;errEl.textContent="";}
+      if(!fm.checkValidity()){
+        fm.reportValidity();
+        return;
+      }
+      var btn=fm.querySelector(".cp-submit");
+      if(btn){btn.disabled=true;btn.textContent="Sending…";}
+      var fd=new FormData(fm);
+      var payload={};
+      fd.forEach(function(v,k){payload[k]=typeof v==="string"?v:String(v);});
+      if(window.SparkleanAds&&typeof window.SparkleanAds.getStoredAdClickIds==="function"){
+        var ids=window.SparkleanAds.getStoredAdClickIds()||{};
+        payload.campaign=ids;
+        if(ids.gclid)payload.gclid=ids.gclid;
+        if(ids.gbraid)payload.gbraid=ids.gbraid;
+        if(ids.wbraid)payload.wbraid=ids.wbraid;
+      }
+      fetch("/.netlify/functions/contact-submit",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload)
+      })
+        .then(function(r){
+          return r.text().then(function(t){
+            var j={};
+            try{j=t?JSON.parse(t):{};}catch(e){j={};}
+            return{ok:r.ok,j:j};
+          });
+        })
+        .then(function(res){
+          if(!res.ok||!res.j||!res.j.ok||!res.j.leadId||!res.j.reportToken){
+            throw new Error("SUBMIT_FAIL");
+          }
+          var leadId=String(res.j.leadId);
+          var reportToken=String(res.j.reportToken);
+          showThanks(false);
+          if(window.SparkleanAds&&typeof window.SparkleanAds.fireAndReportConversion==="function"){
+            return window.SparkleanAds.fireAndReportConversion({
+              leadId:leadId,
+              reportToken:reportToken
+            }).then(function(outcome){
+              if(outcome&&!outcome.browserSent) showThanks(true);
+            });
+          }
+          if(window.SparkleanAds&&typeof window.SparkleanAds.reportConversionOutcome==="function"){
+            return window.SparkleanAds.reportConversionOutcome({
+              leadId:leadId,
+              reportToken:reportToken,
+              status:"OFFLINE_QUEUED",
+              failureReason:"sparklean_ads_unavailable"
+            }).then(function(){showThanks(true);});
+          }
+          showThanks(true);
+        })
+        .catch(function(){
+          if(errEl){errEl.hidden=false;errEl.textContent=PUBLIC_FAIL;}
+          if(btn){btn.disabled=false;btn.textContent="Send message";}
+        });
+    });
   }
 })();
 </script>
