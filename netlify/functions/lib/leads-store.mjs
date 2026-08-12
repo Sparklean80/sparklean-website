@@ -1,9 +1,7 @@
 /**
  * Durable lead / conversion tracking store (Netlify Blobs: sparklean-leads).
- * States are truthful browser/server outcomes — never "Google confirmed".
- *
- * Security: only SHA-256(reportToken) is persisted; bearer returned once at create.
- * Concurrency: conditional writes (Blob onlyIfMatch / in-memory version CAS).
+ * Conditional writes only: onlyIfNew (create) / onlyIfMatch (opaque ETag).
+ * Never falls back to unconditional setJSON after a failed conditional write.
  */
 
 import { getStore } from "@netlify/blobs";
@@ -20,6 +18,33 @@ export const TRACKING_STATUS = Object.freeze({
   OFFLINE_IMPORTED: "OFFLINE_IMPORTED",
   FAILED: "FAILED",
 });
+
+/** Monotonic allowed transitions. Terminal-ish states cannot regress. */
+export const TRACKING_TRANSITIONS = Object.freeze({
+  [TRACKING_STATUS.PENDING]: new Set([
+    TRACKING_STATUS.BROWSER_SENT,
+    TRACKING_STATUS.OFFLINE_QUEUED,
+    TRACKING_STATUS.FAILED,
+  ]),
+  [TRACKING_STATUS.OFFLINE_QUEUED]: new Set([
+    TRACKING_STATUS.BROWSER_SENT,
+    TRACKING_STATUS.OFFLINE_IMPORTED,
+    TRACKING_STATUS.FAILED,
+  ]),
+  [TRACKING_STATUS.FAILED]: new Set([
+    TRACKING_STATUS.BROWSER_SENT,
+    TRACKING_STATUS.OFFLINE_QUEUED,
+    TRACKING_STATUS.OFFLINE_IMPORTED,
+  ]),
+  [TRACKING_STATUS.BROWSER_SENT]: new Set([TRACKING_STATUS.OFFLINE_IMPORTED]),
+  [TRACKING_STATUS.OFFLINE_IMPORTED]: new Set([]),
+});
+
+export function canTransitionTrackingStatus(from, to) {
+  if (from === to) return true;
+  const allowed = TRACKING_TRANSITIONS[from];
+  return Boolean(allowed && allowed.has(to));
+}
 
 export const INTAKE_SOURCE = Object.freeze({
   CONTACT_FORM: "CONTACT_FORM",
@@ -53,8 +78,6 @@ export class CasConflictError extends Error {
 
 /** @type {Map<string, Map<string, { data: object, etag: string }>>} */
 const memoryStores = new Map();
-
-/** Optional injected store for BlobsServer concurrency tests. */
 let injectedStore = null;
 
 export function useMemory() {
@@ -67,6 +90,58 @@ export function resetMemoryStoreForTests() {
 
 export function setInjectedBlobStoreForTests(store) {
   injectedStore = store || null;
+}
+
+function contentFingerprint(data) {
+  return JSON.stringify(data);
+}
+
+/**
+ * BlobsServer often omits etag on getWithMetadata; cache WriteResult etags so
+ * production-identical onlyIfMatch paths work in tests.
+ * Only attach a cached etag when the read body matches the last successful write
+ * (avoids pairing a fresh etag with a stale body → lost updates).
+ */
+export function wrapBlobStoreWithEtagCache(store) {
+  /** @type {Map<string, { etag: string, fingerprint: string }>} */
+  const meta = new Map();
+  return {
+    async get(key, opts) {
+      return store.get(key, opts);
+    },
+    async getWithMetadata(key, opts) {
+      for (let i = 0; i < 12; i++) {
+        const r = await store.getWithMetadata(key, opts);
+        if (!r || r.data == null) return r;
+        if (r.etag) {
+          meta.set(key, { etag: r.etag, fingerprint: contentFingerprint(r.data) });
+          return r;
+        }
+        const cached = meta.get(key);
+        const fp = contentFingerprint(r.data);
+        if (cached && cached.fingerprint === fp) {
+          return { ...r, etag: cached.etag };
+        }
+        // Stale body vs newer write etag (or unknown body) — wait for read to catch up.
+        await new Promise((res) => setTimeout(res, 5 + i * 5));
+      }
+      throw new Error(`BLOB_ETAG_MISSING:${key}`);
+    },
+    async setJSON(key, data, opts) {
+      const r = await store.setJSON(key, data, opts);
+      if (r && r.modified && r.etag) {
+        meta.set(key, { etag: r.etag, fingerprint: contentFingerprint(data) });
+      }
+      return r;
+    },
+    async delete(key) {
+      meta.delete(key);
+      return store.delete(key);
+    },
+    list(opts) {
+      return store.list(opts);
+    },
+  };
 }
 
 function memoryMap() {
@@ -84,28 +159,34 @@ function clone(v) {
   return JSON.parse(JSON.stringify(v));
 }
 
-function newEtag() {
-  return `"${randomBytes(8).toString("hex")}"`;
+function newOpaqueEtag() {
+  return `"${randomBytes(16).toString("hex")}"`;
 }
 
 /**
- * @returns {Promise<{ data: object, etag: string, version: number } | null>}
+ * Read key with opaque ETag. Memory and Blob paths return the same shape.
+ * @returns {Promise<{ data: object, etag: string } | null>}
  */
-export async function getLeadRecord(leadId) {
-  if (!leadId) return null;
-  const key = String(leadId);
+export async function getRecord(key) {
+  const k = String(key);
   if (useMemory()) {
-    const row = memoryMap().get(key);
-    return row
-      ? { data: clone(row.data), etag: row.etag, version: row.data.version || 1 }
-      : null;
+    const row = memoryMap().get(k);
+    return row ? { data: clone(row.data), etag: row.etag } : null;
   }
   const store = openStore();
-  const result = await store.getWithMetadata(key, { type: "json" });
+  const result = await store.getWithMetadata(k, { type: "json" });
   if (!result || result.data == null) return null;
-  const version = Number(result.data.version) || 1;
-  // Application CAS key is always version-based (HTTP etag optional / unreliable on BlobsServer).
-  return { data: result.data, etag: `v${version}`, httpEtag: result.etag || null, version };
+  if (!result.etag) {
+    throw new Error(`BLOB_ETAG_MISSING:${k}`);
+  }
+  return { data: result.data, etag: result.etag };
+}
+
+export async function getLeadRecord(leadId) {
+  if (!leadId) return null;
+  const rec = await getRecord(String(leadId));
+  if (!rec) return null;
+  return { ...rec, version: Number(rec.data.version) || 1 };
 }
 
 export async function getLead(leadId) {
@@ -114,67 +195,48 @@ export async function getLead(leadId) {
 }
 
 /**
- * Conditional write. expectedEtag null → create-only.
- * Uses Blob onlyIfMatch when etag is opaque HTTP etag; otherwise version CAS.
+ * Conditional write using only Netlify semantics:
+ * - expectedEtag == null → onlyIfNew
+ * - else → onlyIfMatch(opaqueEtag)
+ * Never unconditional overwrite after failure.
+ * @returns {Promise<string>} new opaque etag
  */
-export async function writeLeadCas(lead, expectedEtag) {
-  const key = lead.leadId;
-  const payload = clone(lead);
+export async function writeCas(key, data, expectedEtag) {
+  const k = String(key);
+  const payload = clone(data);
   delete payload.reportToken;
 
   if (useMemory()) {
     const map = memoryMap();
-    const cur = map.get(key);
+    const cur = map.get(k);
     if (expectedEtag == null) {
       if (cur) throw new CasConflictError();
-      const etag = newEtag();
-      map.set(key, { data: payload, etag });
+      const etag = newOpaqueEtag();
+      map.set(k, { data: payload, etag });
       return etag;
     }
     if (!cur || cur.etag !== expectedEtag) throw new CasConflictError();
-    const etag = newEtag();
-    map.set(key, { data: payload, etag });
+    const etag = newOpaqueEtag();
+    map.set(k, { data: payload, etag });
     return etag;
   }
 
   const store = openStore();
-  const current = await store.get(key, { type: "json" });
-
   if (expectedEtag == null) {
-    if (current) throw new CasConflictError();
-    await store.setJSON(key, payload);
-    return `v${payload.version || 1}`;
+    const res = await store.setJSON(k, payload, { onlyIfNew: true });
+    if (!res || res.modified === false || !res.etag) throw new CasConflictError();
+    return res.etag;
   }
-
-  if (!current) throw new CasConflictError();
-
-  // Prefer version-stamp CAS (durable across BlobsServer + production).
-  const expectedVersion = Number(String(expectedEtag).replace(/^v/, ""));
-  if (!Number.isFinite(expectedVersion) || current.version !== expectedVersion) {
-    throw new CasConflictError();
-  }
-  const again = await store.get(key, { type: "json" });
-  if (!again || again.version !== expectedVersion) throw new CasConflictError();
-
-  // Best-effort HTTP etag conditional write when available.
-  if (typeof expectedEtag === "string" && expectedEtag.startsWith('"')) {
-    try {
-      const res = await store.setJSON(key, payload, { onlyIfMatch: expectedEtag });
-      if (res && res.modified === false) throw new CasConflictError();
-      return (res && res.etag) || `v${payload.version || 1}`;
-    } catch (e) {
-      if (e instanceof CasConflictError) throw e;
-      // fall through to plain set after version check
-    }
-  }
-  await store.setJSON(key, payload);
-  return `v${payload.version || 1}`;
+  const res = await store.setJSON(k, payload, { onlyIfMatch: expectedEtag });
+  if (!res || res.modified === false || !res.etag) throw new CasConflictError();
+  return res.etag;
 }
 
-/**
- * Serialized mutation boundary with CAS retries.
- */
-export async function mutateLeadCas(leadId, mutator, { maxAttempts = 12 } = {}) {
+export async function writeLeadCas(lead, expectedEtag) {
+  return writeCas(lead.leadId, lead, expectedEtag);
+}
+
+export async function mutateLeadCas(leadId, mutator, { maxAttempts = 24 } = {}) {
   for (let i = 0; i < maxAttempts; i++) {
     const rec = await getLeadRecord(leadId);
     if (!rec) return null;
@@ -184,13 +246,31 @@ export async function mutateLeadCas(leadId, mutator, { maxAttempts = 12 } = {}) 
     next.updatedAt = new Date().toISOString();
     next.version = (rec.data.version || 1) + 1;
     delete next.reportToken;
-    const expected = rec.etag || `v${rec.version || rec.data.version || 1}`;
+    if (
+      next.trackingStatus &&
+      next.trackingStatus !== rec.data.trackingStatus &&
+      !canTransitionTrackingStatus(rec.data.trackingStatus, next.trackingStatus)
+    ) {
+      return rec.data;
+    }
     try {
-      await writeLeadCas(next, expected);
-      return next;
+      await writeLeadCas(next, rec.etag);
+      // BlobsServer may report onlyIfMatch success for two writers; confirm durability.
+      let verify;
+      try {
+        verify = await getLead(leadId);
+      } catch {
+        await new Promise((r) => setTimeout(r, 5 + Math.floor(Math.random() * 25)));
+        continue;
+      }
+      if (!verify || contentFingerprint(verify) !== contentFingerprint(next)) {
+        await new Promise((r) => setTimeout(r, 5 + Math.floor(Math.random() * 25)));
+        continue;
+      }
+      return verify;
     } catch (e) {
       if (e && e.code === "CAS_CONFLICT" && i < maxAttempts - 1) {
-        await new Promise((r) => setTimeout(r, 5 + Math.floor(Math.random() * 15)));
+        await new Promise((r) => setTimeout(r, 5 + Math.floor(Math.random() * 25)));
         continue;
       }
       throw e;
@@ -210,6 +290,10 @@ export function newLeadId() {
 
 export function newReportToken() {
   return randomBytes(24).toString("base64url");
+}
+
+export function newAttemptId() {
+  return `att_${randomBytes(10).toString("hex")}`;
 }
 
 export function verifyReportToken(lead, bearer) {
@@ -284,9 +368,125 @@ function pickClickIds(campaign, consent) {
   };
 }
 
+function idemKeyFor(idemKey) {
+  return IDEMPOTENCY_PREFIX + hashToken(idemKey).slice(0, 40);
+}
+
+/**
+ * Atomic idempotency ownership via onlyIfNew before lead create / Brevo.
+ * Re-read + onlyIfMatch seal so spurious BlobsServer onlyIfNew success cannot
+ * mint two owners. Losers hydrate the winner leadId.
+ * @returns {Promise<{ won: boolean, leadId: string }>}
+ */
+export async function claimIdempotency(idemKey, leadId) {
+  if (!idemKey || !leadId) throw new Error("IDEMPOTENCY_ARGS");
+  const key = idemKeyFor(idemKey);
+  const createdAt = new Date().toISOString();
+  const payload = {
+    leadId,
+    createdAt,
+    status: "claiming",
+  };
+  try {
+    await writeCas(key, payload, null);
+  } catch (e) {
+    if (!(e && e.code === "CAS_CONFLICT")) throw e;
+    return hydrateIdempotencyLoser(key);
+  }
+
+  const confirmed = await waitForRecord(key, { timeoutMs: 4000 });
+  if (!confirmed || !confirmed.data.leadId) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
+  if (confirmed.data.leadId !== leadId) {
+    return { won: false, leadId: confirmed.data.leadId };
+  }
+
+  try {
+    await writeCas(
+      key,
+      { leadId, createdAt: confirmed.data.createdAt || createdAt, status: "owned" },
+      confirmed.etag
+    );
+  } catch (e) {
+    if (!(e && e.code === "CAS_CONFLICT")) throw e;
+    return hydrateIdempotencyLoser(key);
+  }
+
+  const sealed = await waitForRecord(key, { timeoutMs: 4000 });
+  if (!sealed || !sealed.data.leadId) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
+  if (sealed.data.leadId !== leadId) {
+    return { won: false, leadId: sealed.data.leadId };
+  }
+  return { won: true, leadId };
+}
+
+async function hydrateIdempotencyLoser(key) {
+  const existing = await waitForRecord(key, { timeoutMs: 4000 });
+  if (!existing || !existing.data.leadId) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
+  return { won: false, leadId: existing.data.leadId };
+}
+
+async function waitForRecord(key, { timeoutMs = 4000, intervalMs = 20 } = {}) {
+  const start = Date.now();
+  while (Date.now() - start < timeoutMs) {
+    try {
+      const rec = await getRecord(key);
+      if (rec && rec.data) return rec;
+    } catch {
+      /* etag catch-up */
+    }
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+  return null;
+}
+
+export async function getIdempotentLeadId(idemKey) {
+  if (!idemKey) return null;
+  const rec = await getRecord(idemKeyFor(idemKey));
+  return rec && rec.data && rec.data.leadId ? rec.data.leadId : null;
+}
+
+/** @deprecated use claimIdempotency — kept for tests that only read */
+export async function putIdempotentLeadId(idemKey, leadId) {
+  const claim = await claimIdempotency(idemKey, leadId);
+  return claim;
+}
+
+async function waitForLead(leadId, { timeoutMs = 8000, intervalMs = 25 } = {}) {
+  const start = Date.now();
+  while (Date.now() - start < timeoutMs) {
+    const lead = await getLead(leadId);
+    if (lead) return lead;
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+  return null;
+}
+
+/**
+ * Create lead with optional atomic idempotency claim first.
+ * Losers hydrate the winner lead and must not send Brevo.
+ * @returns {Promise<{ lead: object, reportToken: string|null, idempotentReplay: boolean }>}
+ */
+export async function createLeadAtomically(input) {
+  const leadId = input.leadId || newLeadId();
+  const idemKey = input.idempotencyKey || null;
+
+  if (idemKey) {
+    const claim = await claimIdempotency(idemKey, leadId);
+    if (!claim.won) {
+      const lead = await waitForLead(claim.leadId);
+      if (!lead) {
+        return { lead: { leadId: claim.leadId }, reportToken: null, idempotentReplay: true, pendingHydration: true };
+      }
+      return { lead, reportToken: null, idempotentReplay: true };
+    }
+  }
+
+  const created = await createLead({ ...input, leadId });
+  return { ...created, idempotentReplay: false };
+}
+
 /**
  * @returns {Promise<{ lead: object, reportToken: string }>}
- * reportToken is returned once — never stored or logged by callers.
  */
 export async function createLead(input) {
   const nowMs = Date.now();
@@ -311,6 +511,7 @@ export async function createLead(input) {
     trackingStatus: TRACKING_STATUS.PENDING,
     attemptHistory: [
       {
+        attemptId: newAttemptId(),
         at: now,
         status: TRACKING_STATUS.PENDING,
         note: "lead_accepted",
@@ -326,10 +527,12 @@ export async function createLead(input) {
 
 export async function updateLead(leadId, patch) {
   return mutateLeadCas(leadId, (lead) => {
-    const next = { ...lead, ...patch, leadId: lead.leadId };
+    const nextStatus = patch.trackingStatus !== undefined ? patch.trackingStatus : lead.trackingStatus;
+    if (nextStatus !== lead.trackingStatus && !canTransitionTrackingStatus(lead.trackingStatus, nextStatus)) {
+      return null;
+    }
+    const next = { ...lead, ...patch, leadId: lead.leadId, trackingStatus: nextStatus };
     delete next.reportToken;
-    if (patch.reportTokenHash !== undefined) next.reportTokenHash = patch.reportTokenHash;
-    next.version = (lead.version || 1) + 1;
     return next;
   });
 }
@@ -345,9 +548,13 @@ export async function deleteLead(leadId) {
 
 export async function appendAttempt(leadId, attempt) {
   return mutateLeadCas(leadId, (lead) => {
-    const entry = { at: new Date().toISOString(), ...attempt };
+    const entry = {
+      attemptId: attempt.attemptId || newAttemptId(),
+      at: new Date().toISOString(),
+      ...attempt,
+    };
     const attemptHistory = Array.isArray(lead.attemptHistory) ? [...lead.attemptHistory, entry] : [entry];
-    return { ...lead, attemptHistory, version: (lead.version || 1) + 1 };
+    return { ...lead, attemptHistory };
   });
 }
 
@@ -367,26 +574,39 @@ export async function applyConversionReport({ leadId, reportToken, status, failu
     return { ok: false, error: "Report token expired", status: 401 };
   }
 
-  if (lead.trackingStatus === TRACKING_STATUS.BROWSER_SENT && status !== TRACKING_STATUS.FAILED) {
-    const fresh = await appendAttempt(leadId, { status, note: "ignored_duplicate_or_late_report" });
+  if (!canTransitionTrackingStatus(lead.trackingStatus, status)) {
+    const fresh = await appendAttempt(leadId, {
+      attemptId: newAttemptId(),
+      status,
+      note: "ignored_illegal_transition",
+    });
+    return { ok: true, lead: fresh, duplicate: true, illegalTransition: true };
+  }
+
+  if (lead.trackingStatus === status && lead.trackingStatus === TRACKING_STATUS.BROWSER_SENT) {
+    const fresh = await appendAttempt(leadId, {
+      attemptId: newAttemptId(),
+      status,
+      note: "ignored_duplicate_or_late_report",
+    });
     return { ok: true, lead: fresh, duplicate: true };
   }
 
   const updated = await mutateLeadCas(leadId, (cur) => {
-    if (cur.trackingStatus === TRACKING_STATUS.BROWSER_SENT && status !== TRACKING_STATUS.FAILED) {
+    if (!canTransitionTrackingStatus(cur.trackingStatus, status)) {
       return null;
     }
     const patch = {
       ...cur,
       trackingStatus: status,
       failureReason: failureReason ? String(failureReason).slice(0, 500) : null,
-      version: (cur.version || 1) + 1,
     };
     if (status === TRACKING_STATUS.OFFLINE_QUEUED || status === TRACKING_STATUS.FAILED) {
       patch.retryPayload = buildRetryPayload({ ...patch, updatedAt: new Date().toISOString() });
     }
     if (status === TRACKING_STATUS.BROWSER_SENT) patch.failureReason = null;
     const entry = {
+      attemptId: newAttemptId(),
       at: new Date().toISOString(),
       status,
       note: "client_report",
@@ -401,7 +621,9 @@ export async function applyConversionReport({ leadId, reportToken, status, failu
 
 async function listAllLeads() {
   if (useMemory()) {
-    return [...memoryMap().values()].map((row) => clone(row.data));
+    return [...memoryMap().entries()]
+      .filter(([k]) => !String(k).startsWith(IDEMPOTENCY_PREFIX))
+      .map(([, row]) => clone(row.data));
   }
   const store = openStore();
   const out = [];
@@ -430,20 +652,17 @@ export async function listUnresolvedGoogleAttributed({ maxAgeMs = 15 * 60 * 1000
 
 export async function markOfflineQueued(leadId, failureReason) {
   return mutateLeadCas(leadId, (lead) => {
-    if (
-      lead.trackingStatus === TRACKING_STATUS.BROWSER_SENT ||
-      lead.trackingStatus === TRACKING_STATUS.OFFLINE_IMPORTED
-    ) {
+    if (!canTransitionTrackingStatus(lead.trackingStatus, TRACKING_STATUS.OFFLINE_QUEUED)) {
       return null;
     }
     const patch = {
       ...lead,
       trackingStatus: TRACKING_STATUS.OFFLINE_QUEUED,
       failureReason: failureReason || "reconcile_pending_timeout",
-      version: (lead.version || 1) + 1,
     };
     patch.retryPayload = buildRetryPayload({ ...patch, updatedAt: new Date().toISOString() });
     const entry = {
+      attemptId: newAttemptId(),
       at: new Date().toISOString(),
       status: TRACKING_STATUS.OFFLINE_QUEUED,
       note: "reconcile",
@@ -452,35 +671,4 @@ export async function markOfflineQueued(leadId, failureReason) {
     patch.attemptHistory = Array.isArray(lead.attemptHistory) ? [...lead.attemptHistory, entry] : [entry];
     return patch;
   });
-}
-
-/** Idempotency map: key → { leadId, createdAt } with CAS create. */
-export async function getIdempotentLeadId(idemKey) {
-  if (!idemKey) return null;
-  const key = IDEMPOTENCY_PREFIX + hashToken(idemKey).slice(0, 40);
-  if (useMemory()) {
-    const row = memoryMap().get(key);
-    return row && row.data && row.data.leadId ? row.data.leadId : null;
-  }
-  const store = openStore();
-  const data = await store.get(key, { type: "json" });
-  return data && data.leadId ? data.leadId : null;
-}
-
-export async function putIdempotentLeadId(idemKey, leadId) {
-  if (!idemKey || !leadId) return;
-  const key = IDEMPOTENCY_PREFIX + hashToken(idemKey).slice(0, 40);
-  const payload = { leadId, createdAt: new Date().toISOString() };
-  if (useMemory()) {
-    const map = memoryMap();
-    if (map.has(key)) return;
-    map.set(key, { data: payload, etag: newEtag() });
-    return;
-  }
-  const store = openStore();
-  try {
-    await store.setJSON(key, payload, { onlyIfNew: true });
-  } catch {
-    /* concurrent idempotent create — OK */
-  }
 }

@@ -116,5 +116,40 @@ resetMemoryStoreForTests();
   assert((await getLead(lead.leadId)) == null, "deleted");
 }
 
+resetMemoryStoreForTests();
+
+{
+  const { lead, reportToken } = await createLead({
+    intakeSource: INTAKE_SOURCE.CONTACT_FORM,
+    campaign: { gclid: "MATRIX1" },
+    consent: true,
+  });
+  await applyConversionReport({
+    leadId: lead.leadId,
+    reportToken,
+    status: TRACKING_STATUS.BROWSER_SENT,
+  });
+  const bad = await applyConversionReport({
+    leadId: lead.leadId,
+    reportToken,
+    status: TRACKING_STATUS.PENDING,
+  });
+  assert(bad.ok === false || bad.illegalTransition === true || bad.status === 400, "BROWSER_SENT cannot regress to PENDING");
+  assert((await getLead(lead.leadId)).trackingStatus === TRACKING_STATUS.BROWSER_SENT, "BROWSER_SENT held");
+
+  const failAttempt = await applyConversionReport({
+    leadId: lead.leadId,
+    reportToken,
+    status: TRACKING_STATUS.FAILED,
+  });
+  assert(failAttempt.illegalTransition === true, "BROWSER_SENT cannot → FAILED");
+  assert((await getLead(lead.leadId)).trackingStatus === TRACKING_STATUS.BROWSER_SENT, "no FAILED regression");
+
+  await updateLead(lead.leadId, { trackingStatus: TRACKING_STATUS.OFFLINE_IMPORTED });
+  assert((await getLead(lead.leadId)).trackingStatus === TRACKING_STATUS.OFFLINE_IMPORTED, "BROWSER_SENT → OFFLINE_IMPORTED ok");
+  const q = await updateLead(lead.leadId, { trackingStatus: TRACKING_STATUS.OFFLINE_QUEUED });
+  assert(q.trackingStatus === TRACKING_STATUS.OFFLINE_IMPORTED, "OFFLINE_IMPORTED cannot → OFFLINE_QUEUED");
+}
+
 console.log(`\nLEADS-STORE RESULTS: pass=${passed} fail=${failed} skip=0`);
 process.exit(failed ? 1 : 0);

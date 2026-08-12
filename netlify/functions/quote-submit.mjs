@@ -9,10 +9,7 @@ import {
   CONVERSION_ACTION,
   INTAKE_SOURCE,
   TRACKING_STATUS,
-  createLead,
-  getIdempotentLeadId,
-  getLead,
-  putIdempotentLeadId,
+  createLeadAtomically,
   updateLead,
 } from "./lib/leads-store.mjs";
 import {
@@ -845,21 +842,6 @@ export default async (request, context) => {
   }
 
   const idemKey = parseIdempotencyKey(request, body);
-  if (idemKey) {
-    const existingId = await getIdempotentLeadId(idemKey);
-    if (existingId) {
-      const existing = await getLead(existingId);
-      if (existing) {
-        return json({
-          ok: true,
-          leadId: existing.leadId,
-          reportToken: null,
-          idempotentReplay: true,
-          receivedAt: new Date().toISOString(),
-        });
-      }
-    }
-  }
 
   const answers = body.answers;
   if (!answers || typeof answers !== "object") return json({ error: "Missing answers" }, 400);
@@ -942,11 +924,12 @@ export default async (request, context) => {
 
   let created;
   try {
-    created = await createLead({
+    created = await createLeadAtomically({
       intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
       netlifyReceiptId: String(receiptId).slice(0, 120),
       campaign,
       consent: true,
+      idempotencyKey: idemKey,
     });
   } catch (e) {
     console.error("[quote-submit] Blob create failed", e && e.code);
@@ -956,7 +939,17 @@ export default async (request, context) => {
   const lead = created.lead;
   const leadId = lead.leadId;
   const reportToken = created.reportToken;
-  if (idemKey) await putIdempotentLeadId(idemKey, leadId);
+
+  if (created.idempotentReplay) {
+    return json({
+      ok: true,
+      leadId,
+      reportToken: null,
+      idempotentReplay: true,
+      receivedAt: new Date().toISOString(),
+    });
+  }
+
   const trackingMeta = [
     `trackingStatus: ${TRACKING_STATUS.PENDING}`,
     `conversionAction: ${CONVERSION_ACTION}`,
