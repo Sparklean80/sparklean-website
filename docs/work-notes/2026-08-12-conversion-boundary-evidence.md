@@ -1,87 +1,49 @@
-# Conversion boundary evidence — 2026-08-12
+# Conversion boundary evidence — 2026-08-12 (correction)
 
-**Review branch:** `review/lead-conversion-boundary`  
-**Production baseline pin:** `76633d0507be579694f19e8b531c77045e3f4ce5`  
-**Status:** Implementation + local / adversarial tests pushed for Control Room review.  
-**Explicitly not done here:** merge to `main`, Netlify deploy/preview, Ads campaign changes, production form submissions, founder acceptance claim.
+**Review branch:** `review/lead-conversion-boundary`
+**Baseline pin:** `76633d0507be579694f19e8b531c77045e3f4ce5`
+**Control Room:** `LEAD_CONVERSION_BOUNDARY_CORRECTION_REQUIRED` addressed on this branch.
+**Status:** Stop for review — no merge, deploy, preview, Ads changes, or production submissions.
 
-## 1. Baseline gaps (`76633d0`)
+## Corrections landed
 
-What that tip **does** prove:
+1. **First-party attribution** — `js/sparklean-attribution.js` (+ intake inline persist). Click IDs survive when `sparklean-ads.js` / gtag are blocked.
+2. **Direct `conversion-report`** when SparkleanAds absent (contact + guided intake).
+3. **`fireAndReportConversion`** inspects durable report response; report failure → delayed/`UNRESOLVED`, never BROWSER_SENT success.
+4. **Token hash only** on Blob; timing-safe verify; bearer returned once.
+5. **Version/CAS mutation boundary** + BlobsServer concurrency proofs (`test:blob-concurrency`).
+6. **Reconcile auth** — never `x-netlify-event` alone; HTTP requires `SPARKLEAN_RECONCILE_KEY`; schedule needs authentic payload + configured secret.
+7. **Abuse bounds** — same-site origin gate, rate limits, idempotency keys, payload clips.
 
-- Contact form sets a pending `contact-*` id on submit and, after `?sent=1`, fires `send_to=AW-17027441328/HnWnCJPRt9kcELDFqLc_` with `transaction_id` = that pending id.
-- Direct `?sent=1` without pending → zero conversions.
-- Guided intake fires the same conversion only after `quote-submit` returns `leadId`.
+## Language
 
-What it **does not** prove:
+Evidence may say **BROWSER_SENT** only. There is **no Google-confirmed attribution** state.
 
-- No durable lead store (Netlify Blobs).
-- No server-accepted contact path (browser navigation / Netlify Forms success URL only).
-- No `BROWSER_SENT` vs Google-confirmed distinction — browser `gtag` leave ≠ Ads reporting confirmation.
-- No `OFFLINE_QUEUED` / alert path when Ads helper is blocked after lead accept.
-- No reconciliation for stuck `PENDING` Google-attributed leads.
+## Schedule (VC)
 
-**Language rule for this pack:** evidence may say **BROWSER_SENT** only. There is **no Google-confirmed attribution** state in this system. Do **not** claim Google attribution or reporting confirmation.
+- `netlify.toml` `[functions."leads-reconcile"] schedule = "*/15 * * * *"`
+- `leads-reconcile.mjs` `export const config.schedule`
 
-## 2. Contact (genuine) — proof checklist
+## Retention
 
-Preview deploy URL: **not opened in this review push** (no Netlify credentials / no deploy).
+- Blob `sparklean-leads`: operational tracking; `reportToken` TTL 24h (hash stored).
+- `deleteLead` for ops deletion after import/window.
+- Alerts: allowlisted retry fields only (no PII / bearer / credentials).
 
-| Step | Expected | Observed |
-|------|----------|----------|
-| POST `/.netlify/functions/contact-submit` | `{ ok, leadId, reportToken }` | Local contract + unit coverage; live preview deferred |
-| Blob lead | `intakeSource=CONTACT_FORM`, `trackingStatus=PENDING` | Covered by leads-store + adversarial suite |
-| Brevo / Slack | Lead email / optional Slack | Not exercised against production |
-| Thank-you UI | `#cp-thanks` visible | Wired in `pages/contact.html` |
-| Ads network | Exactly one conversion; `transaction_id` = `leadId` | Unit: fireAndReport → BROWSER_SENT |
-| Replay | Zero additional conversions | Adversarial: duplicate report → `duplicate: true` |
-| Report | `conversion-report` → `BROWSER_SENT` | Unit covered |
+## Blocked-script proof (automated)
 
-## 3. Guided intake (independent) — proof checklist
+`test:conversion-adversarial` blocked-script case: Ads absent → click ID captured → lead once → OFFLINE_QUEUED → delayed copy → alert clean → replay no duplicate lead.
 
-Explicitly **not** the contact form.
+## Local test funnel (correction)
 
-| Step | Expected | Observed |
-|------|----------|----------|
-| POST `/.netlify/functions/quote-submit` | `{ ok, leadId, reportToken }` | Funnel mocks + function contract |
-| Blob lead | `intakeSource=GUIDED_INTAKE`, `PENDING` | leads-store |
-| Success UI | Intake done copy | paid-intake funnel tests |
-| Ads network | Exactly one conversion; `transaction_id` = `leadId` | funnel pass |
-| Replay | Zero | Ads + adversarial |
-| Report | `BROWSER_SENT` | Unit |
+| Suite | Pass | Fail | Skip |
+|-------|------|------|------|
+| test:ads | 174 | 0 | 0 |
+| test:paid-intake | 137 | 0 | 0 |
+| test:leads-store | 22 | 0 | 0 |
+| test:conversion-adversarial | 24 | 0 | 0 |
+| test:blob-concurrency | 11 | 0 | 0 |
 
-## 4. JS blocked — proof checklist
+## Stop
 
-| Step | Expected | Observed |
-|------|----------|----------|
-| Lead accepted | Blob remains | Unit |
-| Ads helper / `gtag` unavailable | Not treated as success | `test:ads` helper-missing → OFFLINE_QUEUED |
-| Report | `OFFLINE_QUEUED` or `FAILED` | Pass |
-| Alert | Allowlisted retry payload only | Adversarial PII/token leak scan |
-| UI | Delayed-tracking copy | Wired in contact + intake |
-
-## 5. Schedule (version-controlled)
-
-- `netlify.toml` → `[functions."leads-reconcile"]` `schedule = "*/15 * * * *"`
-- `netlify/functions/leads-reconcile.mjs` → `export const config = { schedule: "*/15 * * * *" }`
-- Unauthorized HTTP reconcile (no schedule event / wrong key) → **401**
-
-## 6. Retention / deletion
-
-- Blob store: `sparklean-leads` (operational conversion tracking — **not** a CRM of full customer PII).
-- `reportToken` TTL: **24 hours** (`REPORT_TOKEN_TTL_MS`); expired reports → 401.
-- Ops may `deleteLead(leadId)` after offline import or retention window; helper exported from `leads-store.mjs`.
-- Alerts use **allowlisted** retry fields only (`RETRY_PAYLOAD_KEYS`); never `reportToken`, never customer email/phone/name, never API credentials.
-
-## 7. Local automated evidence
-
-```text
-npm run test:funnel
-# includes test:ads, test:paid-intake, test:leads-store, test:conversion-adversarial
-```
-
-Results recorded in the evidence commit message / Control Room return block after preflight.
-
-## 8. Stop condition
-
-**Stop for Control Room review.** No merge, deploy, Netlify preview, Ads changes, or production submissions from this push.
+No merge · no deploy · no Netlify preview · no campaign changes · no production submissions.
