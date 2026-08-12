@@ -76,6 +76,63 @@ export class CasConflictError extends Error {
   }
 }
 
+export class IdempotencyMaterialConflictError extends Error {
+  constructor(message = "IDEMPOTENCY_MATERIAL_CONFLICT") {
+    super(message);
+    this.name = "IdempotencyMaterialConflictError";
+    this.code = "IDEMPOTENCY_MATERIAL_CONFLICT";
+  }
+}
+
+export class IdempotencyInFlightError extends Error {
+  constructor(message = "IDEMPOTENCY_IN_FLIGHT") {
+    super(message);
+    this.name = "IdempotencyInFlightError";
+    this.code = "IDEMPOTENCY_IN_FLIGHT";
+  }
+}
+
+export const CLAIM_STATUS = Object.freeze({
+  CLAIMING: "claiming",
+  LEASED: "leased",
+  LEAD_READY: "lead_ready",
+  COMPLETE: "complete",
+});
+
+export const OUTBOX_STATUS = Object.freeze({
+  PENDING: "PENDING",
+  SENDING: "SENDING",
+  DELIVERED: "DELIVERED",
+  FAILED: "FAILED",
+});
+
+export const OUTBOX_PREFIX = "outbox:";
+export const DEFAULT_CLAIM_LEASE_MS = 45_000;
+export const DEFAULT_SEND_LEASE_MS = 60_000;
+
+/** Test-only crash injection points (cleared between suites). */
+export const leadsStoreTestHooks = {
+  afterClaimBeforeCreate: null,
+  afterOutboxBeforeSend: null,
+  afterSendBeforeAck: null,
+};
+
+export function resetLeadsStoreTestHooks() {
+  leadsStoreTestHooks.afterClaimBeforeCreate = null;
+  leadsStoreTestHooks.afterOutboxBeforeSend = null;
+  leadsStoreTestHooks.afterSendBeforeAck = null;
+}
+
+export function claimLeaseMs() {
+  const n = Number(process.env.SPARKLEAN_IDEMPOTENCY_LEASE_MS);
+  return Number.isFinite(n) && n > 0 ? n : DEFAULT_CLAIM_LEASE_MS;
+}
+
+export function sendLeaseMs() {
+  const n = Number(process.env.SPARKLEAN_OUTBOX_SEND_LEASE_MS);
+  return Number.isFinite(n) && n > 0 ? n : DEFAULT_SEND_LEASE_MS;
+}
+
 /** @type {Map<string, Map<string, { data: object, etag: string }>>} */
 const memoryStores = new Map();
 let injectedStore = null;
@@ -105,6 +162,24 @@ function contentFingerprint(data) {
 export function wrapBlobStoreWithEtagCache(store) {
   /** @type {Map<string, { etag: string, fingerprint: string }>} */
   const meta = new Map();
+
+  async function etagFromList(key) {
+    try {
+      const listed = await store.list();
+      const blobs = (listed && listed.blobs) || [];
+      const encoded = encodeURIComponent(key);
+      for (const b of blobs) {
+        if (!b || !b.etag) continue;
+        if (b.key === key || b.key === encoded || decodeURIComponent(b.key) === key) {
+          return b.etag;
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    return null;
+  }
+
   return {
     async get(key, opts) {
       return store.get(key, opts);
@@ -122,7 +197,11 @@ export function wrapBlobStoreWithEtagCache(store) {
         if (cached && cached.fingerprint === fp) {
           return { ...r, etag: cached.etag };
         }
-        // Stale body vs newer write etag (or unknown body) — wait for read to catch up.
+        const listedEtag = await etagFromList(key);
+        if (listedEtag) {
+          meta.set(key, { etag: listedEtag, fingerprint: fp });
+          return { ...r, etag: listedEtag };
+        }
         await new Promise((res) => setTimeout(res, 5 + i * 5));
       }
       throw new Error(`BLOB_ETAG_MISSING:${key}`);
@@ -372,57 +451,35 @@ function idemKeyFor(idemKey) {
   return IDEMPOTENCY_PREFIX + hashToken(idemKey).slice(0, 40);
 }
 
-/**
- * Atomic idempotency ownership via onlyIfNew before lead create / Brevo.
- * Re-read + onlyIfMatch seal so spurious BlobsServer onlyIfNew success cannot
- * mint two owners. Losers hydrate the winner leadId.
- * @returns {Promise<{ won: boolean, leadId: string }>}
- */
-export async function claimIdempotency(idemKey, leadId) {
-  if (!idemKey || !leadId) throw new Error("IDEMPOTENCY_ARGS");
-  const key = idemKeyFor(idemKey);
-  const createdAt = new Date().toISOString();
-  const payload = {
-    leadId,
-    createdAt,
-    status: "claiming",
-  };
-  try {
-    await writeCas(key, payload, null);
-  } catch (e) {
-    if (!(e && e.code === "CAS_CONFLICT")) throw e;
-    return hydrateIdempotencyLoser(key);
-  }
-
-  const confirmed = await waitForRecord(key, { timeoutMs: 4000 });
-  if (!confirmed || !confirmed.data.leadId) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
-  if (confirmed.data.leadId !== leadId) {
-    return { won: false, leadId: confirmed.data.leadId };
-  }
-
-  try {
-    await writeCas(
-      key,
-      { leadId, createdAt: confirmed.data.createdAt || createdAt, status: "owned" },
-      confirmed.etag
-    );
-  } catch (e) {
-    if (!(e && e.code === "CAS_CONFLICT")) throw e;
-    return hydrateIdempotencyLoser(key);
-  }
-
-  const sealed = await waitForRecord(key, { timeoutMs: 4000 });
-  if (!sealed || !sealed.data.leadId) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
-  if (sealed.data.leadId !== leadId) {
-    return { won: false, leadId: sealed.data.leadId };
-  }
-  return { won: true, leadId };
+function outboxKeyFor(leadId) {
+  return OUTBOX_PREFIX + String(leadId);
 }
 
-async function hydrateIdempotencyLoser(key) {
-  const existing = await waitForRecord(key, { timeoutMs: 4000 });
-  if (!existing || !existing.data.leadId) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
-  return { won: false, leadId: existing.data.leadId };
+function leaseExpired(iso, now = Date.now()) {
+  if (!iso) return true;
+  const t = Date.parse(iso);
+  return !Number.isFinite(t) || t <= now;
+}
+
+/**
+ * Stable hash of request material for idempotency binding.
+ * Same key + different material → IDEMPOTENCY_MATERIAL_CONFLICT.
+ */
+export function canonicalMaterialHash(material) {
+  if (!material || typeof material !== "object") return hashToken("");
+  const sorted = {};
+  for (const k of Object.keys(material).sort()) {
+    let v = material[k];
+    if (v == null) continue;
+    if (typeof v === "string") {
+      v = v.trim().toLowerCase();
+      if (!v) continue;
+    } else if (typeof v === "object") {
+      v = JSON.parse(JSON.stringify(v));
+    }
+    sorted[k] = v;
+  }
+  return hashToken(JSON.stringify(sorted));
 }
 
 async function waitForRecord(key, { timeoutMs = 4000, intervalMs = 20 } = {}) {
@@ -439,18 +496,6 @@ async function waitForRecord(key, { timeoutMs = 4000, intervalMs = 20 } = {}) {
   return null;
 }
 
-export async function getIdempotentLeadId(idemKey) {
-  if (!idemKey) return null;
-  const rec = await getRecord(idemKeyFor(idemKey));
-  return rec && rec.data && rec.data.leadId ? rec.data.leadId : null;
-}
-
-/** @deprecated use claimIdempotency — kept for tests that only read */
-export async function putIdempotentLeadId(idemKey, leadId) {
-  const claim = await claimIdempotency(idemKey, leadId);
-  return claim;
-}
-
 async function waitForLead(leadId, { timeoutMs = 8000, intervalMs = 25 } = {}) {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
@@ -461,28 +506,369 @@ async function waitForLead(leadId, { timeoutMs = 8000, intervalMs = 25 } = {}) {
   return null;
 }
 
+function assertMaterial(claimData, materialHash) {
+  if (claimData.materialHash && materialHash && claimData.materialHash !== materialHash) {
+    throw new IdempotencyMaterialConflictError();
+  }
+}
+
 /**
- * Create lead with optional atomic idempotency claim first.
- * Losers hydrate the winner lead and must not send Brevo.
- * @returns {Promise<{ lead: object, reportToken: string|null, idempotentReplay: boolean }>}
+ * Acquire or recover idempotency lease bound to materialHash.
+ * Orphaned sealed claims (no lead) are reclaimable when the lease expires.
+ * @returns {Promise<{ won: boolean, leadId: string, recovered?: boolean, leadReady?: boolean }>}
+ */
+export async function claimIdempotency(idemKey, leadId, materialHash) {
+  if (!idemKey || !leadId) throw new Error("IDEMPOTENCY_ARGS");
+  if (!materialHash) throw new Error("IDEMPOTENCY_MATERIAL_REQUIRED");
+  const key = idemKeyFor(idemKey);
+  const now = Date.now();
+  const leaseUntil = new Date(now + claimLeaseMs()).toISOString();
+  const createdAt = new Date(now).toISOString();
+  const leaseOwner = randomBytes(8).toString("hex");
+
+  const existing = await getRecord(key);
+  if (existing) {
+    return recoverOrJoinClaim(key, existing, { leadId, materialHash, leaseUntil, leaseOwner, now });
+  }
+
+  const payload = {
+    leadId,
+    materialHash,
+    status: CLAIM_STATUS.LEASED,
+    createdAt,
+    leaseOwner,
+    leaseExpiresAt: leaseUntil,
+  };
+  try {
+    await writeCas(key, payload, null);
+  } catch (e) {
+    if (!(e && e.code === "CAS_CONFLICT")) throw e;
+    const raced = await waitForRecord(key, { timeoutMs: 4000 });
+    if (!raced) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
+    return recoverOrJoinClaim(key, raced, { leadId, materialHash, leaseUntil, leaseOwner, now: Date.now() });
+  }
+
+  const sealed = await waitForRecord(key, { timeoutMs: 4000 });
+  if (!sealed || !sealed.data.leadId) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
+  assertMaterial(sealed.data, materialHash);
+  if (sealed.data.leadId !== leadId) {
+    return joinExistingClaim(sealed.data, materialHash);
+  }
+  return { won: true, leadId, recovered: false };
+}
+
+async function joinExistingClaim(data, materialHash) {
+  assertMaterial(data, materialHash);
+  const lead = await waitForLead(data.leadId, { timeoutMs: 2500 });
+  if (lead) return { won: false, leadId: data.leadId, leadReady: true };
+  // Peer reserved leadId but create not durable yet — co-create with same id.
+  return { won: true, leadId: data.leadId, recovered: true };
+}
+
+async function recoverOrJoinClaim(key, existing, ctx) {
+  const { materialHash, leaseUntil, leaseOwner, now } = ctx;
+  const data = existing.data;
+  assertMaterial(data, materialHash);
+
+  const lead = data.leadId ? await getLead(data.leadId) : null;
+  if (lead) {
+    return { won: false, leadId: data.leadId, leadReady: true };
+  }
+
+  // No durable lead yet (in-flight create or crash orphan). CAS-refresh the lease.
+  const reclaimLeadId = data.leadId || ctx.leadId;
+  const next = {
+    leadId: reclaimLeadId,
+    materialHash: data.materialHash || materialHash,
+    status: CLAIM_STATUS.LEASED,
+    createdAt: data.createdAt || new Date(now).toISOString(),
+    leaseOwner,
+    leaseExpiresAt: leaseUntil,
+    recoveredAt: new Date().toISOString(),
+  };
+  try {
+    await writeCas(key, next, existing.etag);
+  } catch (e) {
+    if (!(e && e.code === "CAS_CONFLICT")) throw e;
+    const again = await waitForRecord(key, { timeoutMs: 4000 });
+    if (!again) throw new CasConflictError("IDEMPOTENCY_ORPHAN");
+    assertMaterial(again.data, materialHash);
+    const lead2 = await waitForLead(again.data.leadId, { timeoutMs: 3000 });
+    if (lead2) return { won: false, leadId: again.data.leadId, leadReady: true };
+    throw new IdempotencyInFlightError();
+  }
+
+  const sealed = await waitForRecord(key, { timeoutMs: 4000 });
+  if (!sealed || sealed.data.leadId !== reclaimLeadId) {
+    const lead3 = sealed && (await waitForLead(sealed.data.leadId, { timeoutMs: 3000 }));
+    if (lead3) return { won: false, leadId: sealed.data.leadId, leadReady: true };
+    throw new IdempotencyInFlightError();
+  }
+  return { won: true, leadId: reclaimLeadId, recovered: true };
+}
+
+export async function markClaimLeadReady(idemKey, leadId, materialHash) {
+  if (!idemKey) return;
+  const key = idemKeyFor(idemKey);
+  for (let i = 0; i < 12; i++) {
+    const rec = await getRecord(key);
+    if (!rec) return;
+    assertMaterial(rec.data, materialHash);
+    if (rec.data.status === CLAIM_STATUS.LEAD_READY || rec.data.status === CLAIM_STATUS.COMPLETE) return;
+    try {
+      await writeCas(
+        key,
+        {
+          ...rec.data,
+          leadId,
+          materialHash: rec.data.materialHash || materialHash,
+          status: CLAIM_STATUS.LEAD_READY,
+          leaseExpiresAt: new Date(Date.now() + claimLeaseMs()).toISOString(),
+        },
+        rec.etag
+      );
+      return;
+    } catch (e) {
+      if (!(e && e.code === "CAS_CONFLICT")) throw e;
+    }
+  }
+}
+
+export async function markClaimComplete(idemKey) {
+  if (!idemKey) return;
+  const key = idemKeyFor(idemKey);
+  for (let i = 0; i < 12; i++) {
+    const rec = await getRecord(key);
+    if (!rec) return;
+    if (rec.data.status === CLAIM_STATUS.COMPLETE) return;
+    try {
+      await writeCas(key, { ...rec.data, status: CLAIM_STATUS.COMPLETE }, rec.etag);
+      return;
+    } catch (e) {
+      if (!(e && e.code === "CAS_CONFLICT")) throw e;
+    }
+  }
+}
+
+export async function getIdempotentLeadId(idemKey) {
+  if (!idemKey) return null;
+  const rec = await getRecord(idemKeyFor(idemKey));
+  return rec && rec.data && rec.data.leadId ? rec.data.leadId : null;
+}
+
+/** @deprecated use claimIdempotency — kept for tests that only read */
+export async function putIdempotentLeadId(idemKey, leadId, materialHash = hashToken("legacy")) {
+  return claimIdempotency(idemKey, leadId, materialHash);
+}
+
+export async function reissueReportToken(leadId) {
+  const reportToken = newReportToken();
+  const updated = await mutateLeadCas(leadId, (lead) => ({
+    ...lead,
+    reportTokenHash: hashToken(reportToken),
+    reportTokenExpiresAt: new Date(Date.now() + REPORT_TOKEN_TTL_MS).toISOString(),
+  }));
+  return { lead: updated, reportToken };
+}
+
+export async function getOutbox(leadId) {
+  if (!leadId) return null;
+  const rec = await getRecord(outboxKeyFor(leadId));
+  return rec ? rec.data : null;
+}
+
+/**
+ * Durable notification outbox — enqueue before Brevo.
+ */
+export async function ensureOutboxPending(leadId, { payloadHash, channel = "brevo" } = {}) {
+  const key = outboxKeyFor(leadId);
+  const existing = await getRecord(key);
+  if (existing) return existing.data;
+  const row = {
+    leadId,
+    channel,
+    payloadHash: payloadHash || null,
+    status: OUTBOX_STATUS.PENDING,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    attempts: 0,
+    sendLeaseOwner: null,
+    sendLeaseExpiresAt: null,
+    lastError: null,
+  };
+  try {
+    await writeCas(key, row, null);
+  } catch (e) {
+    if (!(e && e.code === "CAS_CONFLICT")) throw e;
+    const again = await getRecord(key);
+    return again ? again.data : row;
+  }
+  return row;
+}
+
+/**
+ * Deliver outbox with SENDING lease. DELIVERED short-circuits (no duplicate send).
+ * Expired SENDING lease may retry once (at-least-once, controlled).
+ */
+export async function deliverOutbox(leadId, sendFn) {
+  const key = outboxKeyFor(leadId);
+  for (let attempt = 0; attempt < 16; attempt++) {
+    let rec = await getRecord(key);
+    if (!rec) {
+      await ensureOutboxPending(leadId, {});
+      rec = await getRecord(key);
+      if (!rec) throw new Error("OUTBOX_MISSING");
+    }
+    const data = rec.data;
+    if (data.status === OUTBOX_STATUS.DELIVERED) {
+      return { delivered: true, sent: false, duplicate: true };
+    }
+    const now = Date.now();
+    if (data.status === OUTBOX_STATUS.SENDING && !leaseExpired(data.sendLeaseExpiresAt, now)) {
+      await new Promise((r) => setTimeout(r, 30));
+      continue;
+    }
+
+    const leaseOwner = randomBytes(8).toString("hex");
+    const sending = {
+      ...data,
+      status: OUTBOX_STATUS.SENDING,
+      attempts: (data.attempts || 0) + 1,
+      sendLeaseOwner: leaseOwner,
+      sendLeaseExpiresAt: new Date(now + sendLeaseMs()).toISOString(),
+      updatedAt: new Date().toISOString(),
+      lastError: null,
+    };
+    try {
+      await writeCas(key, sending, rec.etag);
+    } catch (e) {
+      if (e && e.code === "CAS_CONFLICT") continue;
+      throw e;
+    }
+
+    if (typeof leadsStoreTestHooks.afterOutboxBeforeSend === "function") {
+      await leadsStoreTestHooks.afterOutboxBeforeSend({ leadId, outbox: sending });
+    }
+
+    try {
+      await sendFn();
+    } catch (err) {
+      const failRec = await getRecord(key);
+      if (failRec) {
+        try {
+          await writeCas(
+            key,
+            {
+              ...failRec.data,
+              status: OUTBOX_STATUS.FAILED,
+              lastError: String(err && err.message ? err.message : err).slice(0, 300),
+              updatedAt: new Date().toISOString(),
+            },
+            failRec.etag
+          );
+        } catch {
+          /* best-effort */
+        }
+      }
+      throw err;
+    }
+
+    if (typeof leadsStoreTestHooks.afterSendBeforeAck === "function") {
+      await leadsStoreTestHooks.afterSendBeforeAck({ leadId });
+    }
+
+    for (let j = 0; j < 12; j++) {
+      const ackRec = await getRecord(key);
+      if (!ackRec) break;
+      if (ackRec.data.status === OUTBOX_STATUS.DELIVERED) {
+        return { delivered: true, sent: true, duplicate: false };
+      }
+      try {
+        await writeCas(
+          key,
+          {
+            ...ackRec.data,
+            status: OUTBOX_STATUS.DELIVERED,
+            sendLeaseOwner: null,
+            sendLeaseExpiresAt: null,
+            updatedAt: new Date().toISOString(),
+          },
+          ackRec.etag
+        );
+        return { delivered: true, sent: true, duplicate: false };
+      } catch (e) {
+        if (!(e && e.code === "CAS_CONFLICT")) throw e;
+      }
+    }
+    return { delivered: true, sent: true, duplicate: false };
+  }
+  throw new CasConflictError("OUTBOX_CAS_EXHAUSTED");
+}
+
+/**
+ * Create lead with lease-backed idempotency. Never returns pendingHydration for a missing lead.
+ * Orphaned claims (crash after claim, before create) are reclaimed on retry.
  */
 export async function createLeadAtomically(input) {
   const leadId = input.leadId || newLeadId();
   const idemKey = input.idempotencyKey || null;
+  const materialHash =
+    input.materialHash || (input.material ? canonicalMaterialHash(input.material) : null);
 
-  if (idemKey) {
-    const claim = await claimIdempotency(idemKey, leadId);
-    if (!claim.won) {
-      const lead = await waitForLead(claim.leadId);
-      if (!lead) {
-        return { lead: { leadId: claim.leadId }, reportToken: null, idempotentReplay: true, pendingHydration: true };
-      }
-      return { lead, reportToken: null, idempotentReplay: true };
+  if (!idemKey) {
+    const created = await createLead({ ...input, leadId });
+    return { ...created, idempotentReplay: false };
+  }
+  if (!materialHash) throw new Error("IDEMPOTENCY_MATERIAL_REQUIRED");
+
+  const claim = await claimIdempotency(idemKey, leadId, materialHash);
+
+  if (!claim.won) {
+    const lead = await waitForLead(claim.leadId, { timeoutMs: 3000 });
+    if (!lead) throw new IdempotencyInFlightError();
+    const outbox = await getOutbox(claim.leadId);
+    if (outbox && outbox.status === OUTBOX_STATUS.DELIVERED) {
+      return { lead, reportToken: null, idempotentReplay: true, needsDelivery: false };
     }
+    const reissued = await reissueReportToken(claim.leadId);
+    return {
+      lead: reissued.lead,
+      reportToken: reissued.reportToken,
+      idempotentReplay: true,
+      needsDelivery: true,
+    };
   }
 
-  const created = await createLead({ ...input, leadId });
-  return { ...created, idempotentReplay: false };
+  if (typeof leadsStoreTestHooks.afterClaimBeforeCreate === "function") {
+    await leadsStoreTestHooks.afterClaimBeforeCreate({ leadId: claim.leadId, idemKey, materialHash });
+  }
+
+  let existing = await getLead(claim.leadId);
+  if (!existing) {
+    const created = await createLead({ ...input, leadId: claim.leadId });
+    await markClaimLeadReady(idemKey, claim.leadId, materialHash);
+    if (created.alreadyExisted || !created.reportToken) {
+      const reissued = await reissueReportToken(claim.leadId);
+      return {
+        lead: reissued.lead,
+        reportToken: reissued.reportToken,
+        idempotentReplay: false,
+        needsDelivery: true,
+        recovered: true,
+      };
+    }
+    return { ...created, idempotentReplay: false, needsDelivery: true, recovered: Boolean(claim.recovered) };
+  }
+
+  await markClaimLeadReady(idemKey, claim.leadId, materialHash);
+  const reissued = await reissueReportToken(claim.leadId);
+  return {
+    lead: reissued.lead,
+    reportToken: reissued.reportToken,
+    idempotentReplay: false,
+    needsDelivery: true,
+    recovered: true,
+  };
 }
 
 /**
@@ -521,7 +907,16 @@ export async function createLead(input) {
     retryPayload: null,
     version: 1,
   };
-  await writeLeadCas(lead, null);
+  try {
+    await writeLeadCas(lead, null);
+  } catch (e) {
+    if (e && e.code === "CAS_CONFLICT") {
+      // Recovered claim may race a twin create — load winner.
+      const existing = await getLead(leadId);
+      if (existing) return { lead: existing, reportToken: null, alreadyExisted: true };
+    }
+    throw e;
+  }
   return { lead, reportToken };
 }
 
@@ -622,7 +1017,7 @@ export async function applyConversionReport({ leadId, reportToken, status, failu
 async function listAllLeads() {
   if (useMemory()) {
     return [...memoryMap().entries()]
-      .filter(([k]) => !String(k).startsWith(IDEMPOTENCY_PREFIX))
+      .filter(([k]) => !String(k).startsWith(IDEMPOTENCY_PREFIX) && !String(k).startsWith(OUTBOX_PREFIX))
       .map(([, row]) => clone(row.data));
   }
   const store = openStore();
@@ -631,7 +1026,7 @@ async function listAllLeads() {
     const blobs = (page && page.blobs) || [];
     for (const entry of blobs) {
       const key = entry && entry.key;
-      if (!key || String(key).startsWith(IDEMPOTENCY_PREFIX)) continue;
+      if (!key || String(key).startsWith(IDEMPOTENCY_PREFIX) || String(key).startsWith(OUTBOX_PREFIX)) continue;
       const data = await store.get(key, { type: "json" });
       if (data && data.leadId) out.push(data);
     }

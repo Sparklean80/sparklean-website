@@ -143,18 +143,21 @@ try {
 
   // --- Atomic idempotency: concurrent identical claims → one owner ---
   const idem = `idem-blob-${Date.now()}`;
+  const materialHash = "a".repeat(64);
   const [c1, c2] = await Promise.all([
     createLeadAtomically({
       intakeSource: INTAKE_SOURCE.CONTACT_FORM,
       campaign: { gclid: "IDEMA" },
       consent: true,
       idempotencyKey: idem,
+      materialHash,
     }),
     createLeadAtomically({
       intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
       campaign: { gclid: "IDEMA" },
       consent: true,
       idempotencyKey: idem,
+      materialHash,
     }),
   ]);
   assert(c1.lead.leadId === c2.lead.leadId, "concurrent createLeadAtomically → same leadId");
@@ -164,7 +167,22 @@ try {
   assert(losers.length === 1, "exactly one loser hydrates winner");
   assert((await getIdempotentLeadId(idem)) === c1.lead.leadId, "one idempotency mapping");
 
-  // --- Simultaneous contact + quote handlers (mocked Brevo) ---
+  // material conflict
+  let materialConflict = false;
+  try {
+    await createLeadAtomically({
+      intakeSource: INTAKE_SOURCE.CONTACT_FORM,
+      campaign: { gclid: "IDEMA" },
+      consent: true,
+      idempotencyKey: idem,
+      materialHash: "b".repeat(64),
+    });
+  } catch (e) {
+    materialConflict = e && e.code === "IDEMPOTENCY_MATERIAL_CONFLICT";
+  }
+  assert(materialConflict, "same key + different material → IDEMPOTENCY_MATERIAL_CONFLICT");
+
+  // --- Simultaneous identical contact submissions (same key + material) ---
   process.env.SPARKLEAN_SKIP_ORIGIN_CHECK = "1";
   process.env.BREVO_API_KEY = "test-brevo-key";
   process.env.SPARKLEAN_FROM_EMAIL = "info@sparklean.co";
@@ -180,8 +198,7 @@ try {
   };
 
   const contactHandler = (await import("../netlify/functions/contact-submit.mjs")).default;
-  const quoteHandler = (await import("../netlify/functions/quote-submit.mjs")).default;
-  const sharedIdem = `sim-contact-quote-${Date.now()}`;
+  const sharedIdem = `sim-contact-twice-${Date.now()}`;
 
   const contactBody = {
     fullName: "Test User",
@@ -195,21 +212,6 @@ try {
     message: "blob race",
     campaign: { gclid: "SIM1" },
     idempotencyKey: sharedIdem,
-  };
-  const quoteBody = {
-    answers: {
-      fullName: "Test User",
-      phone: "2395550100",
-      email: "test@example.com",
-      location: "34102",
-      serviceCategory: "residential",
-      bedrooms: "3",
-      bathrooms: "2",
-    },
-    serviceLabel: "Residential cleaning",
-    campaign: { gclid: "SIM1" },
-    idempotencyKey: sharedIdem,
-    submittedAt: new Date().toISOString(),
   };
 
   const mkReq = (body) =>
@@ -225,26 +227,32 @@ try {
 
   const [cr, qr] = await Promise.all([
     contactHandler(mkReq(contactBody), { requestId: "nf-c1" }),
-    quoteHandler(mkReq(quoteBody), { requestId: "nf-q1" }),
+    contactHandler(mkReq(contactBody), { requestId: "nf-c2" }),
   ]);
   const cj = await cr.json();
   const qj = await qr.json();
   assert(cr.status === 200 && qr.status === 200, "both handlers 200");
   assert(cj.ok && qj.ok, "both ok");
-  assert(cj.leadId === qj.leadId, "simultaneous contact+quote → same leadId");
+  assert(cj.leadId === qj.leadId, "simultaneous identical contact → same leadId");
   assert(brevoCalls === 1, `exactly one Brevo send (got ${brevoCalls})`);
   assert((await getIdempotentLeadId(sharedIdem)) === cj.leadId, "one idempotency record for shared key");
   const stored = await getLead(cj.leadId);
   assert(Boolean(stored), "exactly one lead record exists");
-  assert([true, undefined].includes(cj.idempotentReplay) || [true, undefined].includes(qj.idempotentReplay), "at least one replay flag on loser");
   const replayCount = [cj, qj].filter((x) => x.idempotentReplay).length;
   assert(replayCount === 1, "exactly one idempotentReplay response");
 
-  // claimIdempotency onlyIfNew
+  // claimIdempotency: second joins once lead exists; material reserved to first leadId
   const claimKey = `claim-only-${Date.now()}`;
-  const first = await claimIdempotency(claimKey, "lead-first");
-  const second = await claimIdempotency(claimKey, "lead-second");
+  const mh = "c".repeat(64);
+  const first = await claimIdempotency(claimKey, "lead-first", mh);
   assert(first.won === true && first.leadId === "lead-first", "first claim wins");
+  await createLead({
+    leadId: "lead-first",
+    intakeSource: INTAKE_SOURCE.CONTACT_FORM,
+    campaign: { gclid: "CL" },
+    consent: true,
+  });
+  const second = await claimIdempotency(claimKey, "lead-second", mh);
   assert(second.won === false && second.leadId === "lead-first", "second claim hydrates winner id");
 } finally {
   globalThis.fetch = realFetch;

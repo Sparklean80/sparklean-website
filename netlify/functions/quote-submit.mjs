@@ -9,12 +9,21 @@ import {
   CONVERSION_ACTION,
   INTAKE_SOURCE,
   TRACKING_STATUS,
+  OUTBOX_STATUS,
+  canonicalMaterialHash,
   createLeadAtomically,
+  ensureOutboxPending,
+  deliverOutbox,
+  markClaimComplete,
+  getOutbox,
   updateLead,
+  IdempotencyMaterialConflictError,
+  IdempotencyInFlightError,
 } from "./lib/leads-store.mjs";
 import {
   assertSameSiteOrigin,
   clientIp,
+  hashToken,
   parseIdempotencyKey,
   rateLimitCheck,
 } from "./lib/request-guard.mjs";
@@ -922,6 +931,17 @@ export default async (request, context) => {
     request.headers.get("x-nf-request-id") ||
     `intake_${Date.now()}`;
 
+  const material = {
+    fullName: answers.fullName,
+    phone: answers.phone,
+    email: answers.email,
+    location: answers.location,
+    serviceCategory: answers.serviceCategory,
+    serviceLabel,
+    intakeSource: INTAKE_SOURCE.GUIDED_INTAKE,
+  };
+  const materialHash = canonicalMaterialHash(material);
+
   let created;
   try {
     created = await createLeadAtomically({
@@ -930,17 +950,25 @@ export default async (request, context) => {
       campaign,
       consent: true,
       idempotencyKey: idemKey,
+      materialHash,
+      material,
     });
   } catch (e) {
+    if (e instanceof IdempotencyMaterialConflictError || (e && e.code === "IDEMPOTENCY_MATERIAL_CONFLICT")) {
+      return json({ error: "IDEMPOTENCY_MATERIAL_CONFLICT" }, 409);
+    }
+    if (e instanceof IdempotencyInFlightError || (e && e.code === "IDEMPOTENCY_IN_FLIGHT")) {
+      return json({ error: PUBLIC_EMAIL_FAILURE, code: "IDEMPOTENCY_IN_FLIGHT" }, 503);
+    }
     console.error("[quote-submit] Blob create failed", e && e.code);
     return json({ error: PUBLIC_EMAIL_FAILURE }, 500);
   }
 
   const lead = created.lead;
   const leadId = lead.leadId;
-  const reportToken = created.reportToken;
+  let reportToken = created.reportToken;
 
-  if (created.idempotentReplay) {
+  if (created.idempotentReplay && !created.needsDelivery) {
     return json({
       ok: true,
       leadId,
@@ -1034,11 +1062,19 @@ export default async (request, context) => {
   });
 
   try {
-    await sendBrevoTransactionalEmail({
-      subject,
-      html,
-      text,
+    const payloadHash = hashToken(`${subject}\n${text}`);
+    await ensureOutboxPending(leadId, { payloadHash, channel: "brevo" });
+    const delivery = await deliverOutbox(leadId, async () => {
+      await sendBrevoTransactionalEmail({
+        subject,
+        html,
+        text,
+      });
     });
+    if (idemKey) await markClaimComplete(idemKey);
+    if (delivery.duplicate && created.idempotentReplay) {
+      reportToken = null;
+    }
   } catch (e) {
     console.error("[quote-submit] email path aborted — see logs above for Brevo / config", {
       code: e && e.message,
@@ -1046,10 +1082,13 @@ export default async (request, context) => {
       brevoDetail: e && e.brevoDetail,
     });
     try {
-      await updateLead(leadId, {
-        trackingStatus: TRACKING_STATUS.FAILED,
-        failureReason: "email_delivery_failed",
-      });
+      const box = await getOutbox(leadId);
+      if (!box || box.status !== OUTBOX_STATUS.DELIVERED) {
+        await updateLead(leadId, {
+          trackingStatus: TRACKING_STATUS.FAILED,
+          failureReason: "email_delivery_failed",
+        });
+      }
     } catch (e2) {
       console.error("[quote-submit] failed to mark FAILED after Brevo error", e2);
     }
@@ -1063,5 +1102,6 @@ export default async (request, context) => {
     receivedAt: new Date().toISOString(),
     leadId,
     reportToken,
+    idempotentReplay: Boolean(created.idempotentReplay),
   });
 };
