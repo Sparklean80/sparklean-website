@@ -85,6 +85,9 @@ function makeEnv() {
     setItem(k, v) {
       store.set(k, String(v));
     },
+    removeItem(k) {
+      store.delete(k);
+    },
   };
   function gtag() {
     gtagCalls.push(Array.from(arguments));
@@ -162,6 +165,40 @@ function makeEnv() {
   const payload = JSON.stringify(conversions[0]);
   assert(!/email|phone|fullName|@/i.test(payload) || payload.includes("transaction_id"), "conversion payload has no customer PII fields");
   assert(!payload.includes("@gmail"), "no email in conversion");
+}
+
+// --- Netlify contact form success path ---
+const contactHtml = fs.readFileSync(path.join(root, "pages/contact.html"), "utf8");
+assert(contactHtml.includes("markContactFormSubmitPending"), "contact form marks pending on submit");
+assert(contactHtml.includes("trackContactFormAccepted"), "contact success calls trackContactFormAccepted");
+assert(contactHtml.includes("sent=1"), "contact success still keyed on sent=1");
+assert(!contactHtml.includes("HnWnCJPRt9kcELDFqLc_"), "contact.html does not embed send_to (uses sparklean-ads.js)");
+assert(
+  adsSrc.includes("trackContactFormAccepted") && adsSrc.includes("CONTACT_PENDING_KEY"),
+  "ads.js exposes contact pending + accept helpers"
+);
+
+{
+  const { sandbox, conversions } = makeEnv();
+  // Direct ?sent=1 with no pending submit → zero conversions
+  const fired = sandbox.window.SparkleanAds.trackContactFormAccepted();
+  assert(fired === "", "direct sent=1 without pending fires nothing");
+  assert(conversions.length === 0, "no conversion without pending submit");
+}
+
+{
+  const { sandbox, conversions } = makeEnv();
+  const pending = sandbox.window.SparkleanAds.markContactFormSubmitPending();
+  assert(/^contact-\d+-[a-z0-9]+$/i.test(pending), `pending id shape (${pending})`);
+  const txn = sandbox.window.SparkleanAds.trackContactFormAccepted();
+  assert(txn === pending, "accepted txn matches pending id");
+  assert(conversions.length === 1, "exactly one conversion after contact accept");
+  assert(conversions[0].send_to === sandbox.window.SparkleanAds.SEND_TO, "contact uses AI Quote Request Completed send_to");
+  assert(conversions[0].transaction_id === pending, "contact transaction_id is stable pending id");
+  // Replay accept / duplicate → zero new conversions
+  sandbox.window.SparkleanAds.trackContactFormAccepted();
+  sandbox.window.SparkleanAds.trackQuoteRequestCompleted(pending);
+  assert(conversions.length === 1, "contact duplicate / replay does not fire again");
 }
 
 console.log(failed ? `\nFAILED: ${failed}` : "\nALL GOOGLE ADS TESTS PASSED");

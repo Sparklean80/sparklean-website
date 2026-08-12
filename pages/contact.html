@@ -454,11 +454,24 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
     hb.addEventListener("click",function(){hb.classList.toggle("open");mm.classList.toggle("open");});
     mm.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(){hb.classList.remove("open");mm.classList.remove("open");});});
   }
+  var fm=document.getElementById("sparklean-contact-form");
+  // Real submit only (required consent already enforced by the form). Sets a pending
+  // transaction id so ?sent=1 alone / refresh / direct URL cannot invent conversions.
+  if(fm){
+    fm.addEventListener("submit",function(){
+      if(window.SparkleanAds&&typeof window.SparkleanAds.markContactFormSubmitPending==="function"){
+        window.SparkleanAds.markContactFormSubmitPending();
+      }
+    });
+  }
   if(/[?&]sent=1(?:&|$)/.test(location.search)){
     var th=document.getElementById("cp-thanks");
-    var fm=document.getElementById("sparklean-contact-form");
     if(th)th.classList.add("is-visible");
     if(fm)fm.style.display="none";
+    // Confirmed Netlify acceptance → same Ads conversion as AI Quote Request Completed.
+    if(window.SparkleanAds&&typeof window.SparkleanAds.trackContactFormAccepted==="function"){
+      window.SparkleanAds.trackContactFormAccepted();
+    }
     try{history.replaceState(null,"",location.pathname+location.hash);}catch(e){}
   }
 })();
