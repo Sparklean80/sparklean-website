@@ -1,7 +1,8 @@
 # Phase 1 SEO/conversion batch — evidence matrix
 
 **Date:** 2026-08-14  
-**Product SHA:** 7ada682a8297150c3c824b7a3f58e8fc5e35230b  
+**Product SHA:** 7ada682a8297150c3c824b7a3f58e8fc5e35230b
+**Redirects fix SHA:** 1040c2348b5455cc026184cf5a1ed76f27b3c7c4 (include in deploy tip)  
 **Scope:** Remaining approved Phase 1 SEO/conversion items after Trust Shield + font preconnect.  
 **Not in scope:** Phase 2 commercial hubs, Ads console bidding/settings edits, GSC bulk indexing, production deploy (report SHA first).
 
