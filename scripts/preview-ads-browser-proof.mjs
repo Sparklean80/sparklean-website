@@ -22,7 +22,21 @@ function isGoogleConversionUrl(url) {
   if (!/google|doubleclick|googlesyndication|googleadservices|google.com\/ccm|google.com\/pagead/i.test(u)) {
     return false;
   }
-  return /conversion|pagead\/1p-|viewthroughconversion|\/ccm\//i.test(u);
+  // Keep broad capture for audit, but classify later by en=/label=
+  return /conversion|pagead\/1p-|viewthroughconversion|\/ccm\/|googleadservices|doubleclick/i.test(u);
+}
+
+function isLeadConversionHit(hit) {
+  const u = String(hit.url || "");
+  const q = hit.query || {};
+  const en = String(q.en || q.data || "");
+  const label = String(q.label || "");
+  return (
+    label.includes(LABEL) ||
+    u.includes(LABEL) ||
+    /en=conversion|event%3Dconversion|event=conversion|data=event%3Dconversion/i.test(u) ||
+    /conversion/i.test(en)
+  );
 }
 
 function parseConversionHit(req) {
@@ -138,12 +152,9 @@ async function runContact(context, tag, viewportLabel) {
     functionResponses: bucket.functionResponses,
     screenshotAfter: shotAfter,
     contactStarIdPresent: firedIds.some((id) => String(id).startsWith("contact-")),
-    labelHit: bucket.googleConversion.some(
-      (h) =>
-        String(h.label || "").includes(LABEL) ||
-        String(h.url || "").includes(LABEL) ||
-        String(h.url || "").includes("17027441328")
-    ),
+    labelHit: bucket.googleConversion.some((h) => isLeadConversionHit(h)),
+    leadConversionHits: bucket.googleConversion.filter((h) => isLeadConversionHit(h)),
+    leadConversionCount: bucket.googleConversion.filter((h) => isLeadConversionHit(h)).length,
   };
   await page.close();
   return result;
@@ -308,15 +319,21 @@ try {
 evidence.finishedAt = new Date().toISOString();
 evidence.summary = {
   desktopGoogleHits: evidence.steps.desktopContact?.googleConversionCount ?? null,
+  desktopLeadConversionHits: evidence.steps.desktopContact?.leadConversionCount ?? null,
   mobileGoogleHits: evidence.steps.mobileContact?.googleConversionCount ?? null,
+  mobileLeadConversionHits: evidence.steps.mobileContact?.leadConversionCount ?? null,
   desktopContactStar: evidence.steps.desktopContact?.contactStarIdPresent ?? null,
   mobileContactStar: evidence.steps.mobileContact?.contactStarIdPresent ?? null,
+  desktopThanks: evidence.steps.desktopContact?.thanksVisible ?? null,
+  mobileThanks: evidence.steps.mobileContact?.thanksVisible ?? null,
+  desktopFormError: evidence.steps.desktopContact?.formError ?? null,
+  mobileFormError: evidence.steps.mobileContact?.formError ?? null,
   sent1ExtraHits: evidence.steps.sent1ZeroDesktop?.extraConversionRequests ?? null,
   intakeGoogleHits: evidence.steps.aiIntake?.googleConversionCount ?? null,
   intakeReplayExtra: evidence.steps.aiIntake?.replayExtraGoogleHits ?? null,
   blockedTagGoogleHits: evidence.steps.aiIntakeBlockedTag?.googleConversionCount ?? null,
   note:
-    "b18a49f contact form uses Blob leadId + fireAndReportConversion, not production contact-* / ?sent=1 consume path.",
+    "Product bb9b0fb: Blob leadId path (not production contact-*). Classify leadConversionHits separately from gtag.config/page_view.",
 };
 
 const jsonPath = path.join(OUT, `${STAMP}-evidence.json`);
