@@ -79,7 +79,7 @@ function parseFormBody(raw, contentType) {
   return o;
 }
 
-async function sendBrevo({ subject, html, text, request }) {
+async function sendBrevo({ subject, html, text, request, replyToEmail }) {
   if (shouldForceBrevoFail(request)) {
     console.error("[contact-submit] preview-only forced Brevo failure");
     throw new Error("BREVO_FAILED");
@@ -92,6 +92,12 @@ async function sendBrevo({ subject, html, text, request }) {
   const sender = parseSender(fromRaw);
   if (!apiKey) throw new Error("MISSING_EMAIL_CONFIG");
 
+  // From = authenticated Sparklean sender only. Customer address is Reply-To only.
+  const replyTo =
+    replyToEmail && typeof replyToEmail === "string" && replyToEmail.includes("@")
+      ? { email: replyToEmail.trim() }
+      : { email: sender.email };
+
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
@@ -102,7 +108,7 @@ async function sendBrevo({ subject, html, text, request }) {
     body: JSON.stringify({
       sender,
       to: [{ email: toEmail }],
-      replyTo: { email: sender.email },
+      replyTo,
       subject,
       htmlContent: html,
       textContent: text,
@@ -312,7 +318,7 @@ export default async (request, context) => {
     const delivery = await deliverOutbox(
       lead.leadId,
       async () => {
-        await sendBrevo({ subject, html, text, request });
+        await sendBrevo({ subject, html, text, request, replyToEmail: email });
       },
       { payloadHash }
     );

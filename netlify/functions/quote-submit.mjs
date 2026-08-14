@@ -778,7 +778,7 @@ async function brevoPost(apiKey, payload) {
   return { ok: res.ok, status: res.status, text: responseText };
 }
 
-async function sendBrevoTransactionalEmail({ subject, html, text, request }) {
+async function sendBrevoTransactionalEmail({ subject, html, text, request, replyToEmail }) {
   if (shouldForceBrevoFail(request)) {
     console.error("[quote-submit] preview-only forced Brevo failure");
     const err = new Error("BREVO_FAILED");
@@ -800,8 +800,12 @@ async function sendBrevoTransactionalEmail({ subject, html, text, request }) {
     throw new Error("MISSING_EMAIL_CONFIG");
   }
 
-  // Deliverability: no customer Reply-To (mismatched domains → spam) and no JSON attachment.
-  // Client email stays in the body with a Reply button. Reply-To stays the Sparklean sender.
+  // From = authenticated Sparklean sender. Customer address is Reply-To only (never From).
+  const replyTo =
+    replyToEmail && typeof replyToEmail === "string" && replyToEmail.includes("@")
+      ? replyToEmail.trim()
+      : sender.email;
+
   const attempt = await brevoPost(
     apiKey,
     buildBrevoPayload({
@@ -810,7 +814,7 @@ async function sendBrevoTransactionalEmail({ subject, html, text, request }) {
       subject,
       html,
       text,
-      replyTo: sender.email,
+      replyTo,
       attachment: null,
     })
   );
@@ -1095,6 +1099,7 @@ export default async (request, context) => {
           html,
           text,
           request,
+          replyToEmail: answers.email,
         });
       },
       { payloadHash }
