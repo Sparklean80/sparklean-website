@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (city paid-match visual redesign: two-column trust + local coverage section replacing SEO link dump; preview-only until Tony approves)
+Last updated: **2026-08-14** (city paid-match visual redesign live on production — two-column trust + local coverage; deploy `6a7f6ce3`)
 
 ---
 

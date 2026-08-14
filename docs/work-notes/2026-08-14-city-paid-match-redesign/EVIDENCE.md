@@ -54,4 +54,5 @@ Under `screenshots/` (desktop 1440 + mobile 390):
 
 ## Stop
 
-**No production deploy.** Awaiting Tony visual approval on draft preview.
+**Production deployed** after Tony approval (2026-08-14).  
+**Prod deploy id:** `6a7f6ce3802294d76ad34740` · https://www.sparklean.co/house-cleaning-naples#paid-match
