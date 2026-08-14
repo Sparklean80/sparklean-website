@@ -5,7 +5,7 @@
 
 /* --- Hero: single cinematic image (URL set per page modifier) --- */
 .hero--contact .hero-bg {
-  background-image: url("https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21c822d48a61eeebb9364_Roxy1.JPG");
+  background-image: url("/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp");
   background-position: 72% center;
   background-size: cover;
 }

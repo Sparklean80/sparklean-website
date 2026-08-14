@@ -599,6 +599,14 @@
   to = "/pages/post-construction-cleaning.html"
   status = 200
 [[redirects]]
+  from = "/vacation-rental-cleaning"
+  to = "/pages/vacation-rental-cleaning.html"
+  status = 200
+[[redirects]]
+  from = "/vacation-rental-cleaning/"
+  to = "/pages/vacation-rental-cleaning.html"
+  status = 200
+[[redirects]]
   from = "/specialized-cleaning"
   to = "/pages/specialized-cleaning.html"
   status = 200

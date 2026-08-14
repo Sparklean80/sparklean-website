@@ -13,8 +13,7 @@
 export const ORG_ID = "https://www.sparklean.co/#organization";
 export const WEBSITE_ID = "https://www.sparklean.co/#website";
 export const SITE_URL = "https://www.sparklean.co/";
-export const LOGO_URL =
-  "https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png";
+export const LOGO_URL = "/images/branding/Sparklean_Logo_Transparent.png";
 
 /** Locked public positioning (exact). */
 export const LOCKED_DESCRIPTION =
@@ -180,6 +179,19 @@ export function offerCatalog() {
             "Tile and grout, window cleaning, kitchen detailing, and concierge add-ons.",
         },
       },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          "@id": "https://www.sparklean.co/vacation-rental-cleaning#service",
+          name: "Vacation Rental Cleaning",
+          url: "https://www.sparklean.co/vacation-rental-cleaning",
+          provider: { "@id": ORG_ID },
+          areaServed: areaServedNodes(),
+          description:
+            "Airbnb and short-term rental turnover cleaning with lockbox access and guest-ready finishes across Southwest Florida.",
+        },
+      },
     ],
   };
 }
@@ -215,8 +227,8 @@ export function getCanonicalOrganization() {
     },
     image: [
       LOGO_URL,
-      "https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21c8b4a74322eaf0b5148_1000051954.WEBP",
-      "https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21cae1dbe6ede803ef701_1000051474.JPG",
+      "/images/heroes/69b21c8b4a74322eaf0b5148_1000051954-6f5aa8b3-1400.webp",
+      "/images/heroes/69b21cae1dbe6ede803ef701_1000051474-0fcae9d8-1400.webp",
     ],
     founder: [{ "@id": FOUNDER_TONY_ID }, { "@id": FOUNDER_ROXY_ID }],
     contactPoint: [

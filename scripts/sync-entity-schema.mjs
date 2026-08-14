@@ -697,6 +697,20 @@ syncServicePage({
   faqFromFile: false,
 });
 
+syncServicePage({
+  relPath: "pages/vacation-rental-cleaning.html",
+  pageUrl: "https://www.sparklean.co/vacation-rental-cleaning",
+  pageName: "Vacation Rental Cleaning | Sparklean Cleaning",
+  pageDescription:
+    "Guest-ready vacation rental and Airbnb turnover cleaning across Southwest Florida.",
+  serviceId: "https://www.sparklean.co/vacation-rental-cleaning#service",
+  serviceName: "Vacation Rental Cleaning",
+  serviceDescription:
+    "Professionally managed Airbnb and vacation rental turnover cleaning with lockbox access and guest-ready finishes from Sparklean Cleaning.",
+  catalogName: null,
+  offers: null,
+});
+
 for (const key of Object.keys(CITY_PAGES)) {
   syncCityPage(key);
 }
