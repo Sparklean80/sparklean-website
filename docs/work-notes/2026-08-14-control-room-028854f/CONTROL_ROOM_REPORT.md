@@ -7,7 +7,7 @@
 | Role | SHA |
 |------|-----|
 | **Product** | `028854f4b6f83ad6385fe3c2628d0e02ec1f3a88` |
-| **Evidence** | *(this commit — tip after product)* |
+| **Evidence** | `94668e97070b2ef7d98f5616b44f47de82a4b03e` |
 | Production baseline pin | `76633d0507be579694f19e8b531c77045e3f4ce5` |
 
 **Preview URL:** https://conversion-028854f--sparklean-website.netlify.app  
