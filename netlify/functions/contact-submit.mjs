@@ -371,7 +371,16 @@ export default async (request, context) => {
     } catch (e2) {
       console.error("[contact-submit] failed to mark FAILED");
     }
-    return json({ error: PUBLIC_FAILURE }, 500);
+    const forced = e && String(e.message || "") === "BREVO_FAILED";
+    return json(
+      {
+        error: PUBLIC_FAILURE,
+        code: forced ? "PREVIEW_BREVO_FORCE_FAIL" : "EMAIL_DELIVERY_FAILED",
+        ok: false,
+        leadId: lead.leadId,
+      },
+      500
+    );
   }
 
   await notifySlackOptional({ leadId: lead.leadId, serviceNeeded, cityArea });

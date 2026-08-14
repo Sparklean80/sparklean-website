@@ -661,6 +661,7 @@ async function runBrevoFailureApi() {
     falseSuccess: first.ok === true && first.status === 200,
     falseDeliveredClaim: first.ok === true,
     noReportTokenOnFail: first.hasReportToken !== true,
+    previewForceCode: first.code === "PREVIEW_BREVO_FORCE_FAIL",
   });
 }
 
@@ -839,7 +840,9 @@ evidence.acceptance = sanitizeDeep({
   forcedBrevoNoFalseSuccess: Boolean(
     evidence.steps.brevoFailureApi &&
       evidence.steps.brevoFailureApi.falseSuccess === false &&
-      evidence.steps.brevoFailureApi.noReportTokenOnFail === true
+      evidence.steps.brevoFailureApi.noReportTokenOnFail === true &&
+      (evidence.steps.brevoFailureApi.previewForceCode === true ||
+        evidence.steps.brevoFailureApi.first?.status >= 500)
   ),
   normalBrevoRestoredDelivered: Boolean(
     evidence.steps.brevoRestoreApi && evidence.steps.brevoRestoreApi.deliveredSuccess === true
