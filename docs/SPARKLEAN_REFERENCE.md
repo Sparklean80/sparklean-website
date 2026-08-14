@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (Brevo domain auth CLOSED — Gmail DKIM/DMARC PASS; Trust Shield Phase 1 live)
+Last updated: **2026-08-14** (email auth CLOSED; font preconnect on marketing hubs; Trust Shield Phase 1 live)
 
 ---
 
@@ -30,7 +30,7 @@ Last updated: **2026-08-14** (Brevo domain auth CLOSED — Gmail DKIM/DMARC PASS
 | Defer non-critical JS | **Partial** — quote intake + sticky CTA use `defer` |
 | Prefetch likely next pages | **Done** — hover prefetch in `js/sparklean-mobile-sticky-cta.js` |
 | Preconnect + preload LCP hero image (homepage) | **Done** — `index.html` |
-| Font preconnect sitewide | **Partial** — homepage + customer-portal; extend to hub pages |
+| Font preconnect sitewide | **Done** — marketing hubs + homepage (2026-08-14); signalhouse private pages optional |
 | Migrate Webflow CDN images → `/images/` + WebP/AVIF | **TODO** — biggest LCP win remaining |
 | Minify inline CSS on hub pages | **TODO** — optional build step |
 | Remove unused JS | **Low priority** — bundles are small (~3 JS files) |
