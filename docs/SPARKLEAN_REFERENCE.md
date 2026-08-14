@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (email auth audit + customer Reply-To; Priority 1 conversion closed at `028854f`)
+Last updated: **2026-08-14** (Phase 1 Trust Shield on commercial hub; email auth audit pending DNS)
 
 ---
 
@@ -433,8 +433,9 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 - City wording live (`660c6f4`); next levers = GBP/reviews + recrawl, not more URLs
 
 ### Phase 1 — Commercial Trust Shield
-- Mid-page section on `/commercial-cleaning` only
-- Proof link screenshot, vertical index grid (medical, dealerships, schools, HOA, etc.)
+- Mid-page section on `/commercial-cleaning` only — **Live 2026-08-14** (`#trust-shield`)
+- Proof framed as supervised commercial accountability (not a software pitch); links to existing commercial blogs + contact
+- Vertical index money pages still **held** until Phase 0 city rankings stabilize
 
 ### Phase 2 — Commercial money pages (~6–14 max)
 - Hub drafts exist locally (`office-cleaning`, `dealership-cleaning`, `school-cleaning`, `janitorial-services`) — **hold push** until Phase 0 city rankings stabilize
