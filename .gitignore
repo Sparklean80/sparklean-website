@@ -4,3 +4,5 @@ node_modules/
 videos/*.mp4
 videos/*.mov
 videos/*.MOV
+
+.reconcile-key.local

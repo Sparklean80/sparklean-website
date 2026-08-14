@@ -31,6 +31,7 @@ import {
   parseIdempotencyKey,
   rateLimitCheck,
 } from "./lib/request-guard.mjs";
+import { shouldForceBrevoFail } from "./lib/preview-brevo-fail.mjs";
 
 const MAX_BODY = 120_000;
 
@@ -777,7 +778,14 @@ async function brevoPost(apiKey, payload) {
   return { ok: res.ok, status: res.status, text: responseText };
 }
 
-async function sendBrevoTransactionalEmail({ subject, html, text }) {
+async function sendBrevoTransactionalEmail({ subject, html, text, request }) {
+  if (shouldForceBrevoFail(request)) {
+    console.error("[quote-submit] preview-only forced Brevo failure");
+    const err = new Error("BREVO_FAILED");
+    err.brevoStatus = 0;
+    err.brevoDetail = "preview_forced_failure";
+    throw err;
+  }
   const apiKey = process.env.BREVO_API_KEY;
   const fromRaw = (process.env.SPARKLEAN_FROM_EMAIL && process.env.SPARKLEAN_FROM_EMAIL.trim()) || "info@sparklean.co";
   const toEmail = (process.env.SPARKLEAN_LEAD_TO && process.env.SPARKLEAN_LEAD_TO.trim()) || "info@sparklean.co";
@@ -1086,6 +1094,7 @@ export default async (request, context) => {
           subject,
           html,
           text,
+          request,
         });
       },
       { payloadHash }

@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (Blobs strong-consistency + etag durability for claim→lead→outbox on review branch; baseline pin `76633d0`)
+Last updated: **2026-08-14** (Ads consent gate + attribution on all pages + preview-only Brevo fail flag; baseline pin `76633d0`)
 
 ---
 

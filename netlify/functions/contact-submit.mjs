@@ -31,6 +31,7 @@ import {
   parseIdempotencyKey,
   rateLimitCheck,
 } from "./lib/request-guard.mjs";
+import { shouldForceBrevoFail } from "./lib/preview-brevo-fail.mjs";
 
 const MAX_BODY = 80_000;
 const PUBLIC_FAILURE =
@@ -78,7 +79,11 @@ function parseFormBody(raw, contentType) {
   return o;
 }
 
-async function sendBrevo({ subject, html, text }) {
+async function sendBrevo({ subject, html, text, request }) {
+  if (shouldForceBrevoFail(request)) {
+    console.error("[contact-submit] preview-only forced Brevo failure");
+    throw new Error("BREVO_FAILED");
+  }
   const apiKey = process.env.BREVO_API_KEY;
   const fromRaw =
     (process.env.SPARKLEAN_FROM_EMAIL && process.env.SPARKLEAN_FROM_EMAIL.trim()) || "info@sparklean.co";
@@ -307,7 +312,7 @@ export default async (request, context) => {
     const delivery = await deliverOutbox(
       lead.leadId,
       async () => {
-        await sendBrevo({ subject, html, text });
+        await sendBrevo({ subject, html, text, request });
       },
       { payloadHash }
     );
