@@ -351,6 +351,33 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   .inner-box{padding:32px 18px !important;}
   .area{min-width:100% !important;padding:20px !important;}
 }
+
+/* Paid-search message match + cost factors (Phase 1 local SEO) */
+.paid-match{background:linear-gradient(180deg,rgba(184,164,122,.12),rgba(14,14,14,0));border-bottom:1px solid rgba(184,164,122,.18);padding:28px 80px 32px;}
+.paid-match-inner{max-width:1100px;margin:0 auto;}
+.paid-match-kicker{font-family:var(--serif);font-size:clamp(1.15rem,2.4vw,1.55rem);color:var(--white);margin-bottom:14px;line-height:1.25;}
+.paid-match-kicker em{font-style:italic;color:var(--gold);}
+.paid-match-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 18px;margin:0 0 18px;}
+.paid-match-list li{font-size:.72rem;letter-spacing:.04em;color:var(--w70);display:flex;gap:8px;align-items:flex-start;line-height:1.45;}
+.paid-match-list li::before{content:"✦";color:var(--gold);flex-shrink:0;margin-top:1px;}
+.paid-match-ctas{display:flex;flex-wrap:wrap;gap:12px;}
+.cost-factors{padding:88px 80px;background:var(--dark2);}
+.cost-factors-inner{max-width:920px;margin:0 auto;}
+.cost-factors .sec-h{margin-bottom:12px;}
+.cost-factors-lead{font-family:var(--serif);font-size:.98rem;line-height:1.85;color:var(--w70);margin:0 0 28px;}
+.cost-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px;}
+.cost-card{border:1px solid rgba(184,164,122,.14);background:rgba(14,14,14,.45);padding:18px 16px;}
+.cost-card strong{display:block;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.cost-card span{font-size:.78rem;color:var(--w70);line-height:1.55;display:block;}
+.hero-mobile-body .hero-mobile-h{font-family:var(--serif);font-size:2rem;font-weight:400;line-height:1.12;margin-bottom:14px;color:var(--white);}
+.hero-mobile-body .hero-mobile-h em{font-style:italic;color:var(--gold);}
+@media(max-width:900px){
+  .paid-match{padding:22px 20px 26px;}
+  .cost-factors{padding:64px 20px;}
+  .paid-match-ctas{flex-direction:column;align-items:stretch;}
+  .paid-match-ctas .btn-gold,.paid-match-ctas .btn-outline{justify-content:center;text-align:center;}
+}
+
 </style>
 <link rel="stylesheet" href="/css/sparklean-mobile-first.css">
 <link rel="stylesheet" href="/css/quote-intake.css">
@@ -436,10 +463,11 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   <picture><source type="image/webp" srcset="/images/heroes/69b432ed7f788ef8b631d3ba_IMG_1466-f7c19d91-800.webp 800w, /images/heroes/69b432ed7f788ef8b631d3ba_IMG_1466-f7c19d91-1400.webp 1400w" sizes="100vw"><img class="hero-mobile-img" src="/images/heroes/69b432ed7f788ef8b631d3ba_IMG_1466-f7c19d91-1400.jpg" srcset="/images/heroes/69b432ed7f788ef8b631d3ba_IMG_1466-f7c19d91-1400.jpg 1400w" sizes="100vw" alt="Sparklean luxury home cleaning Cape Coral FL" width="1400" height="900" decoding="async" fetchpriority="high"></picture>
   <div class="hero-mobile-body">
     <div class="hero-mobile-tag"><div class="hero-mobile-tag-line"></div><span>Luxury Cleaning · Cape Coral, FL</span></div>
-    <h1>Cape Coral House Cleaning<br>for <em>Canal Homes</em></h1>
+    <p class="hero-mobile-h">Cape Coral House Cleaning<br>for <em>Canal Homes</em></p>
     <p class="hero-sub">Waterfront-minded care for Cape Harbour, Tarpon Point, Sandoval, Cape Royal and canal addresses throughout the city.</p>
     <p class="hero-guar">✦ 24-Hour Happiness Guaranteed</p>
     <div class="hero-btns">
+      <a href="tel:2398883588" class="btn-outline">Call (239) 888-3588</a>
       <a href="/contact" class="btn-gold" data-sparklean-intake-preset="recurringResidential">Begin recurring residential care →</a>
       <a href="#services" class="btn-outline">Our Services</a>
     </div>
@@ -468,6 +496,25 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   </div>
 </div>
 
+
+<!-- PAID-SEARCH MESSAGE MATCH -->
+<section class="paid-match" id="paid-match" aria-label="House cleaning in Cape Coral">
+  <div class="paid-match-inner">
+    <p class="paid-match-kicker">Looking for <em>house cleaning in Cape Coral</em>?</p>
+    <ul class="paid-match-list">
+      <li>House cleaning in Cape Coral — local teams who know the area</li>
+      <li>Weekly and biweekly recurring service available</li>
+      <li>Uniformed, supervised cleaning teams</li>
+      <li>Bonded and insured (with Workers' Comp)</li>
+      <li>24-hour satisfaction guarantee</li>
+    </ul>
+    <div class="paid-match-ctas">
+      <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588</a>
+      <a href="/contact" class="btn-outline" data-sparklean-intake-preset="recurringResidential">Request a personalized recurring-cleaning quote</a>
+    </div>
+  </div>
+</section>
+
 <div class="marquee"><div class="marquee-track">
   <span class="m-item"><span class="m-dot"></span>House Cleaning Cape Coral FL</span>
   <span class="m-item"><span class="m-dot"></span>Cape Harbour · Tarpon Point · Sandoval</span>
@@ -491,7 +538,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   <div class="ni-grid">
     <div class="ni-img-wrap">
       <div class="ni-badge"><div class="ni-badge-n">24h</div><div class="ni-badge-t">Happiness Guaranteed</div></div>
-      <img class="ni-img" src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b43323f12be19b9cf64860_IMG_1460.jpeg" alt="Sparklean luxury home cleaning Cape Coral FL">
+      <img class="ni-img" src="/images/cdn-migrated/69b43323f12be19b9cf64860_IMG_1460.jpeg-5e1e3095-1200.webp" alt="Sparklean luxury home cleaning Cape Coral FL" width="1200" height="800" loading="lazy" decoding="async">
     </div>
     <div>
       <div class="eyebrow"><div class="ey-line"></div><span>Cape Coral, Florida</span></div>
@@ -562,7 +609,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
       <div class="ss-num">01</div>
       <div class="ss-icon">🏠</div>
       <div class="ss-title">Recurring House Cleaning</div>
-      <p class="ss-desc">Recurring care that stays ahead of salt film, lanai traffic, and everyday waterfront living while preserving a calm, polished interior.</p>
+      <p class="ss-desc">Weekly, biweekly, or monthly care that stays ahead of salt film, lanai traffic, and everyday waterfront living — uniformed, supervised teams so the standard stays consistent.</p>
       <div class="ss-link">Learn More</div>
       <div class="ss-arrow">→</div>
     </a>
@@ -596,7 +643,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 <section class="photo-pair">
   <div class="pp-grid">
     <div class="pp-item">
-      <img class="pp-img" src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b43506abc6fb8d1f397a4d_unnamed%20(9).jpg" alt="Sparklean luxury cleaning Cape Coral home" loading="lazy">
+      <img class="pp-img" src="/images/cdn-migrated/69b43506abc6fb8d1f397a4d_unnamed--9-.jpg-2981388b-1200.webp" alt="Sparklean luxury cleaning Cape Coral home" loading="lazy" width="1200" height="800" decoding="async">
       <div class="pp-label"><div class="pp-label-t">Luxury Home Cleaning</div><div class="pp-label-s">Cape Coral · SW Florida</div></div>
     </div>
     <div class="pp-item">
@@ -639,6 +686,26 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
       </div>
       <p class="rev-google-cta"><a href="https://www.google.com/maps/search/?api=1&amp;query=Sparklean%20Cleaning%2024221%20Bernwood%20Dr%20Suite%202%20Bonita%20Springs%20FL%2034135" target="_blank" rel="noopener noreferrer" class="btn-outline" style="font-size:.54rem;padding:12px 24px;letter-spacing:.14em;">Read live Google reviews ↗</a></p>
     </div>
+  </div>
+</section>
+
+
+<!-- PRICE-INTENT SUPPORT -->
+<section class="cost-factors" id="cost-factors">
+  <div class="cost-factors-inner">
+    <div class="eyebrow"><div class="ey-line"></div><span>Pricing clarity</span></div>
+    <h2 class="sec-h">What affects the cost of<br><em>house cleaning in Cape Coral?</em></h2>
+    <div class="gold-line"></div>
+    <p class="cost-factors-lead">There is no honest one-price answer for every home. Sparklean quotes from the details that actually change the work — then you choose weekly, biweekly, or another recurring rhythm that fits.</p>
+    <div class="cost-grid">
+      <div class="cost-card"><strong>Home size</strong><span>Square footage and how many bathrooms drive time on site.</span></div>
+      <div class="cost-card"><strong>Cleaning frequency</strong><span>Weekly and biweekly visits usually cost less per visit than rare deep resets.</span></div>
+      <div class="cost-card"><strong>Current condition</strong><span>First cleans and neglected areas may need extra detail before recurring care begins.</span></div>
+      <div class="cost-card"><strong>Occupancy &amp; pets</strong><span>Busy households and pets change hair, floors, and high-touch surfaces.</span></div>
+      <div class="cost-card"><strong>Rooms &amp; scope</strong><span>Add-ons like ovens, insides of cabinets, or windows change the plan.</span></div>
+      <div class="cost-card"><strong>Special instructions</strong><span>Gate codes, preferred products, and fragile finishes are built into your quote.</span></div>
+    </div>
+    <a href="/contact" class="btn-gold" data-sparklean-intake-preset="recurringResidential">Request a personalized recurring-cleaning quote →</a>
   </div>
 </section>
 
