@@ -135,11 +135,7 @@ h1 em{font-style:italic;color:var(--gold)}
 .bc-sep{font-size:.52rem;color:var(--w30);}
 .bc-inner span{font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--w30);}
 
-/* SEO CITY BAND */
-.city-band{padding:28px 80px;background:var(--dark3);border-bottom:1px solid rgba(201,168,76,.07);}
-.city-band p{font-family:var(--serif);font-size:.88rem;line-height:1.9;color:var(--w70);max-width:100%;text-align:center;}
-.city-band strong{color:var(--gold-lt);font-weight:400;}
-.city-band a{color:var(--gold-lt);text-decoration:underline;text-underline-offset:3px;}
+
 
 /* NAPLES INTRO */
 .naples-intro{padding:110px 80px;}
@@ -277,7 +273,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   .nav-logo img{height:76px;}
   .hero-content{padding:calc(96px + 48px) 28px 64px;}
   .hero-stats{right:24px;gap:22px;padding:14px 18px;}
-  .breadcrumb,.city-band{padding-left:32px;padding-right:32px;}
+  .breadcrumb,
   .naples-intro,.hoods,.svc-sum,.photo-pair,.snowbird,.reviews,.faq,.cta{padding-left:32px;padding-right:32px;}
   .rev-band{grid-template-columns:1fr;gap:32px;}
   .rev-grid{grid-template-columns:1fr;}
@@ -303,7 +299,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   .hero{display:none!important;}
   .hero-mobile{display:flex;}
 
-  .breadcrumb,.city-band{padding-left:20px;padding-right:20px;}
+  .breadcrumb,
   .naples-intro,.hoods,.svc-sum,.photo-pair,.snowbird,.reviews,.faq,.cta{padding-left:20px;padding-right:20px;padding-top:72px;padding-bottom:72px;}
   .ni-grid,.sb-grid{grid-template-columns:1fr;gap:36px;}
   .hoods-grid{grid-template-columns:1fr;}
@@ -370,7 +366,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   .ci-grid,.sl-grid,.ni-grid,.sb-grid,.pp-grid,.comm-grid,.pb-inner,.about-grid,.why-grid,.prod-grid,.faq-grid,.rev-band{grid-template-columns:1fr !important;gap:32px !important;}
   .pt-grid,.wb-grid,.hoods-grid,.ss-grid,.ind-grid,.why-grid,.svc-grid,.rev-grid{grid-template-columns:1fr !important;gap:3px !important;}
   .pc-intro,.project-types,.svc-list,.why-builders,.community,.cta,.naples-intro,.hoods,.svc-sum,.photo-pair,.snowbird,.faq,.about,.services,.why,.products,.reviews,.areas,.inner,.comm-intro,.industries{padding:52px 20px !important;}
-  .breadcrumb,.city-band{padding-left:20px !important;padding-right:20px !important;}
+  .breadcrumb,
   .pp-img{height:220px !important;}
   .photo-pair{grid-template-columns:1fr !important;}
   .cta-btns{flex-direction:column !important;align-items:stretch !important;}
@@ -380,30 +376,51 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   .area{min-width:100% !important;padding:20px !important;}
 }
 
-/* Paid-search message match + cost factors (Phase 1 local SEO) */
-.paid-match{background:linear-gradient(180deg,rgba(184,164,122,.12),rgba(14,14,14,0));border-bottom:1px solid rgba(184,164,122,.18);padding:28px 80px 32px;}
-.paid-match-inner{max-width:1100px;margin:0 auto;}
-.paid-match-kicker{font-family:var(--serif);font-size:clamp(1.15rem,2.4vw,1.55rem);color:var(--white);margin-bottom:14px;line-height:1.25;}
-.paid-match-kicker em{font-style:italic;color:var(--gold);}
-.paid-match-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 18px;margin:0 0 18px;}
-.paid-match-list li{font-size:.72rem;letter-spacing:.04em;color:var(--w70);display:flex;gap:8px;align-items:flex-start;line-height:1.45;}
-.paid-match-list li::before{content:"✦";color:var(--gold);flex-shrink:0;margin-top:1px;}
-.paid-match-ctas{display:flex;flex-wrap:wrap;gap:12px;}
-.cost-factors{padding:88px 80px;background:var(--dark2);}
-.cost-factors-inner{max-width:920px;margin:0 auto;}
-.cost-factors .sec-h{margin-bottom:12px;}
-.cost-factors-lead{font-family:var(--serif);font-size:.98rem;line-height:1.85;color:var(--w70);margin:0 0 28px;}
-.cost-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px;}
-.cost-card{border:1px solid rgba(184,164,122,.14);background:rgba(14,14,14,.45);padding:18px 16px;}
-.cost-card strong{display:block;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
-.cost-card span{font-size:.78rem;color:var(--w70);line-height:1.55;display:block;}
-.hero-mobile-body .hero-mobile-h{font-family:var(--serif);font-size:2rem;font-weight:400;line-height:1.12;margin-bottom:14px;color:var(--white);}
-.hero-mobile-body .hero-mobile-h em{font-style:italic;color:var(--gold);}
-@media(max-width:900px){
-  .paid-match{padding:22px 20px 26px;}
-  .cost-factors{padding:64px 20px;}
+/* Paid-match + local coverage — premium two-column (city LPs) */
+.paid-match{padding:80px 40px;background:var(--dark3);border-bottom:1px solid rgba(201,168,76,.07);}
+.paid-match-inner{max-width:1180px;margin:0 auto;}
+.paid-match-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px 56px;align-items:center;}
+.paid-match .eyebrow{margin-bottom:18px;}
+.paid-match-h{font-family:var(--serif);font-size:clamp(2.05rem,1.2rem + 2.4vw,3.25rem);font-weight:400;line-height:1.15;color:var(--white);margin:0 0 18px;max-width:22ch;}
+.paid-match-h em{font-style:italic;color:var(--gold);}
+.paid-match-body{font-size:1rem;line-height:1.7;color:var(--w70);margin:0 0 28px;max-width:38rem;}
+.paid-match-ctas{display:flex;flex-wrap:wrap;gap:14px;}
+.paid-match-ctas .btn-gold,.paid-match-ctas .btn-outline{font-size:.72rem;letter-spacing:.14em;padding:18px 28px;min-height:52px;box-sizing:border-box;}
+.paid-match-trust{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.pm-card{border:1px solid rgba(201,168,76,.28);background:rgba(14,14,14,.35);padding:22px 20px;min-height:108px;display:flex;flex-direction:column;gap:10px;justify-content:center;}
+.pm-card-mark{width:18px;height:1px;background:var(--gold);display:block;}
+.pm-card-title{font-family:var(--serif);font-size:1.05rem;line-height:1.35;color:var(--white);font-weight:400;margin:0;}
+.pm-card-sub{font-size:.88rem;line-height:1.5;color:var(--w70);margin:0;}
+.local-xp{padding:80px 40px;background:var(--dark);border-bottom:1px solid rgba(201,168,76,.07);}
+.local-xp-inner{max-width:1180px;margin:0 auto;}
+.local-xp .eyebrow{margin-bottom:18px;}
+.local-xp-h{font-family:var(--serif);font-size:clamp(2.05rem,1.2rem + 2.4vw,3.25rem);font-weight:400;line-height:1.15;color:var(--white);margin:0 0 22px;max-width:28ch;}
+.local-xp-h em{font-style:italic;color:var(--gold);}
+.local-xp-copy{max-width:46rem;}
+.local-xp-copy p{font-size:1rem;line-height:1.75;color:var(--w70);margin:0 0 16px;}
+.local-xp-links{display:flex;flex-wrap:wrap;gap:12px 18px;margin-top:28px;padding-top:28px;border-top:1px solid rgba(201,168,76,.12);}
+.local-xp-links a{font-size:.78rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-lt);text-decoration:none;border-bottom:1px solid rgba(201,168,76,.35);padding-bottom:3px;transition:color .2s,border-color .2s;}
+.local-xp-links a:hover{color:var(--gold);border-color:var(--gold);}
+.city-guides{padding:48px 40px 56px;background:var(--dark3);border-bottom:1px solid rgba(201,168,76,.07);}
+.city-guides-inner{max-width:1180px;margin:0 auto;}
+.city-guides .eyebrow{margin-bottom:16px;}
+.city-guides-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.city-guides-card{display:block;border:1px solid rgba(201,168,76,.22);padding:22px 20px;text-decoration:none;color:inherit;transition:border-color .2s,background .2s;}
+.city-guides-card:hover{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.04);}
+.city-guides-card span{display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.city-guides-card strong{display:block;font-family:var(--serif);font-size:1.05rem;font-weight:400;line-height:1.35;color:var(--white);}
+@media(max-width:960px){
+  .paid-match,.local-xp{padding:64px 24px;}
+  .paid-match-grid{grid-template-columns:1fr;gap:36px;}
+  .paid-match-h,.local-xp-h{font-size:clamp(2.05rem,5.5vw,2.35rem);max-width:none;}
   .paid-match-ctas{flex-direction:column;align-items:stretch;}
-  .paid-match-ctas .btn-gold,.paid-match-ctas .btn-outline{justify-content:center;text-align:center;}
+  .paid-match-ctas .btn-gold,.paid-match-ctas .btn-outline{justify-content:center;text-align:center;width:100%;}
+  .city-guides{padding:40px 24px 48px;}
+  .city-guides-grid{grid-template-columns:1fr;}
+}
+@media(max-width:560px){
+  .paid-match-trust{grid-template-columns:1fr;}
+  .pm-card{min-height:0;}
 }
 
 </style>
@@ -429,7 +446,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 <!-- NAV -->
 <nav>
   <a href="/" class="nav-logo">
-    <img src="/images/branding/Sparklean_Logo_Transparent.png" alt="Sparklean Cleaning">
+    <img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning">
   </a>
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
@@ -518,26 +535,6 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
     <div class="trust-item"><span class="t-icon">★</span><div><span class="t-title">Supervised Teams</span><span class="t-sub">Direct Employees</span></div></div>
   </div>
 </div>
-
-
-<!-- PAID-SEARCH MESSAGE MATCH -->
-<section class="paid-match" id="paid-match" aria-label="House cleaning in Naples">
-  <div class="paid-match-inner">
-    <p class="paid-match-kicker">Looking for <em>house cleaning in Naples</em>?</p>
-    <ul class="paid-match-list">
-      <li>House cleaning in Naples — local teams who know the area</li>
-      <li>Weekly and biweekly recurring service available</li>
-      <li>Uniformed, supervised cleaning teams</li>
-      <li>Bonded and insured (with Workers' Comp)</li>
-      <li>24-hour satisfaction guarantee</li>
-    </ul>
-    <div class="paid-match-ctas">
-      <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588</a>
-      <a href="/contact" class="btn-outline" data-sparklean-intake-preset="recurringResidential">Request a personalized recurring-cleaning quote</a>
-    </div>
-  </div>
-</section>
-
 <!-- MARQUEE -->
 <div class="marquee"><div class="marquee-track">
   <span class="m-item"><span class="m-dot"></span>House Cleaning Naples FL</span>
@@ -565,11 +562,56 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   </div>
 </div>
 
-<!-- SEO CITY BAND -->
-<div class="city-band">
-  <p>Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Southwest Florida. In <strong>Naples</strong>, we provide supervised house cleaning — not a gig marketplace — inside <strong>Port Royal</strong>, <strong>Pelican Bay</strong>, <strong>Park Shore</strong>, <strong>Old Naples</strong>, <strong>The Moorings</strong>, <strong>Aqualane Shores</strong>, <strong>Bay Colony</strong>, <strong>Coquina Sands</strong>, <strong>North Naples</strong>, and <strong>East Naples</strong> (zips <strong>34102</strong>, <strong>34103</strong>, <strong>34105</strong>, <strong>34108</strong>, <strong>34109</strong>). Gate access is coordinated in advance. Finishes are treated carefully. Recurring house cleaning, seasonal preparation, deep cleaning, and white glove estate care are scheduled around how Naples households actually live. The same company also serves <a href="/house-cleaning-bonita-springs">Bonita Springs</a>, <a href="/house-cleaning-estero">Estero</a>, <a href="/house-cleaning-fort-myers">Fort Myers</a>, <a href="/house-cleaning-cape-coral">Cape Coral</a>, and Marco Island. See <a href="/residential-cleaning">residential cleaning</a>, <a href="/commercial-cleaning">Naples commercial cleaning</a>, and <a href="/post-construction-cleaning">post-construction cleaning</a>, plus guides on <a href="/blog/naples-house-cleaning-when-to-hire-a-pro">when to hire a pro</a>, <a href="/blog/naples-post-construction-cleaning-before-move-in">post-construction cleaning</a>, and <a href="/blog/naples-office-cleaning-medical-law-firms">office &amp; medical cleaning</a>. <a href="/blog">Browse articles</a> or <a href="/contact">contact Sparklean</a>.</p>
-</div>
 
+<!-- PAID-SEARCH MESSAGE MATCH -->
+<section class="paid-match" id="paid-match" aria-label="House cleaning in Naples">
+  <div class="paid-match-inner">
+    <div class="paid-match-grid">
+      <div class="paid-match-copy">
+        <div class="eyebrow"><div class="ey-line"></div><span>House cleaning in Naples</span></div>
+        <h2 class="paid-match-h">A professionally managed clean—<em>without the uncertainty.</em></h2>
+        <p class="paid-match-body">Sparklean provides recurring house cleaning throughout Naples with uniformed teams, active supervision and consistent standards. Choose weekly, biweekly or monthly service built around your home.</p>
+        <div class="paid-match-ctas">
+          <a href="/contact" class="btn-gold" data-sparklean-intake-preset="recurringResidential">Get My Cleaning Plan</a>
+          <a href="tel:2398883588" class="btn-outline">Call (239) 888-3588</a>
+        </div>
+      </div>
+      <div class="paid-match-trust" aria-label="Why homeowners choose Sparklean">
+        <div class="pm-card"><span class="pm-card-mark" aria-hidden="true"></span><p class="pm-card-title">Uniformed, supervised teams</p><p class="pm-card-sub">Direct employees — not a gig marketplace</p></div>
+        <div class="pm-card"><span class="pm-card-mark" aria-hidden="true"></span><p class="pm-card-title">Bonded and insured</p><p class="pm-card-sub">Including Workers&apos; Comp coverage</p></div>
+        <div class="pm-card"><span class="pm-card-mark" aria-hidden="true"></span><p class="pm-card-title">Weekly, biweekly &amp; monthly</p><p class="pm-card-sub">Recurring plans sized to your home</p></div>
+        <div class="pm-card"><span class="pm-card-mark" aria-hidden="true"></span><p class="pm-card-title">24-hour satisfaction guarantee</p><p class="pm-card-sub">We make it right — quickly</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="local-xp" id="local-coverage" aria-label="Local Naples experience">
+  <div class="local-xp-inner">
+    <div class="eyebrow"><div class="ey-line"></div><span>Local Naples experience</span></div>
+    <h2 class="local-xp-h">Cleaning designed around how Naples homes are actually lived in.</h2>
+    <div class="local-xp-copy">
+      <p>From full-time residences and waterfront homes to seasonal properties and condominiums, Sparklean provides professionally supervised cleaning throughout Naples. Service is coordinated around property access, household preferences and the recurring schedule selected by each client.</p>
+      <p>Our Naples service area includes Port Royal, Pelican Bay, Park Shore, Old Naples, The Moorings, Aqualane Shores, Bay Colony, Coquina Sands, North Naples and East Naples.</p>
+    </div>
+    <div class="local-xp-links">
+      <a href="/residential-cleaning">Explore Residential Cleaning</a>
+      <a href="/commercial-cleaning">Commercial Cleaning in Naples</a>
+      <a href="/post-construction-cleaning">Post-Construction Cleaning</a>
+    </div>
+  </div>
+</section>
+
+<section class="city-guides" aria-label="Related guides">
+  <div class="city-guides-inner">
+    <div class="eyebrow"><div class="ey-line"></div><span>Related reading</span></div>
+    <div class="city-guides-grid">
+      <a class="city-guides-card" href="/blog/naples-house-cleaning-when-to-hire-a-pro"><span>Guide</span><strong>When to hire a house cleaning pro in Naples</strong></a>
+      <a class="city-guides-card" href="/blog/naples-post-construction-cleaning-before-move-in"><span>Guide</span><strong>Post-construction cleaning before move-in</strong></a>
+      <a class="city-guides-card" href="/blog/naples-office-cleaning-medical-law-firms"><span>Guide</span><strong>Office & medical cleaning in Naples</strong></a>
+    </div>
+  </div>
+</section>
 <!-- NAPLES INTRO -->
 <section class="naples-intro">
   <div class="ni-grid">
@@ -848,7 +890,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 <footer>
   <div class="footer-top">
     <div class="footer-logo-wrap">
-      <img src="/images/branding/Sparklean_Logo_Transparent.png" alt="Sparklean Cleaning">
+      <img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning">
       <div class="footer-divider"></div>
       <div class="footer-cities"><a href="/house-cleaning-naples" style="color:inherit;text-decoration:none;">Naples</a> &nbsp;·&nbsp; <a href="/house-cleaning-estero" style="color:inherit;text-decoration:none;">Estero</a> &nbsp;·&nbsp; <a href="/house-cleaning-fort-myers" style="color:inherit;text-decoration:none;">Fort Myers</a> &nbsp;·&nbsp; <a href="/house-cleaning-bonita-springs" style="color:inherit;text-decoration:none;">Bonita Springs</a> &nbsp;·&nbsp; <a href="/house-cleaning-cape-coral" style="color:inherit;text-decoration:none;">Cape Coral</a></div>
     </div>
