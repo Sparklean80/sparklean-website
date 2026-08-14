@@ -1,0 +1,140 @@
+{
+  "productSha": "638cf4767d578bda1b2d7f1335707bf76b153b37",
+  "deployId": "6a7f6393e3a2322af323600d",
+  "productionUrl": "https://www.sparklean.co",
+  "testedPage": "/house-cleaning-naples",
+  "startedAt": "2026-08-14T18:51:46.643Z",
+  "constraints": {
+    "maxNewLeads": 1,
+    "noSeoChanges": true,
+    "noBrevoForce": true,
+    "noAdsConsoleChanges": true,
+    "noSecretsInEvidence": true
+  },
+  "steps": {
+    "uiSnapshot": {
+      "title": "House Cleaning Naples FL | Sparklean Cleaning",
+      "h1": "Naples House Cleaning with Discretion",
+      "paidMatchVisible": true,
+      "costFactorsPresent": true,
+      "telHrefs": [
+        "tel:[redacted-phone]",
+        "tel:[redacted-phone]",
+        "tel:[redacted-phone]",
+        "tel:[redacted-phone]",
+        "tel:[redacted-phone]",
+        "tel:[redacted-phone]"
+      ],
+      "quoteCtaTextPresent": true
+    },
+    "quoteSubmitDirect": {
+      "status": 200,
+      "ok": true,
+      "leadId": "b0d8f433-f113-4347-8216-baba9e110432",
+      "hasReportToken": true,
+      "code": null,
+      "errorPresent": false,
+      "intakeOpenAtStart": true,
+      "intakeErrorText": null
+    },
+    "cityIntake": {
+      "gtagReady": true,
+      "doneTextPresent": true,
+      "delayedNoteCount": 0,
+      "leadAccepted": true,
+      "leadId": "b0d8f433-f113-4347-8216-baba9e110432",
+      "gclidExpected": "CR-PROD-638cf47-city",
+      "gclidStored": "CR-PROD-638cf47-city",
+      "attributionPreserved": true,
+      "hasReportTokenOnce": true,
+      "conversionReport": [
+        {
+          "status": 200,
+          "ok": true,
+          "trackingStatus": "BROWSER_SENT"
+        }
+      ],
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "google": {
+        "rawGoogleishCount": 17,
+        "leadConversionFanOutCount": 3,
+        "logicalLeadConversionCount": 1,
+        "conversionLabelsSeen": [
+          "HnWnCJPRt9kcELDFqLc_"
+        ],
+        "conversionIdsSeen": [
+          "17027441328"
+        ],
+        "leadConversionHits": [
+          {
+            "method": "GET",
+            "host": "www.googleadservices.com",
+            "pathname": "/pagead/conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": "b0d8f433-f113-4347-8216-baba9e110432",
+            "tid_param": null,
+            "oid": "b0d8f433-f113-4347-8216-baba9e110432",
+            "conversion_id_path": "17027441328",
+            "send_to": null
+          },
+          {
+            "method": "POST",
+            "host": "googleads.g.doubleclick.net",
+            "pathname": "/pagead/viewthroughconversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "oid": null,
+            "conversion_id_path": null,
+            "send_to": null
+          },
+          {
+            "method": "GET",
+            "host": "www.google.com",
+            "pathname": "/pagead/1p-conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "oid": null,
+            "conversion_id_path": null,
+            "send_to": null
+          }
+        ]
+      },
+      "firedLeadIds": [
+        "b0d8f433-f113-4347-8216-baba9e110432"
+      ],
+      "transactionIdMatchesLeadUuid": true,
+      "correctConversionId": true,
+      "correctConversionLabel": true
+    },
+    "refreshNoDoubleFire": {
+      "newLogicalLeadConversions": 0,
+      "newLeadConversionFanOut": 0,
+      "newConversionReports": 0,
+      "firedLeadIdsAfterRefresh": [
+        "b0d8f433-f113-4347-8216-baba9e110432"
+      ],
+      "pass": true
+    }
+  },
+  "finishedAt": "2026-08-14T18:51:57.641Z",
+  "acceptance": {
+    "durableLead": true,
+    "brevoPathAccepted": true,
+    "exactlyOneLogicalGoogleConversion": true,
+    "correctConversionId": true,
+    "correctConversionLabel": true,
+    "transactionIdEqualsLeadUuid": true,
+    "attributionPreserved": true,
+    "durableBrowserSent": true,
+    "refreshNoSecondConversion": true,
+    "allRequired": true
+  }
+}

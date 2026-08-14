@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (Phase 1 full local-SEO package: city paid-match + cost factors + money-page CDN migration; email auth CLOSED)
+Last updated: **2026-08-14** (Phase 1 local-SEO **live** on prod deploy `6a7f6393` / product `638cf47`; email auth CLOSED)
 
 ---
 

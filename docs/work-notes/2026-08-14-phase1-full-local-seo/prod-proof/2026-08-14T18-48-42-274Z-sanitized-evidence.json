@@ -1,0 +1,86 @@
+{
+  "productSha": "638cf4767d578bda1b2d7f1335707bf76b153b37",
+  "deployId": "6a7f62008af4ec4a666153c6",
+  "productionUrl": "https://www.sparklean.co",
+  "testedPage": "/house-cleaning-naples",
+  "startedAt": "2026-08-14T18:48:42.275Z",
+  "constraints": {
+    "maxNewLeads": 1,
+    "noSeoChanges": true,
+    "noBrevoForce": true,
+    "noAdsConsoleChanges": true,
+    "noSecretsInEvidence": true
+  },
+  "steps": {
+    "uiSnapshot": {
+      "title": "House Cleaning Naples FL | Sparklean Cleaning",
+      "h1": "Naples House Cleaning with Discretion",
+      "paidMatchVisible": true,
+      "costFactorsPresent": true,
+      "telHrefs": [
+        "tel:[redacted-phone]",
+        "tel:[redacted-phone]",
+        "tel:[redacted-phone]",
+        "tel:[redacted-phone]",
+        "tel:[redacted-phone]",
+        "tel:[redacted-phone]"
+      ],
+      "quoteCtaTextPresent": true
+    },
+    "quoteSubmitDirect": {
+      "status": 502,
+      "ok": false,
+      "leadId": null,
+      "hasReportToken": false,
+      "code": null,
+      "errorPresent": false,
+      "intakeOpenAtStart": true,
+      "intakeErrorText": "We're having trouble submitting your request right now. Please call Sparklean directly at ([redacted-phone]."
+    },
+    "cityIntake": {
+      "gtagReady": true,
+      "doneTextPresent": false,
+      "delayedNoteCount": 0,
+      "leadAccepted": false,
+      "leadId": null,
+      "gclidExpected": "CR-PROD-638cf47-city",
+      "gclidStored": "CR-PROD-638cf47-city",
+      "attributionPreserved": true,
+      "hasReportTokenOnce": false,
+      "conversionReport": [],
+      "finalDurableTrackingStatus": null,
+      "google": {
+        "rawGoogleishCount": 10,
+        "leadConversionFanOutCount": 0,
+        "logicalLeadConversionCount": 0,
+        "conversionLabelsSeen": [],
+        "conversionIdsSeen": [],
+        "leadConversionHits": []
+      },
+      "firedLeadIds": [],
+      "transactionIdMatchesLeadUuid": false,
+      "correctConversionId": false,
+      "correctConversionLabel": false
+    },
+    "refreshNoDoubleFire": {
+      "newLogicalLeadConversions": 0,
+      "newLeadConversionFanOut": 0,
+      "newConversionReports": 0,
+      "firedLeadIdsAfterRefresh": [],
+      "pass": true
+    }
+  },
+  "finishedAt": "2026-08-14T18:49:35.720Z",
+  "acceptance": {
+    "durableLead": false,
+    "brevoPathAccepted": false,
+    "exactlyOneLogicalGoogleConversion": false,
+    "correctConversionId": false,
+    "correctConversionLabel": false,
+    "transactionIdEqualsLeadUuid": false,
+    "attributionPreserved": true,
+    "durableBrowserSent": false,
+    "refreshNoSecondConversion": true,
+    "allRequired": false
+  }
+}

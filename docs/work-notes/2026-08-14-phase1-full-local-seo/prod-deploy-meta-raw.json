@@ -1,0 +1,216 @@
+﻿{
+  "id": "6a7f62008af4ec4a666153c6",
+  "site_id": "7b32b2d6-9257-4d3c-9236-80ff24a54563",
+  "build_id": null,
+  "state": "ready",
+  "name": "sparklean-website",
+  "url": "https://www.sparklean.co",
+  "ssl_url": "https://www.sparklean.co",
+  "admin_url": "https://app.netlify.com/projects/sparklean-website",
+  "deploy_url": "http://6a7f62008af4ec4a666153c6--sparklean-website.netlify.app",
+  "deploy_ssl_url": "https://6a7f62008af4ec4a666153c6--sparklean-website.netlify.app",
+  "created_at": "2026-08-14T18:44:16.449Z",
+  "updated_at": "2026-08-14T18:44:45.185Z",
+  "user_id": "69b3556c9bbc7da57dca8e8a",
+  "error_message": null,
+  "required": [],
+  "required_functions": [],
+  "required_edge_functions": [],
+  "commit_ref": null,
+  "review_id": null,
+  "branch": "main",
+  "commit_url": null,
+  "skipped": null,
+  "locked": null,
+  "title": "CR authorize prod deploy exact SHA 638cf4767d578bda1b2d7f1335707bf76b153b37",
+  "commit_message": null,
+  "review_url": null,
+  "published_at": "2026-08-14T18:44:36.792Z",
+  "context": "production",
+  "deploy_time": 20,
+  "available_functions": [
+    {
+      "n": "contact-submit",
+      "d": "15dce0131208ab2123bd70356ac49ea8d9d872a8366bbe99fa4fb28848975753",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "p": 10,
+      "id": "092fe2547b171fcd25a1f08c74470c3de1a8f61add2d9da587d7bcee291b2e73",
+      "a": "786465436847",
+      "c": "2026-08-14T18:44:35.496Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "aa9f2503777732170aa5530e7ddcb9b256429c961ba338540dce4fc4a9aec6c4",
+      "r": "nodejs24.x",
+      "rg": "us-east-2",
+      "s": 351586
+    },
+    {
+      "n": "conversion-report",
+      "d": "ebebcf843a13b31d0f12b2550f35f6730b6d457f20969258648ba274fc60ef86",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "p": 10,
+      "id": "8aee45825e1f1616793db069bd97bf44e815a52cd6d916f07112466b1490eafe",
+      "a": "775206496707",
+      "c": "2026-08-14T18:44:35.612Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "f5af85b3d65abe41dc94d3dfa61463351ad65bc834225a766fd5b8dc1011126d",
+      "r": "nodejs24.x",
+      "rg": "us-east-2",
+      "s": 344622
+    },
+    {
+      "n": "leads-reconcile-invoke",
+      "d": "8f33a98d17a22bb2a2e4baa167af0c17223abd80b7bdf0bf46badb56cc214cb4",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "p": 10,
+      "id": "b90b809aaf4e714196a18effc58650a1576b1abba4861a0aa3898e99f677dcf6",
+      "a": "375708248955",
+      "c": "2026-08-14T18:44:35.849Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "5835b45e0497d244c74a17471361b8b1cf3af5512eeb7e3499f3c45749d98787",
+      "r": "nodejs24.x",
+      "rg": "us-east-2",
+      "s": 343781
+    },
+    {
+      "n": "leads-reconcile",
+      "d": "d82ded2462d9aed4855b00968f52d8eb221a7878a658154cecb945cca098afdb",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "p": 10,
+      "id": "9050111581082e38a76f84380be152b96d130e34bbfe146bb245c8b885f9c28c",
+      "a": "016005051599",
+      "c": "2026-08-14T18:44:35.854Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "48d7e99e01fbbfe42ad95243b59cfc64f9954aa92ab21e1631a14cd6938baf92",
+      "r": "nodejs24.x",
+      "rg": "us-east-2",
+      "s": 344036
+    },
+    {
+      "n": "quote-submit",
+      "d": "2d709f140691d5686b0a3fa7f99fe5bdeeb64a98c455218b1590de8f80dc0a57",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "p": 10,
+      "id": "6e8f365edcf4fda892f1408ee24cfe58be3d6b6b980549191031ce1b5472f3c1",
+      "a": "924105187622",
+      "c": "2026-08-14T18:44:35.890Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "a14da368a34bd01f038475d3b8881d6a28cff7d318c5f2f433020ced2689a14a",
+      "r": "nodejs24.x",
+      "rg": "us-east-2",
+      "s": 360607
+    }
+  ],
+  "screenshot_url": "https://d33wubrfki0l68.cloudfront.net/6a7f62008af4ec4a666153c6/screenshot_2026-08-14-18-44-38-0000.webp",
+  "committer": null,
+  "skipped_log": null,
+  "manual_deploy": false,
+  "plugin_state": "none",
+  "lighthouse_plugin_scores": null,
+  "links": {
+    "permalink": "https://6a7f62008af4ec4a666153c6--sparklean-website.netlify.app",
+    "alias": "https://www.sparklean.co",
+    "branch": null
+  },
+  "framework": "unknown",
+  "entry_path": null,
+  "views_count": null,
+  "function_schedules": [
+    {
+      "name": "leads-reconcile",
+      "cron": "*/15 * * * *"
+    }
+  ],
+  "public_repo": true,
+  "pending_review_reason": null,
+  "lighthouse": null,
+  "edge_functions_present": null,
+  "expires_at": null,
+  "blobs_region": "us-east-2",
+  "deploy_validations_report": null,
+  "strict_contributor_verification_failure": false,
+  "agent_runner_id": null,
+  "deploy_source": "cli",
+  "database_branch_id": null,
+  "database_migrations": null,
+  "database_snapshots": null,
+  "skew_protection_token": "7d9462e3e1a340308a960a612b617be1c9af79e9589808a6727f956561b2027a366137663632303038616634656334613636363135336336",
+  "has_source_zip": false,
+  "subdomain_alias": "6a7f62008af4ec4a666153c6",
+  "functions_region": "cmh",
+  "functions_region_overrides": [],
+  "summary": {
+    "status": "ready",
+    "messages": [
+      {
+        "type": "info",
+        "title": "38 new files uploaded",
+        "description": "31 generated pages and 7 assets changed.",
+        "details": "New pages include:\n- index.html\n"
+      },
+      {
+        "type": "info",
+        "title": "266 redirect rules processed",
+        "description": "All redirect rules deployed without errors.",
+        "details": ""
+      },
+      {
+        "type": "info",
+        "title": "1 header rule processed",
+        "description": "All header rules deployed without errors.",
+        "details": ""
+      },
+      {
+        "type": "info",
+        "title": "5 functions deployed",
+        "description": "We have deployed 5 functions. [Visit your Functions](/projects/sparklean-website/logs/functions) for more information.",
+        "details": null
+      },
+      {
+        "type": "info",
+        "title": "No edge functions deployed",
+        "description": "This deploy did not include any edge functions. [Learn more about Edge Functions](https://docs.netlify.com/edge-functions/overview/)",
+        "details": null
+      }
+    ]
+  }
+}
