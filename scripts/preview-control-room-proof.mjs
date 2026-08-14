@@ -198,7 +198,7 @@ function attach(page, bucket) {
   });
   page.on("response", async (res) => {
     const url = res.url();
-    if (!/\/\.netlify\/functions\/(contact-submit|quote-submit|conversion-report|leads-reconcile)/.test(url)) {
+    if (!/\/\.netlify\/functions\/(contact-submit|quote-submit|conversion-report|leads-reconcile-invoke|leads-reconcile)/.test(url)) {
       return;
     }
     let body = "";
@@ -560,8 +560,10 @@ async function runSent1(context, tag) {
 
 async function runReconcileProofs() {
   const key = process.env.SPARKLEAN_RECONCILE_KEY || "";
+  // Scheduled leads-reconcile is not HTTP-callable (Netlify platform 403). Use invoke.
+  const path = `${BASE}/.netlify/functions/leads-reconcile-invoke`;
   async function post(headers) {
-    const res = await fetch(`${BASE}/.netlify/functions/leads-reconcile`, {
+    const res = await fetch(path, {
       method: "POST",
       headers: { "content-type": "application/json", ...headers },
       body: JSON.stringify({ source: "control-room-reproof" }),
@@ -592,12 +594,14 @@ async function runReconcileProofs() {
     authorizedReplay = await post({ "x-sparklean-reconcile-key": key });
   }
   return sanitizeDeep({
+    endpoint: "leads-reconcile-invoke",
     keyConfigured,
     unauthorizedNoKey,
     unauthorizedWrongKey,
     authorized,
     authorizedReplay,
-    unauthorizedDenied: unauthorizedNoKey.status >= 400 && unauthorizedWrongKey.status >= 400,
+    unauthorizedDenied:
+      unauthorizedNoKey.status === 401 && unauthorizedWrongKey.status === 401,
     authorizedOk: authorized ? authorized.status === 200 && authorized.ok === true : null,
     authorizedIdempotent:
       authorized && authorizedReplay

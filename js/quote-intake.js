@@ -690,7 +690,11 @@
 
         if (leadId && reportToken && window.SparkleanAds && typeof window.SparkleanAds.fireAndReportConversion === "function") {
           return window.SparkleanAds.fireAndReportConversion({ leadId: leadId, reportToken: reportToken }).then(function (outcome) {
-            if (outcome && (outcome.delayed || !outcome.browserSent || !outcome.reportOk)) trackingDelayed = true;
+            var consentDenied =
+              outcome && outcome.failureReason === "ads_consent_denied" && outcome.reportOk === true;
+            if (outcome && !consentDenied && (outcome.delayed || !outcome.browserSent || !outcome.reportOk)) {
+              trackingDelayed = true;
+            }
             finishSuccessUi();
           });
         }
