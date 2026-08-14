@@ -13,7 +13,7 @@
 
 ## Explicitly not done
 
-- DNS / Brevo DKIM publish (awaiting authorization — see email-auth audit)
+- ~~DNS / Brevo DKIM publish~~ — **CLOSED 2026-08-14** (see `docs/work-notes/2026-08-14-brevo-domain-auth/`)
 - Vacation rental page
 - Commercial vertical `/office-cleaning` etc. push
 - Homepage H1 redesign
