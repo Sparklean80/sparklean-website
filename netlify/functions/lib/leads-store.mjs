@@ -203,6 +203,8 @@ export function sendLeaseMs() {
 /** @type {Map<string, Map<string, { data: object, etag: string }>>} */
 const memoryStores = new Map();
 let injectedStore = null;
+/** Production getStore() wrapped once per isolate — Netlify often omits ETag on write/read. */
+let productionStore = null;
 
 export function useMemory() {
   return process.env.SPARKLEAN_LEADS_MEMORY === "1" && !injectedStore;
@@ -210,10 +212,12 @@ export function useMemory() {
 
 export function resetMemoryStoreForTests() {
   memoryStores.clear();
+  productionStore = null;
 }
 
 export function setInjectedBlobStoreForTests(store) {
   injectedStore = store || null;
+  if (store) productionStore = null;
 }
 
 function contentFingerprint(data) {
@@ -275,8 +279,24 @@ export function wrapBlobStoreWithEtagCache(store) {
     },
     async setJSON(key, data, opts) {
       const r = await store.setJSON(key, data, opts);
-      if (r && r.modified && r.etag) {
+      if (!r || r.modified === false) return r;
+      if (r.etag) {
         meta.set(key, { etag: r.etag, fingerprint: contentFingerprint(data) });
+        return r;
+      }
+      // Write succeeded but ETag header omitted — resolve from list/read before callers treat as conflict.
+      for (let i = 0; i < 12; i++) {
+        const listedEtag = await etagFromList(key);
+        if (listedEtag) {
+          meta.set(key, { etag: listedEtag, fingerprint: contentFingerprint(data) });
+          return { ...r, etag: listedEtag, modified: true };
+        }
+        const got = await store.getWithMetadata(key, { type: "json" });
+        if (got && got.etag) {
+          meta.set(key, { etag: got.etag, fingerprint: contentFingerprint(data) });
+          return { ...r, etag: got.etag, modified: true };
+        }
+        await new Promise((res) => setTimeout(res, 5 + i * 5));
       }
       return r;
     },
@@ -298,7 +318,13 @@ function memoryMap() {
 function openStore() {
   if (injectedStore) return injectedStore;
   if (useMemory()) return null;
-  return getStore(STORE_NAME);
+  if (!productionStore) {
+    // Strong consistency is required for claim→create→outbox sequencing.
+    productionStore = wrapBlobStoreWithEtagCache(
+      getStore({ name: STORE_NAME, consistency: "strong" })
+    );
+  }
+  return productionStore;
 }
 
 function clone(v) {
@@ -320,7 +346,10 @@ export async function getRecord(key) {
     return row ? { data: clone(row.data), etag: row.etag } : null;
   }
   const store = openStore();
-  const result = await store.getWithMetadata(k, { type: "json" });
+  const readOpts = { type: "json" };
+  // Strong reads only on real Netlify (injected BlobsServer cannot).
+  if (!injectedStore) readOpts.consistency = "strong";
+  const result = await store.getWithMetadata(k, readOpts);
   if (!result || result.data == null) return null;
   if (!result.etag) {
     throw new Error(`BLOB_ETAG_MISSING:${k}`);
@@ -368,14 +397,17 @@ export async function writeCas(key, data, expectedEtag) {
   }
 
   const store = openStore();
-  if (expectedEtag == null) {
-    const res = await store.setJSON(k, payload, { onlyIfNew: true });
-    if (!res || res.modified === false || !res.etag) throw new CasConflictError();
-    return res.etag;
-  }
-  const res = await store.setJSON(k, payload, { onlyIfMatch: expectedEtag });
-  if (!res || res.modified === false || !res.etag) throw new CasConflictError();
-  return res.etag;
+  const res =
+    expectedEtag == null
+      ? await store.setJSON(k, payload, { onlyIfNew: true })
+      : await store.setJSON(k, payload, { onlyIfMatch: expectedEtag });
+  // modified:false = precondition failed (true conflict). Missing/empty etag after a
+  // successful write is NOT a conflict — Netlify branch/deploy Blobs often omit the header.
+  if (!res || res.modified === false) throw new CasConflictError();
+  if (res.etag) return res.etag;
+  const sealed = await waitForRecord(k, { timeoutMs: 4000 });
+  if (sealed && sealed.etag) return sealed.etag;
+  throw new Error(`BLOB_ETAG_MISSING_AFTER_WRITE:${k}`);
 }
 
 export async function writeLeadCas(lead, expectedEtag) {
@@ -819,7 +851,7 @@ export async function ensureOutboxPending(leadId, { payloadHash, channel = "brev
     await writeCas(key, row, null);
   } catch (e) {
     if (!(e && e.code === "CAS_CONFLICT")) throw e;
-    const again = await getRecord(key);
+    const again = await waitForRecord(key, { timeoutMs: 4000 });
     if (
       again &&
       payloadHash &&
@@ -828,9 +860,12 @@ export async function ensureOutboxPending(leadId, { payloadHash, channel = "brev
     ) {
       throw new OutboxPayloadConflictError();
     }
-    return again ? again.data : row;
+    if (!again) throw new CasConflictError("OUTBOX_CREATE_UNCONFIRMED");
+    return again.data;
   }
-  return row;
+  const sealed = await waitForRecord(key, { timeoutMs: 4000 });
+  if (!sealed) throw new Error("OUTBOX_MISSING");
+  return sealed.data;
 }
 
 /**

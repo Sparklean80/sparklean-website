@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-12** (lead/conversion reconciliation boundary on review branch; baseline pin `76633d0`)
+Last updated: **2026-08-14** (Blobs strong-consistency + etag durability for claim→lead→outbox on review branch; baseline pin `76633d0`)
 
 ---
 
@@ -392,7 +392,7 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **Contact form → Ads (2026-08-12 baseline `76633d0`):** Browser `?sent=1` + pending `contact-*` only — no Blobs, no `BROWSER_SENT` vs Google confirmation.
 
-**Lead / conversion reconciliation boundary (2026-08-12, review `review/lead-conversion-boundary`, lease-fence correction):** Real claim leases (no reclaim before expiry; in-flight 503); outbox `sendLeaseOwner`+`sendFence` fencing; Brevo send without durable DELIVERED → `RECONCILIATION_REQUIRED` (not completed success; at-least-once-ambiguous); full quote material hash + outbox payload bind; attribution keys excluded/documented. Proofs: `test:idempotency-lease`, `test:blob-concurrency`, `test:funnel`. Evidence work note pins product SHA.
+**Lead / conversion reconciliation boundary (2026-08-12→08-14, review `review/lead-conversion-boundary`):** Real claim leases (no reclaim before expiry; in-flight 503); outbox `sendLeaseOwner`+`sendFence` fencing; Brevo send without durable DELIVERED → `RECONCILIATION_REQUIRED` (not completed success; at-least-once-ambiguous); full quote material hash + outbox payload bind; attribution keys excluded/documented. **2026-08-14 Blobs durability:** production store uses strong consistency + etag-cache wrap; `writeCas` does not treat missing write ETag as CAS conflict; `ensureOutboxPending` waits for durable seal (fixes Deploy Preview `OUTBOX_MISSING`). Proofs: `test:idempotency-lease`, `test:blob-concurrency`, `test:funnel`. Evidence work notes pin product SHAs. Exact-SHA preview browser Google proof still required before any “fixed” claim.
 
 **Paid Ads intake (2026-08-10, review branch):** `js/quote-intake.js` paid mode activates on `?quote=1`, `gclid`/`gbraid`/`wbraid`, paid `utm_medium` (cpc/ppc/paid/…), or stored click ids. **Do not** auto-open the full-screen intake for `gclid`/paid UTM — after 10s or 35% scroll, show a small non-blocking prompt (“Ready for a personalized cleaning plan?”). `?quote=1` may still open immediately. Hero/nav/sticky quote CTAs open the five-field paid flow immediately. Analytics (not Ads conversions): `paid_quote_prompt_shown`, `paid_quote_started`, `paid_quote_submitted`, `phone_click`. Google Ads conversion still fires only after Brevo success + `leadId`. Confirmation includes Call Sparklean (no invented SLA). Tests: `npm run test:funnel`. Preferred paid LP: `/residential-cleaning?gclid=…` (soft prompt) or `?quote=1` (force open).
 
