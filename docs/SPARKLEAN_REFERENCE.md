@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (Phase 1 SEO batch: vacation rental + local LCP heroes; email auth CLOSED)
+Last updated: **2026-08-14** (Phase 1 full local-SEO package: city paid-match + cost factors + money-page CDN migration; email auth CLOSED)
 
 ---
 
@@ -31,7 +31,7 @@ Last updated: **2026-08-14** (Phase 1 SEO batch: vacation rental + local LCP her
 | Prefetch likely next pages | **Done** — hover prefetch in `js/sparklean-mobile-sticky-cta.js` |
 | Preconnect + preload LCP hero image (homepage) | **Done** — local `/images/heroes/` WebP + `rel=preload` (2026-08-14) |
 | Font preconnect sitewide | **Done** — marketing hubs + homepage (2026-08-14); signalhouse private pages optional |
-| Migrate Webflow CDN images → `/images/` + WebP/AVIF | **Partial** — money-page **LCP/hero** images local WebP+srcset (2026-08-14); below-fold decorative CDN still OK to migrate later |
+| Migrate Webflow CDN images → `/images/` + WebP/AVIF | **Money pages done** — heroes + remaining marketing CDN → `/images/heroes/` + `/images/cdn-migrated/` (2026-08-14 `638cf47`); non-money pages may still use CDN |
 | Minify inline CSS on hub pages | **TODO** — optional build step |
 | Remove unused JS | **Low priority** — bundles are small (~3 JS files) |
 | Third-party trackers | **None** — keep it that way |
@@ -55,9 +55,9 @@ Service worker, offline shell, post-login asset cache, push notifications → **
 
 | Page | Status |
 |------|--------|
-| Naples / Bonita / Estero / Fort Myers / Cape Coral house cleaning | **Live** — `/house-cleaning-{city}` · unique luxury wording pass **2026-07-14** (`660c6f4`) |
+| Naples / Bonita / Estero / Fort Myers / Cape Coral house cleaning | **Live** — `/house-cleaning-{city}` · unique luxury wording + paid-match strip + cost-factors + conversion CTAs (**2026-08-14** product `638cf47`) |
 | Post-construction cleaning | **Live** — `/post-construction-cleaning` |
-| Vacation rental cleaning | **Live** — `/vacation-rental-cleaning` (2026-08-14) |
+| Vacation rental cleaning | **Live** — `/vacation-rental-cleaning` (2026-08-14; turnover + inspection/issue notes + cost factors) |
 | Luxury home cleaning | **Partial** — covered in residential + city copy |
 | Office / dealership / school / janitorial | **Draft local only** — generated, **not pushed** (freeze until city rankings recover) |
 

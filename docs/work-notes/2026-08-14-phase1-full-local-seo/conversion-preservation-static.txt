@@ -1,0 +1,10 @@
+﻿OK   pages/house-cleaning-naples.html
+OK   pages/house-cleaning-bonita-springs.html
+OK   pages/house-cleaning-estero.html
+OK   pages/house-cleaning-fort-myers.html
+OK   pages/house-cleaning-cape-coral.html
+OK   pages/vacation-rental-cleaning.html
+OK   pages/residential-cleaning.html
+OK   conversion label present in sparklean-ads.js
+OK   Reply-To paths present in contact/quote submit
+ALL CONVERSION-PRESERVATION STATIC CHECKS PASSED
