@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (email auth CLOSED; font preconnect on marketing hubs; Trust Shield Phase 1 live)
+Last updated: **2026-08-14** (Phase 1 SEO batch: vacation rental + local LCP heroes; email auth CLOSED)
 
 ---
 
@@ -29,9 +29,9 @@ Last updated: **2026-08-14** (email auth CLOSED; font preconnect on marketing hu
 | Lazy-load below-fold images | **Partial** — most pages use `loading="lazy"` |
 | Defer non-critical JS | **Partial** — quote intake + sticky CTA use `defer` |
 | Prefetch likely next pages | **Done** — hover prefetch in `js/sparklean-mobile-sticky-cta.js` |
-| Preconnect + preload LCP hero image (homepage) | **Done** — `index.html` |
+| Preconnect + preload LCP hero image (homepage) | **Done** — local `/images/heroes/` WebP + `rel=preload` (2026-08-14) |
 | Font preconnect sitewide | **Done** — marketing hubs + homepage (2026-08-14); signalhouse private pages optional |
-| Migrate Webflow CDN images → `/images/` + WebP/AVIF | **TODO** — biggest LCP win remaining |
+| Migrate Webflow CDN images → `/images/` + WebP/AVIF | **Partial** — money-page **LCP/hero** images local WebP+srcset (2026-08-14); below-fold decorative CDN still OK to migrate later |
 | Minify inline CSS on hub pages | **TODO** — optional build step |
 | Remove unused JS | **Low priority** — bundles are small (~3 JS files) |
 | Third-party trackers | **None** — keep it that way |
@@ -57,7 +57,7 @@ Service worker, offline shell, post-login asset cache, push notifications → **
 |------|--------|
 | Naples / Bonita / Estero / Fort Myers / Cape Coral house cleaning | **Live** — `/house-cleaning-{city}` · unique luxury wording pass **2026-07-14** (`660c6f4`) |
 | Post-construction cleaning | **Live** — `/post-construction-cleaning` |
-| Vacation rental cleaning | **TODO** — new page or section |
+| Vacation rental cleaning | **Live** — `/vacation-rental-cleaning` (2026-08-14) |
 | Luxury home cleaning | **Partial** — covered in residential + city copy |
 | Office / dealership / school / janitorial | **Draft local only** — generated, **not pushed** (freeze until city rankings recover) |
 
