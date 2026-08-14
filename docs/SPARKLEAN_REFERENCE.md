@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (product `028854f` merged+deployed to production; prior baseline `76633d0`)
+Last updated: **2026-08-14** (email auth audit + customer Reply-To; Priority 1 conversion closed at `028854f`)
 
 ---
 
@@ -396,7 +396,7 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **Paid Ads intake (2026-08-10, review branch):** `js/quote-intake.js` paid mode activates on `?quote=1`, `gclid`/`gbraid`/`wbraid`, paid `utm_medium` (cpc/ppc/paid/…), or stored click ids. **Do not** auto-open the full-screen intake for `gclid`/paid UTM — after 10s or 35% scroll, show a small non-blocking prompt (“Ready for a personalized cleaning plan?”). `?quote=1` may still open immediately. Hero/nav/sticky quote CTAs open the five-field paid flow immediately. Analytics (not Ads conversions): `paid_quote_prompt_shown`, `paid_quote_started`, `paid_quote_submitted`, `phone_click`. Google Ads conversion still fires only after Brevo success + `leadId`. Confirmation includes Call Sparklean (no invented SLA). Tests: `npm run test:funnel`. Preferred paid LP: `/residential-cleaning?gclid=…` (soft prompt) or `?quote=1` (force open).
 
-**Lead inbox / spam (2026-07-30):** Lead mail no longer sets Reply-To to the customer or attaches JSON (both spam triggers). Subject uses “Sparklean inquiry …”. In Brevo: **Senders → Domains** must show `sparklean.co` authenticated (same account as marketing). If campaigns inbox but leads spam, add a Gmail filter for subject `Sparklean inquiry` → Never spam.
+**Lead inbox / spam (2026-08-14):** From stays authenticated Sparklean (`SPARKLEAN_FROM_EMAIL`). **Reply-To = customer email only** (never From). No JSON attachment. **DNS:** Brevo DKIM + DMARC still required for Gmail verification — see `docs/work-notes/2026-08-14-email-auth-brevo-audit.md` (DNS not modified until authorized). In Brevo: **Senders → Domains** must show `sparklean.co` authenticated.
 
 ---
 
