@@ -32,71 +32,35 @@ Priority 1 conversion repair closed at product `028854f` / deploy `6a7f4eaa1972b
 
 **Root cause of Gmail “cannot verify” / impersonation warning:** Brevo is sending with From `@sparklean.co` but the domain has **no Brevo DKIM selectors** and **no DMARC**. SPF only authorizes Google Workspace, not Brevo’s return-path alignment path. On Brevo shared IPs, **aligned DKIM** is what makes DMARC pass for Sparklean From addresses.
 
-## Exact DNS records to authorize (do not apply until Tony approves)
+## DNS applied 2026-08-14 (Control Room correction)
 
-Copy **exact** DKIM CNAME targets from Brevo → **Senders, Domains & Dedicated IPs → Domains → sparklean.co → Authenticate**. Do not invent the CNAME targets.
+**Do not modify SPF. Do not add `include:spf.brevo.com`.** Brevo docs: SPF not required for standard shared-IP domain auth.
 
-### 1) Keep a **single** SPF TXT at apex (edit existing — never add a second SPF)
+Exact Brevo records + apply/auth proof:  
+`docs/work-notes/2026-08-14-brevo-domain-auth/2026-08-14-brevo-domain-auth-evidence.md`
 
-**Current:**
-```text
-Type: TXT
-Host: @ (sparklean.co)
-Value: v=spf1 include:_spf.google.com ~all
-```
+| Record | Applied |
+|--------|---------|
+| SPF | **Unchanged:** `v=spf1 include:_spf.google.com ~all` |
+| Verification TXT | `brevo-code:38d801b5503e3eb1ece3a7870a4ab513` |
+| DKIM | `brevo1._domainkey` → `b1.sparklean-co.dkim.brevo.com` |
+| DKIM | `brevo2._domainkey` → `b2.sparklean-co.dkim.brevo.com` |
+| DMARC | `v=DMARC1; p=none; rua=mailto:rua@dmarc.brevo.com` |
 
-**Recommended edit (optional hygiene; still keep ONE record):**
-```text
-Type: TXT
-Host: @ (sparklean.co)
-Value: v=spf1 include:_spf.google.com include:spf.brevo.com ~all
-```
-
-Note: On Brevo shared IP, SPF include does **not** by itself produce DMARC alignment for `@sparklean.co` From; DKIM is required. The include is still useful for clarity and some receivers.
-
-### 2) Brevo domain verification TXT (if Brevo shows one)
-
-```text
-Type: TXT
-Host: @ (or host Brevo shows)
-Value: brevo-code:<<<<<<<<copy-from-Brevo-dashboard>>>>>>>>
-```
-
-### 3) Brevo DKIM (required)
-
-```text
-Type: CNAME
-Host: brevo1._domainkey
-Value: <<<<<<<<exact target from Brevo dashboard — typically *.dkim.brevo.com>>>>>>>>
-
-Type: CNAME
-Host: brevo2._domainkey
-Value: <<<<<<<<exact target from Brevo dashboard>>>>>>>>
-```
-
-If Brevo’s UI still shows legacy `mail._domainkey` / `mail2._domainkey`, use **exactly** what the dashboard shows for this account.
-
-### 4) DMARC (required for Gmail sender requirements / alignment reporting)
-
-```text
-Type: TXT
-Host: _dmarc
-Value: v=DMARC1; p=none; rua=mailto:info@sparklean.co; fo=1
-```
-
-Start at `p=none`. Tighten to `quarantine`/`reject` only after aggregate reports show Brevo DKIM aligned.
+Brevo: **authenticated = true** / **verified = true**.
 
 ## Proof status
 
 | Proof | Status |
 |-------|--------|
-| Normal Brevo send with From Sparklean + Reply-To customer | **Code ready** (after product deploy) |
-| SPF / DKIM / DMARC pass without Gmail impersonation warning | **BLOCKED** until authorized DNS records are live and Brevo marks `sparklean.co` authenticated |
+| Normal Brevo send with From Sparklean + Reply-To customer | **PASS** |
+| Brevo Domains authenticated | **PASS** |
+| Gmail headers DKIM/DMARC + no impersonation warning | **PASS** (closed 2026-08-14) |
 
-**Next after DNS authorized:** send one contact/intake lead email → open in Gmail → confirm no “couldn’t verify” banner → optionally check headers (`dkim=pass`, `dmarc=pass` aligned to `sparklean.co`). Re-check Brevo Domains UI shows Authenticated.
+**Gmail production-header confirmation:** `dkim=pass` (`header.i=@sparklean.co`, selector `brevo2`); `dmarc=pass` aligned to `header.from=sparklean.co`; `spf=pass` on Brevo envelope-sender; prior “couldn’t verify” warning absent. Apex SPF remains Google-only (unchanged).
 
-## Explicitly not done
+## Explicitly not done in this audit file
 
-- DNS mutation  
 - Ads settings  
-- SEO (starts after this report)  
+- SEO (continues after this closeout in separate product/evidence commits)  
+

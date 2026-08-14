@@ -1,0 +1,53 @@
+{
+  "recordedAt": "2026-08-14T18:01:15.041Z",
+  "created": [
+    {
+      "label": "brevo_code",
+      "id": "6a7f57d58af4ece0566153cc",
+      "type": "TXT",
+      "hostname": "sparklean.co",
+      "value": "brevo-code:38d801b5503e3eb1ece3a7870a4ab513"
+    },
+    {
+      "label": "dkim1",
+      "id": "6a7f57db4bbcc3dc980686c7",
+      "type": "CNAME",
+      "hostname": "brevo1._domainkey.sparklean.co",
+      "value": "b1.sparklean-co.dkim.brevo.com"
+    },
+    {
+      "label": "dkim2",
+      "id": "6a7f57e35630751fe4f6ffd6",
+      "type": "CNAME",
+      "hostname": "brevo2._domainkey.sparklean.co",
+      "value": "b2.sparklean-co.dkim.brevo.com"
+    },
+    {
+      "label": "dmarc",
+      "id": "6a7f57e63cd211d1a907052c",
+      "type": "TXT",
+      "hostname": "_dmarc.sparklean.co",
+      "value": "v=DMARC1; p=none; rua=mailto:rua@dmarc.brevo.com"
+    }
+  ],
+  "skipped": [],
+  "spfRecords": [
+    {
+      "hostname": "sparklean.co",
+      "type": "TXT",
+      "ttl": 3600,
+      "priority": null,
+      "weight": null,
+      "port": null,
+      "flag": null,
+      "tag": null,
+      "id": "6a1069e588e4c2500ca60b17",
+      "site_id": null,
+      "dns_zone_id": "6a0c6abcc2af1a43fa9fc125",
+      "errors": [],
+      "managed": false,
+      "value": "v=spf1 include:_spf.google.com ~all"
+    }
+  ],
+  "spfUnchanged": true
+}

@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (Phase 1 Trust Shield on commercial hub; email auth audit pending DNS)
+Last updated: **2026-08-14** (Brevo domain auth CLOSED — Gmail DKIM/DMARC PASS; Trust Shield Phase 1 live)
 
 ---
 
@@ -396,7 +396,7 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **Paid Ads intake (2026-08-10, review branch):** `js/quote-intake.js` paid mode activates on `?quote=1`, `gclid`/`gbraid`/`wbraid`, paid `utm_medium` (cpc/ppc/paid/…), or stored click ids. **Do not** auto-open the full-screen intake for `gclid`/paid UTM — after 10s or 35% scroll, show a small non-blocking prompt (“Ready for a personalized cleaning plan?”). `?quote=1` may still open immediately. Hero/nav/sticky quote CTAs open the five-field paid flow immediately. Analytics (not Ads conversions): `paid_quote_prompt_shown`, `paid_quote_started`, `paid_quote_submitted`, `phone_click`. Google Ads conversion still fires only after Brevo success + `leadId`. Confirmation includes Call Sparklean (no invented SLA). Tests: `npm run test:funnel`. Preferred paid LP: `/residential-cleaning?gclid=…` (soft prompt) or `?quote=1` (force open).
 
-**Lead inbox / spam (2026-08-14):** From stays authenticated Sparklean (`SPARKLEAN_FROM_EMAIL`). **Reply-To = customer email only** (never From). No JSON attachment. **DNS:** Brevo DKIM + DMARC still required for Gmail verification — see `docs/work-notes/2026-08-14-email-auth-brevo-audit.md` (DNS not modified until authorized). In Brevo: **Senders → Domains** must show `sparklean.co` authenticated.
+**Lead inbox / spam (2026-08-14):** From stays authenticated Sparklean (`SPARKLEAN_FROM_EMAIL`). **Reply-To = customer email only** (never From). No JSON attachment. **DNS (applied + Gmail-proven 2026-08-14):** Brevo verification TXT + DKIM CNAMEs (`brevo1`/`brevo2` → `b1`/`b2.sparklean-co.dkim.brevo.com`) + DMARC `p=none` `rua@dmarc.brevo.com`. **SPF unchanged** (`v=spf1 include:_spf.google.com ~all` — do not add `include:spf.brevo.com`). Brevo authenticated; Gmail headers: `dkim=pass` (`@sparklean.co`, selector `brevo2`), `dmarc=pass`, no impersonation warning. Evidence: `docs/work-notes/2026-08-14-brevo-domain-auth/`.
 
 ---
 

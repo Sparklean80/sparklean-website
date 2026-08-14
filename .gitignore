@@ -6,3 +6,9 @@ videos/*.mov
 videos/*.MOV
 
 .reconcile-key.local
+
+.brevo-key.local
+
+.brevo-probe-token.local
+.brevo-key.local
+

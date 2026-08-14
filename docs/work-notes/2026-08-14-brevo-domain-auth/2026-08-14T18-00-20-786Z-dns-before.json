@@ -1,0 +1,97 @@
+{
+  "zoneId": "6a0c6abcc2af1a43fa9fc125",
+  "siteId": "7b32b2d6-9257-4d3c-9236-80ff24a54563",
+  "recordedAt": "2026-08-14T18:00:20.787Z",
+  "spfRecords": [
+    {
+      "id": "6a1069e588e4c2500ca60b17",
+      "type": "TXT",
+      "hostname": "sparklean.co",
+      "value": "v=spf1 include:_spf.google.com ~all",
+      "ttl": 3600
+    }
+  ],
+  "relevantRecords": [
+    {
+      "id": "6a0c6abe24d91a0008276ae2",
+      "type": "NETLIFY",
+      "hostname": "sparklean.co",
+      "value": "sparklean-website.netlify.app",
+      "ttl": 3600
+    },
+    {
+      "id": "6a1069ca7c5ae3a8c1e105da",
+      "type": "MX",
+      "hostname": "sparklean.co",
+      "value": "ASPMX.L.GOOGLE.COM",
+      "ttl": 3600
+    },
+    {
+      "id": "6a1069e588e4c2500ca60b17",
+      "type": "TXT",
+      "hostname": "sparklean.co",
+      "value": "v=spf1 include:_spf.google.com ~all",
+      "ttl": 3600
+    },
+    {
+      "id": "6a106a80f316c3bd4a8d3394",
+      "type": "MX",
+      "hostname": "sparklean.co",
+      "value": "ALT1.ASPMX.L.GOOGLE.COM",
+      "ttl": 3600
+    },
+    {
+      "id": "6a106aa5643688a852164d7d",
+      "type": "MX",
+      "hostname": "sparklean.co",
+      "value": "ALT2.ASPMX.L.GOOGLE.COM",
+      "ttl": 3600
+    },
+    {
+      "id": "6a106ac2f316c3bcfd8d34fe",
+      "type": "MX",
+      "hostname": "sparklean.co",
+      "value": "ALT3.ASPMX.L.GOOGLE.COM",
+      "ttl": 3600
+    },
+    {
+      "id": "6a106ae3da213781e9431098",
+      "type": "MX",
+      "hostname": "sparklean.co",
+      "value": "ALT4.ASPMX.L.GOOGLE.COM",
+      "ttl": 3600
+    }
+  ],
+  "allCount": 8,
+  "plannedAdds": [
+    {
+      "type": "TXT",
+      "hostname": "sparklean.co",
+      "value": "brevo-code:38d801b5503e3eb1ece3a7870a4ab513",
+      "ttl": 3600,
+      "label": "brevo_code"
+    },
+    {
+      "type": "CNAME",
+      "hostname": "brevo1._domainkey.sparklean.co",
+      "value": "b1.sparklean-co.dkim.brevo.com",
+      "ttl": 3600,
+      "label": "dkim1"
+    },
+    {
+      "type": "CNAME",
+      "hostname": "brevo2._domainkey.sparklean.co",
+      "value": "b2.sparklean-co.dkim.brevo.com",
+      "ttl": 3600,
+      "label": "dkim2"
+    },
+    {
+      "type": "TXT",
+      "hostname": "_dmarc.sparklean.co",
+      "value": "v=DMARC1; p=none; rua=mailto:rua@dmarc.brevo.com",
+      "ttl": 3600,
+      "label": "dmarc"
+    }
+  ],
+  "policy": "Do not modify existing SPF; do not add include:spf.brevo.com"
+}
