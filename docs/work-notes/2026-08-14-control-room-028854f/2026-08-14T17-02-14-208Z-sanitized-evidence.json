@@ -1,0 +1,91 @@
+{
+  "productSha": "028854f4b6f83ad6385fe3c2628d0e02ec1f3a88",
+  "previewUrl": "https://conversion-028854f--sparklean-website.netlify.app",
+  "phase": "brevo",
+  "startedAt": "2026-08-14T17:02:14.209Z",
+  "conversionConstants": {
+    "conversionId": "17027441328",
+    "conversionLabel": "HnWnCJPRt9kcELDFqLc_"
+  },
+  "constraints": {
+    "noSeo": true,
+    "noMerge": true,
+    "noProdDeploy": true,
+    "noAdsBiddingChange": true,
+    "noGoogleAdsUiClaimWithoutDiagnostics": true
+  },
+  "steps": {
+    "brevoFailureApi": {
+      "note": "Requires SPARKLEAN_ALLOW_PREVIEW_BREVO_FAIL=1 and SPARKLEAN_FORCE_BREVO_FAIL=1 on preview host only.",
+      "first": {
+        "status": 200,
+        "ok": true,
+        "leadId": "e0223c7d-b7d6-4d2b-b028-352b51efdb23",
+        "hasReportToken": true,
+        "code": null,
+        "errorPresent": false,
+        "deliveryFinality": null
+      },
+      "second": {
+        "status": 409,
+        "ok": false,
+        "leadId": null,
+        "hasReportToken": false,
+        "code": null,
+        "errorPresent": true,
+        "deliveryFinality": null
+      },
+      "sameLeadId": false,
+      "falseSuccess": true,
+      "falseDeliveredClaim": true,
+      "noReportTokenOnFail": false,
+      "previewForceCode": false
+    }
+  },
+  "finishedAt": "2026-08-14T17:02:16.149Z",
+  "matrix": {
+    "desktopContact": null,
+    "mobileContact": null,
+    "desktopIntakeUnresolved": null,
+    "mobileIntakeUnresolved": null,
+    "consentDenied": null,
+    "consentGranted": null,
+    "consentUnresolved": null,
+    "sent1": null,
+    "reconcile": null,
+    "brevoFailureApi": {
+      "note": "Requires SPARKLEAN_ALLOW_PREVIEW_BREVO_FAIL=1 and SPARKLEAN_FORCE_BREVO_FAIL=1 on preview host only.",
+      "first": {
+        "status": 200,
+        "ok": true,
+        "leadId": "e0223c7d-b7d6-4d2b-b028-352b51efdb23",
+        "hasReportToken": true,
+        "code": null,
+        "errorPresent": false,
+        "deliveryFinality": null
+      },
+      "second": {
+        "status": 409,
+        "ok": false,
+        "leadId": null,
+        "hasReportToken": false,
+        "code": null,
+        "errorPresent": true,
+        "deliveryFinality": null
+      },
+      "sameLeadId": false,
+      "falseSuccess": true,
+      "falseDeliveredClaim": true,
+      "noReportTokenOnFail": false,
+      "previewForceCode": false
+    },
+    "brevoRestoreApi": null
+  },
+  "acceptance": {
+    "guidedIntakeDurableBrowserSent": false,
+    "unauthorizedReconcileDenied": false,
+    "authorizedReconcileIdempotent": false,
+    "forcedBrevoNoFalseSuccess": false,
+    "normalBrevoRestoredDelivered": false
+  }
+}

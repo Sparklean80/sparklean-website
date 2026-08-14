@@ -1,0 +1,865 @@
+{
+  "productSha": "028854f4b6f83ad6385fe3c2628d0e02ec1f3a88",
+  "previewUrl": "https://conversion-028854f--sparklean-website.netlify.app",
+  "mergedAt": "2026-08-14T17:08:58.643Z",
+  "phaseFiles": {
+    "brevo": "2026-08-14T17-05-35-608Z-sanitized-evidence.json",
+    "brevo-restore": "2026-08-14T17-06-57-434Z-sanitized-evidence.json",
+    "core": "2026-08-14T17-06-59-426Z-sanitized-evidence.json",
+    "consent": "2026-08-14T17-07-48-654Z-sanitized-evidence.json",
+    "reconcile": "2026-08-14T17-08-22-574Z-sanitized-evidence.json"
+  },
+  "steps": {
+    "brevoFailureApi": {
+      "note": "Requires SPARKLEAN_ALLOW_PREVIEW_BREVO_FAIL=1 and SPARKLEAN_FORCE_BREVO_FAIL=1 on preview host only.",
+      "first": {
+        "status": 500,
+        "ok": false,
+        "leadId": "6a32a1e1-ef99-4df4-bc1f-ae4295a35dc8",
+        "hasReportToken": false,
+        "code": "PREVIEW_BREVO_FORCE_FAIL",
+        "errorPresent": true,
+        "deliveryFinality": null
+      },
+      "second": {
+        "status": 409,
+        "ok": false,
+        "leadId": null,
+        "hasReportToken": false,
+        "code": null,
+        "errorPresent": true,
+        "deliveryFinality": null
+      },
+      "sameLeadId": false,
+      "falseSuccess": false,
+      "falseDeliveredClaim": false,
+      "noReportTokenOnFail": true,
+      "previewForceCode": true
+    },
+    "brevoRestoreApi": {
+      "note": "Requires FORCE flag unset; ALLOW may remain.",
+      "first": {
+        "status": 200,
+        "ok": true,
+        "leadId": "6cb6557a-86ef-4d62-85fb-942b31055d29",
+        "hasReportToken": true,
+        "code": null,
+        "errorPresent": false,
+        "deliveryFinality": null
+      },
+      "deliveredSuccess": true,
+      "hasReportToken": true
+    },
+    "desktopContact": {
+      "viewport": "desktop-1440",
+      "tag": "desktop",
+      "consentState": "unresolved",
+      "gtagReady": true,
+      "thanksVisible": true,
+      "formErrorPresent": false,
+      "leadAccepted": true,
+      "leadId": "7d0e1d45-d6aa-47b1-a2bc-989776c74dbc",
+      "hasReportTokenOnce": true,
+      "conversionReport": [
+        {
+          "status": 200,
+          "ok": true,
+          "trackingStatus": "BROWSER_SENT",
+          "duplicate": false
+        }
+      ],
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "google": {
+        "rawGoogleishCount": 13,
+        "leadConversionFanOutCount": 3,
+        "logicalLeadConversionCount": 1,
+        "leadConversionHits": [
+          {
+            "method": "GET",
+            "host": "www.googleadservices.com",
+            "pathname": "/pagead/conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": "17027441328",
+            "send_to": null
+          },
+          {
+            "method": "POST",
+            "host": "googleads.g.doubleclick.net",
+            "pathname": "/pagead/viewthroughconversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          },
+          {
+            "method": "GET",
+            "host": "www.google.com",
+            "pathname": "/pagead/1p-conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          }
+        ],
+        "configOrPageViewCount": 5,
+        "otherGoogleishCount": 5
+      },
+      "firedLeadIds": [
+        "7d0e1d45-d6aa-47b1-a2bc-989776c74dbc"
+      ],
+      "replayNav": {
+        "label": "contact-after-success",
+        "leadConversionFanOutBeforeNav": 3,
+        "leadConversionFanOutAfterNav": 3,
+        "additionalLeadConversionFanOut": 0
+      },
+      "additionalLeadConversionsAfterRefreshBackForward": 0,
+      "googleAdsUiRecording": "NOT_CHECKED",
+      "screenshotAfter": "[redacted-phone]T[redacted-phone]Z-desktop-contact-after.png"
+    },
+    "mobileContact": {
+      "viewport": "mobile-390",
+      "tag": "mobile",
+      "consentState": "unresolved",
+      "gtagReady": true,
+      "thanksVisible": true,
+      "formErrorPresent": false,
+      "leadAccepted": true,
+      "leadId": "3baabb1c-fa9a-4f16-85fa-fcea18193023",
+      "hasReportTokenOnce": true,
+      "conversionReport": [
+        {
+          "status": 200,
+          "ok": true,
+          "trackingStatus": "BROWSER_SENT",
+          "duplicate": false
+        }
+      ],
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "google": {
+        "rawGoogleishCount": 13,
+        "leadConversionFanOutCount": 3,
+        "logicalLeadConversionCount": 1,
+        "leadConversionHits": [
+          {
+            "method": "GET",
+            "host": "www.googleadservices.com",
+            "pathname": "/pagead/conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": "17027441328",
+            "send_to": null
+          },
+          {
+            "method": "POST",
+            "host": "googleads.g.doubleclick.net",
+            "pathname": "/pagead/viewthroughconversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          },
+          {
+            "method": "GET",
+            "host": "www.google.com",
+            "pathname": "/pagead/1p-conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          }
+        ],
+        "configOrPageViewCount": 5,
+        "otherGoogleishCount": 5
+      },
+      "firedLeadIds": [
+        "3baabb1c-fa9a-4f16-85fa-fcea18193023"
+      ],
+      "replayNav": {
+        "label": "contact-after-success",
+        "leadConversionFanOutBeforeNav": 3,
+        "leadConversionFanOutAfterNav": 3,
+        "additionalLeadConversionFanOut": 0
+      },
+      "additionalLeadConversionsAfterRefreshBackForward": 0,
+      "googleAdsUiRecording": "NOT_CHECKED",
+      "screenshotAfter": "[redacted-phone]T[redacted-phone]Z-mobile-contact-after.png"
+    },
+    "desktopIntakeUnresolved": {
+      "viewport": "desktop-1440",
+      "tag": "intake-unresolved",
+      "consentMode": "unresolved",
+      "consentState": "unresolved",
+      "blockAds": false,
+      "gtagReady": true,
+      "doneTextPresent": true,
+      "delayedNoteCount": 0,
+      "intakeErrorPresent": false,
+      "waitedForDurableTerminal": true,
+      "acceptedOnlyIfTerminal": true,
+      "leadAccepted": true,
+      "leadId": "db91dc65-fa1c-4ff6-9178-3d788743639c",
+      "hasReportTokenOnce": true,
+      "conversionReport": [
+        {
+          "status": 200,
+          "ok": true,
+          "trackingStatus": "BROWSER_SENT",
+          "duplicate": false
+        }
+      ],
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "google": {
+        "rawGoogleishCount": 17,
+        "leadConversionFanOutCount": 3,
+        "logicalLeadConversionCount": 1,
+        "leadConversionHits": [
+          {
+            "method": "GET",
+            "host": "www.googleadservices.com",
+            "pathname": "/pagead/conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": "17027441328",
+            "send_to": null
+          },
+          {
+            "method": "POST",
+            "host": "googleads.g.doubleclick.net",
+            "pathname": "/pagead/viewthroughconversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          },
+          {
+            "method": "GET",
+            "host": "www.google.com",
+            "pathname": "/pagead/1p-conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          }
+        ],
+        "configOrPageViewCount": 5,
+        "otherGoogleishCount": 9
+      },
+      "firedLeadIds": [
+        "db91dc65-fa1c-4ff6-9178-3d788743639c"
+      ],
+      "replayNav": {
+        "label": "intake-after-success",
+        "leadConversionFanOutBeforeNav": 3,
+        "leadConversionFanOutAfterNav": 3,
+        "additionalLeadConversionFanOut": 0
+      },
+      "additionalLeadConversionsAfterRefreshBackForward": 0,
+      "helperReplayExtraLeadFanOut": 0,
+      "googleAdsUiRecording": "NOT_CHECKED"
+    },
+    "mobileIntakeUnresolved": {
+      "viewport": "mobile-390",
+      "tag": "intake-mobile",
+      "consentMode": "unresolved",
+      "consentState": "unresolved",
+      "blockAds": false,
+      "gtagReady": true,
+      "doneTextPresent": true,
+      "delayedNoteCount": 0,
+      "intakeErrorPresent": false,
+      "waitedForDurableTerminal": true,
+      "acceptedOnlyIfTerminal": true,
+      "leadAccepted": true,
+      "leadId": "d6ec4e16-f76a-4c66-8b47-67a80d2175b5",
+      "hasReportTokenOnce": true,
+      "conversionReport": [
+        {
+          "status": 200,
+          "ok": true,
+          "trackingStatus": "BROWSER_SENT",
+          "duplicate": false
+        }
+      ],
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "google": {
+        "rawGoogleishCount": 17,
+        "leadConversionFanOutCount": 3,
+        "logicalLeadConversionCount": 1,
+        "leadConversionHits": [
+          {
+            "method": "GET",
+            "host": "www.googleadservices.com",
+            "pathname": "/pagead/conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": "17027441328",
+            "send_to": null
+          },
+          {
+            "method": "POST",
+            "host": "googleads.g.doubleclick.net",
+            "pathname": "/pagead/viewthroughconversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          },
+          {
+            "method": "GET",
+            "host": "www.google.com",
+            "pathname": "/pagead/1p-conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          }
+        ],
+        "configOrPageViewCount": 5,
+        "otherGoogleishCount": 9
+      },
+      "firedLeadIds": [
+        "d6ec4e16-f76a-4c66-8b47-67a80d2175b5"
+      ],
+      "replayNav": {
+        "label": "intake-after-success",
+        "leadConversionFanOutBeforeNav": 3,
+        "leadConversionFanOutAfterNav": 3,
+        "additionalLeadConversionFanOut": 0
+      },
+      "additionalLeadConversionsAfterRefreshBackForward": 0,
+      "helperReplayExtraLeadFanOut": 0,
+      "googleAdsUiRecording": "NOT_CHECKED"
+    },
+    "sent1Zero": {
+      "tag": "sent1",
+      "thanksVisible": true,
+      "google": {
+        "rawGoogleishCount": 9,
+        "leadConversionFanOutCount": 0,
+        "logicalLeadConversionCount": 0,
+        "leadConversionHits": [],
+        "configOrPageViewCount": 8,
+        "otherGoogleishCount": 1
+      },
+      "logicalLeadConversions": 0
+    },
+    "consentDeniedIntake": {
+      "viewport": "desktop-1440",
+      "tag": "consent-denied",
+      "consentMode": "denied",
+      "consentState": "denied",
+      "blockAds": false,
+      "gtagReady": true,
+      "doneTextPresent": true,
+      "delayedNoteCount": 0,
+      "intakeErrorPresent": false,
+      "waitedForDurableTerminal": true,
+      "acceptedOnlyIfTerminal": true,
+      "leadAccepted": true,
+      "leadId": "4398ddb2-32c5-4088-9a7e-6adfb502afaf",
+      "hasReportTokenOnce": true,
+      "conversionReport": [
+        {
+          "status": 200,
+          "ok": true,
+          "trackingStatus": "OFFLINE_QUEUED",
+          "duplicate": false
+        }
+      ],
+      "finalDurableTrackingStatus": "OFFLINE_QUEUED",
+      "google": {
+        "rawGoogleishCount": 3,
+        "leadConversionFanOutCount": 0,
+        "logicalLeadConversionCount": 0,
+        "leadConversionHits": [],
+        "configOrPageViewCount": 1,
+        "otherGoogleishCount": 2
+      },
+      "firedLeadIds": [],
+      "replayNav": {
+        "label": "intake-after-success",
+        "leadConversionFanOutBeforeNav": 0,
+        "leadConversionFanOutAfterNav": 0,
+        "additionalLeadConversionFanOut": 0
+      },
+      "additionalLeadConversionsAfterRefreshBackForward": 0,
+      "helperReplayExtraLeadFanOut": 0,
+      "googleAdsUiRecording": "NOT_CHECKED"
+    },
+    "consentGrantedIntake": {
+      "viewport": "desktop-1440",
+      "tag": "consent-granted",
+      "consentMode": "granted",
+      "consentState": "granted",
+      "blockAds": false,
+      "gtagReady": true,
+      "doneTextPresent": true,
+      "delayedNoteCount": 0,
+      "intakeErrorPresent": false,
+      "waitedForDurableTerminal": true,
+      "acceptedOnlyIfTerminal": true,
+      "leadAccepted": true,
+      "leadId": "bc1fd129-c6b5-4a5e-bdd9-a3ca80cba2ed",
+      "hasReportTokenOnce": true,
+      "conversionReport": [
+        {
+          "status": 200,
+          "ok": true,
+          "trackingStatus": "BROWSER_SENT",
+          "duplicate": false
+        }
+      ],
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "google": {
+        "rawGoogleishCount": 17,
+        "leadConversionFanOutCount": 3,
+        "logicalLeadConversionCount": 1,
+        "leadConversionHits": [
+          {
+            "method": "GET",
+            "host": "www.googleadservices.com",
+            "pathname": "/pagead/conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": "17027441328",
+            "send_to": null
+          },
+          {
+            "method": "POST",
+            "host": "googleads.g.doubleclick.net",
+            "pathname": "/pagead/viewthroughconversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          },
+          {
+            "method": "GET",
+            "host": "www.google.com",
+            "pathname": "/pagead/1p-conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          }
+        ],
+        "configOrPageViewCount": 5,
+        "otherGoogleishCount": 9
+      },
+      "firedLeadIds": [
+        "bc1fd129-c6b5-4a5e-bdd9-a3ca80cba2ed"
+      ],
+      "replayNav": {
+        "label": "intake-after-success",
+        "leadConversionFanOutBeforeNav": 3,
+        "leadConversionFanOutAfterNav": 3,
+        "additionalLeadConversionFanOut": 0
+      },
+      "additionalLeadConversionsAfterRefreshBackForward": 0,
+      "helperReplayExtraLeadFanOut": 0,
+      "googleAdsUiRecording": "NOT_CHECKED"
+    },
+    "consentUnresolvedIntake": {
+      "viewport": "desktop-1440",
+      "tag": "consent-unresolved",
+      "consentMode": "unresolved",
+      "consentState": "unresolved",
+      "blockAds": false,
+      "gtagReady": true,
+      "doneTextPresent": true,
+      "delayedNoteCount": 0,
+      "intakeErrorPresent": false,
+      "waitedForDurableTerminal": true,
+      "acceptedOnlyIfTerminal": true,
+      "leadAccepted": true,
+      "leadId": "9f990245-2316-4514-b01b-1443fefbf656",
+      "hasReportTokenOnce": true,
+      "conversionReport": [
+        {
+          "status": 200,
+          "ok": true,
+          "trackingStatus": "BROWSER_SENT",
+          "duplicate": false
+        }
+      ],
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "google": {
+        "rawGoogleishCount": 17,
+        "leadConversionFanOutCount": 3,
+        "logicalLeadConversionCount": 1,
+        "leadConversionHits": [
+          {
+            "method": "GET",
+            "host": "www.googleadservices.com",
+            "pathname": "/pagead/conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": "17027441328",
+            "send_to": null
+          },
+          {
+            "method": "POST",
+            "host": "googleads.g.doubleclick.net",
+            "pathname": "/pagead/viewthroughconversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          },
+          {
+            "method": "GET",
+            "host": "www.google.com",
+            "pathname": "/pagead/1p-conversion/17027441328/",
+            "en": "conversion",
+            "data": "event=conversion",
+            "label": "HnWnCJPRt9kcELDFqLc_",
+            "transaction_id": null,
+            "tid_param": null,
+            "conversion_id_path": null,
+            "send_to": null
+          }
+        ],
+        "configOrPageViewCount": 5,
+        "otherGoogleishCount": 9
+      },
+      "firedLeadIds": [
+        "9f990245-2316-4514-b01b-1443fefbf656"
+      ],
+      "replayNav": {
+        "label": "intake-after-success",
+        "leadConversionFanOutBeforeNav": 3,
+        "leadConversionFanOutAfterNav": 3,
+        "additionalLeadConversionFanOut": 0
+      },
+      "additionalLeadConversionsAfterRefreshBackForward": 0,
+      "helperReplayExtraLeadFanOut": 0,
+      "googleAdsUiRecording": "NOT_CHECKED"
+    },
+    "reconcile": {
+      "endpoint": "leads-reconcile-invoke",
+      "keyConfigured": true,
+      "unauthorizedNoKey": {
+        "status": 401,
+        "ok": false,
+        "checked": null,
+        "queuedCount": null,
+        "error": "present"
+      },
+      "unauthorizedWrongKey": {
+        "status": 401,
+        "ok": false,
+        "checked": null,
+        "queuedCount": null,
+        "error": "present"
+      },
+      "authorized": {
+        "status": 200,
+        "ok": true,
+        "checked": 0,
+        "queuedCount": 0,
+        "error": null
+      },
+      "authorizedReplay": {
+        "status": 200,
+        "ok": true,
+        "checked": 0,
+        "queuedCount": 0,
+        "error": null
+      },
+      "unauthorizedDenied": true,
+      "authorizedOk": true,
+      "authorizedIdempotent": true
+    }
+  },
+  "matrix": {
+    "brevoFailureApi": {
+      "note": "Requires SPARKLEAN_ALLOW_PREVIEW_BREVO_FAIL=1 and SPARKLEAN_FORCE_BREVO_FAIL=1 on preview host only.",
+      "first": {
+        "status": 500,
+        "ok": false,
+        "leadId": "6a32a1e1-ef99-4df4-bc1f-ae4295a35dc8",
+        "hasReportToken": false,
+        "code": "PREVIEW_BREVO_FORCE_FAIL",
+        "errorPresent": true,
+        "deliveryFinality": null
+      },
+      "second": {
+        "status": 409,
+        "ok": false,
+        "leadId": null,
+        "hasReportToken": false,
+        "code": null,
+        "errorPresent": true,
+        "deliveryFinality": null
+      },
+      "sameLeadId": false,
+      "falseSuccess": false,
+      "falseDeliveredClaim": false,
+      "noReportTokenOnFail": true,
+      "previewForceCode": true
+    },
+    "brevoRestoreApi": {
+      "note": "Requires FORCE flag unset; ALLOW may remain.",
+      "first": {
+        "status": 200,
+        "ok": true,
+        "leadId": "6cb6557a-86ef-4d62-85fb-942b31055d29",
+        "hasReportToken": true,
+        "code": null,
+        "errorPresent": false,
+        "deliveryFinality": null
+      },
+      "deliveredSuccess": true,
+      "hasReportToken": true
+    },
+    "desktopContact": {
+      "leadAccepted": true,
+      "brevo": "delivered-or-accepted-path",
+      "googleRequest": "emitted",
+      "logicalLeadConversionCount": 1,
+      "conversionReport": {
+        "status": 200,
+        "ok": true,
+        "trackingStatus": "BROWSER_SENT"
+      },
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "acceptedOnlyIfTerminal": null,
+      "delayedNoteCount": null,
+      "replayConversionCount": 0,
+      "helperReplayExtraLeadFanOut": null,
+      "leadId": "7d0e1d45-d6aa-47b1-a2bc-989776c74dbc",
+      "googleAdsUiRecording": "NOT_CHECKED",
+      "kind": "contact"
+    },
+    "mobileContact": {
+      "leadAccepted": true,
+      "brevo": "delivered-or-accepted-path",
+      "googleRequest": "emitted",
+      "logicalLeadConversionCount": 1,
+      "conversionReport": {
+        "status": 200,
+        "ok": true,
+        "trackingStatus": "BROWSER_SENT"
+      },
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "acceptedOnlyIfTerminal": null,
+      "delayedNoteCount": null,
+      "replayConversionCount": 0,
+      "helperReplayExtraLeadFanOut": null,
+      "leadId": "3baabb1c-fa9a-4f16-85fa-fcea18193023",
+      "googleAdsUiRecording": "NOT_CHECKED",
+      "kind": "contact"
+    },
+    "desktopIntakeUnresolved": {
+      "leadAccepted": true,
+      "brevo": "delivered-or-accepted-path",
+      "googleRequest": "emitted",
+      "logicalLeadConversionCount": 1,
+      "conversionReport": {
+        "status": 200,
+        "ok": true,
+        "trackingStatus": "BROWSER_SENT"
+      },
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "acceptedOnlyIfTerminal": true,
+      "delayedNoteCount": 0,
+      "replayConversionCount": 0,
+      "helperReplayExtraLeadFanOut": 0,
+      "leadId": "db91dc65-fa1c-4ff6-9178-3d788743639c",
+      "googleAdsUiRecording": "NOT_CHECKED",
+      "kind": "intake"
+    },
+    "mobileIntakeUnresolved": {
+      "leadAccepted": true,
+      "brevo": "delivered-or-accepted-path",
+      "googleRequest": "emitted",
+      "logicalLeadConversionCount": 1,
+      "conversionReport": {
+        "status": 200,
+        "ok": true,
+        "trackingStatus": "BROWSER_SENT"
+      },
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "acceptedOnlyIfTerminal": true,
+      "delayedNoteCount": 0,
+      "replayConversionCount": 0,
+      "helperReplayExtraLeadFanOut": 0,
+      "leadId": "d6ec4e16-f76a-4c66-8b47-67a80d2175b5",
+      "googleAdsUiRecording": "NOT_CHECKED",
+      "kind": "intake"
+    },
+    "sent1": {
+      "leadAccepted": false,
+      "brevo": "n/a",
+      "googleRequest": "none",
+      "conversionReport": "n/a",
+      "finalDurableTrackingStatus": "n/a",
+      "replayConversionCount": 0,
+      "googleAdsUiRecording": "NOT_CHECKED"
+    },
+    "consentDenied": {
+      "leadAccepted": true,
+      "brevo": "delivered-or-accepted-path",
+      "googleRequest": "intentionally-blocked-or-denied",
+      "logicalLeadConversionCount": 0,
+      "conversionReport": {
+        "status": 200,
+        "ok": true,
+        "trackingStatus": "OFFLINE_QUEUED"
+      },
+      "finalDurableTrackingStatus": "OFFLINE_QUEUED",
+      "acceptedOnlyIfTerminal": true,
+      "delayedNoteCount": 0,
+      "replayConversionCount": 0,
+      "helperReplayExtraLeadFanOut": 0,
+      "leadId": "4398ddb2-32c5-4088-9a7e-6adfb502afaf",
+      "googleAdsUiRecording": "NOT_CHECKED",
+      "kind": "intake"
+    },
+    "consentGranted": {
+      "leadAccepted": true,
+      "brevo": "delivered-or-accepted-path",
+      "googleRequest": "emitted",
+      "logicalLeadConversionCount": 1,
+      "conversionReport": {
+        "status": 200,
+        "ok": true,
+        "trackingStatus": "BROWSER_SENT"
+      },
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "acceptedOnlyIfTerminal": true,
+      "delayedNoteCount": 0,
+      "replayConversionCount": 0,
+      "helperReplayExtraLeadFanOut": 0,
+      "leadId": "bc1fd129-c6b5-4a5e-bdd9-a3ca80cba2ed",
+      "googleAdsUiRecording": "NOT_CHECKED",
+      "kind": "intake"
+    },
+    "consentUnresolved": {
+      "leadAccepted": true,
+      "brevo": "delivered-or-accepted-path",
+      "googleRequest": "emitted",
+      "logicalLeadConversionCount": 1,
+      "conversionReport": {
+        "status": 200,
+        "ok": true,
+        "trackingStatus": "BROWSER_SENT"
+      },
+      "finalDurableTrackingStatus": "BROWSER_SENT",
+      "acceptedOnlyIfTerminal": true,
+      "delayedNoteCount": 0,
+      "replayConversionCount": 0,
+      "helperReplayExtraLeadFanOut": 0,
+      "leadId": "9f990245-2316-4514-b01b-1443fefbf656",
+      "googleAdsUiRecording": "NOT_CHECKED",
+      "kind": "intake"
+    },
+    "reconcile": {
+      "endpoint": "leads-reconcile-invoke",
+      "keyConfigured": true,
+      "unauthorizedNoKey": {
+        "status": 401,
+        "ok": false,
+        "checked": null,
+        "queuedCount": null,
+        "error": "present"
+      },
+      "unauthorizedWrongKey": {
+        "status": 401,
+        "ok": false,
+        "checked": null,
+        "queuedCount": null,
+        "error": "present"
+      },
+      "authorized": {
+        "status": 200,
+        "ok": true,
+        "checked": 0,
+        "queuedCount": 0,
+        "error": null
+      },
+      "authorizedReplay": {
+        "status": 200,
+        "ok": true,
+        "checked": 0,
+        "queuedCount": 0,
+        "error": null
+      },
+      "unauthorizedDenied": true,
+      "authorizedOk": true,
+      "authorizedIdempotent": true
+    }
+  },
+  "acceptance": {
+    "guidedIntakeDurableBrowserSent": true,
+    "consentDeniedZeroGoogle": true,
+    "consentGrantedExactlyOneLogical": true,
+    "consentUnresolvedMayFire": true,
+    "unauthorizedReconcileDenied": true,
+    "authorizedReconcileIdempotent": true,
+    "forcedBrevoNoFalseSuccess": true,
+    "normalBrevoRestoredDelivered": true,
+    "allRequired": true
+  },
+  "constraints": {
+    "noSeo": true,
+    "noMerge": true,
+    "noProdDeploy": true,
+    "noAdsBiddingChange": true,
+    "noGoogleAdsUiClaimWithoutDiagnostics": true,
+    "reconcileSecretNotInEvidence": true
+  }
+}

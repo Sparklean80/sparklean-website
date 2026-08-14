@@ -1,0 +1,67 @@
+{
+  "productSha": "028854f4b6f83ad6385fe3c2628d0e02ec1f3a88",
+  "previewUrl": "https://conversion-028854f--sparklean-website.netlify.app",
+  "phase": "brevo-restore",
+  "startedAt": "2026-08-14T17:06:57.435Z",
+  "conversionConstants": {
+    "conversionId": "17027441328",
+    "conversionLabel": "HnWnCJPRt9kcELDFqLc_"
+  },
+  "constraints": {
+    "noSeo": true,
+    "noMerge": true,
+    "noProdDeploy": true,
+    "noAdsBiddingChange": true,
+    "noGoogleAdsUiClaimWithoutDiagnostics": true
+  },
+  "steps": {
+    "brevoRestoreApi": {
+      "note": "Requires FORCE flag unset; ALLOW may remain.",
+      "first": {
+        "status": 200,
+        "ok": true,
+        "leadId": "6cb6557a-86ef-4d62-85fb-942b31055d29",
+        "hasReportToken": true,
+        "code": null,
+        "errorPresent": false,
+        "deliveryFinality": null
+      },
+      "deliveredSuccess": true,
+      "hasReportToken": true
+    }
+  },
+  "finishedAt": "2026-08-14T17:06:58.965Z",
+  "matrix": {
+    "desktopContact": null,
+    "mobileContact": null,
+    "desktopIntakeUnresolved": null,
+    "mobileIntakeUnresolved": null,
+    "consentDenied": null,
+    "consentGranted": null,
+    "consentUnresolved": null,
+    "sent1": null,
+    "reconcile": null,
+    "brevoFailureApi": null,
+    "brevoRestoreApi": {
+      "note": "Requires FORCE flag unset; ALLOW may remain.",
+      "first": {
+        "status": 200,
+        "ok": true,
+        "leadId": "6cb6557a-86ef-4d62-85fb-942b31055d29",
+        "hasReportToken": true,
+        "code": null,
+        "errorPresent": false,
+        "deliveryFinality": null
+      },
+      "deliveredSuccess": true,
+      "hasReportToken": true
+    }
+  },
+  "acceptance": {
+    "guidedIntakeDurableBrowserSent": false,
+    "unauthorizedReconcileDenied": false,
+    "authorizedReconcileIdempotent": false,
+    "forcedBrevoNoFalseSuccess": false,
+    "normalBrevoRestoredDelivered": true
+  }
+}

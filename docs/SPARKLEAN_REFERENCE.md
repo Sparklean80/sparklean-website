@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (HTTP `leads-reconcile-invoke` + Ads consent gate + attribution sitewide + preview Brevo fail; baseline pin `76633d0`)
+Last updated: **2026-08-14** (product `028854f` CR preview proofs: consent + reconcile-invoke + preview Brevo fail; baseline pin `76633d0`)
 
 ---
 

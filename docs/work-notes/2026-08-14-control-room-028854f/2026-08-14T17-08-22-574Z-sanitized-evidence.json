@@ -1,0 +1,109 @@
+{
+  "productSha": "028854f4b6f83ad6385fe3c2628d0e02ec1f3a88",
+  "previewUrl": "https://conversion-028854f--sparklean-website.netlify.app",
+  "phase": "reconcile",
+  "startedAt": "2026-08-14T17:08:22.575Z",
+  "conversionConstants": {
+    "conversionId": "17027441328",
+    "conversionLabel": "HnWnCJPRt9kcELDFqLc_"
+  },
+  "constraints": {
+    "noSeo": true,
+    "noMerge": true,
+    "noProdDeploy": true,
+    "noAdsBiddingChange": true,
+    "noGoogleAdsUiClaimWithoutDiagnostics": true
+  },
+  "steps": {
+    "reconcile": {
+      "endpoint": "leads-reconcile-invoke",
+      "keyConfigured": true,
+      "unauthorizedNoKey": {
+        "status": 401,
+        "ok": false,
+        "checked": null,
+        "queuedCount": null,
+        "error": "present"
+      },
+      "unauthorizedWrongKey": {
+        "status": 401,
+        "ok": false,
+        "checked": null,
+        "queuedCount": null,
+        "error": "present"
+      },
+      "authorized": {
+        "status": 200,
+        "ok": true,
+        "checked": 0,
+        "queuedCount": 0,
+        "error": null
+      },
+      "authorizedReplay": {
+        "status": 200,
+        "ok": true,
+        "checked": 0,
+        "queuedCount": 0,
+        "error": null
+      },
+      "unauthorizedDenied": true,
+      "authorizedOk": true,
+      "authorizedIdempotent": true
+    }
+  },
+  "finishedAt": "2026-08-14T17:08:27.825Z",
+  "matrix": {
+    "desktopContact": null,
+    "mobileContact": null,
+    "desktopIntakeUnresolved": null,
+    "mobileIntakeUnresolved": null,
+    "consentDenied": null,
+    "consentGranted": null,
+    "consentUnresolved": null,
+    "sent1": null,
+    "reconcile": {
+      "endpoint": "leads-reconcile-invoke",
+      "keyConfigured": true,
+      "unauthorizedNoKey": {
+        "status": 401,
+        "ok": false,
+        "checked": null,
+        "queuedCount": null,
+        "error": "present"
+      },
+      "unauthorizedWrongKey": {
+        "status": 401,
+        "ok": false,
+        "checked": null,
+        "queuedCount": null,
+        "error": "present"
+      },
+      "authorized": {
+        "status": 200,
+        "ok": true,
+        "checked": 0,
+        "queuedCount": 0,
+        "error": null
+      },
+      "authorizedReplay": {
+        "status": 200,
+        "ok": true,
+        "checked": 0,
+        "queuedCount": 0,
+        "error": null
+      },
+      "unauthorizedDenied": true,
+      "authorizedOk": true,
+      "authorizedIdempotent": true
+    },
+    "brevoFailureApi": null,
+    "brevoRestoreApi": null
+  },
+  "acceptance": {
+    "guidedIntakeDurableBrowserSent": false,
+    "unauthorizedReconcileDenied": true,
+    "authorizedReconcileIdempotent": true,
+    "forcedBrevoNoFalseSuccess": false,
+    "normalBrevoRestoredDelivered": false
+  }
+}
