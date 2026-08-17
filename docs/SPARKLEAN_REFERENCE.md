@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-14** (city paid-match visual redesign live on production — two-column trust + local coverage; deploy `6a7f6ce3`)
+Last updated: **2026-08-17** (homepage rebuild on branch `homepage-rebuild-2026-08-17` — Naples-led H1, compact quote entry → existing intake, city hub cards, FAQ refresh; not merged/deployed yet)
 
 ---
 
@@ -138,7 +138,7 @@ Track in portal + analytics (not yet wired on marketing site):
 
 1. **Do not publish home address** on the marketing site.
 2. **Do not commit or push** unless Tony asks (he often wants push after deploy-ready SEO changes — ask if unclear).
-3. **Do not rewrite the homepage H1** or do broad UI redesigns unless agreed.
+3. **Do not rewrite the homepage H1** or do broad UI redesigns unless agreed. (Authorized homepage rebuild 2026-08-17 on branch `homepage-rebuild-2026-08-17` — see `evidence/homepage-rebuild-2026-08-17/`.)
 4. **No snowbird-only / thin / duplicate city blog scatter** — high-intent local SEO only.
 5. **No paid ads / LSA** unless Tony asks.
 6. **30-day URL freeze** on core paths during SEO recovery (no renames on `/`, city pages, service hubs without explicit approval).
