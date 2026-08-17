@@ -1,0 +1,35 @@
+{
+  "title": "Luxury Cleaning Services in Naples &amp; Southwest Florida | Sparklean",
+  "meta": "Luxury residential, commercial, post-construction and vacation-rental cleaning in Naples, Bonita Springs, Estero, Fort Myers and Cape Coral.",
+  "canonical": "https://www.sparklean.co/",
+  "h1": "Luxury Cleaning Services in Naples &amp; Across Southwest Florida",
+  "primaryCtas": [
+    "Request Your Personalized Quote",
+    "Build My Personalized Quote",
+    "Request a Quote"
+  ],
+  "cityUrls": [
+    "/house-cleaning-naples",
+    "/house-cleaning-bonita-springs",
+    "/house-cleaning-estero",
+    "/house-cleaning-fort-myers",
+    "/house-cleaning-cape-coral"
+  ],
+  "serviceUrls": [
+    "/residential-cleaning",
+    "/commercial-cleaning",
+    "/post-construction-cleaning",
+    "/vacation-rental-cleaning",
+    "/specialized-cleaning"
+  ],
+  "quoteHandoff": "Compact form stores sessionStorage sparklean_home_quote_hint then opens SparkleanQuoteIntake.open() — no lead submit, no PII in URL",
+  "sharedComponentsTouched": "none (index.html + homepage-only scripts under scripts/)",
+  "filesChangedProduct": [
+    "index.html"
+  ],
+  "filesEvidence": [
+    "evidence/homepage-rebuild-2026-08-17/",
+    "scripts/rebuild-homepage.mjs",
+    "scripts/verify-homepage-rebuild.mjs"
+  ]
+}
