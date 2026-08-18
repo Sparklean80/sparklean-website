@@ -190,11 +190,11 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
     <button class="nav-hamburger" id="hamburger" type="button" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
-    <a href="/contact" class="nav-btn" data-sparklean-intake>Get a Quote</a>
+    <a href="/contact?quote=1#quote-intake" class="nav-btn" data-sparklean-intake>Get a Quote</a>
   </div>
 </nav>
 <div class="nav-mobile-menu" id="mobileMenu">
-  <a href="/contact" class="nav-mobile-quote" data-sparklean-intake>Get a Quote</a>
+  <a href="/contact?quote=1#quote-intake" class="nav-mobile-quote" data-sparklean-intake>Get a Quote</a>
   <a href="/">Home</a>
   <a href="/residential-cleaning">Residential Cleaning</a>
   <a href="/commercial-cleaning">Commercial &amp; Janitorial</a>
@@ -219,7 +219,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
     <p class="hero-sub">Personalized communication, responsive support, and concierge-level service for homes, estates, offices, and specialty cleaning throughout Southwest Florida.</p>
     <p class="hero-guar">✦ Bonded · Insured · Workers' Comp · Workers’ Comp</p>
     <div class="hero-btns">
-      <a href="/contact" class="btn-gold" data-sparklean-intake>Request Your Personalized Quote →</a>
+      <a href="/contact?quote=1#quote-intake" class="btn-gold" data-sparklean-intake>Request Your Personalized Quote →</a>
       <a href="tel:2398883588" class="btn-outline">Call Sparklean</a>
     </div>
   </div>
@@ -233,7 +233,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
     <p class="hero-sub">Personalized communication, responsive support, and concierge-level service for homes, estates, offices, and specialty cleaning throughout Southwest Florida.</p>
     <p class="hero-guar">✦ Bonded · Insured · Workers' Comp · Workers’ Comp</p>
     <div class="hero-btns">
-      <a href="/contact" class="btn-gold" data-sparklean-intake>Request Your Personalized Quote →</a>
+      <a href="/contact?quote=1#quote-intake" class="btn-gold" data-sparklean-intake>Request Your Personalized Quote →</a>
       <a href="tel:2398883588" class="btn-outline">Call Sparklean</a>
     </div>
   </div>
@@ -259,12 +259,23 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 
 <section class="cp-wrap" id="contact-experience">
   <div class="cp-inner">
+    <div id="quote-intake" class="cp-quote-landmark" tabindex="-1">
+      <h2 class="cp-quote-landmark__title">Guided quote request</h2>
+      <p class="cp-quote-landmark__lede">The structured intake opens here when available. If it does not appear, use the simple form below or call <a href="tel:2398883588">(239) 888-3588</a> — either path reaches Sparklean.</p>
+      <p class="cp-quote-landmark__actions">
+        <a href="/contact?quote=1#quote-intake" class="btn-gold" data-sparklean-intake>Open guided quote →</a>
+        <a href="#sparklean-contact-form" class="btn-outline">Use the simple form</a>
+      </p>
+      <noscript>
+        <p class="cp-quote-landmark__noscript"><strong>JavaScript is off.</strong> Please use the contact form on this page or call <a href="tel:2398883588">(239) 888-3588</a>.</p>
+      </noscript>
+    </div>
     <div class="cp-grid">
       <div class="cp-form-card">
         <p id="cp-thanks" class="cp-thanks" role="status">Thank you. Your message has been received. A Sparklean team member will follow up shortly.</p>
         <p id="cp-form-error" class="cp-form-error" role="alert" hidden></p>
         <h2 class="cp-form-title">Write to us <em>directly</em></h2>
-        <p class="cp-form-lede">Share a few details below, or use the guided request experience for structured scheduling notes. Either path reaches the same attentive team.</p>
+        <p class="cp-form-lede">This simpler form is a separate path from the guided quote. Both deliver to the same Sparklean lead system — use whichever is easier. For structured scheduling notes, open the guided quote above.</p>
 
         <form id="sparklean-contact-form" class="cp-form" name="sparklean-contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/contact?sent=1#contact-experience">
           <input type="hidden" name="form-name" value="sparklean-contact">
@@ -399,9 +410,9 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
           <div class="cp-info-k">Response time</div>
           <div class="cp-info-v">Most inquiries receive a reply within minutes during business hours.</div>
         </div>
-        <p class="cp-info-note">For the fastest structured intake — property type, timing, and service scope — use “Request Your Personalized Quote” above.</p>
+        <p class="cp-info-note">For the fastest structured intake — property type, timing, and service scope — open the guided quote.</p>
         <div style="margin-top:22px;">
-          <a href="/contact" class="btn-gold" style="width:100%;box-sizing:border-box;" data-sparklean-intake>Request Your Personalized Quote →</a>
+          <a href="/contact?quote=1#quote-intake" class="btn-gold" style="width:100%;box-sizing:border-box;" data-sparklean-intake>Request Your Personalized Quote →</a>
         </div>
       </aside>
     </div>
@@ -464,7 +475,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   var fm=document.getElementById("sparklean-contact-form");
   var th=document.getElementById("cp-thanks");
   var errEl=document.getElementById("cp-form-error");
-  var PUBLIC_FAIL="We're having trouble submitting your request right now. Please call Sparklean directly at (239) 888-3588.";
+  var PUBLIC_FAIL="We're having trouble submitting your request right now. Your information is still on this form — please try again, or call Sparklean directly at (239) 888-3588.";
 
   function showThanks(trackingDelayed){
     if(th){

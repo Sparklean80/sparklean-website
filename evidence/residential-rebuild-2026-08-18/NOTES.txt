@@ -1,0 +1,9 @@
+desktop: h1="Residential Cleaning in Southwest Florida"
+desktop: trust=4.9★ Google Rating | Direct Employees | Supervised Teams | Bonded & Insured | 24-Hour Guarantee
+desktop: marcoCount=0 heroBg=block/absolute h1Left=80
+tablet: h1="Residential Cleaning in Southwest Florida"
+tablet: trust=4.9★ Google Rating | Direct Employees | Supervised Teams | Bonded & Insured | 24-Hour Guarantee
+tablet: marcoCount=0 heroBg=block/relative h1Left=28
+mobile: h1="Residential Cleaning in Southwest Florida"
+mobile: trust=4.9★ Google Rating | Direct Employees | Supervised Teams | Bonded & Insured | 24-Hour Guarantee
+mobile: marcoCount=0 heroBg=block/relative h1Left=20

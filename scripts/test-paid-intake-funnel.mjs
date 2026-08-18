@@ -40,10 +40,20 @@ assert(
   contactHtml.includes('id="sparklean-contact-form"') && contactHtml.includes("data-netlify"),
   "contact Netlify form preserved for organic"
 );
-assert(contactHtml.includes("data-sparklean-intake>Request Your Personalized Quote"), "contact quote CTA has data-sparklean-intake");
+assert(contactHtml.includes('id="quote-intake"'), "contact has #quote-intake landmark");
+assert(
+  contactHtml.includes('href="/contact?quote=1#quote-intake"') &&
+    contactHtml.includes("Request Your Personalized Quote"),
+  "contact quote CTA uses durable quote URL"
+);
+assert(contactHtml.includes("data-sparklean-intake"), "contact quote CTA has data-sparklean-intake");
 assert(intakeSrc.includes("isPaidLandingQuery"), "paid landing detector present");
 assert(intakeSrc.includes("isSoftPaidLandingQuery"), "soft paid landing detector present");
 assert(intakeSrc.includes("isForcedQuoteQuery"), "forced quote detector present");
+assert(intakeSrc.includes("isQuoteOpenHref"), "durable quote href detector present");
+assert(intakeSrc.includes("forceOpenDoneThisLoad"), "force-open is per page load (refresh may reopen)");
+assert(!intakeSrc.includes("sparklean_paid_force_open"), "sessionStorage once-per-session force-open removed");
+assert(intakeSrc.includes("QUOTE_OPEN_HREF"), "canonical quote open href constant present");
 assert(intakeSrc.includes("schedulePaidSoftPrompt"), "soft prompt scheduler present");
 assert(!intakeSrc.includes("maybeAutoOpenPaid"), "legacy immediate auto-open removed");
 assert(intakeSrc.includes("Ready for a personalized cleaning plan?"), "soft prompt copy present");
@@ -150,6 +160,18 @@ const MOBILE_UA =
   assert(T.isPaidLandingQuery("") === false, "empty query not paid");
   assert(T.isSoftPaidLandingQuery("?gbraid=x") === true, "gbraid is soft-paid");
   assert(T.isSoftPaidLandingQuery("?wbraid=y") === true, "wbraid is soft-paid");
+  assert(T.isQuoteOpenHref("/contact?quote=1#quote-intake") === true, "durable quote href detected");
+  assert(T.isQuoteOpenHref("/contact") === false, "bare /contact is not durable quote href");
+  assert(T.presetFromQuery("?quote=1&preset=recurringResidential") === "recurringResidential", "preset from query");
+  assert(w.conversions.length === 0, "detector setup fires no Google conversion");
+}
+
+// Contact durable URL opens intake; opening is not a conversion
+{
+  const w = makeWindow("https://www.sparklean.co/contact?quote=1#quote-intake", DESKTOP_UA);
+  await new Promise((r) => setTimeout(r, 40));
+  assert(intakeOpen(w), "contact?quote=1#quote-intake: intake opens");
+  assert(w.conversions.length === 0, "opening intake is not a Google conversion");
 }
 
 // GCLID does NOT immediately open modal
@@ -289,6 +311,7 @@ async function assertImmediateCta(label, ua, width) {
   w.document.querySelector(".sparklean-mcta__quote").click();
   await new Promise((r) => setTimeout(r, 10));
   assert(intakeOpen(w), `${label}: sticky quote opens immediately`);
+  assert(w.conversions.length === 0, `${label}: sticky open is not a Google conversion`);
 }
 
 await assertImmediateCta("desktop CTA", DESKTOP_UA, 1280);

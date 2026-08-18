@@ -1,0 +1,12 @@
+desktop direct open=true landmark=true form=true
+screenshot desktop-contact-quote1-open.png
+desktop refresh reopens intake
+screenshot desktop-contact-quote1-refresh.png
+mobile residential CTA href=/contact?quote=1&preset=recurringResidential#quote-intake
+screenshot mobile-residential-cta.png
+mobile residential CTA → contact opens intake
+screenshot mobile-residential-to-contact-open.png
+js-blocked: landmark+form visible; overlay open count=0
+screenshot desktop-js-blocked-fallback.png
+naples nav quote href=/contact?quote=1#quote-intake
+screenshot desktop-naples-nav-quote.png

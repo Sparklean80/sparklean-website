@@ -7,10 +7,12 @@
  * lead only (name, phone, email, location, service) — no property expansion.
  *
  * Triggers:
- * - ?quote=1 → may open intake immediately (explicit).
+ * - /contact?quote=1#quote-intake (or ?quote=1 / #quote-intake) → open intake on load
+ *   (direct visit, refresh, new tab). Prefer real hrefs over JS-only /contact self-links.
  * - gclid / gbraid / wbraid / paid UTM → soft concierge prompt after 10s OR
  *   35% scroll (never auto-open full-screen). Hero/nav/sticky still open now.
- * - Organic → click-triggered only.
+ * - Organic → click-triggered only, or navigate to the quote URL above.
+ * - Never fire a Google Ads conversion from opening intake or loading ?quote=1.
  */
 (function () {
   /** First-party click-id capture (works even if sparklean-ads.js is blocked). */
@@ -75,7 +77,7 @@
       "Tell us about the home and preferred cadence. Most clients continue weekly, biweekly, or monthly with supervised recurring care.",
   };
   var INTAKE_FAILURE_MSG =
-    "We're having trouble submitting your request right now. Please call Sparklean directly at (239) 888-3588.";
+    "We're having trouble submitting your request right now. Your answers are still here — please try again, or call Sparklean directly at (239) 888-3588.";
   var referralTypePrefill = "";
   var PAID_UTM_MEDIUMS = /^(cpc|ppc|paid|paidsearch|display|cpm|cpa|ads|ad)$/i;
   var PROMPT_DELAY_MS = 10000;
@@ -84,6 +86,9 @@
   var softPromptTimer = null;
   var softPromptBound = false;
   var softPromptShown = false;
+  /** Prevents double-open within a single document load (refresh may open again). */
+  var forceOpenDoneThisLoad = false;
+  var QUOTE_OPEN_HREF = "/contact?quote=1#quote-intake";
 
   function esc(s) {
     return String(s == null ? "" : s)
@@ -126,8 +131,98 @@
   }
 
   /** Explicit instruction — may open intake immediately. */
+  function isQuoteIntakeHash() {
+    try {
+      return String(window.location.hash || "").replace(/^#/, "") === "quote-intake";
+    } catch (eHash) {
+      return false;
+    }
+  }
+
   function isForcedQuoteQuery(search) {
-    return parseSearch(search).get("quote") === "1";
+    if (parseSearch(search).get("quote") === "1") return true;
+    // Hash-only bookmark / fallback target (when search arg omitted).
+    if (search == null && isQuoteIntakeHash()) return true;
+    return false;
+  }
+
+  function presetFromQuery(search) {
+    var raw = String(parseSearch(search).get("preset") || "").trim();
+    if (raw === "recurringResidential" || raw === "innerCircle" || raw === "referral") return raw;
+    return "";
+  }
+
+  /** True when an href is the durable guided-quote destination (not bare /contact). */
+  function isQuoteOpenHref(href) {
+    if (!href) return false;
+    var s = String(href).trim();
+    if (!s || s.charAt(0) === "#" || /^tel:|^mailto:|^https?:/i.test(s)) {
+      if (/^https?:/i.test(s)) {
+        try {
+          var uAbs = new URL(s, window.location.origin);
+          if (uAbs.origin !== window.location.origin) return false;
+          s = uAbs.pathname + uAbs.search + uAbs.hash;
+        } catch (eAbs) {
+          return false;
+        }
+      } else if (s.charAt(0) === "#") {
+        return s === "#quote-intake" || s === "#quote";
+      } else {
+        return false;
+      }
+    }
+    var path = s.split("?")[0].split("#")[0];
+    if (path !== "/contact" && path !== "contact") return false;
+    var q = "";
+    var hash = "";
+    var qi = s.indexOf("?");
+    var hi = s.indexOf("#");
+    if (qi !== -1) {
+      q = hi === -1 || hi < qi ? s.slice(qi + 1) : s.slice(qi + 1, hi);
+    }
+    if (hi !== -1) hash = s.slice(hi + 1);
+    try {
+      var params = new URLSearchParams(q);
+      if (params.get("quote") === "1") return true;
+    } catch (eQ) {
+      /* ignore */
+    }
+    return hash === "quote-intake";
+  }
+
+  function isAlreadyOnQuoteOpenHref(href) {
+    if (!isQuoteOpenHref(href)) return false;
+    try {
+      var u = new URL(href, window.location.origin);
+      if (u.pathname !== window.location.pathname) return false;
+      var wantQuote = u.searchParams.get("quote") === "1";
+      var haveQuote = readQuery().get("quote") === "1";
+      if (wantQuote !== haveQuote) return false;
+      var wantPreset = String(u.searchParams.get("preset") || "").trim();
+      var havePreset = String(readQuery().get("preset") || "").trim();
+      if (wantPreset !== havePreset) return false;
+      return true;
+    } catch (eOn) {
+      return false;
+    }
+  }
+
+  function quoteOpenOptsFromAnchor(a) {
+    var pr = (a.getAttribute("data-sparklean-intake-preset") || "").trim();
+    var rType = (a.getAttribute("data-sparklean-referral-type") || "").trim();
+    if (!pr) {
+      try {
+        var u = new URL(a.getAttribute("href") || "", window.location.origin);
+        pr = String(u.searchParams.get("preset") || "").trim();
+      } catch (ePr) {
+        pr = "";
+      }
+    }
+    return {
+      sourceUrl: window.location.href,
+      preset: pr || null,
+      referralType: rType || null,
+    };
   }
 
   /** Paid click / campaign params that keep paid mode but must not auto-open. */
@@ -159,8 +254,28 @@
     return "sparklean_paid_soft_prompt:" + window.location.pathname + window.location.search;
   }
 
-  function forceOpenStorageKey() {
-    return "sparklean_paid_force_open:" + window.location.pathname + window.location.search;
+  function focusQuoteLandmark() {
+    try {
+      var landmark = document.getElementById("quote-intake");
+      if (landmark && typeof landmark.focus === "function") {
+        if (!landmark.hasAttribute("tabindex")) landmark.setAttribute("tabindex", "-1");
+        landmark.focus({ preventScroll: false });
+      }
+    } catch (eFocus) {
+      /* ignore */
+    }
+  }
+
+  function maybeForceOpenQuote() {
+    if (forceOpenDoneThisLoad) return;
+    if (!isForcedQuoteQuery() && !isQuoteIntakeHash()) return;
+    forceOpenDoneThisLoad = true;
+    focusQuoteLandmark();
+    var preset = presetFromQuery() || paidLandingPreset();
+    open({
+      sourceUrl: window.location.href,
+      preset: preset || null,
+    });
   }
 
   function getSoftPromptState() {
@@ -189,11 +304,15 @@
 
   function shouldInterceptAnchor(a) {
     if (!a || a.tagName !== "A") return false;
-    if (a.hasAttribute("data-sparklean-intake")) return true;
-    if ((a.getAttribute("data-sparklean-intake-preset") || "").trim()) return true;
     if (a.hasAttribute("data-sparklean-intake-skip")) return false;
     if (a.classList.contains("sparklean-no-intake")) return false;
     var href = (a.getAttribute("href") || "").trim();
+    // Durable quote URL: navigate for real unless already on that destination.
+    if (isQuoteOpenHref(href)) {
+      return isAlreadyOnQuoteOpenHref(href);
+    }
+    if (a.hasAttribute("data-sparklean-intake")) return true;
+    if ((a.getAttribute("data-sparklean-intake-preset") || "").trim()) return true;
     var txt = (a.textContent || "").trim();
     var tLower = txt.toLowerCase();
     if (href === "#quote") {
@@ -225,13 +344,7 @@
         var a = e.target.closest("a");
         if (!shouldInterceptAnchor(a)) return;
         e.preventDefault();
-        var pr = (a.getAttribute("data-sparklean-intake-preset") || "").trim();
-        var rType = (a.getAttribute("data-sparklean-referral-type") || "").trim();
-        open({
-          sourceUrl: window.location.href,
-          preset: pr || null,
-          referralType: rType || null,
-        });
+        open(quoteOpenOptsFromAnchor(a));
       },
       true
     );
@@ -741,9 +854,10 @@
     root.id = "sparklean-quote-intake";
     root.className = "sq-intake";
     root.setAttribute("hidden", "");
+    root.setAttribute("data-sparklean-quote-overlay", "1");
     root.innerHTML =
       '<div class="sq-intake__backdrop" data-intake-close tabindex="-1"></div>' +
-      '<div class="sq-intake__dialog" role="dialog" aria-modal="true" aria-labelledby="sq-intake-title">' +
+      '<div class="sq-intake__dialog" role="dialog" aria-modal="true" aria-labelledby="sq-intake-title" tabindex="-1">' +
       '<div class="sq-intake__head">' +
       '<div><p class="sq-intake__eyebrow">Service request</p>' +
       '<h1 id="sq-intake-title" class="sq-intake__title">A few brief questions</h1></div>' +
@@ -903,7 +1017,12 @@
     render();
     requestAnimationFrame(function () {
       var inp = root.querySelector(".sq-intake__input");
-      if (inp) inp.focus();
+      if (inp) {
+        inp.focus();
+        return;
+      }
+      var dialog = root.querySelector(".sq-intake__dialog");
+      if (dialog) dialog.focus();
     });
   }
 
@@ -1042,17 +1161,6 @@
     }
   }
 
-  function maybeForceOpenQuote() {
-    if (!isForcedQuoteQuery()) return;
-    try {
-      if (sessionStorage.getItem(forceOpenStorageKey()) === "1") return;
-      sessionStorage.setItem(forceOpenStorageKey(), "1");
-    } catch (e5) {
-      /* continue even if storage blocked */
-    }
-    openPaidIntake("?quote=1");
-  }
-
   window.SparkleanQuoteIntake = {
     open: open,
     close: close,
@@ -1060,6 +1168,8 @@
       isPaidLandingQuery: isPaidLandingQuery,
       isForcedQuoteQuery: isForcedQuoteQuery,
       isSoftPaidLandingQuery: isSoftPaidLandingQuery,
+      isQuoteOpenHref: isQuoteOpenHref,
+      presetFromQuery: presetFromQuery,
       shouldUsePaidMode: shouldUsePaidMode,
       showSoftPrompt: showSoftPrompt,
       dismissSoftPrompt: dismissSoftPrompt,
@@ -1119,12 +1229,14 @@
     document.addEventListener("click", function (e) {
       if (e.target.closest(".sparklean-mcta__quote")) {
         e.preventDefault();
+        // Sticky bar is a button (no href). Open in place; primary <a> CTAs use
+        // /contact?quote=1#quote-intake for a durable address-bar destination.
         open({ sourceUrl: window.location.href + "#sticky-quote" });
       }
     });
     var tryPaidLanding = function () {
       if (!ensureFlows()) return;
-      // Explicit ?quote=1 may open immediately; paid click IDs never auto-open.
+      // Explicit ?quote=1 / #quote-intake may open immediately; paid click IDs never auto-open.
       maybeForceOpenQuote();
       schedulePaidSoftPrompt();
     };
@@ -1135,6 +1247,17 @@
         setTimeout(tryPaidLanding, 0);
       });
     }
+    window.addEventListener("hashchange", function () {
+      if (!isQuoteIntakeHash() && readQuery().get("quote") !== "1") return;
+      forceOpenDoneThisLoad = false;
+      maybeForceOpenQuote();
+    });
+    window.addEventListener("pageshow", function (ev) {
+      if (!ev.persisted) return;
+      forceOpenDoneThisLoad = false;
+      maybeForceOpenQuote();
+      schedulePaidSoftPrompt();
+    });
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

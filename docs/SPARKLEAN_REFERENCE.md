@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-17** (homepage full-service positioning on branch `homepage-full-service-positioning-2026-08-17` — H1/meta/services/FAQ; not merged/deployed yet)
+Last updated: **2026-08-18** (residential hub rebuild on branch `fix-contact-quote-url-2026-08-17` — SWFL regional, not Naples-owned; homepage chrome; not deployed)
 
 ---
 
@@ -388,6 +388,8 @@ Categories: residential, condo, luxury estate, move-in/out, airbnb, commercial o
 
 Contact page + homepage `#quote` use these flows → `netlify/functions/quote-submit.mjs` → Brevo transactional → `SPARKLEAN_LEAD_TO` (default `info@sparklean.co`).
 
+**Residential LP (2026-08-18):** Regional hub — **not** Naples city SEO. Title/H1: Residential Cleaning Southwest Florida. City pages own Naples/Bonita/Estero/Fort Myers/Cape Coral. Homepage-matching trust strip + tablet/mobile photo-on-top stack (`#residential-hero`). Broken trust DOM fixed; marquee removed; areas = five linked cities only; paid-match points to city URLs. Keeps tiers/checklist/video/cost factors/FAQ + `recurringResidential` intake. Evidence: `evidence/residential-rebuild-2026-08-18/`.
+
 **Residential LP positioning (2026-08-10, copy-only on `/residential-cleaning`):** Professional accountability — not “expensive luxury.” Protected lines: “Local care. Large-company discipline.” / “House cleaning you don’t have to manage.” / “Anyone can start a cleaning company. Sparklean built a system to deliver cleaning consistently.” Hero CTA: Build My Cleaning Plan + Call. Trust strip leads with visible **4.9★ Google** (live reviews link; no invented review count). Homepage + city pages adapt later after paid LP performance.
 
 **Contact form → Ads (2026-08-12 baseline `76633d0`):** Browser `?sent=1` + pending `contact-*` only — no Blobs, no `BROWSER_SENT` vs Google confirmation.
@@ -395,6 +397,19 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 **Lead / conversion reconciliation boundary (2026-08-12→08-14, review `review/lead-conversion-boundary`):** Real claim leases (no reclaim before expiry; in-flight 503); outbox `sendLeaseOwner`+`sendFence` fencing; Brevo send without durable DELIVERED → `RECONCILIATION_REQUIRED` (not completed success; at-least-once-ambiguous); full quote material hash + outbox payload bind; attribution keys excluded/documented. **2026-08-14 Blobs durability:** production store uses strong consistency + etag-cache wrap; `writeCas` does not treat missing write ETag as CAS conflict; `ensureOutboxPending` waits for durable seal (fixes Deploy Preview `OUTBOX_MISSING`). Proofs: `test:idempotency-lease`, `test:blob-concurrency`, `test:funnel`. Evidence work notes pin product SHAs. Exact-SHA preview browser Google proof still required before any “fixed” claim.
 
 **Paid Ads intake (2026-08-10, review branch):** `js/quote-intake.js` paid mode activates on `?quote=1`, `gclid`/`gbraid`/`wbraid`, paid `utm_medium` (cpc/ppc/paid/…), or stored click ids. **Do not** auto-open the full-screen intake for `gclid`/paid UTM — after 10s or 35% scroll, show a small non-blocking prompt (“Ready for a personalized cleaning plan?”). `?quote=1` may still open immediately. Hero/nav/sticky quote CTAs open the five-field paid flow immediately. Analytics (not Ads conversions): `paid_quote_prompt_shown`, `paid_quote_started`, `paid_quote_submitted`, `phone_click`. Google Ads conversion still fires only after Brevo success + `leadId`. Confirmation includes Call Sparklean (no invented SLA). Tests: `npm run test:funnel`. Preferred paid LP: `/residential-cleaning?gclid=…` (soft prompt) or `?quote=1` (force open).
+
+### Dual lead paths (2026-08-17) — durable quote URL
+
+Two separate paths; **do not merge** and **do not double-submit**.
+
+| Path | Entry | Backend | Ads conversion |
+|------|--------|---------|----------------|
+| **Guided quote** | `/contact?quote=1#quote-intake` (also `&preset=recurringResidential` from residential/city CTAs). Opens overlay on load/refresh/new tab. Landmark `#quote-intake` + simple form remain if JS is delayed/off. | `POST /.netlify/functions/quote-submit` | Only after server returns `leadId` + `reportToken`, then `SparkleanAds.fireAndReportConversion` (exactly once per leadId) |
+| **Simple contact form** | Visible form on `/contact` (`#sparklean-contact-form`) | `POST /.netlify/functions/contact-submit` | Same gate: server `leadId` + `reportToken` → `fireAndReportConversion` |
+
+**Never** fire a Google Ads conversion from: loading `?quote=1`, opening the intake, viewing thank-you/`?sent=1`, or analytics events like `paid_quote_started`.
+
+Primary service + city CTAs use the durable href (not bare `/contact` self-links). Homepage left unchanged in this change. Sticky mobile quote button still opens in place (no href). Attribution: `gclid`/`gbraid`/`wbraid` via `sparklean-attribution.js` on both paths. Evidence: `evidence/quote-open-url-2026-08-17/`. Verify: `node scripts/verify-quote-open-url.mjs` + `npm run test:paid-intake`.
 
 **Lead inbox / spam (2026-08-14):** From stays authenticated Sparklean (`SPARKLEAN_FROM_EMAIL`). **Reply-To = customer email only** (never From). No JSON attachment. **DNS (applied + Gmail-proven 2026-08-14):** Brevo verification TXT + DKIM CNAMEs (`brevo1`/`brevo2` → `b1`/`b2.sparklean-co.dkim.brevo.com`) + DMARC `p=none` `rua@dmarc.brevo.com`. **SPF unchanged** (`v=spf1 include:_spf.google.com ~all` — do not add `include:spf.brevo.com`). Brevo authenticated; Gmail headers: `dkim=pass` (`@sparklean.co`, selector `brevo2`), `dmarc=pass`, no impersonation warning. Evidence: `docs/work-notes/2026-08-14-brevo-domain-auth/`.
 
