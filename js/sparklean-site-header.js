@@ -9,6 +9,7 @@
     document.body.classList.add("site-header-v2");
 
     var topbar = header.querySelector(".rewards-topbar");
+    var earn = header.querySelector(".nav-earn");
     var dropdowns = header.querySelectorAll(".nav-dd");
     var scrollTicking = false;
     var root = document.documentElement;
@@ -17,7 +18,6 @@
       var h = header.offsetHeight || 0;
       if (h > 0) {
         root.style.setProperty("--header-total", h + "px");
-        /* Keep legacy page paddings (calc(var(--nav-h)+…)) aligned with measured chrome. */
         root.style.setProperty("--nav-h", h + "px");
         document.body.style.setProperty("--nav-h", h + "px");
         document.body.style.setProperty("--header-total", h + "px");
@@ -27,21 +27,23 @@
     function closeRewards() {
       header.classList.remove("rewards-open");
       if (topbar) topbar.setAttribute("aria-expanded", "false");
+      if (earn) earn.setAttribute("aria-expanded", "false");
     }
 
-    function openRewards() {
+    function openRewards(trigger) {
       closeDropdowns();
       header.classList.add("rewards-open");
-      if (topbar) topbar.setAttribute("aria-expanded", "true");
+      if (topbar) topbar.setAttribute("aria-expanded", trigger === topbar ? "true" : "false");
+      if (earn) earn.setAttribute("aria-expanded", trigger === earn ? "true" : "false");
     }
 
-    function toggleRewards(e) {
+    function toggleRewards(trigger, e) {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
       }
       if (header.classList.contains("rewards-open")) closeRewards();
-      else openRewards();
+      else openRewards(trigger);
     }
 
     function closeDropdowns() {
@@ -54,7 +56,12 @@
 
     if (topbar) {
       topbar.addEventListener("click", function (e) {
-        toggleRewards(e);
+        toggleRewards(topbar, e);
+      });
+    }
+    if (earn) {
+      earn.addEventListener("click", function (e) {
+        toggleRewards(earn, e);
       });
     }
 
@@ -139,7 +146,6 @@
           closeRewards();
           closeDropdowns();
         }
-        /* Blog articles use [hidden]; keep in sync with .open */
         if (mm.hasAttribute("hidden")) {
           if (open) mm.removeAttribute("hidden");
         }

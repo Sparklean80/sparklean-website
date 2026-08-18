@@ -237,15 +237,32 @@ body.site-header-v2 {
   flex-shrink: 0;
 }
 
-.site-header .nav-phone,
+/* Phone: always readable on desktop; stronger than Client Login, secondary to Quote */
+.site-header .nav-phone {
+  display: inline-flex !important;
+  align-items: center;
+  font-size: 0.64rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: none !important;
+  color: rgba(249, 247, 243, 0.88) !important;
+  text-decoration: none !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .site-header .nav-portal {
   display: inline-flex !important;
   align-items: center;
-  font-size: 0.56rem !important;
+  font-size: 0.5rem !important;
   font-weight: 500 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: none !important;
-  color: rgba(249, 247, 243, 0.55) !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: rgba(249, 247, 243, 0.5) !important;
   text-decoration: none !important;
   padding: 0 !important;
   border: none !important;
@@ -254,21 +271,80 @@ body.site-header-v2 {
   white-space: nowrap;
 }
 
-.site-header .nav-portal {
-  letter-spacing: 0.12em !important;
-  text-transform: uppercase !important;
-  font-size: 0.5rem !important;
-}
-
 .site-header .nav-portal::before {
   display: none !important;
 }
 
-.site-header .nav-phone:hover,
-.site-header .nav-portal:hover {
+.site-header .nav-phone:hover {
   color: #d4bf96 !important;
   background: none !important;
   border: none !important;
+}
+
+.site-header .nav-portal:hover {
+  color: rgba(249, 247, 243, 0.78) !important;
+  background: none !important;
+  border: none !important;
+}
+
+/* Compact Call control — tablet/mobile header (full number lives in sticky CTA / menu) */
+.site-header .nav-call {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(249, 247, 243, 0.88);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.site-header .nav-call-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.site-header .nav-call:hover {
+  color: #d4bf96;
+}
+
+/* Earn $5 — scrolled desktop only (rewards bar stays; this is the compact reminder) */
+.site-header .nav-earn {
+  display: none;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #d4bf96;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.site-header .nav-earn:hover,
+.site-header .nav-earn[aria-expanded="true"] {
+  color: #f9f7f3;
+}
+
+.site-header .nav-earn:focus {
+  outline: none;
+}
+
+.site-header .nav-earn:focus-visible {
+  outline: 2px solid #b8a47a;
+  outline-offset: 3px;
 }
 
 .site-header .nav-btn {
@@ -379,7 +455,7 @@ body.site-header-v2 {
 }
 
 /* —— Scrolled sticky state —— */
-.site-header.is-scrolled .nav-phone,
+/* Phone stays. Client Login may drop. Earn $5 Credit appears. */
 .site-header.is-scrolled .nav-portal {
   display: none !important;
 }
@@ -388,8 +464,16 @@ body.site-header-v2 {
   display: none;
 }
 
+.site-header.is-scrolled .nav-earn {
+  display: inline-flex;
+}
+
 .site-header.is-scrolled .nav-links {
   gap: 18px !important;
+}
+
+.site-header.is-scrolled .nav-phone {
+  display: inline-flex !important;
 }
 
 #home.hero .hero-content {
@@ -426,9 +510,20 @@ body.site-header-v2 {
   }
 }
 
+/* Beat sparklean-nav-logo.css rules that hide .nav-phone under 1480px */
+@media (max-width: 1480px) {
+  .site-header .nav-phone {
+    display: inline-flex !important;
+  }
+}
+
 @media (max-width: 1280px) {
   .site-header .nav-portal {
     display: none !important;
+  }
+
+  .site-header .nav-right {
+    gap: 12px !important;
   }
 
   .site-header > nav {
@@ -436,14 +531,39 @@ body.site-header-v2 {
   }
 }
 
-@media (max-width: 1180px) {
+/* Phone number stays through all desktop widths including 1280 */
+@media (min-width: 1101px) {
   .site-header .nav-phone {
+    display: inline-flex !important;
+  }
+
+  .site-header .nav-call {
     display: none !important;
   }
 }
 
 @media (max-width: 1100px) {
   .site-header .nav-links {
+    display: none !important;
+  }
+
+  .site-header .nav-phone {
+    display: none !important;
+  }
+
+  .site-header .nav-call {
+    display: inline-flex !important;
+  }
+
+  .site-header .nav-earn {
+    display: none !important;
+  }
+
+  .site-header.is-scrolled .nav-earn {
+    display: none !important;
+  }
+
+  .site-header .nav-portal {
     display: none !important;
   }
 
