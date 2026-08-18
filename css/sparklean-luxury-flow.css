@@ -892,3 +892,117 @@
     margin-bottom: 22px;
   }
 }
+
+/* ── City/service: cost factors + Google reviews (shared) ── */
+.cost-factors {
+  padding: 88px 80px;
+  background: var(--dark2, #111);
+}
+.cost-factors-inner {
+  max-width: 920px;
+  margin: 0 auto;
+}
+.cost-factors .sec-h {
+  margin-bottom: 12px;
+}
+.cost-factors-lead {
+  font-family: var(--serif, "Playfair Display", Georgia, serif);
+  font-size: 0.98rem;
+  line-height: 1.85;
+  color: var(--w70, rgba(249, 247, 243, 0.7));
+  margin: 0 0 28px;
+}
+.cost-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.cost-card {
+  border: 1px solid rgba(184, 164, 122, 0.14);
+  background: rgba(14, 14, 14, 0.45);
+  padding: 18px 16px;
+}
+.cost-card strong {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold, #c9a84c);
+  margin-bottom: 6px;
+}
+.cost-card span {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--w70, rgba(249, 247, 243, 0.7));
+  line-height: 1.55;
+}
+
+.cost-list {
+  list-style: none;
+  margin: 28px 0 32px;
+  padding: 0;
+  border-top: 1px solid rgba(184, 164, 122, 0.16);
+}
+.cost-list li {
+  display: grid;
+  grid-template-columns: minmax(132px, 190px) minmax(0, 1fr);
+  gap: 12px 28px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(184, 164, 122, 0.12);
+  align-items: start;
+}
+.cost-label {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold, #c9a84c);
+  line-height: 1.45;
+  padding-top: 3px;
+}
+.cost-desc {
+  margin: 0;
+  font-family: var(--serif, "Playfair Display", Georgia, serif);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--w70, rgba(249, 247, 243, 0.7));
+}
+
+.reviews.reviews--google {
+  text-align: center;
+}
+.reviews-google-inner {
+  max-width: 520px;
+  margin: 0 auto;
+}
+.reviews--google .eyebrow {
+  justify-content: center;
+}
+.reviews--google .sec-h {
+  margin-bottom: 18px;
+}
+.reviews--google .rev-sub {
+  margin: 0 auto 28px;
+  max-width: 34em;
+}
+.reviews--google .reviews-google-cta {
+  display: inline-flex;
+}
+
+@media (max-width: 1024px) {
+  .cost-factors {
+    padding: 72px 32px;
+  }
+}
+@media (max-width: 640px) {
+  .cost-factors {
+    padding: 64px 20px;
+  }
+  .cost-list li {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 16px 0;
+  }
+}

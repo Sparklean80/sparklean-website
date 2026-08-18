@@ -203,6 +203,28 @@ h1 em{font-style:italic;color:var(--gold)}
 .sb-card-t{font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--white);margin-bottom:4px;}
 .sb-card-d{font-family:var(--serif);font-size:.84rem;line-height:1.65;color:var(--w70);}
 
+/* Reviews + cost factors — editorial (city pages) */
+.reviews.reviews--google{text-align:center;padding:88px 80px;}
+.reviews-google-inner{max-width:520px;margin:0 auto;}
+.reviews--google .eyebrow{justify-content:center;margin-bottom:18px;}
+.reviews--google .sec-h{margin:0 0 16px;}
+.reviews--google .rev-sub{margin:0 auto 28px;max-width:34em;font-family:var(--serif);font-size:.96rem;line-height:1.85;color:var(--w70);font-style:italic;}
+.reviews--google .reviews-google-cta{display:inline-flex;}
+.cost-factors{padding:88px 80px;background:var(--dark2);}
+.cost-factors-inner{max-width:720px;margin:0 auto;}
+.cost-factors .sec-h{margin-bottom:12px;}
+.cost-factors-lead{font-family:var(--serif);font-size:.98rem;line-height:1.85;color:var(--w70);margin:0 0 8px;}
+.cost-list{list-style:none;margin:28px 0 32px;padding:0;border-top:1px solid rgba(184,164,122,.16);}
+.cost-list li{display:grid;grid-template-columns:minmax(132px,190px) minmax(0,1fr);gap:12px 28px;padding:18px 0;border-bottom:1px solid rgba(184,164,122,.12);align-items:start;}
+.cost-label{margin:0;font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);line-height:1.45;padding-top:3px;}
+.cost-desc{margin:0;font-family:var(--serif);font-size:.92rem;line-height:1.7;color:var(--w70);}
+@media(max-width:1024px){
+  .reviews.reviews--google,.cost-factors{padding:72px 32px;}
+}
+@media(max-width:640px){
+  .reviews.reviews--google,.cost-factors{padding:64px 20px;}
+  .cost-list li{grid-template-columns:1fr;gap:6px;padding:16px 0;}
+}
 .reviews{padding:100px 80px;}
 .rev-band{display:grid;grid-template-columns:1fr 1.1fr;gap:52px;align-items:center;margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid rgba(201,168,76,.1);}
 .rev-sub{font-family:var(--serif);font-size:.96rem;line-height:1.85;color:var(--w70);font-style:italic;margin-bottom:26px;}
@@ -832,19 +854,12 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   </div>
 </section>
 
-<section class="reviews" id="reviews">
-  <div class="eyebrow"><div class="ey-line"></div><span>Google Reviews</span></div>
-  <h2 class="sec-h" style="margin-bottom:14px;text-align:center">4.9★ on <em>Google</em></h2>
-  <div class="rev-band rev-band--google-only">
-    <div>
-      <p class="rev-sub">Homeowners and businesses across Southwest Florida trust Sparklean — including Naples homeowners in Port Royal, Pelican Bay, and Park Shore. Read current Google reviews on our live profile.</p>
-      <div class="rev-stats">
-        <a class="rev-google-proof" href="https://www.google.com/maps/search/?api=1&amp;query=Sparklean%20Cleaning%2024221%20Bernwood%20Dr%20Suite%202%20Bonita%20Springs%20FL%2034135" target="_blank" rel="noopener noreferrer"><div><div class="rev-stat-n">4.9</div><div class="rev-stat-l">★★★★★<br>Google Rating</div></div></a>
-        <div><div class="rev-stat-n">24h</div><div class="rev-stat-l">Happiness<br>Guarantee</div></div>
-        <div><div class="rev-stat-n">Naples</div><div class="rev-stat-l">Estates &amp;<br>Condos</div></div>
-      </div>
-      <p class="rev-google-cta"><a href="https://www.google.com/maps/search/?api=1&amp;query=Sparklean%20Cleaning%2024221%20Bernwood%20Dr%20Suite%202%20Bonita%20Springs%20FL%2034135" target="_blank" rel="noopener noreferrer" class="btn-outline" style="font-size:.54rem;padding:12px 24px;letter-spacing:.14em;">Read live Google reviews ↗</a></p>
-    </div>
+<section class="reviews reviews--google" id="reviews">
+  <div class="reviews-google-inner">
+    <div class="eyebrow"><div class="ey-line"></div><span>Google Reviews</span></div>
+    <h2 class="sec-h">4.9★ on <em>Google</em></h2>
+    <p class="rev-sub">Naples homeowners in Port Royal, Pelican Bay, and Park Shore trust Sparklean for supervised house cleaning.</p>
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Sparklean%20Cleaning%2024221%20Bernwood%20Dr%20Suite%202%20Bonita%20Springs%20FL%2034135" target="_blank" rel="noopener noreferrer" class="btn-outline reviews-google-cta">Read live Google reviews ↗</a>
   </div>
 </section>
 
@@ -857,15 +872,15 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
     <h2 class="sec-h">What affects the cost of<br><em>house cleaning in Naples?</em></h2>
     <div class="gold-line"></div>
     <p class="cost-factors-lead">There is no honest one-price answer for every home. Sparklean quotes from the details that actually change the work — then you choose weekly, biweekly, or another recurring rhythm that fits.</p>
-    <div class="cost-grid">
-      <div class="cost-card"><strong>Home size</strong><span>Square footage and how many bathrooms drive time on site.</span></div>
-      <div class="cost-card"><strong>Cleaning frequency</strong><span>Weekly and biweekly visits usually cost less per visit than rare deep resets.</span></div>
-      <div class="cost-card"><strong>Current condition</strong><span>First cleans and neglected areas may need extra detail before recurring care begins.</span></div>
-      <div class="cost-card"><strong>Occupancy &amp; pets</strong><span>Busy households and pets change hair, floors, and high-touch surfaces.</span></div>
-      <div class="cost-card"><strong>Rooms &amp; scope</strong><span>Add-ons like ovens, insides of cabinets, or windows change the plan.</span></div>
-      <div class="cost-card"><strong>Special instructions</strong><span>Gate codes, preferred products, and fragile finishes are built into your quote.</span></div>
-    </div>
-    <a href="/contact?quote=1&preset=recurringResidential#quote-intake" class="btn-gold" data-sparklean-intake-preset="recurringResidential">Request a personalized recurring-cleaning quote →</a>
+    <ul class="cost-list">
+      <li><p class="cost-label">Home size</p><p class="cost-desc">Square footage and how many bathrooms drive time on site.</p></li>
+      <li><p class="cost-label">Cleaning frequency</p><p class="cost-desc">Weekly and biweekly visits usually cost less per visit than rare deep resets.</p></li>
+      <li><p class="cost-label">Current condition</p><p class="cost-desc">First cleans and neglected areas may need extra detail before recurring care begins.</p></li>
+      <li><p class="cost-label">Occupancy &amp; pets</p><p class="cost-desc">Busy households and pets change hair, floors, and high-touch surfaces.</p></li>
+      <li><p class="cost-label">Rooms &amp; scope</p><p class="cost-desc">Add-ons like ovens, insides of cabinets, or windows change the plan.</p></li>
+      <li><p class="cost-label">Special instructions</p><p class="cost-desc">Gate codes, preferred products, and fragile finishes are built into your quote.</p></li>
+    </ul>
+    <a href="/contact?quote=1&preset=recurringResidential#quote-intake" class="btn-gold" data-sparklean-intake-preset="recurringResidential">Request a personalized quote →</a>
   </div>
 </section>
 

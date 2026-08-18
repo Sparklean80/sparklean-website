@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-18** (Naples city page SEO ownership pass — H1/title aligned to House Cleaning Services in Naples, Florida)
+Last updated: **2026-08-18** (City pages: cost-factors CSS + cleaned Google reviews band)
 
 ---
 
@@ -392,6 +392,8 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 **Sitewide header conversion (2026-08-18):** Sticky champagne Rewards bar — “SPARKLEAN REWARDS · Earn $5 in cleaning credit for every $100 spent. Learn More →” (cleaning credit, not cash back; no coin medallion). Consolidated crawlable `SERVICES` + `SERVICE AREAS` menus. Conversion hierarchy: Request a Quote (only filled primary) → phone always visible on desktop (incl. scrolled) → quiet Client Login → Rewards info bar. Scrolled desktop: Services · Service Areas · Why Sparklean · Earn $5 Credit · phone · Request a Quote (About/Partners/Blog + Client Login hidden). Tablet/mobile: compact Call + Quote in header/sticky CTA. Homepage hero proof card: 4.9★ Google Rating + 24-Hour Happiness Guarantee (cities stay in copy + Service Areas nav). Assets: `css/sparklean-site-header.css`, `js/sparklean-site-header.js`. Signal House excluded.
 
 **Naples city page SEO ownership (2026-08-18):** `/house-cleaning-naples` now owns the city query. Title/H1/schema: `House Cleaning Services in Naples, Florida`. Discretion/estates kept in supporting copy (Port Royal, Pelican Bay, Park Shore, Old Naples). Removed SWFL trust-card dilution and “maid service” marquee wording. Breadcrumb: Home → Residential Cleaning → Naples. CTA aligned to Build My Cleaning Plan. No UI redesign.
+
+**City reviews + cost-factors UI (2026-08-18):** Pricing clarity rebuilt as an editorial label/description list (not smashed inline text). Styles inlined on city pages + shared `sparklean-luxury-flow.css`. Google Reviews simplified to centered rating + one city line + one CTA. All five city pages.
 
 **Residential LP (2026-08-18 SEO correction):** Service-category hub — **not** SWFL and **not** a five-city H1. Eyebrow `Residential Cleaning`. H1 `Professionally Managed Residential Cleaning`. Title/meta match category positioning (no city list). Lower H2 `Residential Cleaning Service Areas` + five crawlable city cards. City pages exclusively own `House Cleaning Services in [City], Florida`. Homepage H1 stays Naples-primary. Trust strip + tablet/mobile photo-on-top stack unchanged. Evidence: `evidence/residential-service-hub-seo-2026-08-18/`.
 
