@@ -388,7 +388,7 @@ Categories: residential, condo, luxury estate, move-in/out, airbnb, commercial o
 
 Contact page + homepage `#quote` use these flows → `netlify/functions/quote-submit.mjs` → Brevo transactional → `SPARKLEAN_LEAD_TO` (default `info@sparklean.co`).
 
-**Sparklean Rewards header chip (2026-08-18, homepage only):** Sticky-nav pill `Rewards · $5 / $100` in `index.html` `.nav-right` (scrolls with Client App + Quote). Click expands full rewards copy + Open Client App → `/customer-portal`. Mobile (<1320px): compact line in hamburger menu. Assets: `css/sparklean-rewards.css`, `js/sparklean-rewards.js`. Evidence: `evidence/sparklean-rewards-header-2026-08-18/`. Sitewide rollout deferred until Tony approves.
+**Sparklean Rewards header (2026-08-18, homepage only):** Desktop sticky credit badge — gold `$5` medallion + “Earn Cleaning Credit” / “For every $100 spent” (offer readable without click). Expand panel: Spend $500 → Earn $25 example + Request a Quote + View Rewards in Client App. Mobile: ~36px sticky row under nav with full offer line. Assets: `css/sparklean-rewards.css`, `js/sparklean-rewards.js`. Evidence: `evidence/sparklean-rewards-header-2026-08-18/`. Sitewide deferred.
 
 **Residential LP (2026-08-18 SEO correction):** Service-category hub — **not** SWFL and **not** a five-city H1. Eyebrow `Residential Cleaning`. H1 `Professionally Managed Residential Cleaning`. Title/meta match category positioning (no city list). Lower H2 `Residential Cleaning Service Areas` + five crawlable city cards. City pages exclusively own `House Cleaning Services in [City], Florida`. Homepage H1 stays Naples-primary. Trust strip + tablet/mobile photo-on-top stack unchanged. Evidence: `evidence/residential-service-hub-seo-2026-08-18/`.
 
