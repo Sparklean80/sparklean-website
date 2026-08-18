@@ -476,8 +476,28 @@ body.site-header-v2 {
   display: inline-flex !important;
 }
 
-#home.hero .hero-content {
-  padding-top: calc(var(--header-total) + 48px) !important;
+/* Desktop full-bleed hero: copy clears fixed chrome */
+@media (min-width: 1025px) {
+  #home.hero .hero-content {
+    padding-top: calc(var(--header-total) + 48px) !important;
+  }
+}
+
+/* Tablet/mobile photo-on-top: photo starts below fixed header — do not crop faces */
+@media (max-width: 1024px) {
+  #home.hero {
+    padding-top: var(--header-total) !important;
+  }
+
+  #home.hero .hero-content {
+    padding-top: 40px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #home.hero .hero-content {
+    padding-top: 32px !important;
+  }
 }
 
 .site-header + .nav-mobile-menu,
@@ -592,9 +612,5 @@ body.site-header-v2 {
 
   .site-header > nav {
     padding: 0 14px !important;
-  }
-
-  #home.hero .hero-content {
-    padding-top: calc(var(--header-total) + 28px) !important;
   }
 }
