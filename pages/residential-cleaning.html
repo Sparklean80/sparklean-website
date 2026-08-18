@@ -53,6 +53,41 @@
 .hero-mobile-body .hero-mobile-h em{font-style:italic;color:var(--gold);}
 .areas-pills a.pill{text-decoration:none;color:inherit;display:inline-block;}
 .areas-pills a.pill:hover{border-color:var(--gold);color:var(--gold);}
+/* Desktop why photos: full scene, top-aligned — not a short centered crop strip */
+@media (min-width: 1025px) {
+  .why-grid {
+    align-items: start !important;
+    grid-template-columns: 1fr 1.05fr !important;
+    gap: 56px !important;
+  }
+  .why-img-wrap {
+    width: 100% !important;
+    align-self: start !important;
+    overflow: hidden !important;
+  }
+  .why-img-wrap img {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    aspect-ratio: 3 / 2 !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
+  }
+  .why-badge {
+    bottom: 16px !important;
+    left: 16px !important;
+  }
+  .photo-pair {
+    height: min(72vh, 720px) !important;
+    min-height: 560px !important;
+  }
+  .photo-pair-item img {
+    object-fit: cover !important;
+    object-position: center 18% !important;
+  }
+}
 #residential-hero.hero .hero-benefit{font-family:var(--serif);font-size:clamp(.95rem,2vw,1.12rem);line-height:1.65;color:var(--white);margin:0 0 14px;opacity:0;animation:up 1s .58s forwards;max-width:36em;}
 #residential-hero.hero .hero-sub{margin-bottom:28px;}
 .areas-grid-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;max-width:980px;margin:36px auto 0;text-align:left;}
@@ -933,7 +968,7 @@
 </div>
 
 <div class="why-img-wrap">
-<img src="/images/cdn-migrated/69b313b5c748d7c5ee1533b1_1000051463.jpeg-3498fb00-1200.webp" alt="Sparklean team"/ width="1200" height="800" loading="lazy" decoding="async">
+<img src="/images/cdn-migrated/69b313b5c748d7c5ee1533b1_1000051463.jpeg-3498fb00-1200.jpg" alt="Sparklean supervised residential cleaning team" width="1200" height="800" loading="lazy" decoding="async">
 <div class="why-badge">
 <span class="why-badge-big">24h</span>
 <span class="why-badge-sm">Happiness Guaranteed</span>
