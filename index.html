@@ -169,6 +169,7 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 <link rel="stylesheet" href="/css/quote-intake.css">
 <link rel="stylesheet" href="/css/sparklean-luxury-flow.css">
 <link rel="stylesheet" href="/css/sparklean-nav-logo.css">
+<link rel="stylesheet" href="/css/sparklean-rewards.css">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17027441328"></script>
 <script>
@@ -339,6 +340,17 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
     <li><a href="/contact">Contact</a></li>
   </ul>
   <div class="nav-right">
+    <div class="nav-rewards">
+      <button type="button" class="nav-rewards-btn" aria-expanded="false" aria-controls="nav-rewards-panel">Rewards · $5 / $100</button>
+      <div class="nav-rewards-panel" id="nav-rewards-panel" role="region" aria-label="Sparklean Rewards">
+        <div class="nav-rewards-kicker">Loyalty</div>
+        <div class="nav-rewards-title">Sparklean Rewards</div>
+        <p>Earn $5 in Cleaning Credit for every $100 you spend.</p>
+        <p>Use your credit toward any future residential, commercial, construction, remodeling, or vacation-rental cleaning.</p>
+        <p>Track your rewards anytime in the Sparklean app.</p>
+        <a class="nav-rewards-cta" href="/customer-portal">Open Client App</a>
+      </div>
+    </div>
     <a href="tel:2398883588" class="nav-phone">(239) 888-3588</a>
     <a href="/customer-portal" class="nav-portal">Client App</a>
     <button class="nav-hamburger" id="hamburger" aria-label="Menu">
@@ -348,6 +360,10 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
   </div>
 </nav>
 <div class="nav-mobile-menu" id="mobileMenu">
+  <a href="/customer-portal" class="nav-rewards-mobile">
+    <strong>Sparklean Rewards</strong>
+    <span>Earn $5 for every $100 spent · Track and redeem in the Sparklean app.</span>
+  </a>
   <a href="/contact" class="nav-mobile-quote" data-sparklean-intake>Request a Quote</a>
   <a href="/">Home</a>
   <a href="/residential-cleaning">Residential Cleaning</a>
@@ -796,6 +812,7 @@ if(hb&&mm){
 
 <script src="/js/serviceFlows.js"></script>
 <script src="/js/quote-intake.js" defer></script>
+<script src="/js/sparklean-rewards.js" defer></script>
 <script src="/js/sparklean-mobile-sticky-cta.js" defer></script>
 </body>
 </html>
