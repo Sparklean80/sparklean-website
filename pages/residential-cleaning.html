@@ -35,7 +35,7 @@
 .paid-match-list li{font-size:.78rem;letter-spacing:.02em;color:var(--w70);line-height:1.55;padding:18px 16px;border:1px solid rgba(184,164,122,.14);background:rgba(14,14,14,.35);}
 .paid-match-list li strong{display:block;font-size:.58rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
 .paid-match-ctas{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
-.hub-nav{padding:28px 80px;background:var(--dark3);border-bottom:1px solid rgba(184,164,122,.08);}
+.hub-nav{position:static!important;top:auto!important;left:auto!important;right:auto!important;height:auto!important;z-index:auto!important;display:block!important;padding:28px 80px;background:var(--dark3);border-bottom:1px solid rgba(184,164,122,.08);border-top:none;}
 .hub-nav-inner{max-width:920px;margin:0 auto;text-align:center;}
 .hub-nav-label{font-size:.5rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
 .hub-nav-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
@@ -323,7 +323,7 @@
 <span class="current">Residential Cleaning</span>
 </div>
 
-<nav class="hub-nav" aria-label="Related Sparklean services">
+<div class="hub-nav" aria-label="Related Sparklean services">
   <div class="hub-nav-inner">
     <div class="hub-nav-label">Also from Sparklean</div>
     <div class="hub-nav-links">
@@ -335,7 +335,7 @@
       <a href="/contact">Contact</a>
     </div>
   </div>
-</nav>
+</div>
 
 <section class="intro">
 <div class="intro-photo">
