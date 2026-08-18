@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-18** (City pages: cost-factors CSS + cleaned Google reviews band)
+Last updated: **2026-08-18** (Mobile: city breadcrumb void + hero crops; homepage Roxy framing)
 
 ---
 
@@ -394,6 +394,8 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 **Naples city page SEO ownership (2026-08-18):** `/house-cleaning-naples` now owns the city query. Title/H1/schema: `House Cleaning Services in Naples, Florida`. Discretion/estates kept in supporting copy (Port Royal, Pelican Bay, Park Shore, Old Naples). Removed SWFL trust-card dilution and “maid service” marquee wording. Breadcrumb: Home → Residential Cleaning → Naples. CTA aligned to Build My Cleaning Plan. No UI redesign.
 
 **City reviews + cost-factors UI (2026-08-18):** Pricing clarity rebuilt as an editorial label/description list (not smashed inline text). Styles inlined on city pages + shared `sparklean-luxury-flow.css`. Google Reviews simplified to centered rating + one city line + one CTA. All five city pages.
+
+**Mobile hero + breadcrumb (2026-08-18):** City pages had a CSS typo grouping `.breadcrumb` with `.pp-img{height:220px}` — created a tall empty black band with Home › Residential › City. Fixed on all five city LPs; mobile heroes taller with `object-position:center 20%`. Homepage mobile/tablet shifts Roxy hero left (`18–22%`) and taller band so she isn’t cropped out of the wipe-photo shot.
 
 **Residential LP (2026-08-18 SEO correction):** Service-category hub — **not** SWFL and **not** a five-city H1. Eyebrow `Residential Cleaning`. H1 `Professionally Managed Residential Cleaning`. Title/meta match category positioning (no city list). Lower H2 `Residential Cleaning Service Areas` + five crawlable city cards. City pages exclusively own `House Cleaning Services in [City], Florida`. Homepage H1 stays Naples-primary. Trust strip + tablet/mobile photo-on-top stack unchanged. Evidence: `evidence/residential-service-hub-seo-2026-08-18/`.
 

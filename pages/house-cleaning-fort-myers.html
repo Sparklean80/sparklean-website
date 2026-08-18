@@ -77,7 +77,7 @@ h1 em{font-style:italic;color:var(--gold)}
 @keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 
 .hero-mobile{display:none;flex-direction:column;}
-.hero-mobile-img{width:100%;height:56vw;min-height:220px;max-height:340px;object-fit:cover;object-position:center center;display:block;}
+.hero-mobile-img{width:100%;height:min(78vw,460px);min-height:300px;max-height:480px;object-fit:cover;object-position:center 20%;display:block;}
 .hero-mobile-body{background:var(--dark);padding:36px 20px 52px;}
 .hero-mobile-tag{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
 .hero-mobile-tag-line{width:22px;height:1px;background:var(--gold);}
@@ -295,7 +295,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   .nav-phone{display:none;}
   .hero{display:none!important;}
   .hero-mobile{display:flex;}
-  .breadcrumb,
+  .breadcrumb{padding:12px 20px;}
   .fort-myers-intro,.hoods,.svc-sum,.photo-pair,.snowbird,.reviews,.faq,.cta{padding-left:20px;padding-right:20px;padding-top:72px;padding-bottom:72px;}
   .ni-grid,.sb-grid{grid-template-columns:1fr;gap:36px;}
   .hoods-grid{grid-template-columns:1fr;}
@@ -364,7 +364,6 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
   .ci-grid,.sl-grid,.ni-grid,.sb-grid,.pp-grid,.comm-grid,.pb-inner,.about-grid,.why-grid,.prod-grid,.faq-grid,.rev-band{grid-template-columns:1fr !important;gap:32px !important;}
   .pt-grid,.wb-grid,.hoods-grid,.ss-grid,.ind-grid,.why-grid,.svc-grid,.rev-grid{grid-template-columns:1fr !important;gap:3px !important;}
   .pc-intro,.project-types,.svc-list,.why-builders,.community,.cta,.naples-intro,.hoods,.svc-sum,.photo-pair,.snowbird,.faq,.about,.services,.why,.products,.reviews,.areas,.inner,.comm-intro,.industries{padding:52px 20px !important;}
-  .breadcrumb,
   .pp-img{height:220px !important;}
   .photo-pair{grid-template-columns:1fr !important;}
   .cta-btns{flex-direction:column !important;align-items:stretch !important;}

@@ -243,7 +243,8 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
   flex:0 0 auto;
 }
 #home.hero .hero-bg img{
-  object-position:center 18%;
+  /* Keep Roxy (left) in frame — not only the artwork */
+  object-position:22% 18%;
   animation:none;
   transform:none;
 }
@@ -302,11 +303,11 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 }
 @media(max-width:640px){
 #home.hero .hero-bg{
-  height:68vw;
-  min-height:280px;
-  max-height:380px;
+  height:78vw;
+  min-height:320px;
+  max-height:460px;
 }
-#home.hero .hero-bg img{object-position:center 14%;}
+#home.hero .hero-bg img{object-position:18% 16%;}
 #home.hero .hero-content{padding:32px 20px 44px;}
 #home.hero h1{font-size:clamp(1.7rem,7vw,2.15rem);}
 #home.hero h1 .h1-line{white-space:normal;}
