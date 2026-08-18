@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-18** (sitewide header conversion — sticky $5 Rewards bar + Services/Service Areas menus)
+Last updated: **2026-08-18** (cleaner 3-column footer sitewide; logo unchanged)
 
 ---
 
