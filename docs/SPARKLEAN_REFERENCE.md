@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-17** (homepage rebuild on branch `homepage-rebuild-2026-08-17` — Naples-led H1, compact quote entry → existing intake, city hub cards, FAQ refresh; not merged/deployed yet)
+Last updated: **2026-08-17** (homepage full-service positioning on branch `homepage-full-service-positioning-2026-08-17` — H1/meta/services/FAQ; not merged/deployed yet)
 
 ---
 
