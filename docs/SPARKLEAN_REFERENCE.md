@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-18** (residential hub rebuild on branch `fix-contact-quote-url-2026-08-17` — SWFL regional, not Naples-owned; homepage chrome; not deployed)
+Last updated: **2026-08-18** (residential hub SEO correction — service-category H1, not SWFL/city list; hierarchy via Service Areas cards)
 
 ---
 
@@ -388,7 +388,9 @@ Categories: residential, condo, luxury estate, move-in/out, airbnb, commercial o
 
 Contact page + homepage `#quote` use these flows → `netlify/functions/quote-submit.mjs` → Brevo transactional → `SPARKLEAN_LEAD_TO` (default `info@sparklean.co`).
 
-**Residential LP (2026-08-18):** Regional hub — **not** Naples city SEO. Title/H1: Residential Cleaning Southwest Florida. City pages own Naples/Bonita/Estero/Fort Myers/Cape Coral. Homepage-matching trust strip + tablet/mobile photo-on-top stack (`#residential-hero`). Broken trust DOM fixed; marquee removed; areas = five linked cities only; paid-match points to city URLs. Keeps tiers/checklist/video/cost factors/FAQ + `recurringResidential` intake. Evidence: `evidence/residential-rebuild-2026-08-18/`.
+**Residential LP (2026-08-18 SEO correction):** Service-category hub — **not** SWFL and **not** a five-city H1. Eyebrow `Residential Cleaning`. H1 `Professionally Managed Residential Cleaning`. Title/meta match category positioning (no city list). Lower H2 `Residential Cleaning Service Areas` + five crawlable city cards. City pages exclusively own `House Cleaning Services in [City], Florida`. Homepage H1 stays Naples-primary. Trust strip + tablet/mobile photo-on-top stack unchanged. Evidence: `evidence/residential-service-hub-seo-2026-08-18/`.
+
+**Residential LP (2026-08-18 earlier SWFL draft — superseded):** Had Title/H1 “Residential Cleaning Southwest Florida.” Corrected same day after Google doorway/keyword-stuffing review.
 
 **Residential LP positioning (2026-08-10, copy-only on `/residential-cleaning`):** Professional accountability — not “expensive luxury.” Protected lines: “Local care. Large-company discipline.” / “House cleaning you don’t have to manage.” / “Anyone can start a cleaning company. Sparklean built a system to deliver cleaning consistently.” Hero CTA: Build My Cleaning Plan + Call. Trust strip leads with visible **4.9★ Google** (live reviews link; no invented review count). Homepage + city pages adapt later after paid LP performance.
 
