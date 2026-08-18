@@ -1,0 +1,544 @@
+/**
+ * Homepage header conversion system — rewards top bar, consolidated menus, scroll state.
+ * Loaded after sparklean-nav-logo.css so these rules win on the homepage.
+ */
+
+:root {
+  --rewards-bar-h: 30px;
+  --nav-h: 96px;
+  --header-total: calc(var(--rewards-bar-h) + var(--nav-h));
+}
+
+.site-header {
+  --rewards-bar-h: 30px;
+  --nav-h: 96px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+}
+
+/* —— Thin rewards bar (above nav) —— */
+.rewards-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--rewards-bar-h);
+  min-height: 28px;
+  max-height: 32px;
+  margin: 0;
+  padding: 0 20px;
+  border: 0;
+  border-bottom: 1px solid rgba(184, 164, 122, 0.55);
+  background: #e8dfc8;
+  color: rgba(26, 24, 20, 0.78);
+  font-family: "Montserrat", system-ui, sans-serif;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.25s, border-color 0.25s;
+}
+
+.rewards-topbar:hover,
+.rewards-topbar[aria-expanded="true"] {
+  background: #efe7d4;
+  border-bottom-color: rgba(139, 115, 64, 0.55);
+}
+
+.rewards-topbar:focus {
+  outline: none;
+}
+
+.rewards-topbar:focus-visible {
+  outline: 2px solid #b8a47a;
+  outline-offset: -2px;
+}
+
+.rewards-topbar-inner {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 8px;
+  max-width: 1100px;
+  font-size: 0.52rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+.rewards-topbar-inner strong {
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5c4a28;
+}
+
+.rewards-topbar-sep {
+  color: rgba(92, 74, 40, 0.4);
+}
+
+.rewards-topbar-more {
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1a1814;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(92, 74, 40, 0.45);
+}
+
+/* —— Main nav row —— */
+.site-header > nav {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  height: var(--nav-h) !important;
+  background: var(--nav-bg, #131313);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px !important;
+  gap: 20px;
+}
+
+.site-header .nav-logo img {
+  height: 88px !important;
+  max-width: min(300px, 36vw) !important;
+}
+
+.site-header .nav-links {
+  display: flex !important;
+  align-items: center;
+  gap: 22px !important;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+.site-header .nav-links > li > a,
+.site-header .nav-dd-toggle {
+  font-size: 0.58rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: rgba(249, 247, 243, 0.7) !important;
+  text-decoration: none !important;
+  background: none !important;
+  border: none !important;
+  padding: 8px 0 !important;
+  cursor: pointer;
+  font-family: "Montserrat", system-ui, sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.site-header .nav-links > li > a:hover,
+.site-header .nav-dd-toggle:hover,
+.site-header .nav-dd.is-open > .nav-dd-toggle {
+  color: #f9f7f3 !important;
+}
+
+.site-header .nav-dd {
+  position: relative;
+}
+
+.site-header .nav-dd-arrow {
+  font-size: 0.55rem;
+  opacity: 0.7;
+  transition: transform 0.2s;
+}
+
+.site-header .nav-dd.is-open .nav-dd-arrow {
+  transform: rotate(180deg);
+}
+
+.site-header .nav-dd-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 260px;
+  padding: 8px 0;
+  background: #131313;
+  border: 1px solid rgba(184, 164, 122, 0.28);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  z-index: 960;
+  list-style: none;
+  margin: 0;
+}
+
+.site-header .nav-dd.is-open > .nav-dd-menu {
+  display: block;
+}
+
+.site-header .nav-dd-menu a {
+  display: block !important;
+  padding: 12px 18px !important;
+  font-size: 0.56rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: rgba(249, 247, 243, 0.7) !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.07);
+  white-space: nowrap;
+}
+
+.site-header .nav-dd-menu li:last-child a {
+  border-bottom: none;
+}
+
+.site-header .nav-dd-menu a:hover,
+.site-header .nav-dd-menu a:focus {
+  color: #d4bf96 !important;
+  background: rgba(184, 164, 122, 0.06);
+  outline: none;
+}
+
+.site-header .nav-right {
+  display: flex !important;
+  align-items: center;
+  gap: 14px !important;
+  flex-shrink: 0;
+}
+
+/* Quiet utility links — not bordered buttons */
+.site-header .nav-phone,
+.site-header .nav-portal {
+  display: inline-flex !important;
+  align-items: center;
+  font-size: 0.56rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: none !important;
+  color: rgba(249, 247, 243, 0.55) !important;
+  text-decoration: none !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  white-space: nowrap;
+}
+
+.site-header .nav-portal {
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  font-size: 0.5rem !important;
+}
+
+.site-header .nav-portal::before {
+  display: none !important;
+}
+
+.site-header .nav-phone:hover,
+.site-header .nav-portal:hover {
+  color: #d4bf96 !important;
+  background: none !important;
+  border: none !important;
+}
+
+/* Only filled primary CTA */
+.site-header .nav-btn {
+  display: inline-flex !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Compact earn control — scrolled desktop only */
+.site-header .nav-earn {
+  display: none;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #d4bf96;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.site-header .nav-earn:hover,
+.site-header .nav-earn[aria-expanded="true"] {
+  color: #f9f7f3;
+}
+
+.site-header .nav-earn:focus {
+  outline: none;
+}
+
+.site-header .nav-earn:focus-visible {
+  outline: 2px solid #b8a47a;
+  outline-offset: 3px;
+}
+
+/* Rewards explanation panel */
+.rewards-panel {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(420px, calc(100vw - 32px));
+  padding: 22px 20px 18px;
+  background: #131313;
+  border: 1px solid rgba(184, 164, 122, 0.35);
+  border-top: none;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+  z-index: 970;
+  text-align: left;
+}
+
+.site-header.rewards-open .rewards-panel {
+  display: block;
+}
+
+.rewards-panel-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.28rem;
+  color: #f9f7f3;
+  margin: 0 0 10px;
+  line-height: 1.2;
+}
+
+.rewards-panel > p {
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(249, 247, 243, 0.72);
+  margin: 0 0 12px;
+}
+
+.rewards-panel-example {
+  font-family: "Playfair Display", Georgia, serif !important;
+  font-size: 1.02rem !important;
+  font-style: italic;
+  color: #d4bf96 !important;
+  line-height: 1.35 !important;
+  margin: 0 0 14px !important;
+  padding: 12px 14px;
+  border: 1px solid rgba(184, 164, 122, 0.22);
+  background: rgba(184, 164, 122, 0.07);
+}
+
+.rewards-panel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rewards-panel-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 16px;
+  background: #b8a47a;
+  color: #0e0e0e;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.rewards-panel-cta:hover {
+  background: #d4bf96;
+}
+
+.rewards-panel-cta-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 11px 16px;
+  background: transparent;
+  color: #d4bf96;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid rgba(184, 164, 122, 0.42);
+  box-sizing: border-box;
+}
+
+.rewards-panel-cta-outline:hover {
+  border-color: rgba(212, 191, 150, 0.75);
+  color: #f9f7f3;
+  background: rgba(184, 164, 122, 0.08);
+}
+
+/* —— Scrolled sticky state —— */
+.site-header.is-scrolled {
+  --rewards-bar-h: 0px;
+  --nav-h: 72px;
+}
+
+.site-header.is-scrolled .rewards-topbar {
+  display: none;
+}
+
+.site-header.is-scrolled .nav-phone,
+.site-header.is-scrolled .nav-portal {
+  display: none !important;
+}
+
+.site-header.is-scrolled .nav-links > li:nth-child(n + 4) {
+  display: none;
+}
+
+.site-header.is-scrolled .nav-earn {
+  display: inline-flex;
+}
+
+.site-header.is-scrolled .nav-logo img {
+  height: 64px !important;
+}
+
+.site-header.is-scrolled .nav-links {
+  gap: 18px !important;
+}
+
+#home.hero .hero-content {
+  padding-top: calc(var(--header-total) + 48px) !important;
+}
+
+.site-header + .nav-mobile-menu,
+.nav-mobile-menu {
+  top: var(--header-total) !important;
+}
+
+/* —— Breakpoints —— */
+@media (max-width: 1440px) {
+  .site-header .nav-links {
+    gap: 16px !important;
+  }
+
+  .site-header > nav {
+    padding: 0 28px !important;
+  }
+}
+
+@media (max-width: 1320px) {
+  .site-header .nav-links {
+    gap: 12px !important;
+  }
+
+  .site-header .nav-right {
+    gap: 12px !important;
+  }
+
+  .site-header > nav {
+    padding: 0 22px !important;
+  }
+}
+
+/* Prefer quiet Client Login drop before phone (phone ranks higher) */
+@media (max-width: 1280px) {
+  .site-header .nav-portal {
+    display: none !important;
+  }
+
+  .site-header > nav {
+    padding: 0 18px !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  .site-header .nav-phone {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  .site-header .nav-links {
+    display: none !important;
+  }
+
+  .site-header .nav-earn {
+    display: none !important;
+  }
+
+  .site-header.is-scrolled .nav-earn {
+    display: none !important;
+  }
+
+  .rewards-topbar-inner {
+    font-size: 0.48rem;
+  }
+
+  .site-header {
+    --nav-h: 80px;
+  }
+
+  .site-header .nav-logo img {
+    height: 72px !important;
+  }
+
+  .site-header.is-scrolled {
+    --nav-h: 68px;
+  }
+
+  :root {
+    --nav-h: 80px;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-header {
+    --rewards-bar-h: auto;
+    --nav-h: 68px;
+  }
+
+  .rewards-topbar {
+    height: auto;
+    min-height: 28px;
+    max-height: none;
+    padding: 7px 12px;
+  }
+
+  .site-header.is-scrolled {
+    --nav-h: 64px;
+  }
+
+  .rewards-topbar-inner {
+    font-size: 0.44rem;
+    letter-spacing: 0.04em;
+    gap: 4px 6px;
+  }
+
+  .rewards-topbar-sep {
+    display: none;
+  }
+
+  .site-header .nav-logo img {
+    height: 56px !important;
+    max-width: min(200px, 48vw) !important;
+  }
+
+  .site-header > nav {
+    padding: 0 14px !important;
+  }
+
+  #home.hero .hero-content {
+    padding-top: calc(var(--header-total) + 28px) !important;
+  }
+}

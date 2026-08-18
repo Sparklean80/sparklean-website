@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-18** (homepage sticky-header Sparklean Rewards chip — homepage only for review)
+Last updated: **2026-08-18** (homepage header conversion system — rewards top bar + Services/Service Areas menus; homepage only)
 
 ---
 
@@ -388,7 +388,7 @@ Categories: residential, condo, luxury estate, move-in/out, airbnb, commercial o
 
 Contact page + homepage `#quote` use these flows → `netlify/functions/quote-submit.mjs` → Brevo transactional → `SPARKLEAN_LEAD_TO` (default `info@sparklean.co`).
 
-**Sparklean Rewards header (2026-08-18, homepage only):** Desktop sticky credit badge — gold `$5` medallion + “Earn Cleaning Credit” / “For every $100 spent” (offer readable without click). Expand panel: Spend $500 → Earn $25 example + Request a Quote + View Rewards in Client App. Mobile: ~36px sticky row under nav with full offer line. Assets: `css/sparklean-rewards.css`, `js/sparklean-rewards.js`. Evidence: `evidence/sparklean-rewards-header-2026-08-18/`. Sitewide deferred.
+**Homepage header conversion (2026-08-18, homepage only):** Thin champagne rewards bar above nav — “SPARKLEAN REWARDS · Earn 5% in cleaning credit on every service. Learn More →” (no coin / no `$5` circle; not cash back). Main nav consolidates services + city pages into click/keyboard/touch `SERVICES` and `SERVICE AREAS` menus (real `<a href>` links). Conversion hierarchy: Request a Quote (only filled primary) → quiet phone → quiet Client Login → Rewards as info bar. Scrolled sticky: logo · Services · Service Areas · Why Sparklean · Earn 5% Credit · Request a Quote (phone + Client Login hidden). Assets: `css/sparklean-header-home.css`, `js/sparklean-header-home.js`. Evidence: `evidence/sparklean-header-conversion-2026-08-18/`. Sitewide deferred. Legacy `css/sparklean-rewards.css` / `js/sparklean-rewards.js` unused on homepage.
 
 **Residential LP (2026-08-18 SEO correction):** Service-category hub — **not** SWFL and **not** a five-city H1. Eyebrow `Residential Cleaning`. H1 `Professionally Managed Residential Cleaning`. Title/meta match category positioning (no city list). Lower H2 `Residential Cleaning Service Areas` + five crawlable city cards. City pages exclusively own `House Cleaning Services in [City], Florida`. Homepage H1 stays Naples-primary. Trust strip + tablet/mobile photo-on-top stack unchanged. Evidence: `evidence/residential-service-hub-seo-2026-08-18/`.
 
