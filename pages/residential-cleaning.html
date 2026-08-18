@@ -63,9 +63,9 @@
 #residential-hero.hero .hero-guar{font-size:.56rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;opacity:0;animation:up 1s .72s forwards;}
 #residential-hero.hero .hero-sub a{color:var(--gold-lt);text-decoration:underline;text-underline-offset:3px;}
 @media(max-width:1024px){
-#residential-hero.hero{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;min-height:0;height:auto;overflow:visible;}
-#residential-hero.hero .hero-bg{position:relative;inset:auto;width:100%;height:min(52vw,420px);min-height:260px;max-height:440px;flex:0 0 auto;display:block!important;}
-#residential-hero.hero .hero-bg img{object-position:center 18%;animation:none;transform:none;}
+#residential-hero.hero{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;min-height:0;height:auto;overflow:hidden!important;}
+#residential-hero.hero .hero-bg{position:relative;inset:auto!important;left:0;right:0;width:100%;max-width:100%;height:min(52vw,420px);min-height:260px;max-height:440px;flex:0 0 auto;display:block!important;animation:none!important;transform:none!important;}
+#residential-hero.hero .hero-bg img{object-position:center 18%;animation:none!important;transform:none!important;width:100%;max-width:100%;}
 #residential-hero.hero .hero-ov{display:none!important;}
 #residential-hero.hero .hero-content{position:relative;z-index:2;width:100%;max-width:100%;margin:0;padding:40px 28px 56px;background:#11100e;box-sizing:border-box;}
 #residential-hero.hero .hero-tag,#residential-hero.hero h1,#residential-hero.hero .hero-benefit,#residential-hero.hero .hero-sub,#residential-hero.hero .hero-guar,#residential-hero.hero .hero-btns{opacity:1;animation:none;}
@@ -73,19 +73,20 @@
 #residential-hero.hero .hero-benefit{font-size:clamp(.95rem,2.4vw,1.08rem);margin-bottom:12px;}
 #residential-hero.hero .hero-btns{flex-direction:column;align-items:stretch;}
 #residential-hero.hero .btn-gold,#residential-hero.hero .btn-outline{width:100%;justify-content:center;}
-.trust-sep{display:none!important;}
-.trust-inner{flex-wrap:wrap!important;justify-content:center!important;}
-.trust-item{flex:1 1 44%!important;min-width:0!important;padding:12px 14px!important;box-sizing:border-box;}
+#trust{overflow:hidden;position:relative;z-index:3;}
+#trust .trust-sep{display:none!important;}
+#trust .trust-inner{display:grid!important;grid-template-columns:1fr 1fr;width:100%;}
+#trust .trust-item{min-width:0!important;width:100%!important;max-width:100%!important;padding:12px 14px!important;box-sizing:border-box;}
 }
-@media(max-width:640px){
-#residential-hero.hero .hero-bg{height:68vw;min-height:280px;max-height:380px;display:block!important;}
+@media(max-width:700px){
+#residential-hero.hero .hero-bg{height:68vw;min-height:280px;max-height:380px;display:block!important;animation:none!important;transform:none!important;}
 #residential-hero.hero .hero-bg img{object-position:center 14%;}
 #residential-hero.hero .hero-content{padding:32px 20px 44px!important;background:#11100e!important;}
 #residential-hero.hero h1{font-size:clamp(1.7rem,7vw,2.15rem)!important;}
-.trust-inner{flex-direction:column!important;flex-wrap:nowrap!important;}
-.trust-item{flex:1 1 100%!important;width:100%!important;min-width:0!important;padding:14px 20px!important;border-bottom:1px solid rgba(10,10,10,.1)!important;}
-.trust-item:last-child{border-bottom:none!important;}
-.trust-sep{display:none!important;}
+#trust .trust-inner{grid-template-columns:1fr!important;}
+#trust .trust-item{padding:14px 20px!important;border-bottom:1px solid rgba(10,10,10,.1)!important;}
+#trust .trust-item:last-child{border-bottom:none!important;}
+#trust .trust-sep{display:none!important;}
 }
 @media(max-width:900px){
   .paid-match{padding:22px 20px 26px;}
@@ -104,17 +105,69 @@
 <link rel="stylesheet" href="/css/sparklean-luxury-flow.css">
 <link rel="stylesheet" href="/css/sparklean-nav-logo.css">
 <style id="residential-trust-mobile">
-/* Trust strip: match homepage stacking — hide seps, wrap on tablet, column on phone */
-@media (max-width: 1024px) {
-  .trust-sep { display: none !important; }
-  .trust-inner { flex-wrap: wrap !important; justify-content: center !important; }
-  .trust-item { flex: 1 1 44% !important; min-width: 0 !important; max-width: 100%; padding: 12px 14px !important; box-sizing: border-box; }
+/* Trust strip: isolate from hero overflow; grid stack on phones (no flex bleed) */
+#trust {
+  position: relative;
+  z-index: 3;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
-@media (max-width: 640px) {
-  .trust-inner { flex-direction: column !important; flex-wrap: nowrap !important; }
-  .trust-item { flex: 1 1 100% !important; width: 100% !important; min-width: 0 !important; padding: 14px 20px !important; border-bottom: 1px solid rgba(10,10,10,.1) !important; }
-  .trust-item:last-child { border-bottom: none !important; }
-  .trust-sep { display: none !important; }
+#trust .trust-inner {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+#trust .trust-item {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+#trust .t-title,
+#trust .t-sub {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+#residential-hero.hero {
+  overflow: hidden !important;
+}
+#residential-hero.hero .hero-bg {
+  animation: none !important;
+  transform: none !important;
+  inset: auto !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+@media (max-width: 1024px) {
+  #trust .trust-sep { display: none !important; }
+  #trust .trust-inner {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    justify-content: stretch;
+    flex-wrap: unset !important;
+  }
+  #trust .trust-item {
+    flex: unset !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 14px 16px !important;
+  }
+}
+@media (max-width: 700px) {
+  #trust .trust-inner {
+    grid-template-columns: 1fr !important;
+  }
+  #trust .trust-item {
+    padding: 14px 20px !important;
+    border-bottom: 1px solid rgba(10, 10, 10, 0.1) !important;
+  }
+  #trust .trust-item:last-child {
+    border-bottom: none !important;
+  }
 }
 </style>
 
