@@ -24,16 +24,23 @@
 <meta name="twitter:description" content="Recurring, deep, move-in and move-out, and one-time residential cleaning from professionally supervised Sparklean teams.">
 <meta name="twitter:image" content="/images/branding/Sparklean_Logo_Transparent.png">
 <meta name="twitter:image:alt" content="Sparklean Cleaning logo">
-<style>.city-band a{color:var(--gold-lt);text-decoration:underline;text-underline-offset:3px}.trust-item--google{text-decoration:none;color:inherit}.trust-item--google:hover .t-title{text-decoration:underline;text-underline-offset:2px}
-/* Paid-search message match + cost factors (Phase 1 local SEO) */
-.paid-match{background:linear-gradient(180deg,rgba(184,164,122,.12),rgba(14,14,14,0));border-bottom:1px solid rgba(184,164,122,.18);padding:28px 80px 32px;}
-.paid-match-inner{max-width:1100px;margin:0 auto;}
-.paid-match-kicker{font-family:var(--serif);font-size:clamp(1.15rem,2.4vw,1.55rem);color:var(--white);margin-bottom:14px;line-height:1.25;}
+<style>.trust-item--google{text-decoration:none;color:inherit}.trust-item--google:hover .t-title{text-decoration:underline;text-underline-offset:2px}
+/* Next-step band + related services (customer UI, not keyword dump) */
+.paid-match{background:var(--dark2);border-bottom:1px solid rgba(184,164,122,.14);padding:48px 80px;}
+.paid-match-inner{max-width:820px;margin:0 auto;text-align:center;}
+.paid-match-kicker{font-family:var(--serif);font-size:clamp(1.35rem,2.6vw,1.85rem);color:var(--white);margin:0 0 12px;line-height:1.25;}
 .paid-match-kicker em{font-style:italic;color:var(--gold);}
-.paid-match-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 18px;margin:0 0 18px;}
-.paid-match-list li{font-size:.72rem;letter-spacing:.04em;color:var(--w70);display:flex;gap:8px;align-items:flex-start;line-height:1.45;}
-.paid-match-list li::before{content:"✦";color:var(--gold);flex-shrink:0;margin-top:1px;}
-.paid-match-ctas{display:flex;flex-wrap:wrap;gap:12px;}
+.paid-match-lead{font-size:.88rem;line-height:1.7;color:var(--w70);margin:0 auto 28px;max-width:36em;}
+.paid-match-list{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0 0 32px;text-align:left;}
+.paid-match-list li{font-size:.78rem;letter-spacing:.02em;color:var(--w70);line-height:1.55;padding:18px 16px;border:1px solid rgba(184,164,122,.14);background:rgba(14,14,14,.35);}
+.paid-match-list li strong{display:block;font-size:.58rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.paid-match-ctas{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+.hub-nav{padding:28px 80px;background:var(--dark3);border-bottom:1px solid rgba(184,164,122,.08);}
+.hub-nav-inner{max-width:920px;margin:0 auto;text-align:center;}
+.hub-nav-label{font-size:.5rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.hub-nav-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+.hub-nav-links a{display:inline-block;padding:11px 18px;border:1px solid rgba(184,164,122,.22);font-size:.52rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(249,247,243,.55);text-decoration:none;transition:border-color .25s,color .25s;}
+.hub-nav-links a:hover{border-color:var(--gold);color:var(--gold-lt);}
 .cost-factors{padding:88px 80px;background:var(--dark2);}
 .cost-factors-inner{max-width:920px;margin:0 auto;}
 .cost-factors .sec-h{margin-bottom:12px;}
@@ -46,8 +53,6 @@
 .hero-mobile-body .hero-mobile-h em{font-style:italic;color:var(--gold);}
 .areas-pills a.pill{text-decoration:none;color:inherit;display:inline-block;}
 .areas-pills a.pill:hover{border-color:var(--gold);color:var(--gold);}
-.paid-match-cities{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;}
-.paid-match-cities a{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-lt);text-decoration:underline;text-underline-offset:3px;}
 #residential-hero.hero .hero-benefit{font-family:var(--serif);font-size:clamp(.95rem,2vw,1.12rem);line-height:1.65;color:var(--white);margin:0 0 14px;opacity:0;animation:up 1s .58s forwards;max-width:36em;}
 #residential-hero.hero .hero-sub{margin-bottom:28px;}
 .areas-grid-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;max-width:980px;margin:36px auto 0;text-align:left;}
@@ -89,7 +94,9 @@
 #trust .trust-sep{display:none!important;}
 }
 @media(max-width:900px){
-  .paid-match{padding:22px 20px 26px;}
+  .paid-match{padding:40px 20px;}
+  .paid-match-list{grid-template-columns:1fr;}
+  .hub-nav{padding:24px 20px;}
   .cost-factors{padding:64px 20px;}
   .paid-match-ctas{flex-direction:column;align-items:stretch;}
   .paid-match-ctas .btn-gold,.paid-match-ctas .btn-outline{justify-content:center;text-align:center;}
@@ -292,19 +299,18 @@
   </div>
 </section>
 
-<section class="paid-match" id="paid-match" aria-label="Residential cleaning plans">
+<section class="paid-match" id="paid-match" aria-label="Start your residential cleaning plan">
   <div class="paid-match-inner">
-    <p class="paid-match-kicker">Looking for <em>professionally managed residential cleaning</em>?</p>
+    <p class="paid-match-kicker">Ready for cleaning you don’t have to manage?</p>
+    <p class="paid-match-lead">Choose a plan that fits your home — then Sparklean handles the team, the schedule, and the standard.</p>
     <ul class="paid-match-list">
-      <li>Weekly and biweekly recurring residential plans</li>
-      <li>Deep clean and move-in / move-out service</li>
-      <li>Supervised teams — direct employees</li>
-      <li>Bonded, insured, and Workers’ Comp</li>
-      <li>24-hour happiness guarantee</li>
+      <li><strong>Recurring care</strong>Weekly or biweekly visits with the same supervised team.</li>
+      <li><strong>Deep &amp; move support</strong>Reset cleans, move-in, and move-out when the home needs more.</li>
+      <li><strong>One clear next step</strong>Call now or request a personalized quote — no pressure.</li>
     </ul>
     <div class="paid-match-ctas">
       <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588</a>
-      <a href="/contact?quote=1&preset=recurringResidential#quote-intake" class="btn-outline" data-sparklean-intake-preset="recurringResidential">Request a personalized recurring-cleaning quote</a>
+      <a href="/contact?quote=1&preset=recurringResidential#quote-intake" class="btn-outline" data-sparklean-intake-preset="recurringResidential">Build My Cleaning Plan</a>
     </div>
   </div>
 </section>
@@ -317,9 +323,19 @@
 <span class="current">Residential Cleaning</span>
 </div>
 
-<div class="city-band">
-<p>This page is Sparklean’s residential service hub — recurring, deep, move-in and move-out, and one-time home cleaning with professional supervision. Dedicated city pages own local house-cleaning searches; see <a href="#service-areas">Residential Cleaning Service Areas</a> below. For guest turnovers see <a href="/vacation-rental-cleaning">vacation rental cleaning</a>. Pair homes with <a href="/commercial-cleaning">commercial cleaning</a>, line up <a href="/post-construction-cleaning">post-construction cleaning</a> for new builds, browse <a href="/blog">the blog</a>, or <a href="/contact">contact Sparklean</a>.</p>
-</div>
+<nav class="hub-nav" aria-label="Related Sparklean services">
+  <div class="hub-nav-inner">
+    <div class="hub-nav-label">Also from Sparklean</div>
+    <div class="hub-nav-links">
+      <a href="#service-areas">Service areas</a>
+      <a href="/vacation-rental-cleaning">Vacation rental</a>
+      <a href="/commercial-cleaning">Commercial</a>
+      <a href="/post-construction-cleaning">Post-construction</a>
+      <a href="/blog">Blog</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </div>
+</nav>
 
 <section class="intro">
 <div class="intro-photo">
@@ -1008,7 +1024,7 @@
 </div>
 
 <h2 class="sec-h">Residential Cleaning <em>Service Areas</em></h2>
-<p class="areas-sub">Each city page owns its house-cleaning search. Choose your community for local details and next steps.</p>
+<p class="areas-sub">Choose your community for local details and next steps.</p>
 <div class="areas-grid-cards">
 <a class="area-card" href="/house-cleaning-naples">
   <div class="area-card-k">City page</div>
@@ -1110,7 +1126,7 @@
 
 </button>
 <div class="faq-a">
-<p>Sparklean serves homes throughout our coverage area. For city-specific house cleaning pages, see <a href="#service-areas">Residential Cleaning Service Areas</a>. If you're unsure whether we cover your neighborhood, call (239) 888-3588.</p>
+<p>Sparklean serves homes throughout our coverage area. See <a href="#service-areas">Residential Cleaning Service Areas</a> for your community page. If you're unsure whether we cover your neighborhood, call (239) 888-3588.</p>
 </div>
 
 </div>
