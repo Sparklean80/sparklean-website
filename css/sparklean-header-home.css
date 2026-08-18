@@ -5,13 +5,11 @@
 
 :root {
   --rewards-bar-h: 30px;
-  --nav-h: 96px;
   --header-total: calc(var(--rewards-bar-h) + var(--nav-h));
 }
 
 .site-header {
   --rewards-bar-h: 30px;
-  --nav-h: 96px;
   position: fixed;
   top: 0;
   left: 0;
@@ -105,10 +103,7 @@
   gap: 20px;
 }
 
-.site-header .nav-logo img {
-  height: 88px !important;
-  max-width: min(300px, 36vw) !important;
-}
+/* Logo sizing comes from sparklean-nav-logo.css — do not override here. */
 
 .site-header .nav-links {
   display: flex !important;
@@ -253,38 +248,6 @@
   box-shadow: none !important;
 }
 
-/* Compact earn control — scrolled desktop only */
-.site-header .nav-earn {
-  display: none;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: none;
-  color: #d4bf96;
-  font-family: "Montserrat", system-ui, sans-serif;
-  font-size: 0.52rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.site-header .nav-earn:hover,
-.site-header .nav-earn[aria-expanded="true"] {
-  color: #f9f7f3;
-}
-
-.site-header .nav-earn:focus {
-  outline: none;
-}
-
-.site-header .nav-earn:focus-visible {
-  outline: 2px solid #b8a47a;
-  outline-offset: 3px;
-}
-
 /* Rewards explanation panel */
 .rewards-panel {
   display: none;
@@ -387,15 +350,7 @@
 }
 
 /* —— Scrolled sticky state —— */
-.site-header.is-scrolled {
-  --rewards-bar-h: 0px;
-  --nav-h: 72px;
-}
-
-.site-header.is-scrolled .rewards-topbar {
-  display: none;
-}
-
+/* Rewards bar stays with the header while scrolling. */
 .site-header.is-scrolled .nav-phone,
 .site-header.is-scrolled .nav-portal {
   display: none !important;
@@ -403,14 +358,6 @@
 
 .site-header.is-scrolled .nav-links > li:nth-child(n + 4) {
   display: none;
-}
-
-.site-header.is-scrolled .nav-earn {
-  display: inline-flex;
-}
-
-.site-header.is-scrolled .nav-logo img {
-  height: 64px !important;
 }
 
 .site-header.is-scrolled .nav-links {
@@ -473,39 +420,14 @@
     display: none !important;
   }
 
-  .site-header .nav-earn {
-    display: none !important;
-  }
-
-  .site-header.is-scrolled .nav-earn {
-    display: none !important;
-  }
-
   .rewards-topbar-inner {
     font-size: 0.48rem;
-  }
-
-  .site-header {
-    --nav-h: 80px;
-  }
-
-  .site-header .nav-logo img {
-    height: 72px !important;
-  }
-
-  .site-header.is-scrolled {
-    --nav-h: 68px;
-  }
-
-  :root {
-    --nav-h: 80px;
   }
 }
 
 @media (max-width: 640px) {
   .site-header {
     --rewards-bar-h: auto;
-    --nav-h: 68px;
   }
 
   .rewards-topbar {
@@ -513,10 +435,6 @@
     min-height: 28px;
     max-height: none;
     padding: 7px 12px;
-  }
-
-  .site-header.is-scrolled {
-    --nav-h: 64px;
   }
 
   .rewards-topbar-inner {
@@ -527,11 +445,6 @@
 
   .rewards-topbar-sep {
     display: none;
-  }
-
-  .site-header .nav-logo img {
-    height: 56px !important;
-    max-width: min(200px, 48vw) !important;
   }
 
   .site-header > nav {

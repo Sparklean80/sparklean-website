@@ -9,7 +9,6 @@
     document.body.classList.add("home-header-v2");
 
     var topbar = header.querySelector(".rewards-topbar");
-    var earn = header.querySelector(".nav-earn");
     var dropdowns = header.querySelectorAll(".nav-dd");
     var scrollTicking = false;
     var root = document.documentElement;
@@ -22,23 +21,21 @@
     function closeRewards() {
       header.classList.remove("rewards-open");
       if (topbar) topbar.setAttribute("aria-expanded", "false");
-      if (earn) earn.setAttribute("aria-expanded", "false");
     }
 
-    function openRewards(trigger) {
+    function openRewards() {
       closeDropdowns();
       header.classList.add("rewards-open");
-      if (topbar) topbar.setAttribute("aria-expanded", trigger === topbar ? "true" : "false");
-      if (earn) earn.setAttribute("aria-expanded", trigger === earn ? "true" : "false");
+      if (topbar) topbar.setAttribute("aria-expanded", "true");
     }
 
-    function toggleRewards(trigger, e) {
+    function toggleRewards(e) {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
       }
       if (header.classList.contains("rewards-open")) closeRewards();
-      else openRewards(trigger);
+      else openRewards();
     }
 
     function closeDropdowns() {
@@ -51,12 +48,7 @@
 
     if (topbar) {
       topbar.addEventListener("click", function (e) {
-        toggleRewards(topbar, e);
-      });
-    }
-    if (earn) {
-      earn.addEventListener("click", function (e) {
-        toggleRewards(earn, e);
+        toggleRewards(e);
       });
     }
 
