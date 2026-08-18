@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-18** (homepage header: sticky $5 Rewards bar + restore standard logo sizing)
+Last updated: **2026-08-18** (sitewide header conversion — sticky $5 Rewards bar + Services/Service Areas menus)
 
 ---
 
@@ -246,6 +246,7 @@ Pattern: `/blog/{slug}` → `pages/blog/{slug}.html` (200 rewrite in `netlify.to
 | `sparklean-mobile-first.css` | Base responsive + nav on most pages |
 | `sparklean-luxury-flow.css` | Service/city page layout, founder video patterns on some pages |
 | `sparklean-nav-logo.css` | Nav logo sizing |
+| `sparklean-site-header.css` | **Sitewide** header chrome — Rewards bar + Services/Service Areas menus + scroll state (load after `sparklean-nav-logo.css`) |
 | `quote-intake.css` | Quote/contact intake UI |
 | `sparklean-blog-article-page.css` | **Blog article template** |
 | `sparklean-blog-index-mobile.css` | Blog index mobile grid |
@@ -266,8 +267,8 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 2. `<title>` + meta description + **canonical** `https://www.sparklean.co/blog/{slug}`
 3. OG/Twitter tags
 4. JSON-LD `@graph`: Organization + **BlogPosting** + BreadcrumbList
-5. CSS: `sparklean-blog-article-page.css`, `sparklean-mobile-first.css`, `quote-intake.css`, `sparklean-luxury-flow.css`, `sparklean-nav-logo.css`
-6. Standard nav + mobile menu (match any blog page)
+5. CSS: `sparklean-blog-article-page.css`, `sparklean-mobile-first.css`, `quote-intake.css`, `sparklean-luxury-flow.css`, `sparklean-nav-logo.css`, `sparklean-site-header.css`
+6. Standard `#site-header` chrome + mobile menu (match any marketing page; include `js/sparklean-site-header.js`)
 7. `<main id="main-content">` → `.article-shell` → breadcrumb → `<article class="article-inner">`
 8. `.article-cat` · `.article-title` · `.article-byline` · `.article-body` (H2s, lists, internal links)
 9. `.article-cta` with phone + **recurring** CTA (`data-sparklean-intake-preset="recurringResidential"`) for residential; walkthrough/partner CTA for commercial/post-con
@@ -388,7 +389,7 @@ Categories: residential, condo, luxury estate, move-in/out, airbnb, commercial o
 
 Contact page + homepage `#quote` use these flows → `netlify/functions/quote-submit.mjs` → Brevo transactional → `SPARKLEAN_LEAD_TO` (default `info@sparklean.co`).
 
-**Homepage header conversion (2026-08-18, homepage only):** Thin champagne rewards bar above nav stays sticky while scrolling — “SPARKLEAN REWARDS · Earn $5 in cleaning credit for every $100 spent. Learn More →” (no coin medallion; cleaning credit not cash back). Logo sizing left to `sparklean-nav-logo.css`. Main nav consolidates services + city pages into click/keyboard/touch `SERVICES` and `SERVICE AREAS` menus (real `<a href>` links). Conversion hierarchy: Request a Quote (only filled primary) → quiet phone → quiet Client Login → Rewards as sticky info bar. Scrolled sticky: rewards bar remains; nav reduces to Services · Service Areas · Why Sparklean · Request a Quote (phone + Client Login + About/Partners/Blog hidden). Assets: `css/sparklean-header-home.css`, `js/sparklean-header-home.js`. Evidence: `evidence/sparklean-header-conversion-2026-08-18/`. Sitewide deferred.
+**Sitewide header conversion (2026-08-18):** Sticky champagne Rewards bar — “SPARKLEAN REWARDS · Earn $5 in cleaning credit for every $100 spent. Learn More →” (cleaning credit, not cash back; no coin medallion). Consolidated crawlable `SERVICES` + `SERVICE AREAS` menus. Conversion hierarchy: Request a Quote (only filled primary) → quiet phone → quiet Client Login → Rewards info bar (stays on scroll). Scrolled desktop trims About/Partners/Blog + phone + Client Login. Logo sizing stays in `sparklean-nav-logo.css`. Assets: `css/sparklean-site-header.css`, `js/sparklean-site-header.js` (apply script: `scripts/apply-site-header.mjs`). Signal House private pages excluded. Legacy `sparklean-header-home.*` / `sparklean-rewards.*` are aliases or unused.
 
 **Residential LP (2026-08-18 SEO correction):** Service-category hub — **not** SWFL and **not** a five-city H1. Eyebrow `Residential Cleaning`. H1 `Professionally Managed Residential Cleaning`. Title/meta match category positioning (no city list). Lower H2 `Residential Cleaning Service Areas` + five crawlable city cards. City pages exclusively own `House Cleaning Services in [City], Florida`. Homepage H1 stays Naples-primary. Trust strip + tablet/mobile photo-on-top stack unchanged. Evidence: `evidence/residential-service-hub-seo-2026-08-18/`.
 
