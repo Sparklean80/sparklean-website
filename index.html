@@ -171,7 +171,7 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 <link rel="stylesheet" href="/css/sparklean-nav-logo.css">
 <link rel="stylesheet" href="/css/sparklean-site-header.css">
 <link rel="stylesheet" href="/css/sparklean-footer.css">
-<link rel="stylesheet" href="/css/home-hero-mobile.css?v=wipe-full-1">
+<link rel="stylesheet" href="/css/home-hero-mobile.css?v=contain-2048">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17027441328"></script>
 <script>
@@ -186,19 +186,9 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 <script src="/js/sparklean-events.js"></script>
 
 <style id="homepage-rebuild-2026-08-18-hero-full">
-.hero-bg{position:absolute;inset:-2px;overflow:hidden;}
-.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:left center;display:block;animation:zoomIn 14s ease-out forwards;}
-/* Desktop: hide stacked photo; mobile: hide absolute fill shell */
-.hero-photo-full{display:block;width:100%;height:auto;}
-@media(min-width:1100px){
-  .hero-photo-full{display:none!important;}
-  #home.hero .hero-bg{display:block!important;}
-}
-@media(max-width:1099px){
-  #home.hero .hero-photo-full{display:block!important;width:100%!important;height:auto!important;order:-1;}
-  #home.hero .hero-bg{display:none!important;}
-  #home.hero{min-height:0!important;height:auto!important;overflow:visible!important;}
-}
+/* Desktop cinematic uses .homepage-hero__media (see home-hero-mobile.css). */
+.homepage-hero__media{overflow:hidden;}
+.homepage-hero__media img{display:block;}
 .hero-benefit{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.35rem);line-height:1.45;color:var(--white);margin-bottom:14px;opacity:0;animation:up 1s .58s forwards;}
 .hero-sub{margin-bottom:14px;}
 .home-quote{padding:72px 80px;background:var(--dark2);border-top:1px solid rgba(201,168,76,.1);border-bottom:1px solid rgba(201,168,76,.1);}
@@ -225,7 +215,6 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 .area-cta{font-size:.5rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:8px;}
 .cta-trust{margin-top:22px;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(249,247,243,.38);}
 .svc-icon{display:none;}
-/* Hero copy must be immediately readable (SEO + a11y); keep motion on background only */
 #home.hero .hero-tag,#home.hero h1,#home.hero .hero-benefit,#home.hero .hero-sub,#home.hero .hero-guar,#home.hero .hero-btns,#home.hero .hero-stats{opacity:1!important;animation:none!important;transform:none!important;}
 .hero-benefit{opacity:1;animation:none;}
 #home.hero h1{font-size:clamp(1.95rem,3.5vw,3.05rem);line-height:1.14;max-width:none;}
@@ -234,94 +223,25 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 #home.hero h1 .h1-line{white-space:nowrap;}
 #home.hero .hero-sub a{color:var(--gold-lt);text-decoration:underline;text-underline-offset:3px;transition:color .2s;}
 #home.hero .hero-sub a:hover{color:var(--white);}
-/* Tablet + mobile: photo band on top — show FULL hero photo (cleaner + artwork), never crop */
 @media(max-width:1024px){
-#home.hero{
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:stretch !important;
-  justify-content:flex-start !important;
-  min-height:0 !important;
-  height:auto !important;
-  overflow:visible !important;
-}
-#home.hero .hero-bg{
-  display:none !important;
-}
-#home.hero .hero-photo-full{
-  display:block !important;
-  position:static !important;
-  width:100% !important;
-  height:auto !important;
-  max-width:100% !important;
-  object-fit:initial !important;
-  order:-1;
-}
-#home.hero .hero-ov{
-  display:none !important;
-}
-#home.hero .hero-content{
-  position:relative;
-  z-index:2;
-  width:100%;
-  max-width:100%;
-  margin:0;
-  padding:40px 28px 56px;
-  background:#11100e;
-  box-sizing:border-box;
-}
-#home.hero .hero-content::before{
-  content:none;
-  display:none;
-}
-#home.hero .hero-stats{
-  position:static;
-  order:3;
-  display:flex;
-  justify-content:center;
-  gap:36px;
-  margin:0;
-  padding:18px 20px 28px;
-  background:#11100e;
-  border:0;
-  border-top:1px solid rgba(201,168,76,.12);
-  backdrop-filter:none;
-  opacity:1;
-  animation:none;
-}
-#home.hero h1{
-  font-size:clamp(1.85rem,4.2vw,2.55rem);
-}
+#home.hero h1{font-size:clamp(1.85rem,4.2vw,2.55rem);}
 #home.hero h1 .h1-line{white-space:normal;}
-#home.hero .hero-benefit{
-  font-size:clamp(.95rem,2.4vw,1.12rem);
-  margin-bottom:12px;
-}
-#home.hero .hero-sub{
-  font-size:.92rem;
-  line-height:1.7;
-  max-width:40em;
-  margin-bottom:12px;
-}
-#home.hero .hero-btns{
-  flex-direction:column;
-  align-items:stretch;
-}
+#home.hero .hero-benefit{font-size:clamp(.95rem,2.4vw,1.12rem);margin-bottom:12px;}
+#home.hero .hero-sub{font-size:.92rem;line-height:1.7;max-width:40em;margin-bottom:12px;}
+#home.hero .hero-btns{flex-direction:column;align-items:stretch;}
 .home-quote{padding-left:32px;padding-right:32px;}
 .home-quote-form{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:640px){
-#home.hero .hero-content{padding:32px 20px 44px;}
 #home.hero h1{font-size:clamp(1.7rem,7vw,2.15rem);}
 #home.hero h1 .h1-line{white-space:normal;}
-#home.hero .hero-stats{display:flex!important;gap:22px;padding:14px 16px 22px;}
 #home.hero .hs-n{font-size:1.55rem;}
 .home-quote{padding:60px 20px;}
 .home-quote-form{grid-template-columns:1fr;}
 .svc-grid--five{grid-template-columns:1fr;}
 }
 @media(prefers-reduced-motion:reduce){
-.hero-tag,#home h1,.hero-benefit,.hero-sub,.hero-guar,.hero-btns,.hero-stats,.hero-bg img{opacity:1!important;animation:none!important;transform:none!important;}
+.hero-tag,#home h1,.hero-benefit,.hero-sub,.hero-guar,.hero-btns,.hero-stats,.homepage-hero__media img{opacity:1!important;animation:none!important;transform:none!important;}
 }
 #home.hero .hero-tag,#home.hero h1,#home.hero .hero-benefit,#home.hero .hero-sub,#home.hero .hero-guar,#home.hero .hero-btns,#home.hero .hero-stats{animation-fill-mode:forwards;}
 </style>
@@ -411,14 +331,15 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
   <a href="/contact">Contact</a>
   <a href="/refer">Refer Someone</a>
 </div>
-<section class="hero" id="home">
-  <!-- Mobile/tablet: plain stacked photo (full frame). Desktop uses .hero-bg fill. -->
-  <img class="hero-photo-full" src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp?v=wipe1" alt="Sparklean cleaner detailing framed artwork in a Southwest Florida home" width="1400" height="933" fetchpriority="high" decoding="async">
-  <div class="hero-bg" aria-hidden="true">
-    <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp?v=wipe1" alt="" width="1400" height="933" decoding="async">
+<section class="hero homepage-hero" id="home">
+  <div class="homepage-hero__media">
+    <picture>
+      <source type="image/webp" srcset="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp 1400w" sizes="100vw">
+      <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp" alt="Sparklean cleaner detailing framed artwork in a Southwest Florida home" width="2048" height="1365" fetchpriority="high" decoding="async">
+    </picture>
   </div>
-  <div class="hero-ov"></div>
-  <div class="hero-content">
+  <div class="hero-ov homepage-hero__overlay"></div>
+  <div class="hero-content homepage-hero__content">
     <div class="hero-tag"><div class="hero-tag-line"></div><span>Professionally Managed Cleaning · Southwest Florida</span></div>
     <h1><span class="h1-line">Full-Service Cleaning Company</span><br>in <em>Naples, Florida</em></h1>
     <p class="hero-benefit">Luxury-level care for homes, businesses, schools, construction projects, and managed properties.</p>
