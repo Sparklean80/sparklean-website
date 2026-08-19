@@ -6,6 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { GOOGLE_REVIEWS_HREF } from "../data/sparklean-testimonials.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 let failed = 0;
@@ -134,6 +135,21 @@ for (const rel of files) {
   assert(
     !/Bernwood|24221/i.test(html),
     `${rel} does not publish the Bernwood street address`
+  );
+  assert(
+    !/maps\/search\/\?api=1/i.test(html),
+    `${rel} does not use a Google Maps search CTA`
+  );
+  if (/google\.com\/maps/i.test(html)) {
+    assert(
+      html.includes(GOOGLE_REVIEWS_HREF),
+      `${rel} Google Maps links use the verified listing URL`
+    );
+  }
+  const withoutHrefs = html.replace(/\s(?:href|content|src)=["'][^"']*["']/gi, "");
+  assert(
+    !/Brink\s*Cir/i.test(withoutHrefs),
+    `${rel} does not show Brink Cir in visible copy`
   );
 }
 

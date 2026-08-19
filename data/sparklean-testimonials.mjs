@@ -10,11 +10,11 @@
  */
 
 /**
- * Google reviews CTA. Do **not** put a street address in this URL.
- * Swap for the founder’s direct GBP/reviews URL when they provide it.
+ * Google reviews CTA — verified Maps listing (Sparklean Cleaning, Bonita Springs).
+ * Do not put the street in visible copy or schema. Do not use the old Bernwood search URL.
  */
 export const GOOGLE_REVIEWS_HREF =
-  "https://www.google.com/maps/search/?api=1&query=Sparklean%20Cleaning";
+  "https://www.google.com/maps/place/Sparklean+Cleaning,+3423+Brink+Cir,+Bonita+Springs,+FL+34134/";
 
 /** Visible rating only — do not embed reviewCount in schema AggregateRating. */
 export const GOOGLE_RATING_DISPLAY = "4.9";
