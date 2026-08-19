@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (vacation inspection cards stack 1-col on phones — shipped live)
+Last updated: **2026-08-19** (mobile Sparklean Rewards bar type slightly larger sitewide)
 
 ---
 

@@ -31,6 +31,7 @@ body.site-header-v2 {
   :root,
   body.site-header-v2 {
     --nav-row-h: 76px;
+    --rewards-bar-h: 34px;
   }
 }
 
@@ -589,21 +590,25 @@ body.site-header-v2 {
   }
 
   .rewards-topbar-inner {
-    font-size: 0.48rem;
+    font-size: 0.5rem;
   }
 }
 
 @media (max-width: 640px) {
+  .site-header {
+    --rewards-bar-h: 34px;
+  }
+
   .rewards-topbar {
     height: auto;
-    min-height: 28px;
+    min-height: 32px;
     max-height: none;
-    padding: 7px 12px;
+    padding: 8px 14px;
   }
 
   .rewards-topbar-inner {
-    font-size: 0.44rem;
-    letter-spacing: 0.04em;
+    font-size: 0.5rem;
+    letter-spacing: 0.05em;
     gap: 4px 6px;
   }
 
