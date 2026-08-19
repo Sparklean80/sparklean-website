@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (Fort Myers Semrush city-ownership SEO)
+Last updated: **2026-08-19** (Cape Coral Semrush city-ownership SEO — all 5 cities done)
 
 ---
 
@@ -400,6 +400,8 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 **Estero hero full-frame (2026-08-19):** Replaced short cropped `Untitled-design--4` banner (1200×630) with residential’s full team scene `1000051474` (1400×933). Mobile `.hero-mobile-img` uses `height:auto` + `object-fit:contain` + `aspect-ratio:1400/933` so heads/artwork stay visible like homepage/Naples.
 
 **Fort Myers city page SEO ownership (2026-08-19):** Same Semrush pattern. Title/H1/schema: `House Cleaning Services in Fort Myers, Florida`. Across-the-city angle kept (Gulf Harbour, McGregor, Heritage Palms, Gateway). Breadcrumb: Home → Residential Cleaning → Fort Myers. Marquee maid wording removed. Hero CTA: Build My Cleaning Plan. Full-frame mobile hero fit + header clearance. No UI redesign.
+
+**Cape Coral city page SEO ownership (2026-08-19):** Same Semrush pattern. Title/H1/schema: `House Cleaning Services in Cape Coral, Florida`. Canal-homes angle kept (Cape Harbour, Tarpon Point, Sandoval, Cape Royal). Breadcrumb: Home → Residential Cleaning → Cape Coral. Marquee maid wording removed. Hero CTA: Build My Cleaning Plan. Full-frame mobile hero + desktop photo below header + mobile 24h badge bottom-right. **All five city money pages now on this pattern.**
 
 **City reviews + cost-factors UI (2026-08-18):** Pricing clarity rebuilt as an editorial label/description list (not smashed inline text). Styles inlined on city pages + shared `sparklean-luxury-flow.css`. Google Reviews simplified to centered rating + one city line + one CTA. All five city pages.
 
