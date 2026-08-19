@@ -621,6 +621,17 @@
     padding-left: 24px;
     padding-right: 24px;
   }
+
+  .pt-grid,
+  .wb-grid,
+  .comm-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pt-card,
+  .wb-card {
+    padding: 28px 22px !important;
+  }
 }
 
 @media (max-width: 640px) {

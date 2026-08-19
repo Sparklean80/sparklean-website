@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (vacation rental hero swapped to unwatermarked paper-towel finish photo `1000052037`)
+Last updated: **2026-08-19** (vacation inspection cards stack 1-col on phones — shipped live)
 
 ---
 

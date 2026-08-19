@@ -282,8 +282,15 @@ a.btn-gold .btn-gold-icon,
   .sb-grid,
   .pp-grid,
   .comm-grid,
+  .pt-grid,
+  .wb-grid,
   .intro {
     grid-template-columns: 1fr !important;
+  }
+
+  .pt-card,
+  .wb-card {
+    padding: 28px 22px !important;
   }
 
   .why-img-wrap {
