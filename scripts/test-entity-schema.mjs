@@ -8,11 +8,14 @@ import { execSync } from "child_process";
 import { fileURLToPath } from "url";
 import {
  CITY_PAGES,
+ FOUNDER_ROXY_ID,
+ FOUNDER_TONY_ID,
  getCanonicalOrganization,
  LOCKED_DESCRIPTION,
  ORG_ID,
  PHONE_E164,
  SERVICE_AREA_NAMES,
+ WEBSITE_ID,
 } from "../data/sparklean-entity.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -284,6 +287,45 @@ assert(
  "homepage uses registered-business insurance wording"
 );
 assert(!/aggregateRating/.test(homeHtml), "homepage JSON-LD has no aggregateRating");
+
+// Sitewide: every top-level @graph node @id is unique (schema:sync must be idempotent)
+for (const rel of listPublicHtml()) {
+ const html = fs.readFileSync(path.join(root, rel), "utf8");
+ const blocks = extractJsonLd(html);
+ for (const [i, b] of blocks.entries()) {
+ if (!Array.isArray(b["@graph"])) continue;
+ const ids = b["@graph"].map((n) => n && n["@id"]).filter(Boolean);
+ const seen = new Set();
+ const dupes = [];
+ for (const id of ids) {
+ if (seen.has(id)) dupes.push(id);
+ seen.add(id);
+ }
+ assert(
+ dupes.length === 0,
+ `${rel} JSON-LD[${i}] @graph has unique @id values (dupes: ${[...new Set(dupes)].join(", ")})`
+ );
+ }
+}
+
+const blogArticleFiles = listPublicHtml().filter(
+ (f) => f.startsWith("pages/blog/") && f !== "pages/blog.html"
+);
+assert(blogArticleFiles.length === 12, "12 blog article HTML files");
+for (const rel of blogArticleFiles) {
+ const html = fs.readFileSync(path.join(root, rel), "utf8");
+ const blocks = extractJsonLd(html);
+ const graph = (blocks.find((b) => Array.isArray(b["@graph"])) || {})["@graph"] || [];
+ const count = (id) => graph.filter((n) => n && n["@id"] === id).length;
+ assert(count(ORG_ID) === 1, `${rel} has one Organization @id`);
+ assert(count(FOUNDER_TONY_ID) === 1, `${rel} has one Tony founder @id`);
+ assert(count(FOUNDER_ROXY_ID) === 1, `${rel} has one Roxy founder @id`);
+ assert(count(WEBSITE_ID) === 1, `${rel} has one Website @id`);
+ assert(
+ graph.length <= 8,
+ `${rel} @graph stays small (${graph.length} nodes; expected ~6, not stacked sync copies)`
+ );
+}
 
 if (failed) {
  console.error(`\n${failed} assertion(s) failed`);

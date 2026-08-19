@@ -133,10 +133,53 @@ function homepageFaqs() {
  ];
 }
 
+const CANONICAL_SHARED_IDS = new Set([
+ ORG_ID,
+ FOUNDER_TONY_ID,
+ FOUNDER_ROXY_ID,
+ WEBSITE_ID,
+]);
+
+function nodeId(n) {
+ return n && typeof n["@id"] === "string" ? n["@id"] : null;
+}
+
+function typeList(n) {
+ return [].concat((n && n["@type"]) || []);
+}
+
+/** Drop Organization / founder / Website nodes that sync will re-prepend. */
+function stripSharedCanonicalNodes(nodes) {
+ return nodes.filter((n) => {
+ const id = nodeId(n);
+ if (id && CANONICAL_SHARED_IDS.has(id)) return false;
+ const types = typeList(n);
+ if (types.includes("Organization")) return false;
+ if (types.includes("WebSite")) return false;
+ return true;
+ });
+}
+
+/** Keep the first node for each @id. Nodes without @id are always kept. */
+function dedupeGraphById(nodes) {
+ const seen = new Set();
+ const out = [];
+ for (const n of nodes) {
+ const id = nodeId(n);
+ if (id) {
+ if (seen.has(id)) continue;
+ seen.add(id);
+ }
+ out.push(n);
+ }
+ return out;
+}
+
 function writePage(relPath, graph) {
  const abs = path.join(root, relPath);
  const html = fs.readFileSync(abs, "utf8");
- const next = replaceAllLdJson(html, ldJsonScript(graph));
+ const unique = dedupeGraphById(graph);
+ const next = replaceAllLdJson(html, ldJsonScript(unique));
  fs.writeFileSync(abs, next);
  console.log("synced", relPath);
 }
@@ -405,12 +448,7 @@ function syncBlogArticles() {
  }
  if (!graphNodes.length) continue;
 
- const rest = graphNodes.filter((n) => {
- const t = n["@type"];
- if (t === "Organization") return false;
- if (Array.isArray(t) && t.includes("Organization")) return false;
- return true;
- });
+ const rest = stripSharedCanonicalNodes(graphNodes);
 
  const rewritten = rest.map((n) => {
  const copy = { ...n };
