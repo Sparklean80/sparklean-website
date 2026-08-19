@@ -71,7 +71,7 @@ html = """<!DOCTYPE html>
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>About Sparklean Cleaning | Founders, Story &amp; Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral</title>
-<meta name="description" content="Meet founders Tony Giuliano and Roxana Tellez. Learn how national-scale operations and a physician's discipline shaped Sparklean's luxury residential cleaning across Naples, Bonita Springs, Estero, Fort Myers, and Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.">
+<meta name="description" content="Meet founders Tony Giuliano and Roxana Tellez. Learn how national-scale operations and a physician's discipline shaped Sparklean's luxury residential cleaning across Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.">
 <link rel="canonical" href="https://www.sparklean.co/about">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Sparklean Cleaning">

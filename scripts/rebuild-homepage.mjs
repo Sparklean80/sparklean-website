@@ -59,7 +59,7 @@ const schema = {
       legalName: "Sparklean Cleaning LLC",
       alternateName: ["Sparklean", "Sparklean Cleaning LLC"],
       description:
-        "Sparklean Cleaning is a luxury residential and commercial cleaning company serving Naples and Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral with direct employees and supervised teams.",
+        "Sparklean Cleaning is a luxury residential and commercial cleaning company serving Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral with direct employees and supervised teams.",
       url: "https://www.sparklean.co/",
       telephone: "+1-239-888-3588",
       email: "info@sparklean.co",
@@ -196,7 +196,7 @@ const schema = {
       url: "https://www.sparklean.co/",
       name: "Sparklean Cleaning",
       description:
-        "Luxury residential and commercial cleaning in Naples and Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
+        "Luxury residential and commercial cleaning in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
       publisher: { "@id": "https://www.sparklean.co/#organization" },
       inLanguage: "en-US",
     },
@@ -285,7 +285,7 @@ const sections = `
     <p class="hero-sub">Begin with one personalized cleaning or choose ongoing care for your home, business, construction project, or vacation property. Sparklean’s supervised teams serve Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral with the same attention to detail and accountability.</p>
     <div class="hero-guar">✦ 24-Hour Happiness Guarantee</div>
     <div class="hero-btns">
-      <a href="/contact" class="btn-gold" data-sparklean-intake data-sparklean-event="quote_cta" data-sparklean-event-type="hero_primary">Request Your Personalized Quote</a>
+      <a href="/contact?quote=1#quote-intake" class="btn-gold" data-sparklean-intake data-sparklean-event="quote_cta" data-sparklean-event-type="hero_primary">Request Your Personalized Quote</a>
       <a href="#about" class="btn-outline">Discover the Sparklean Standard</a>
     </div>
   </div>

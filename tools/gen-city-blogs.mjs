@@ -140,7 +140,7 @@ function buildArticle(a) {
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="House Cleaning in ${a.city}: When to Hire a Pro">
-<meta name="twitter:description" content="Residential cleaning guidance for ${a.city} and Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.">
+<meta name="twitter:description" content="Residential cleaning guidance for ${a.city}.">
 <meta name="twitter:image" content="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png">
 <script type="application/ld+json">
 ${JSON.stringify(jsonLd)}

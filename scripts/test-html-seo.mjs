@@ -88,6 +88,34 @@ assert(
   "sitemap.xml excludes /customer-portal"
 );
 
+const MOJIBAKE = /â€|Â·|Â©|Â®|Â†|â€™|â€œ|â€|â€“|â€”|â†/;
+const blogDir = path.join(root, "pages/blog");
+const blogFiles = fs.readdirSync(blogDir).filter((f) => f.endsWith(".html"));
+assert(blogFiles.length === 12, `expected 12 blog HTML files (found ${blogFiles.length})`);
+for (const name of blogFiles) {
+  const html = fs.readFileSync(path.join(blogDir, name), "utf8");
+  assert(!MOJIBAKE.test(html), `pages/blog/${name} has no visible UTF-8 mojibake`);
+}
+
+const about = fs.readFileSync(path.join(root, "pages/about.html"), "utf8");
+const aboutDesc = about.match(/<meta name="description" content="([^"]*)"/)?.[1] || "";
+assert(
+  !/Cape Coral, and Naples/.test(aboutDesc),
+  "about meta description does not repeat the five-city list"
+);
+assert(
+  (aboutDesc.match(/Cape Coral/g) || []).length === 1,
+  "about meta description names Cape Coral once"
+);
+
+const home = fs.readFileSync(path.join(root, "index.html"), "utf8");
+assert(
+  /<a href="\/contact\?quote=1#quote-intake"[^>]*data-sparklean-event-type="hero_primary"/.test(
+    home
+  ),
+  "homepage hero personalized-quote CTA href is /contact?quote=1#quote-intake"
+);
+
 if (failed) {
   console.error(`\n${failed} assertion(s) failed`);
   process.exit(1);

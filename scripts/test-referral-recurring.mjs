@@ -118,6 +118,12 @@ const home = read("index.html");
 // Homepage is Naples-led brand hub: open intake without forcing recurring preset.
 // Recurring residential ownership lives on /residential-cleaning (asserted below).
 assert(home.includes("data-sparklean-intake"), "homepage primary quote intake CTA");
+assert(
+  /<a href="\/contact\?quote=1#quote-intake"[^>]*data-sparklean-event-type="hero_primary"/.test(
+    home
+  ),
+  "homepage primary quote CTA uses durable /contact?quote=1#quote-intake"
+);
 assert(home.includes("/why-sparklean"), "homepage links Why Sparklean");
 assert(home.includes("/js/sparklean-events.js"), "homepage loads events helper");
 
