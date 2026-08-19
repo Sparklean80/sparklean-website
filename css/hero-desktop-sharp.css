@@ -1,0 +1,11 @@
+/**
+ * Desktop heroes: no soft zoom / scale (keeps JPG backgrounds crisp).
+ */
+@media (min-width: 768px) {
+  .hero-bg,
+  .homepage-hero__media img,
+  #residential-hero.hero .hero-bg img {
+    animation: none !important;
+    transform: none !important;
+  }
+}

@@ -98,6 +98,9 @@
 
 /* —— Tablet+ desktop cinematic (same single img) —— */
 @media (min-width: 768px) {
+  .homepage-hero__media img {
+    image-rendering: auto;
+  }
   .homepage-hero.hero {
     position: relative;
     min-height: 100vh;

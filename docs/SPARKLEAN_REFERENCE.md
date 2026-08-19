@@ -403,6 +403,8 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **Cape Coral city page SEO ownership (2026-08-19):** Same Semrush pattern. Title/H1/schema: `House Cleaning Services in Cape Coral, Florida`. Canal-homes angle kept (Cape Harbour, Tarpon Point, Sandoval, Cape Royal). Breadcrumb: Home → Residential Cleaning → Cape Coral. Marquee maid wording removed. Hero CTA: Build My Cleaning Plan. Full-frame mobile hero + desktop photo below header + mobile 24h badge bottom-right. **All five city money pages now on this pattern.**
 
+**Desktop hero sharpness (2026-08-19):** All photo-hero pages use **1400 JPG** (not heavily compressed WebP) for desktop `.hero-bg` / homepage `<img>` / residential hero `<img>` / contact CSS / About local JPGs. Desktop `zoomIn` / scale animation removed (`css/hero-desktop-sharp.css`). Mobile still uses WebP sources + existing contain layout. Pages: `/`, `/house-cleaning-{naples,bonita-springs,estero,fort-myers,cape-coral}`, `/residential-cleaning`, `/commercial-cleaning`, `/post-construction-cleaning`, `/vacation-rental-cleaning`, `/specialized-cleaning`, `/contact`, `/about`. No larger-than-1400 originals in repo.
+
 **City reviews + cost-factors UI (2026-08-18):** Pricing clarity rebuilt as an editorial label/description list (not smashed inline text). Styles inlined on city pages + shared `sparklean-luxury-flow.css`. Google Reviews simplified to centered rating + one city line + one CTA. All five city pages.
 
 **Mobile hero + breadcrumb (2026-08-18):** City pages had a CSS typo grouping `.breadcrumb` with `.pp-img{height:220px}` — created a tall empty black band with Home › Residential › City. Fixed on all five city LPs; mobile heroes taller with `object-position:center 20%`.
