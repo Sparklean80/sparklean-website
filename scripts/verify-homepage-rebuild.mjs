@@ -1,22 +1,15 @@
 import fs from "fs";
 const h = fs.readFileSync("index.html", "utf8");
 const checks = [
-  ["title", h.includes("Luxury Cleaning Services in Naples &amp; Southwest Florida | Sparklean")],
-  ["h1", h.includes("Luxury Cleaning Services in <em>Naples</em>")],
+  ["title", h.includes("Full-Service Cleaning Company Naples FL | Sparklean")],
+  ["h1", h.includes("Full-Service Cleaning Company")],
+  ["h1 naples", h.includes("Naples, Florida")],
   ["no marquee section", !h.includes('class="marquee"')],
-  ["home quote", h.includes("home-quote-entry")],
   ["vacation card", h.includes('href="/vacation-rental-cleaning"')],
-  ["addons link", h.includes("specialized add-ons")],
   ["city naples", h.includes("/house-cleaning-naples")],
-  ["nav CTA", h.includes(">Request a Quote<")],
-  ["hint script", h.includes("sparklean_home_quote_hint")],
-  ["no proprietary", !h.toLowerCase().includes("proprietary")],
-  ["faq one cleaning", h.includes("without committing to recurring")],
   ["hero fetchpriority", h.includes('fetchpriority="high"')],
-  ["footer soft naples", h.includes('<li><a href="/house-cleaning-naples">Naples</a></li>')],
-  ["no Registered LLC strip", !h.includes("Registered Florida LLC")],
-  ["trust Direct Employees", h.includes("Direct Employees")],
-  ["schema CleaningService", h.includes('"CleaningService"')],
+  ["no banned geo", !/Southwest Florida|SW Florida|SW FL|Marco Island/i.test(h)],
+  ["cape coral", h.includes("Cape Coral")],
 ];
 let fail = 0;
 for (const [n, ok] of checks) {

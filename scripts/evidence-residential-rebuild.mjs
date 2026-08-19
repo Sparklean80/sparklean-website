@@ -62,6 +62,7 @@ try {
     const h1 = await page.locator("#residential-hero h1").innerText();
     const trust = await page.locator("#trust .t-title").allTextContents();
     const marco = await page.locator("text=Marco Island").count();
+    if (marco !== 0) throw new Error(`${name}: Marco Island still visible (${marco})`);
     const stacked = await page.evaluate(() => {
       const hero = document.getElementById("residential-hero");
       const bg = hero && hero.querySelector(".hero-bg");

@@ -51,11 +51,11 @@ const replacements = [
   ],
   [
     /National franchises often sell a brand, not a relationship\. A Southwest Floridaâ€“based team understands/g,
-    "A Southwest Florida–based, professionally managed team understands",
+    "A professionally managed local team understands",
   ],
   [
     /National franchises often sell a brand, not a relationship\. A Southwest Florida–based team understands/g,
-    "A Southwest Florida–based, professionally managed team understands",
+    "A professionally managed local team understands",
   ],
   [
     /Franchise dashboards do not mop floors\. Sparklean Cleaning is rooted in Naples, Bonita Springs, Fort Myers, Estero, and Cape Coral â€” which matters when/g,

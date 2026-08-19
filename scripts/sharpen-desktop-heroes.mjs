@@ -95,11 +95,11 @@ function sharpenContent(filePath, content) {
   if (filePath.endsWith("index.html")) {
     const oldPic = `<picture>
       <source type="image/webp" srcset="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp 1400w" sizes="100vw">
-      <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp" alt="Sparklean cleaner detailing framed artwork in a Southwest Florida home" width="2048" height="1365" fetchpriority="high" decoding="async">
+      <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp" alt="Sparklean cleaner detailing framed artwork in a Naples home" width="2048" height="1365" fetchpriority="high" decoding="async">
     </picture>`;
     const newPic = `<picture>
       <source media="(max-width: 767px)" type="image/webp" srcset="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp 1400w" sizes="100vw">
-      <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.jpg" alt="Sparklean cleaner detailing framed artwork in a Southwest Florida home" width="2048" height="1365" fetchpriority="high" decoding="async">
+      <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.jpg" alt="Sparklean cleaner detailing framed artwork in a Naples home" width="2048" height="1365" fetchpriority="high" decoding="async">
     </picture>`;
     if (html.includes(oldPic)) {
       html = html.replace(oldPic, newPic);
