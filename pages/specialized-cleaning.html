@@ -126,10 +126,7 @@ h1 em.hero-mobile-h em{font-style:italic;color:var(--gold)}
 .pt-icon{font-size:1.6rem;margin-bottom:18px;display:block;}
 .pt-name{font-family:var(--serif);font-size:1.22rem;font-weight:400;margin-bottom:12px;color:var(--white);}
 .pt-desc{font-size:.78rem;line-height:1.78;color:rgba(249,247,243,.72);max-width:28em;}
-.photo-pair{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(201,168,76,.1);}
-.pp-img{width:100%;height:520px;object-fit:cover;display:block;}
-.pp-img:first-child{object-position:center 40%;}
-.pp-img:last-child{object-position:center 25%;}
+.photo-pair{padding:100px 80px;background:var(--dark2);}
 .svc-list{padding:clamp(104px,12vw,140px) 80px;background:#0e0e0e;border-top:1px solid rgba(201,168,76,.1);}
 .sl-grid{display:grid;grid-template-columns:1fr 1fr;gap:88px;align-items:start;}
 .sl-items{display:flex;flex-direction:column;gap:10px;margin-top:36px;}
@@ -187,8 +184,6 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
  .pc-intro.project-types.svc-list.why-builders.community.cta{padding:60px 20px;}
  .ci-grid,.sl-grid{grid-template-columns:1fr;gap:40px;}
  .pt-grid.wb-grid.comm-grid{grid-template-columns:1fr;gap:3px;}
- .photo-pair{grid-template-columns:1fr;}
- .pp-img{height:260px;}
  .footer-top{padding:52px 20px 40px;}
  .footer-bottom{padding:18px 20px;flex-direction:column;gap:10px;text-align:center;}
  .footer-cols{grid-template-columns:1fr;gap:30px;}
@@ -222,15 +217,13 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
  .footer-bottom{flex-direction:column !important;gap:8px !important;text-align:center !important;padding:14px 20px !important;}
  .ci-grid,.sl-grid,.comm-grid{grid-template-columns:1fr !important;gap:32px !important;}
  .pt-grid.wb-grid{grid-template-columns:1fr !important;gap:3px !important;}
- .pc-intro.project-types.svc-list.why-builders.community.cta.photo-pair{padding:52px 20px !important;}
- .pp-img{height:220px !important;}
- .photo-pair{grid-template-columns:1fr !important;}
+ .pc-intro,.project-types,.svc-list,.why-builders,.community,.cta,.photo-pair{padding:52px 20px !important;}
  .cta-btns{flex-direction:column !important;align-items:stretch !important;}
 }
 </style>
 <link rel="stylesheet" href="/css/sparklean-mobile-first.css">
 <link rel="stylesheet" href="/css/quote-intake.css">
-<link rel="stylesheet" href="/css/sparklean-luxury-flow.css">
+<link rel="stylesheet" href="/css/sparklean-luxury-flow.css?v=pp-cards">
 <link rel="stylesheet" href="/css/sparklean-nav-logo.css">
 <link rel="stylesheet" href="/css/sparklean-site-header.css">
 <link rel="stylesheet" href="/css/hero-desktop-sharp.css">
@@ -469,10 +462,24 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
  </div>
 </section>
 
-<div class="photo-pair">
- <img class="pp-img" src="/images/cdn-migrated/69b21e37dc913e9e39c6e66b_1000051480.JPG-e261c045-1200.webp" alt="Sparklean specialized add-on cleaning luxury home care" loading="lazy" width="1200" height="800" decoding="async">
+<section class="photo-pair">
+ <div class="pp-grid">
+ <div class="pp-item">
+ <img class="pp-img" src="/images/cdn-migrated/69b21e37dc913e9e39c6e66b_1000051480.JPG-e261c045-1200.webp" alt="Sparklean ceiling fan and high-detail add-on cleaning" loading="lazy" width="1200" height="800" decoding="async">
+ <div class="pp-label">
+ <div class="pp-label-t">High-Detail Add-Ons</div>
+ <div class="pp-label-s">Fans, glass &amp; fixtures</div>
+ </div>
+ </div>
+ <div class="pp-item">
  <img class="pp-img" src="/images/cdn-migrated/69b21c9939e6441bc6975f7e_1000051963.jpeg-36ddec59-1200.webp" alt="Sparklean kitchen detailing and luxury finishing" loading="lazy" width="1200" height="800" decoding="async">
-</div>
+ <div class="pp-label">
+ <div class="pp-label-t">Kitchen Finishing</div>
+ <div class="pp-label-s">Appliances, grout &amp; shine</div>
+ </div>
+ </div>
+ </div>
+</section>
 
 <section class="svc-list" id="services">
  <div class="sl-grid">
