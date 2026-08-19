@@ -485,7 +485,8 @@ body.site-header-v2 {
 
 /* Tablet/mobile photo-on-top: photo starts below fixed header — do not crop faces */
 @media (max-width: 1024px) {
-  #home.hero {
+  #home.hero,
+  .hero-mobile {
     padding-top: var(--header-total) !important;
   }
 
