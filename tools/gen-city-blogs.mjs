@@ -6,116 +6,116 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, "../pages/blog");
 
 const articles = [
-  {
-    slug: "cape-coral-house-cleaning-when-to-hire-a-pro",
-    city: "Cape Coral",
-    cityPage: "/house-cleaning-cape-coral",
-    neighborhoods: "Cape Harbour, Tarpon Point, Sandoval, Cape Royal, and Coral Lakes",
-    peerLinks: [
-      ["Fort Myers", "/house-cleaning-fort-myers"],
-      ["Estero", "/house-cleaning-estero"],
-      ["Naples", "/house-cleaning-naples"],
-    ],
-    localNote:
-      "Canal-front homes, lanai traffic, and Gulf moisture mean floors and glass need a steady cadence — especially in waterfront communities where sand and humidity show up fast.",
-    tag: "Cape Coral · SW Florida",
-    breadcrumb: "House cleaning in Cape Coral",
-  },
-  {
-    slug: "fort-myers-house-cleaning-when-to-hire-a-pro",
-    city: "Fort Myers",
-    cityPage: "/house-cleaning-fort-myers",
-    neighborhoods: "Gulf Harbour, Crown Colony, Heritage Palms, and the McGregor Corridor",
-    peerLinks: [
-      ["Cape Coral", "/house-cleaning-cape-coral"],
-      ["Estero", "/house-cleaning-estero"],
-      ["Bonita Springs", "/house-cleaning-bonita-springs"],
-    ],
-    localNote:
-      "From riverfront condos to gated golf communities, Fort Myers homes see a mix of outdoor living, pets, and seasonal turnover — perfect for a supervised recurring crew.",
-    tag: "Fort Myers · SW Florida",
-    breadcrumb: "House cleaning in Fort Myers",
-  },
-  {
-    slug: "estero-house-cleaning-when-to-hire-a-pro",
-    city: "Estero",
-    cityPage: "/house-cleaning-estero",
-    neighborhoods: "West Bay Club, Grandezza, The Brooks, Pelican Sound, and Belle Lago",
-    peerLinks: [
-      ["Bonita Springs", "/house-cleaning-bonita-springs"],
-      ["Fort Myers", "/house-cleaning-fort-myers"],
-      ["Naples", "/house-cleaning-naples"],
-    ],
-    localNote:
-      "Estero's master-planned and gated neighborhoods expect consistency — the same team lead, the same finish, whether you are in for the season or home year-round.",
-    tag: "Estero · SW Florida",
-    breadcrumb: "House cleaning in Estero",
-  },
+ {
+ slug: "cape-coral-house-cleaning-when-to-hire-a-pro",
+ city: "Cape Coral",
+ cityPage: "/house-cleaning-cape-coral",
+ neighborhoods: "Cape Harbour, Tarpon Point, Sandoval, Cape Royal, and Coral Lakes",
+ peerLinks: [
+ ["Fort Myers", "/house-cleaning-fort-myers"],
+ ["Estero", "/house-cleaning-estero"],
+ ["Naples", "/house-cleaning-naples"],
+ ],
+ localNote:
+ "Canal-front homes, lanai traffic, and Gulf moisture mean floors and glass need a steady cadence — especially in waterfront communities where sand and humidity show up fast.",
+ tag: "Cape Coral ",
+ breadcrumb: "House cleaning in Cape Coral",
+ },
+ {
+ slug: "fort-myers-house-cleaning-when-to-hire-a-pro",
+ city: "Fort Myers",
+ cityPage: "/house-cleaning-fort-myers",
+ neighborhoods: "Gulf Harbour, Crown Colony, Heritage Palms, and the McGregor Corridor",
+ peerLinks: [
+ ["Cape Coral", "/house-cleaning-cape-coral"],
+ ["Estero", "/house-cleaning-estero"],
+ ["Bonita Springs", "/house-cleaning-bonita-springs"],
+ ],
+ localNote:
+ "From riverfront condos to gated golf communities, Fort Myers homes see a mix of outdoor living, pets, and seasonal turnover — perfect for a supervised recurring crew.",
+ tag: "Fort Myers ",
+ breadcrumb: "House cleaning in Fort Myers",
+ },
+ {
+ slug: "estero-house-cleaning-when-to-hire-a-pro",
+ city: "Estero",
+ cityPage: "/house-cleaning-estero",
+ neighborhoods: "West Bay Club, Grandezza, The Brooks, Pelican Sound, and Belle Lago",
+ peerLinks: [
+ ["Bonita Springs", "/house-cleaning-bonita-springs"],
+ ["Fort Myers", "/house-cleaning-fort-myers"],
+ ["Naples", "/house-cleaning-naples"],
+ ],
+ localNote:
+ "Estero's master-planned and gated neighborhoods expect consistency — the same team lead, the same finish, whether you are in for the season or home year-round.",
+ tag: "Estero ",
+ breadcrumb: "House cleaning in Estero",
+ },
 ];
 
 function peerLinksHtml(links) {
-  return links
-    .map(([label, href], i) => {
-      const sep = i < links.length - 1 ? ", " : ", and ";
-      return i === links.length - 1 ? `and <a href="${href}">${label}</a>` : `<a href="${href}">${label}</a>${sep.replace("and ", "")}`;
-    })
-    .join("");
+ return links
+ .map(([label, href], i) => {
+ const sep = i < links.length - 1 ? ", " : ", and ";
+ return i === links.length - 1 ? `and <a href="${href}">${label}</a>` : `<a href="${href}">${label}</a>${sep.replace("and ", "")}`;
+ })
+ .join("");
 }
 
 function buildArticle(a) {
-  const url = `https://www.sparklean.co/blog/${a.slug}`;
-  const title = `House Cleaning in ${a.city}, FL: When to Hire a Pro (and What You Actually Get)`;
-  const metaDesc = `Humidity, sand, and busy schedules make home cleaning tough in ${a.city}, FL. Learn when professional house cleaning pays for itself — and what a Sparklean visit includes in ${a.neighborhoods.split(",")[0]} and nearby communities.`;
-  const date = "2026-06-17";
+ const url = `https://www.sparklean.co/blog/${a.slug}`;
+ const title = `House Cleaning in ${a.city}, FL: When to Hire a Pro (and What You Actually Get)`;
+ const metaDesc = `Humidity, sand, and busy schedules make home cleaning tough in ${a.city}, FL. Learn when professional house cleaning pays for itself — and what a Sparklean visit includes in ${a.neighborhoods.split(",")[0]} and nearby communities.`;
+ const date = "2026-06-17";
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://www.sparklean.co/#organization",
-        name: "Sparklean Cleaning",
-        url: "https://www.sparklean.co/",
-        logo: {
-          "@type": "ImageObject",
-          url: "https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png",
-        },
-        telephone: "+1-239-888-3588",
-      },
-      {
-        "@type": "BlogPosting",
-        "@id": `${url}#article`,
-        headline: title,
-        description: metaDesc,
-        url,
-        mainEntityOfPage: { "@type": "WebPage", "@id": url },
-        datePublished: date,
-        dateModified: date,
-        author: { "@type": "Organization", name: "Sparklean Cleaning" },
-        publisher: { "@id": "https://www.sparklean.co/#organization" },
-        articleSection: "Residential Cleaning",
-        inLanguage: "en-US",
-        isPartOf: { "@id": "https://www.sparklean.co/blog#blog" },
-        image:
-          "https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png",
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://www.sparklean.co/" },
-          { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.sparklean.co/blog" },
-          { "@type": "ListItem", position: 3, name: a.breadcrumb, item: url },
-        ],
-      },
-    ],
-  };
+ const jsonLd = {
+ "@context": "https://schema.org",
+ "@graph": [
+ {
+ "@type": "Organization",
+ "@id": "https://www.sparklean.co/#organization",
+ name: "Sparklean Cleaning",
+ url: "https://www.sparklean.co/",
+ logo: {
+ "@type": "ImageObject",
+ url: "https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png",
+ },
+ telephone: "+1-239-888-3588",
+ },
+ {
+ "@type": "BlogPosting",
+ "@id": `${url}#article`,
+ headline: title,
+ description: metaDesc,
+ url,
+ mainEntityOfPage: { "@type": "WebPage", "@id": url },
+ datePublished: date,
+ dateModified: date,
+ author: { "@type": "Organization", name: "Sparklean Cleaning" },
+ publisher: { "@id": "https://www.sparklean.co/#organization" },
+ articleSection: "Residential Cleaning",
+ inLanguage: "en-US",
+ isPartOf: { "@id": "https://www.sparklean.co/blog#blog" },
+ image:
+ "https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png",
+ },
+ {
+ "@type": "BreadcrumbList",
+ itemListElement: [
+ { "@type": "ListItem", position: 1, name: "Home", item: "https://www.sparklean.co/" },
+ { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.sparklean.co/blog" },
+ { "@type": "ListItem", position: 3, name: a.breadcrumb, item: url },
+ ],
+ },
+ ],
+ };
 
-  const introPeers = a.peerLinks
-    .slice(0, 2)
-    .map(([label, href]) => `<a href="${href}">${label}</a>`)
-    .join(", ");
+ const introPeers = a.peerLinks
+ .slice(0, 2)
+ .map(([label, href]) => `<a href="${href}">${label}</a>`)
+ .join(", ");
 
-  return `<!DOCTYPE html>
+ return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -140,7 +140,7 @@ function buildArticle(a) {
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="House Cleaning in ${a.city}: When to Hire a Pro">
-<meta name="twitter:description" content="Residential cleaning guidance for ${a.city} and Southwest Florida.">
+<meta name="twitter:description" content="Residential cleaning guidance for ${a.city} and Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.">
 <meta name="twitter:image" content="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png">
 <script type="application/ld+json">
 ${JSON.stringify(jsonLd)}
@@ -154,208 +154,208 @@ ${JSON.stringify(jsonLd)}
 <body>
 
 <nav aria-label="Primary">
-  <a href="/" class="nav-logo">
-    <img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning" width="200" height="100" decoding="async" fetchpriority="high">
-  </a>
-  <ul class="nav-links">
-    <li><a href="/">Home</a></li>
-    <li><a href="/residential-cleaning">Residential</a></li>
-    <li><a href="/commercial-cleaning">Commercial</a></li>
-    <li><a href="/post-construction-cleaning">Post-Construction</a></li>
-    <li><a href="/specialized-cleaning">Add-Ons</a></li>
-    <li><a href="/about">About Us</a></li>
-    <li><a href="/blog" class="active">Blog</a></li>
-    <li><a href="/contact">Contact</a></li>
-  </ul>
-  <div class="nav-right">
-    <a href="tel:2398883588" class="nav-phone">(239) 888-3588</a>
-    <button type="button" class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" aria-haspopup="true">
-      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
-    </button>
-    <a href="/contact" class="nav-btn">Get a Quote</a>
-  </div>
+ <a href="/" class="nav-logo">
+ <img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning" width="200" height="100" decoding="async" fetchpriority="high">
+ </a>
+ <ul class="nav-links">
+ <li><a href="/">Home</a></li>
+ <li><a href="/residential-cleaning">Residential</a></li>
+ <li><a href="/commercial-cleaning">Commercial</a></li>
+ <li><a href="/post-construction-cleaning">Post-Construction</a></li>
+ <li><a href="/specialized-cleaning">Add-Ons</a></li>
+ <li><a href="/about">About Us</a></li>
+ <li><a href="/blog" class="active">Blog</a></li>
+ <li><a href="/contact">Contact</a></li>
+ </ul>
+ <div class="nav-right">
+ <a href="tel:2398883588" class="nav-phone">(239) 888-3588</a>
+ <button type="button" class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" aria-haspopup="true">
+ <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+ </button>
+ <a href="/contact" class="nav-btn">Get a Quote</a>
+ </div>
 </nav>
 <div class="nav-mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile" hidden>
-  <a href="/">Home</a>
-  <a href="/residential-cleaning">Residential Cleaning</a>
-  <a href="/commercial-cleaning">Commercial &amp; Janitorial</a>
-  <a href="/post-construction-cleaning">Post-Construction</a>
-  <a href="/specialized-cleaning">Add-Ons</a>
-  <a href="/about">About Us</a>
-  <a href="/blog">Blog</a>
-  <a href="/contact">Contact</a>
-  <a href="tel:2398883588">(239) 888-3588</a>
+ <a href="/">Home</a>
+ <a href="/residential-cleaning">Residential Cleaning</a>
+ <a href="/commercial-cleaning">Commercial &amp; Janitorial</a>
+ <a href="/post-construction-cleaning">Post-Construction</a>
+ <a href="/specialized-cleaning">Add-Ons</a>
+ <a href="/about">About Us</a>
+ <a href="/blog">Blog</a>
+ <a href="/contact">Contact</a>
+ <a href="tel:2398883588">(239) 888-3588</a>
 </div>
 
 <main id="main-content">
 <div class="article-shell">
-  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/blog">Blog</a><span aria-hidden="true">/</span><span class="breadcrumb-current">Residential</span></nav>
-  <article class="article-inner">
-    <span class="article-cat">Residential Cleaning</span>
-    <h1 class="article-title">${title}</h1>
-    <div class="article-byline">Sparklean Cleaning · ${a.city}, Bonita Springs, Fort Myers, Estero &amp; Cape Coral</div>
-    <div class="article-body">
-      <p>If you are searching for house cleaning in ${a.city}, FL, you want a dependable routine, a healthier home, and your weekends back — not another chore list. ${a.localNote}</p>
-      <p>Start with our <a href="/residential-cleaning">luxury residential program</a>, then map it to your neighborhood on our <a href="${a.cityPage}">${a.city} house cleaning page</a>. When you are ready to hold dates, <a href="/contact">request a personalized quote</a> so we can align crew size, frequency, and access.</p>
-      <h2>Why &ldquo;DIY&rdquo; Often Costs More Than a Cleaning Service</h2>
-      <p>Many ${a.city} homeowners try to handle everything themselves — then realize:</p>
-      <ul>
-        <li><strong>Time is the hidden expense.</strong> Deep cleaning kitchens, bathrooms, and floors eats entire Saturdays.</li>
-        <li><strong>Consistency slips first.</strong> Dust returns quickly; baseboards and ceiling fans get skipped when you are tired.</li>
-        <li><strong>Wear and tear shows up</strong> in grout, glass, and finishes when soil sits too long.</li>
-      </ul>
-      <p>A recurring home cleaning plan with Sparklean keeps the baseline high so you only touch up between visits, not start from zero every week.</p>
-      <h2>High-Intent Signs You Should Call Sparklean Today</h2>
-      <ul>
-        <li>You need the home &ldquo;show-ready&rdquo; for guests, seasonal arrival, or a rental turnover.</li>
-        <li>Allergies or pets mean you want floors and dust handled on a schedule.</li>
-        <li>You are juggling work, travel, or family and cleaning keeps falling to the bottom of the list.</li>
-        <li>You want recurring peace of mind — predictable visits and predictable results.</li>
-      </ul>
-      <h2>What a Professional Residential Cleaning Visit Typically Includes</h2>
-      <p>Every home is different, but a strong standard home cleaning usually covers:</p>
-      <ul>
-        <li>Kitchen counters, appliance fronts, and sink area</li>
-        <li>Bathrooms: toilets, tubs/showers, vanities, mirrors</li>
-        <li>Dusting of reachable surfaces</li>
-        <li>Vacuuming and hard-floor mopping</li>
-        <li>Trash emptied (where agreed)</li>
-      </ul>
-      <p>Deep cleaning or move-in/move-out service adds detail work — baseboards, interior windows, cabinet fronts, and heavier buildup. For construction dust, see our <a href="/post-construction-cleaning">post-construction</a> program before switching to maintenance.</p>
-      <h2>Local Advantage: Why a ${a.city} Team Matters</h2>
-      <p>Sparklean serves ${a.neighborhoods}, and surrounding ${a.city} communities every week. We understand Southwest Florida humidity, lanai and patio traffic, and the standards homeowners expect in this market — supervised teams, luxury-grade products, and a 24-hour happiness guarantee.</p>
-      <div class="article-cta">
-        <p>Ready for a cleaner home in ${a.city}? Sparklean is ready when you are.</p>
-        <div class="article-cta-row">
-          <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588 →</a>
-          <a href="/contact" class="btn-outline">Get a Quote</a>
-        </div>
-      </div>
-    </div>
-  </article>
+ <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/blog">Blog</a><span aria-hidden="true">/</span><span class="breadcrumb-current">Residential</span></nav>
+ <article class="article-inner">
+ <span class="article-cat">Residential Cleaning</span>
+ <h1 class="article-title">${title}</h1>
+ <div class="article-byline">Sparklean Cleaning · ${a.city}, Bonita Springs, Fort Myers, Estero &amp; Cape Coral</div>
+ <div class="article-body">
+ <p>If you are searching for house cleaning in ${a.city}, FL, you want a dependable routine, a healthier home, and your weekends back — not another chore list. ${a.localNote}</p>
+ <p>Start with our <a href="/residential-cleaning">luxury residential program</a>, then map it to your neighborhood on our <a href="${a.cityPage}">${a.city} house cleaning page</a>. When you are ready to hold dates, <a href="/contact">request a personalized quote</a> so we can align crew size, frequency, and access.</p>
+ <h2>Why &ldquo;DIY&rdquo; Often Costs More Than a Cleaning Service</h2>
+ <p>Many ${a.city} homeowners try to handle everything themselves — then realize:</p>
+ <ul>
+ <li><strong>Time is the hidden expense.</strong> Deep cleaning kitchens, bathrooms, and floors eats entire Saturdays.</li>
+ <li><strong>Consistency slips first.</strong> Dust returns quickly; baseboards and ceiling fans get skipped when you are tired.</li>
+ <li><strong>Wear and tear shows up</strong> in grout, glass, and finishes when soil sits too long.</li>
+ </ul>
+ <p>A recurring home cleaning plan with Sparklean keeps the baseline high so you only touch up between visits, not start from zero every week.</p>
+ <h2>High-Intent Signs You Should Call Sparklean Today</h2>
+ <ul>
+ <li>You need the home &ldquo;show-ready&rdquo; for guests, seasonal arrival, or a rental turnover.</li>
+ <li>Allergies or pets mean you want floors and dust handled on a schedule.</li>
+ <li>You are juggling work, travel, or family and cleaning keeps falling to the bottom of the list.</li>
+ <li>You want recurring peace of mind — predictable visits and predictable results.</li>
+ </ul>
+ <h2>What a Professional Residential Cleaning Visit Typically Includes</h2>
+ <p>Every home is different, but a strong standard home cleaning usually covers:</p>
+ <ul>
+ <li>Kitchen counters, appliance fronts, and sink area</li>
+ <li>Bathrooms: toilets, tubs/showers, vanities, mirrors</li>
+ <li>Dusting of reachable surfaces</li>
+ <li>Vacuuming and hard-floor mopping</li>
+ <li>Trash emptied (where agreed)</li>
+ </ul>
+ <p>Deep cleaning or move-in/move-out service adds detail work — baseboards, interior windows, cabinet fronts, and heavier buildup. For construction dust, see our <a href="/post-construction-cleaning">post-construction</a> program before switching to maintenance.</p>
+ <h2>Local Advantage: Why a ${a.city} Team Matters</h2>
+ <p>Sparklean serves ${a.neighborhoods}, and surrounding ${a.city} communities every week. We understand Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral humidity, lanai and patio traffic, and the standards homeowners expect in this market — supervised teams, luxury-grade products, and a 24-hour happiness guarantee.</p>
+ <div class="article-cta">
+ <p>Ready for a cleaner home in ${a.city}? Sparklean is ready when you are.</p>
+ <div class="article-cta-row">
+ <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588 →</a>
+ <a href="/contact" class="btn-outline">Get a Quote</a>
+ </div>
+ </div>
+ </div>
+ </article>
 </div>
 
 <section class="service-strip" aria-label="Related Sparklean services">
-  <p>Related services &amp; markets</p>
-  <div class="service-strip-row">
-    <a href="/residential-cleaning">Residential</a>
-    <a href="/post-construction-cleaning">Post-construction</a>
-    <a href="/commercial-cleaning">Commercial</a>
-    <a href="/specialized-cleaning">Add-ons</a>
-    <a href="${a.cityPage}">${a.city}</a>
-    <a href="/house-cleaning-naples">Naples</a>
-    <a href="/house-cleaning-fort-myers">Fort Myers</a>
-    <a href="/house-cleaning-cape-coral">Cape Coral</a>
-    <a href="/contact">Custom quote</a>
-  </div>
+ <p>Related services &amp; markets</p>
+ <div class="service-strip-row">
+ <a href="/residential-cleaning">Residential</a>
+ <a href="/post-construction-cleaning">Post-construction</a>
+ <a href="/commercial-cleaning">Commercial</a>
+ <a href="/specialized-cleaning">Add-ons</a>
+ <a href="${a.cityPage}">${a.city}</a>
+ <a href="/house-cleaning-naples">Naples</a>
+ <a href="/house-cleaning-fort-myers">Fort Myers</a>
+ <a href="/house-cleaning-cape-coral">Cape Coral</a>
+ <a href="/contact">Custom quote</a>
+ </div>
 </section>
 
 <p class="article-foot-note">Know someone in ${a.city} who would value this standard? <a href="/contact">Refer a friend or advisor</a> and we will treat them with the same discretion we bring to your home.</p>
 
 <section class="related-wrap" aria-label="Related articles">
-  <h2 class="related-h">Related <em>Sparklean</em> guides</h2>
-  <div class="related-grid">
-    <a class="related-card" href="/blog/naples-house-cleaning-when-to-hire-a-pro"><span>Residential</span><span>House Cleaning in Naples: When to Hire a Pro</span></a>
-    <a class="related-card" href="/blog/naples-post-construction-cleaning-before-move-in"><span>Post-construction</span><span>Post-Construction Cleaning Before Move-In</span></a>
-    <a class="related-card" href="/blog/naples-commercial-cleaning-high-traffic-venues"><span>Commercial</span><span>Dealerships, Schools &amp; Theaters</span></a>
-  </div>
+ <h2 class="related-h">Related <em>Sparklean</em> guides</h2>
+ <div class="related-grid">
+ <a class="related-card" href="/blog/naples-house-cleaning-when-to-hire-a-pro"><span>Residential</span><span>House Cleaning in Naples: When to Hire a Pro</span></a>
+ <a class="related-card" href="/blog/naples-post-construction-cleaning-before-move-in"><span>Post-construction</span><span>Post-Construction Cleaning Before Move-In</span></a>
+ <a class="related-card" href="/blog/naples-commercial-cleaning-high-traffic-venues"><span>Commercial</span><span>Dealerships, Schools &amp; Theaters</span></a>
+ </div>
 </section>
 
 <section class="newsletter" aria-label="Contact Sparklean">
-  <div class="eyebrow"><div class="ey-line"></div><span>Get a Free Quote Today</span><div class="ey-line"></div></div>
-  <h2>Ready to experience<br><em>the Sparklean difference?</em></h2>
-  <p>Bonded · Insured · Workers' Comp · 24-Hour Happiness Guaranteed<br>Serving Naples, Fort Myers, Bonita Springs, Estero &amp; Cape Coral</p>
-  <div class="nl-btns">
-    <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588 →</a>
-    <a href="/contact" class="btn-outline">Request a quote</a>
-  </div>
+ <div class="eyebrow"><div class="ey-line"></div><span>Get a Free Quote Today</span><div class="ey-line"></div></div>
+ <h2>Ready to experience<br><em>the Sparklean difference?</em></h2>
+ <p>Bonded · Insured · Workers' Comp · 24-Hour Happiness Guaranteed<br>Serving Naples, Fort Myers, Bonita Springs, Estero &amp; Cape Coral</p>
+ <div class="nl-btns">
+ <a href="tel:2398883588" class="btn-gold">Call (239) 888-3588 →</a>
+ <a href="/contact" class="btn-outline">Request a quote</a>
+ </div>
 </section>
 </main>
 
 <footer>
-  <div class="footer-top">
-    <div class="footer-logo-wrap">
-      <img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning" width="200" height="100" loading="lazy" decoding="async">
-      <div class="footer-divider"></div>
-      <div class="footer-cities">
-        <a href="/house-cleaning-naples">Naples</a> &nbsp;·&nbsp;
-        <a href="/house-cleaning-estero">Estero</a> &nbsp;·&nbsp;
-        <a href="/house-cleaning-fort-myers">Fort Myers</a> &nbsp;·&nbsp;
-        <a href="/house-cleaning-bonita-springs">Bonita Springs</a> &nbsp;·&nbsp;
-        <a href="/house-cleaning-cape-coral">Cape Coral</a>
-      </div>
-    </div>
-    <div class="footer-cols">
-      <div>
-        <div class="fcol-t">Quick Links</div>
-        <ul class="fcol-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/about">About Us</a></li>
-          <li><a href="/blog">Blog</a></li>
-          <li><a href="/contact">Get a Quote</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="fcol-t">Our Services</div>
-        <ul class="fcol-links">
-          <li><a href="/residential-cleaning">Residential Cleaning</a></li>
-          <li><a href="/commercial-cleaning">Commercial &amp; Janitorial</a></li>
-          <li><a href="/post-construction-cleaning">Post-Construction</a></li>
-          <li><a href="/specialized-cleaning">Specialized Add-Ons</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="fcol-t">Contact Us</div>
-        <div class="fcol-contact">
-          <a href="tel:2398883588">(239) 888-3588</a>
-          <a href="mailto:info@sparklean.co">info@sparklean.co</a>
-          <a href="https://www.sparklean.co/">www.sparklean.co</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="footer-btm">
-    <div class="footer-copy">© 2026 Sparklean Cleaning. All Rights Reserved.</div>
-  </div>
+ <div class="footer-top">
+ <div class="footer-logo-wrap">
+ <img src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning" width="200" height="100" loading="lazy" decoding="async">
+ <div class="footer-divider"></div>
+ <div class="footer-cities">
+ <a href="/house-cleaning-naples">Naples</a> &nbsp;·&nbsp;
+ <a href="/house-cleaning-estero">Estero</a> &nbsp;·&nbsp;
+ <a href="/house-cleaning-fort-myers">Fort Myers</a> &nbsp;·&nbsp;
+ <a href="/house-cleaning-bonita-springs">Bonita Springs</a> &nbsp;·&nbsp;
+ <a href="/house-cleaning-cape-coral">Cape Coral</a>
+ </div>
+ </div>
+ <div class="footer-cols">
+ <div>
+ <div class="fcol-t">Quick Links</div>
+ <ul class="fcol-links">
+ <li><a href="/">Home</a></li>
+ <li><a href="/about">About Us</a></li>
+ <li><a href="/blog">Blog</a></li>
+ <li><a href="/contact">Get a Quote</a></li>
+ </ul>
+ </div>
+ <div>
+ <div class="fcol-t">Our Services</div>
+ <ul class="fcol-links">
+ <li><a href="/residential-cleaning">Residential Cleaning</a></li>
+ <li><a href="/commercial-cleaning">Commercial &amp; Janitorial</a></li>
+ <li><a href="/post-construction-cleaning">Post-Construction</a></li>
+ <li><a href="/specialized-cleaning">Specialized Add-Ons</a></li>
+ </ul>
+ </div>
+ <div>
+ <div class="fcol-t">Contact Us</div>
+ <div class="fcol-contact">
+ <a href="tel:2398883588">(239) 888-3588</a>
+ <a href="mailto:info@sparklean.co">info@sparklean.co</a>
+ <a href="https://www.sparklean.co/">www.sparklean.co</a>
+ </div>
+ </div>
+ </div>
+ </div>
+ <div class="footer-btm">
+ <div class="footer-copy">© 2026 Sparklean Cleaning. All Rights Reserved.</div>
+ </div>
 </footer>
 
 <script>
 (function(){
-  var body=document.body;
-  var hb=document.getElementById('hamburger');
-  var mm=document.getElementById('mobileMenu');
-  var menuOpen=false;
-  function syncScrollLock(){body.classList.toggle('is-scroll-locked',menuOpen);}
-  function setMobileMenu(open){
-    if(!hb||!mm){menuOpen=!!open;syncScrollLock();return;}
-    hb.setAttribute('aria-expanded',open?'true':'false');
-    hb.setAttribute('aria-label',open?'Close menu':'Open menu');
-    if(open){
-      menuOpen=true;
-      mm.removeAttribute('hidden');
-      syncScrollLock();
-      requestAnimationFrame(function(){
-        if(!menuOpen)return;
-        hb.classList.add('open');
-        mm.classList.add('open');
-      });
-    }else{
-      hb.classList.remove('open');
-      mm.classList.remove('open');
-      mm.setAttribute('hidden','');
-      menuOpen=false;
-      syncScrollLock();
-    }
-  }
-  document.addEventListener('keydown',function(e){
-    if(e.key==='Escape'&&menuOpen){e.preventDefault();setMobileMenu(false);}
-  });
-  if(hb&&mm){
-    hb.addEventListener('click',function(){setMobileMenu(!mm.classList.contains('open'));});
-    mm.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){setMobileMenu(false);});});
-  }
-  if(mm&&!mm.hasAttribute('hidden'))mm.setAttribute('hidden','');
-  if(hb)hb.setAttribute('aria-expanded','false');
+ var body=document.body;
+ var hb=document.getElementById('hamburger');
+ var mm=document.getElementById('mobileMenu');
+ var menuOpen=false;
+ function syncScrollLock(){body.classList.toggle('is-scroll-locked',menuOpen);}
+ function setMobileMenu(open){
+ if(!hb||!mm){menuOpen=!!open;syncScrollLock();return;}
+ hb.setAttribute('aria-expanded',open?'true':'false');
+ hb.setAttribute('aria-label',open?'Close menu':'Open menu');
+ if(open){
+ menuOpen=true;
+ mm.removeAttribute('hidden');
+ syncScrollLock();
+ requestAnimationFrame(function(){
+ if(!menuOpen)return;
+ hb.classList.add('open');
+ mm.classList.add('open');
+ });
+ }else{
+ hb.classList.remove('open');
+ mm.classList.remove('open');
+ mm.setAttribute('hidden','');
+ menuOpen=false;
+ syncScrollLock();
+ }
+ }
+ document.addEventListener('keydown',function(e){
+ if(e.key==='Escape'&&menuOpen){e.preventDefault();setMobileMenu(false);}
+ });
+ if(hb&&mm){
+ hb.addEventListener('click',function(){setMobileMenu(!mm.classList.contains('open'));});
+ mm.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){setMobileMenu(false);});});
+ }
+ if(mm&&!mm.hasAttribute('hidden'))mm.setAttribute('hidden','');
+ if(hb)hb.setAttribute('aria-expanded','false');
 })();
 </script>
 <script src="/js/serviceFlows.js"></script>
@@ -367,7 +367,7 @@ ${JSON.stringify(jsonLd)}
 }
 
 for (const a of articles) {
-  const file = path.join(OUT, `${a.slug}.html`);
-  fs.writeFileSync(file, buildArticle(a), "utf8");
-  console.log("wrote", file);
+ const file = path.join(OUT, `${a.slug}.html`);
+ fs.writeFileSync(file, buildArticle(a), "utf8");
+ console.log("wrote", file);
 }

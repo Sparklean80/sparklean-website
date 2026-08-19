@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (Cape Coral Semrush city-ownership SEO — all 5 cities done)
+Last updated: **2026-08-19** (five-city territory ban — SWFL/Marco scrub; not deployed yet)
 
 ---
 
@@ -290,7 +290,8 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 | Canonical `@id` | `https://www.sparklean.co/#organization` |
 | `@type` | `Organization` + `LocalBusiness` only (not deprecated `ProfessionalService`) |
 | Legal name | Sparklean Cleaning LLC (never “corporation”) |
-| Locked description | Professionally managed and supervised residential and commercial cleaning company serving Southwest Florida |
+| Locked description | Professionally managed and supervised residential and commercial cleaning company serving Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral |
+| Service markets | **Five cities only:** Naples, Bonita Springs, Estero, Fort Myers, Cape Coral — do **not** publish Southwest Florida / SW Florida / SW FL / Marco Island as territory copy or schema `areaServed` |
 | Address in schema | **None** — service-area business; no partial PostalAddress |
 | Source module | `data/sparklean-entity.mjs` |
 | Sync | `npm run schema:sync` |
@@ -404,6 +405,10 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 **Cape Coral city page SEO ownership (2026-08-19):** Same Semrush pattern. Title/H1/schema: `House Cleaning Services in Cape Coral, Florida`. Canal-homes angle kept (Cape Harbour, Tarpon Point, Sandoval, Cape Royal). Breadcrumb: Home → Residential Cleaning → Cape Coral. Marquee maid wording removed. Hero CTA: Build My Cleaning Plan. Full-frame mobile hero + desktop photo below header + mobile 24h badge bottom-right. **All five city money pages now on this pattern.**
 
 **Desktop hero sharpness (2026-08-19):** All photo-hero pages use **1400 JPG** (not heavily compressed WebP) for desktop `.hero-bg` / homepage `<img>` / residential hero `<img>` / contact CSS / About local JPGs. Desktop `zoomIn` / scale animation removed (`css/hero-desktop-sharp.css`). Mobile still uses WebP sources + existing contain layout. Pages: `/`, `/house-cleaning-{naples,bonita-springs,estero,fort-myers,cape-coral}`, `/residential-cleaning`, `/commercial-cleaning`, `/post-construction-cleaning`, `/vacation-rental-cleaning`, `/specialized-cleaning`, `/contact`, `/about`. No larger-than-1400 originals in repo.
+
+**Technical SEO correction (2026-08-19, local — not deployed until tests green):** Added `<!DOCTYPE html>` as first bytes on the nine money pages Semrush flagged. Stripped UTF-8 BOM from all 12 blog HTML files. Demoted mobile duplicate `<h1>` → `<p class="hero-mobile-h">` on about, commercial, contact, post-construction, specialized (cities already correct). `/customer-portal` set `noindex, follow` and excluded from `sitemap.xml` via `generate-sitemap.mjs`. Homepage entity drift from Naples-led rebuild restored to approved five-city `LOCKED_DESCRIPTION` + registered-business insurance wording (via `schema:sync` + body copy; tests not weakened). New suite: `npm run test:html-seo` (doctype / BOM / single H1 / portal). Aggregate: `npm run test:site`.
+
+**Five-city territory ban (2026-08-19, local — not deployed):** Removed all published uses of Southwest Florida / SW Florida / SW FL / Marco Island from live HTML, entity schema, intake JS, and quote function fallbacks. Markets are Naples, Bonita Springs, Estero, Fort Myers, Cape Coral only. Blog JSON-LD trailing commas from Marco strip fixed; `schema:sync` + `npm run test:site` green. Generators scrubbed so rebuild scripts do not reintroduce banned phrases.
 
 **City reviews + cost-factors UI (2026-08-18):** Pricing clarity rebuilt as an editorial label/description list (not smashed inline text). Styles inlined on city pages + shared `sparklean-luxury-flow.css`. Google Reviews simplified to centered rating + one city line + one CTA. All five city pages.
 

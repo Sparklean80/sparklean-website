@@ -206,7 +206,7 @@ function enhanceResidential() {
     if (html.includes('<div class="trust">')) {
       html = html.replace(
         /(<div class="trust">[\s\S]*?<\/div>\s*<\/div>\s*)/,
-        `$1${paidMatch("Southwest Florida")}`
+        `$1${paidMatch("Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral")}`
       );
       changes.push("paid-match");
     }
@@ -217,14 +217,14 @@ function enhanceResidential() {
         ? '<section class="faq"'
         : html.match(/<section[^>]*id="faq"[^>]*>/)?.[0];
       if (marker) {
-        html = html.replace(marker, `${costSection("Southwest Florida")}\n${marker}`);
+        html = html.replace(marker, `${costSection("Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral")}\n${marker}`);
         changes.push("cost-factors");
       }
     } else if (html.includes('<section class="tiers"')) {
       // insert before tiers end / before a late section
       html = html.replace(
         /(<section class="cta"|<footer)/,
-        `${costSection("Southwest Florida")}\n$1`
+        `${costSection("Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral")}\n$1`
       );
       changes.push("cost-factors-fallback");
     }

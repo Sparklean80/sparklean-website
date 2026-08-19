@@ -17,21 +17,20 @@ export const LOGO_URL = "/images/branding/Sparklean_Logo_Transparent.png";
 
 /** Locked public positioning (exact). */
 export const LOCKED_DESCRIPTION =
-  "Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Southwest Florida.";
+  "Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.";
 
 export const PHONE_E164 = "+1-239-888-3588";
 export const PHONE_DISPLAY = "(239) 888-3588";
 export const EMAIL = "info@sparklean.co";
 export const PRICE_RANGE = "$$$";
 
-/** Complete service territory — six markets (no branch entities). */
+/** Complete service territory — five markets (no branch entities). */
 export const SERVICE_AREA_NAMES = [
   "Naples",
   "Bonita Springs",
   "Estero",
   "Fort Myers",
   "Cape Coral",
-  "Marco Island",
 ];
 
 /**
@@ -88,14 +87,11 @@ export const CITY_PAGES = {
 };
 
 export function areaServedNodes() {
-  return [
-    { "@type": "AdministrativeArea", name: "Southwest Florida" },
-    ...SERVICE_AREA_NAMES.map((name) => ({
-      "@type": "City",
-      name,
-      containedInPlace: { "@type": "State", name: "Florida" },
-    })),
-  ];
+  return SERVICE_AREA_NAMES.map((name) => ({
+    "@type": "City",
+    name,
+    containedInPlace: { "@type": "State", name: "Florida" },
+  }));
 }
 
 export function founderNodes() {
@@ -137,7 +133,7 @@ export function offerCatalog() {
           provider: { "@id": ORG_ID },
           areaServed: areaServedNodes(),
           description:
-            "Recurring house cleaning, deep cleaning, move-in/move-out, and white-glove residential care across Southwest Florida.",
+            "Recurring house cleaning, deep cleaning, move-in/move-out, and white-glove residential care in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
         },
       },
       {
@@ -150,7 +146,7 @@ export function offerCatalog() {
           provider: { "@id": ORG_ID },
           areaServed: areaServedNodes(),
           description:
-            "Office, medical, dealership, school, and high-traffic commercial cleaning across Southwest Florida.",
+            "Office, medical, dealership, school, and high-traffic commercial cleaning in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
         },
       },
       {
@@ -163,7 +159,7 @@ export function offerCatalog() {
           provider: { "@id": ORG_ID },
           areaServed: areaServedNodes(),
           description:
-            "Rough and final post-construction cleaning for new builds and remodels in Southwest Florida.",
+            "Rough and final post-construction cleaning for new builds and remodels in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
         },
       },
       {
@@ -189,7 +185,7 @@ export function offerCatalog() {
           provider: { "@id": ORG_ID },
           areaServed: areaServedNodes(),
           description:
-            "Airbnb and short-term rental turnover cleaning with lockbox access and guest-ready finishes across Southwest Florida.",
+            "Airbnb and short-term rental turnover cleaning with lockbox access and guest-ready finishes in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
         },
       },
     ],

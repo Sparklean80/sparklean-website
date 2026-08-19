@@ -115,7 +115,9 @@ assert(netlify.includes('from = "/refer"'), "refer rewrite");
 assert(netlify.includes('from = "/partners"'), "partners rewrite");
 
 const home = read("index.html");
-assert(home.includes('data-sparklean-intake-preset="recurringResidential"'), "homepage primary recurring CTA");
+// Homepage is Naples-led brand hub: open intake without forcing recurring preset.
+// Recurring residential ownership lives on /residential-cleaning (asserted below).
+assert(home.includes("data-sparklean-intake"), "homepage primary quote intake CTA");
 assert(home.includes("/why-sparklean"), "homepage links Why Sparklean");
 assert(home.includes("/js/sparklean-events.js"), "homepage loads events helper");
 

@@ -59,7 +59,7 @@ const schema = {
       legalName: "Sparklean Cleaning LLC",
       alternateName: ["Sparklean", "Sparklean Cleaning LLC"],
       description:
-        "Sparklean Cleaning is a luxury residential and commercial cleaning company serving Naples and Southwest Florida with direct employees and supervised teams.",
+        "Sparklean Cleaning is a luxury residential and commercial cleaning company serving Naples and Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral with direct employees and supervised teams.",
       url: "https://www.sparklean.co/",
       telephone: "+1-239-888-3588",
       email: "info@sparklean.co",
@@ -90,7 +90,7 @@ const schema = {
         },
       ],
       areaServed: [
-        { "@type": "AdministrativeArea", name: "Southwest Florida" },
+        { "@type": "AdministrativeArea", name: "Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral" },
         {
           "@type": "City",
           name: "Naples",
@@ -131,7 +131,7 @@ const schema = {
               url: "https://www.sparklean.co/residential-cleaning",
               provider: { "@id": "https://www.sparklean.co/#organization" },
               description:
-                "One-time, deep, move-in/move-out, and recurring residential cleaning across Southwest Florida.",
+                "One-time, deep, move-in/move-out, and recurring residential cleaning across Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
             },
           },
           {
@@ -143,7 +143,7 @@ const schema = {
               url: "https://www.sparklean.co/commercial-cleaning",
               provider: { "@id": "https://www.sparklean.co/#organization" },
               description:
-                "Office, medical, dealership, and commercial cleaning across Southwest Florida.",
+                "Office, medical, dealership, and commercial cleaning across Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
             },
           },
           {
@@ -155,7 +155,7 @@ const schema = {
               url: "https://www.sparklean.co/post-construction-cleaning",
               provider: { "@id": "https://www.sparklean.co/#organization" },
               description:
-                "Rough and final post-construction cleaning for new builds and remodels in Southwest Florida.",
+                "Rough and final post-construction cleaning for new builds and remodels in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
             },
           },
           {
@@ -167,7 +167,7 @@ const schema = {
               url: "https://www.sparklean.co/vacation-rental-cleaning",
               provider: { "@id": "https://www.sparklean.co/#organization" },
               description:
-                "Vacation rental turnover and property-care cleaning across Southwest Florida.",
+                "Vacation rental turnover and property-care cleaning across Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
             },
           },
         ],
@@ -196,7 +196,7 @@ const schema = {
       url: "https://www.sparklean.co/",
       name: "Sparklean Cleaning",
       description:
-        "Luxury residential and commercial cleaning in Naples and Southwest Florida.",
+        "Luxury residential and commercial cleaning in Naples and Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
       publisher: { "@id": "https://www.sparklean.co/#organization" },
       inLanguage: "en-US",
     },
@@ -204,7 +204,7 @@ const schema = {
       "@type": "WebPage",
       "@id": "https://www.sparklean.co/#webpage",
       url: "https://www.sparklean.co/",
-      name: "Luxury Cleaning Services in Naples & Southwest Florida | Sparklean",
+      name: "Luxury Cleaning Services in Naples & Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral | Sparklean",
       description:
         "Luxury residential, commercial, post-construction and vacation-rental cleaning in Naples, Bonita Springs, Estero, Fort Myers and Cape Coral.",
       isPartOf: { "@id": "https://www.sparklean.co/#website" },
@@ -275,12 +275,12 @@ const homepageCss = `
 const sections = `
 <section class="hero" id="home">
   <div class="hero-bg">
-    <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp" alt="Sparklean luxury residential cleaning team preparing a Southwest Florida home" width="1400" height="900" fetchpriority="high" decoding="async">
+    <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp" alt="Sparklean luxury residential cleaning team preparing a Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral home" width="1400" height="900" fetchpriority="high" decoding="async">
   </div>
   <div class="hero-ov"></div>
   <div class="hero and-content hero-content">
     <div class="hero-tag"><div class="hero-tag-line"></div><span>Luxury Residential &amp; Commercial Cleaning</span></div>
-    <h1>Luxury Cleaning Services in <em>Naples</em> &amp; Across Southwest Florida</h1>
+    <h1>Luxury Cleaning Services in <em>Naples</em> &amp; Across Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral</h1>
     <p class="hero-benefit">Exceptional care for your property—without a one-size-fits-all commitment.</p>
     <p class="hero-sub">Begin with one personalized cleaning or choose ongoing care for your home, business, construction project, or vacation property. Sparklean’s supervised teams serve Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral with the same attention to detail and accountability.</p>
     <div class="hero-guar">✦ 24-Hour Happiness Guarantee</div>
@@ -293,7 +293,7 @@ const sections = `
     <a class="hero-google-proof" href="${GOOGLE_REVIEWS}" target="_blank" rel="noopener noreferrer" data-sparklean-event="google_review_click" data-sparklean-event-type="hero">
       <div><div class="hs-n">4.9★</div><div class="hs-l">Google Rating</div></div>
     </a>
-    <div><div class="hs-n">SW FL</div><div class="hs-l">Service Area</div></div>
+    <div><div class="hs-n">Five Cities</div><div class="hs-l">Service Area</div></div>
   </div>
 </section>
 
@@ -360,7 +360,7 @@ const sections = `
   <div class="founder-inner">
     <div class="eyebrow"><div class="ey-line"></div><span>From our founder</span><div class="ey-line"></div></div>
     <h2 class="sec-h" id="founder-story-h">Care is where the<br><em>Sparklean standard</em> begins.</h2>
-    <p class="founder-lede">Roxy rebuilt her life in Southwest Florida with a belief that caring for someone’s property is personal. Her background in medicine shaped a company built around precision, responsibility, and respect for every space entrusted to its team.</p>
+    <p class="founder-lede">Roxy rebuilt her life in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral with a belief that caring for someone’s property is personal. Her background in medicine shaped a company built around precision, responsibility, and respect for every space entrusted to its team.</p>
     <div class="founder-cinematic">
       <div class="founder-cinematic__chrome">
         <div class="founder-cinematic__ratio">
@@ -386,14 +386,14 @@ const sections = `
     </div>
     <p class="founder-tagline">Experience the Sparklean standard</p>
     <a class="founder-soft-cta" href="#founder-message" id="founder-story-cta">Meet Roxy and Hear Her Story</a>
-    <p class="founder-trust-line">Trusted in homes across Southwest Florida</p>
+    <p class="founder-trust-line">Trusted in homes across Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral</p>
   </div>
 </section>
 
 <section class="about" id="about">
   <div class="about-grid">
     <div class="about-imgs">
-      <img class="about-main" src="/images/heroes/69b21c8b4a74322eaf0b5148_1000051954-6f5aa8b3-1400.webp" alt="Sparklean team reviewing service details in a luxury Southwest Florida home" loading="lazy" decoding="async">
+      <img class="about-main" src="/images/heroes/69b21c8b4a74322eaf0b5148_1000051954-6f5aa8b3-1400.webp" alt="Sparklean team reviewing service details in a luxury Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral home" loading="lazy" decoding="async">
       <img class="about-float" src="/images/heroes/69b21cae1dbe6ede803ef701_1000051474-0fcae9d8-1400.webp" alt="Sparklean team lead directing a supervised cleaning crew" loading="lazy" decoding="async">
       <div class="about-badge"><div class="about-badge-n">24h</div><div class="about-badge-t">Happiness Guaranteed</div></div>
     </div>
@@ -401,7 +401,7 @@ const sections = `
       <div class="eyebrow"><div class="ey-line"></div><span>The Sparklean Standard</span></div>
       <h2 class="sec-h">Luxury is knowing every<br>detail is <em>accounted for.</em></h2>
       <div class="gold-line"></div>
-      <p class="about-body">A beautiful result matters. So does knowing who entered your property, how the work was supervised, and who is accountable if something needs attention. Sparklean combines attentive cleaning with direct employees, consistent standards, and responsive management for homes and businesses across Southwest Florida.</p>
+      <p class="about-body">A beautiful result matters. So does knowing who entered your property, how the work was supervised, and who is accountable if something needs attention. Sparklean combines attentive cleaning with direct employees, consistent standards, and responsive management for homes and businesses across Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.</p>
       <ul class="checks">
         <li><span class="ck-icon">✦</span><div class="ck-t"><strong>Discreet, Professional Teams</strong>Uniformed employees who treat your property, privacy, and preferences with respect.</div></li>
         <li><span class="ck-icon">✦</span><div class="ck-t"><strong>Consistent Supervision</strong>A team lead helps maintain the same standard from one visit to the next.</div></li>
@@ -507,12 +507,12 @@ const sections = `
   <h2 class="sec-h" style="margin-bottom:14px;text-align:center">4.9★ on <em>Google</em></h2>
   <div class="rev-band rev-band--google-only">
     <div>
-      <p class="rev-sub">Homeowners and businesses throughout Southwest Florida use Sparklean for one-time projects and ongoing property care. Read current feedback directly on Sparklean’s live Google profile.</p>
+      <p class="rev-sub">Homeowners and businesses throughout Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral use Sparklean for one-time projects and ongoing property care. Read current feedback directly on Sparklean’s live Google profile.</p>
       <div class="rev-stats">
         <a class="rev-google-proof" href="${GOOGLE_REVIEWS}" target="_blank" rel="noopener noreferrer" data-sparklean-event="google_review_click" data-sparklean-event-type="reviews">
           <div><div class="rev-stat-n">4.9</div><div class="rev-stat-l">★★★★★<br>Google Rating</div></div>
         </a>
-        <div><div class="rev-stat-n">SW FL</div><div class="rev-stat-l">Service<br>Area</div></div>
+        <div><div class="rev-stat-n">Five Cities</div><div class="rev-stat-l">Service<br>Area</div></div>
         <div><div class="rev-stat-n">24h</div><div class="rev-stat-l">Happiness<br>Guarantee</div></div>
       </div>
       <p class="rev-google-cta" style="margin-top:22px;">
@@ -525,7 +525,7 @@ const sections = `
 <section class="areas" id="areas">
   <div class="areas-head">
     <div class="eyebrow"><div class="ey-line"></div><span>Service Areas</span><div class="ey-line"></div></div>
-    <h2 class="sec-h" style="margin-top:11px;text-align:center">Luxury cleaning throughout<br><em>Southwest Florida.</em></h2>
+    <h2 class="sec-h" style="margin-top:11px;text-align:center">Luxury cleaning throughout<br><em>Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.</em></h2>
     <p class="areas-intro">Sparklean brings the same supervised service, professional standards, and 24-hour happiness guarantee to homes and businesses across the region. Explore cleaning services available in your community.</p>
   </div>
   <div class="areas-grid">
@@ -658,7 +658,7 @@ const homeQuoteScript = `
 
 html = html.replace(
   /<title>[\s\S]*?<\/title>/,
-  "<title>Luxury Cleaning Services in Naples &amp; Southwest Florida | Sparklean</title>"
+  "<title>Luxury Cleaning Services in Naples &amp; Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral | Sparklean</title>"
 );
 
 html = html.replace(
@@ -673,7 +673,7 @@ html = html.replace(
 
 html = html.replace(
   /<meta property="og:title" content="[^"]*">/,
-  '<meta property="og:title" content="Luxury Cleaning Services in Naples &amp; Southwest Florida | Sparklean">'
+  '<meta property="og:title" content="Luxury Cleaning Services in Naples &amp; Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral | Sparklean">'
 );
 html = html.replace(
   /<meta property="og:description" content="[^"]*">/,
@@ -681,7 +681,7 @@ html = html.replace(
 );
 html = html.replace(
   /<meta name="twitter:title" content="[^"]*">/,
-  '<meta name="twitter:title" content="Luxury Cleaning Services in Naples &amp; Southwest Florida | Sparklean">'
+  '<meta name="twitter:title" content="Luxury Cleaning Services in Naples &amp; Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral | Sparklean">'
 );
 html = html.replace(
   /<meta name="twitter:description" content="[^"]*">/,

@@ -64,9 +64,16 @@ for (const rel of pages) {
       !/>\s*96\+?\s*</.test(html) && !/Google<br>\s*Reviews/.test(html),
       `${rel} does not hard-code a Google review count chip`
     );
-    assert(
+    // Approved city pattern (2026-08-18): centered “4.9★ on Google” + live reviews CTA.
+    // Older pages may still use rev-stat-n card markup.
+    const hasStatCard =
       html.includes(`rev-stat-n">${GOOGLE_RATING_DISPLAY}<`) ||
-        html.includes(`rev-stat-n">${GOOGLE_RATING_DISPLAY}</`),
+      html.includes(`rev-stat-n">${GOOGLE_RATING_DISPLAY}</`);
+    const hasCenteredRating =
+      html.includes(`>${GOOGLE_RATING_DISPLAY}★ on`) ||
+      html.includes(`>${GOOGLE_RATING_DISPLAY}★ on <em>Google</em>`);
+    assert(
+      hasStatCard || hasCenteredRating,
       `${rel} keeps visible ${GOOGLE_RATING_DISPLAY} Google rating card`
     );
     assert(
