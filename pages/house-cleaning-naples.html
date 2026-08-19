@@ -473,6 +473,15 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  display: block !important;
  transform: none !important;
  }
+ /* Portrait window-cleaning shot: do not landscape-crop the squeegee / body. */
+ .photo-pair .pp-img--portrait {
+ height: auto !important;
+ min-height: 0 !important;
+ max-height: none !important;
+ aspect-ratio: auto !important;
+ object-fit: contain !important;
+ object-position: center center !important;
+ }
  .ni-img-wrap,
  .sb-img-wrap,
  .pp-item {
@@ -828,7 +837,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  </div>
  </div>
  <div class="pp-item">
- <img class="pp-img" src="/images/heroes/69b3279517a241efe0394bba_1000051456-87df2f7a-1400.webp" alt="Sparklean team cleaning windows in Naples luxury home">
+ <img class="pp-img pp-img--portrait" src="/images/heroes/69b3279517a241efe0394bba_1000051456-87df2f7a-1400.webp" alt="Sparklean team cleaning windows in Naples luxury home">
  <div class="pp-label">
  <div class="pp-label-t">Spotless, Streak-Free Results</div>
  <div class="pp-label-s">Interior Detailing · Naples FL</div>
