@@ -146,12 +146,6 @@
     min-width: 0;
   }
 
-  .site-header .nav-logo img {
-    height: 48px !important;
-    max-width: 120px;
-    width: auto !important;
-  }
-
   .site-header .nav-right {
     gap: 6px !important;
     flex-shrink: 0;
