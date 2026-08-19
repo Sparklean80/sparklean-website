@@ -590,7 +590,12 @@ body.site-header-v2 {
   }
 
   .site-header .nav-btn {
-    display: none !important;
+    display: inline-flex !important;
+    padding: 8px 10px !important;
+    font-size: 0.42rem !important;
+    letter-spacing: 0.08em !important;
+    max-width: min(148px, 40vw);
+    overflow: hidden;
   }
 
   .rewards-topbar-inner {
