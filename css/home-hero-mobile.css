@@ -1,64 +1,120 @@
 /**
- * Homepage hero — mobile/tablet: full photo, no crop.
- * Loaded last so it wins over absolute/cover hero CSS.
+ * Homepage wipe-photo hero — mobile-first.
+ * Default = full uncropped photo (cleaner + artwork).
+ * Cinematic cover ONLY on large desktops.
  */
-@media (max-width: 1024px) {
-  #home.hero {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    justify-content: flex-start !important;
-    min-height: 0 !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
+#home.hero {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow: visible !important;
+}
 
-  /* Kill absolute full-bleed shell — use .hero-photo-full instead */
-  #home.hero .hero-bg {
-    display: none !important;
-  }
+#home.hero .hero-bg,
+#home.hero .hero-ov {
+  display: none !important;
+}
 
-  #home.hero .hero-photo-full {
-    display: block !important;
-    position: static !important;
-    width: 100% !important;
-    height: auto !important;
-    object-fit: initial !important;
-    transform: none !important;
-    animation: none !important;
-    order: -1;
-  }
+#home.hero .hero-photo-full {
+  display: block !important;
+  position: static !important;
+  order: -1 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: initial !important;
+  transform: none !important;
+  animation: none !important;
+}
 
-  #home.hero .hero-ov {
-    display: none !important;
-  }
+#home.hero .hero-content {
+  position: relative !important;
+  z-index: 2 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 40px 28px 56px !important;
+  background: #11100e !important;
+  box-sizing: border-box !important;
+}
 
-  #home.hero .hero-content {
-    position: relative !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 40px 28px 56px !important;
-    background: #11100e !important;
-  }
+#home.hero .hero-content::before {
+  content: none !important;
+  display: none !important;
+}
 
-  #home.hero .hero-stats {
-    position: static !important;
-    order: 3 !important;
-    display: flex !important;
-    justify-content: center !important;
-    gap: 36px !important;
-    margin: 0 !important;
-    padding: 18px 20px 28px !important;
-    background: #11100e !important;
-    border: 0 !important;
-    border-top: 1px solid rgba(201, 168, 76, 0.12) !important;
-    backdrop-filter: none !important;
-  }
+#home.hero .hero-stats {
+  position: static !important;
+  order: 3 !important;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 36px !important;
+  margin: 0 !important;
+  padding: 18px 20px 28px !important;
+  background: #11100e !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(201, 168, 76, 0.12) !important;
+  backdrop-filter: none !important;
+  opacity: 1 !important;
+  animation: none !important;
 }
 
 @media (max-width: 640px) {
   #home.hero .hero-content {
     padding: 32px 20px 44px !important;
+  }
+}
+
+/* Large desktop only: cinematic absolute cover */
+@media (min-width: 1100px) {
+  #home.hero {
+    min-height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    overflow: hidden !important;
+  }
+
+  #home.hero .hero-photo-full {
+    display: none !important;
+  }
+
+  #home.hero .hero-bg {
+    display: block !important;
+    position: absolute !important;
+    inset: -2px !important;
+    overflow: hidden !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  #home.hero .hero-bg img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: left center !important;
+  }
+
+  #home.hero .hero-ov {
+    display: block !important;
+  }
+
+  #home.hero .hero-content {
+    background: transparent !important;
+    max-width: 820px !important;
+    padding: calc(var(--header-total, 120px) + 60px) 80px 80px 160px !important;
+  }
+
+  #home.hero .hero-stats {
+    position: absolute !important;
+    bottom: 52px !important;
+    right: 72px !important;
+    order: initial !important;
+    background: rgba(14, 14, 14, 0.55) !important;
+    border: 1px solid rgba(201, 168, 76, 0.15) !important;
+    padding: 20px 32px !important;
   }
 }
