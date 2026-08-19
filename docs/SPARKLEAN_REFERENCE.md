@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (five-city territory ban — SWFL/Marco scrub; not deployed yet)
+Last updated: **2026-08-19** (five-city territory + blog JSON-LD idempotency live on production)
 
 ---
 
@@ -406,11 +406,11 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **Desktop hero sharpness (2026-08-19):** All photo-hero pages use **1400 JPG** (not heavily compressed WebP) for desktop `.hero-bg` / homepage `<img>` / residential hero `<img>` / contact CSS / About local JPGs. Desktop `zoomIn` / scale animation removed (`css/hero-desktop-sharp.css`). Mobile still uses WebP sources + existing contain layout. Pages: `/`, `/house-cleaning-{naples,bonita-springs,estero,fort-myers,cape-coral}`, `/residential-cleaning`, `/commercial-cleaning`, `/post-construction-cleaning`, `/vacation-rental-cleaning`, `/specialized-cleaning`, `/contact`, `/about`. No larger-than-1400 originals in repo.
 
-**Technical SEO correction (2026-08-19, local — not deployed until tests green):** Added `<!DOCTYPE html>` as first bytes on the nine money pages Semrush flagged. Stripped UTF-8 BOM from all 12 blog HTML files. Demoted mobile duplicate `<h1>` → `<p class="hero-mobile-h">` on about, commercial, contact, post-construction, specialized (cities already correct). `/customer-portal` set `noindex, follow` and excluded from `sitemap.xml` via `generate-sitemap.mjs`. Homepage entity drift from Naples-led rebuild restored to approved five-city `LOCKED_DESCRIPTION` + registered-business insurance wording (via `schema:sync` + body copy; tests not weakened). New suite: `npm run test:html-seo` (doctype / BOM / single H1 / portal). Aggregate: `npm run test:site`.
+**Technical SEO correction (2026-08-19, production `6a85f4005a60ffac220e184c`):** Added `<!DOCTYPE html>` as first bytes on the nine money pages Semrush flagged. Stripped UTF-8 BOM from all 12 blog HTML files. Demoted mobile duplicate `<h1>` → `<p class="hero-mobile-h">` on about, commercial, contact, post-construction, specialized (cities already correct). `/customer-portal` set `noindex, follow` and excluded from `sitemap.xml` via `generate-sitemap.mjs`. Homepage entity drift from Naples-led rebuild restored to approved five-city `LOCKED_DESCRIPTION` + registered-business insurance wording (via `schema:sync` + body copy; tests not weakened). New suite: `npm run test:html-seo` (doctype / BOM / single H1 / portal). Aggregate: `npm run test:site`.
 
-**Blog JSON-LD idempotency (2026-08-19, not production):** `syncBlogArticles()` used to strip only Organization nodes, then prepend canonical Organization + founders + Website. Founder and Website nodes survived each `schema:sync`, stacking 14 copies of `#founder-tony-giuliano`, `#founder-roxana-tellez`, and `#website`. Sync now strips those shared canonical nodes, then `writePage` dedupes top-level `@graph` by `@id`. `npm run test:schema` asserts unique `@id` values in every public `@graph` and that each of the 12 blog articles has one copy of org/founders/website.
+**Blog JSON-LD idempotency (2026-08-19, production):** `syncBlogArticles()` used to strip only Organization nodes, then prepend canonical Organization + founders + Website. Founder and Website nodes survived each `schema:sync`, stacking 14 copies of `#founder-tony-giuliano`, `#founder-roxana-tellez`, and `#website`. Sync now strips those shared canonical nodes, then `writePage` dedupes top-level `@graph` by `@id`. `npm run test:schema` asserts unique `@id` values in every public `@graph` and that each of the 12 blog articles has one copy of org/founders/website.
 
-**Five-city territory ban (2026-08-19, preview only — not production):** Removed Southwest Florida / SW Florida / SW FL / Marco Island from published HTML, schema, intake, and generators. Review FAIL follow-up: decoded blog UTF-8 mojibake, unique About meta city list, homepage hero quote CTA `/contact?quote=1#quote-intake`, plus html-seo regressions for those.
+**Five-city territory ban (2026-08-19, production):** Removed Southwest Florida / SW Florida / SW FL / Marco Island from published HTML, schema, intake, and generators. Review FAIL follow-up: decoded blog UTF-8 mojibake, unique About meta city list, homepage hero quote CTA `/contact?quote=1#quote-intake`, plus html-seo regressions for those.
 
 **City reviews + cost-factors UI (2026-08-18):** Pricing clarity rebuilt as an editorial label/description list (not smashed inline text). Styles inlined on city pages + shared `sparklean-luxury-flow.css`. Google Reviews simplified to centered rating + one city line + one CTA. All five city pages.
 
