@@ -184,9 +184,9 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 <script src="/js/sparklean-ads.js"></script>
 <script src="/js/sparklean-events.js"></script>
 
-<style id="homepage-rebuild-2026-08-18-hero-ratio">
+<style id="homepage-rebuild-2026-08-18-hero-full">
 .hero-bg{position:absolute;inset:-2px;overflow:hidden;}
-.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;animation:zoomIn 14s ease-out forwards;}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:left center;display:block;animation:zoomIn 14s ease-out forwards;}
 .hero-benefit{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.35rem);line-height:1.45;color:var(--white);margin-bottom:14px;opacity:0;animation:up 1s .58s forwards;}
 .hero-sub{margin-bottom:14px;}
 .home-quote{padding:72px 80px;background:var(--dark2);border-top:1px solid rgba(201,168,76,.1);border-bottom:1px solid rgba(201,168,76,.1);}
@@ -222,36 +222,41 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 #home.hero h1 .h1-line{white-space:nowrap;}
 #home.hero .hero-sub a{color:var(--gold-lt);text-decoration:underline;text-underline-offset:3px;transition:color .2s;}
 #home.hero .hero-sub a:hover{color:var(--white);}
-/* Tablet + mobile: photo band on top, copy on solid panel below — never cover the team */
+/* Tablet + mobile: photo band on top — show FULL hero photo (cleaner + artwork), never crop */
 @media(max-width:1024px){
 #home.hero{
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  justify-content:flex-start;
-  min-height:0;
-  height:auto;
-  overflow:visible;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+  min-height:0 !important;
+  height:auto !important;
+  overflow:visible !important;
 }
 #home.hero .hero-bg{
-  position:relative;
-  inset:auto;
-  width:100%;
-  /* Exact hero asset ratio (1400×900) — full photo, no stretch, no crop */
-  height:calc(100vw * 900 / 1400) !important;
+  position:relative !important;
+  inset:auto !important;
+  top:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+  left:auto !important;
+  width:100% !important;
+  height:auto !important;
   max-height:none !important;
   min-height:0 !important;
   aspect-ratio:auto !important;
-  flex:0 0 auto;
-  overflow:hidden;
-  background:#0e0e0e;
+  flex:0 0 auto !important;
+  overflow:visible !important;
+  background:#0e0e0e !important;
 }
 #home.hero .hero-bg img{
-  position:absolute;
-  inset:0;
+  position:static !important;
+  inset:auto !important;
+  display:block !important;
   width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
+  max-width:100% !important;
+  height:auto !important;
+  object-fit:fill !important; /* ignored when height:auto + intrinsic ratio */
   object-position:center center !important;
   animation:none !important;
   transform:none !important;
@@ -311,11 +316,15 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 }
 @media(max-width:640px){
 #home.hero .hero-bg{
-  height:calc(100vw * 900 / 1400) !important;
+  height:auto !important;
   max-height:none !important;
   min-height:0 !important;
 }
-#home.hero .hero-bg img{object-position:center center !important;}
+#home.hero .hero-bg img{
+  width:100% !important;
+  height:auto !important;
+  position:static !important;
+}
 #home.hero .hero-content{padding:32px 20px 44px;}
 #home.hero h1{font-size:clamp(1.7rem,7vw,2.15rem);}
 #home.hero h1 .h1-line{white-space:normal;}
@@ -418,7 +427,7 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 </div>
 <section class="hero" id="home">
   <div class="hero-bg">
-    <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp" alt="Sparklean professionally managed cleaning team serving homes and businesses in Naples, Florida" width="1400" height="900" fetchpriority="high" decoding="async">
+    <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp" alt="Sparklean cleaner detailing framed artwork in a Southwest Florida home" width="1400" height="933" fetchpriority="high" decoding="async">
   </div>
   <div class="hero-ov"></div>
   <div class="hero-content">

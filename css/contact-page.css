@@ -6,12 +6,17 @@
 /* --- Hero: single cinematic image (URL set per page modifier) --- */
 .hero--contact .hero-bg {
   background-image: url("/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp");
-  background-position: 72% center;
+  background-position: left center;
   background-size: cover;
 }
 
 .hero-mobile--contact .hero-mobile-img {
-  object-position: 72% center;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  min-height: 0;
+  object-fit: contain;
+  object-position: center center;
 }
 
 .hero--contact .hero-sub {
