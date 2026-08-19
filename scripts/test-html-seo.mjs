@@ -133,24 +133,16 @@ for (const m of aboutQuoteCtas) {
 for (const rel of files) {
   const html = fs.readFileSync(path.join(root, rel), "utf8");
   assert(
-    !/Bernwood|24221/i.test(html),
-    `${rel} does not publish the Bernwood street address`
-  );
-  assert(
-    !/maps\/search\/\?api=1/i.test(html),
-    `${rel} does not use a Google Maps search CTA`
+    !/Bernwood|24221|Brink\s*Cir/i.test(html),
+    `${rel} does not publish a street address`
   );
   if (/google\.com\/maps/i.test(html)) {
     assert(
-      html.includes(GOOGLE_REVIEWS_HREF),
-      `${rel} Google Maps links use the verified listing URL`
+      html.includes(GOOGLE_REVIEWS_HREF) ||
+        html.includes(GOOGLE_REVIEWS_HREF.replace(/&/g, "&amp;")),
+      `${rel} Google Maps links use name+city search (not a street place URL)`
     );
   }
-  const withoutHrefs = html.replace(/\s(?:href|content|src)=["'][^"']*["']/gi, "");
-  assert(
-    !/Brink\s*Cir/i.test(withoutHrefs),
-    `${rel} does not show Brink Cir in visible copy`
-  );
 }
 
 if (failed) {

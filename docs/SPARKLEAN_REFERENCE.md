@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (Google reviews CTA → verified Maps listing)
+Last updated: **2026-08-19** (Google reviews CTA = Maps search by name + city)
 
 ---
 
@@ -410,7 +410,7 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **Blog JSON-LD idempotency (2026-08-19, production):** `syncBlogArticles()` used to strip only Organization nodes, then prepend canonical Organization + founders + Website. Founder and Website nodes survived each `schema:sync`, stacking 14 copies of `#founder-tony-giuliano`, `#founder-roxana-tellez`, and `#website`. Sync now strips those shared canonical nodes, then `writePage` dedupes top-level `@graph` by `@id`. `npm run test:schema` asserts unique `@id` values in every public `@graph` and that each of the 12 blog articles has one copy of org/founders/website.
 
-**Address leak in Google reviews URL (2026-08-19):** Maps search CTAs encoded `24221 Bernwood Dr`. That street is gone. Reviews CTAs now use the verified Google Maps listing (`GOOGLE_REVIEWS_HREF` in `data/sparklean-testimonials.mjs`): Sparklean Cleaning, Bonita Springs. The Maps path includes Google’s published street; visible copy and schema still omit it. `test:html-seo` blocks Bernwood/`24221`, Maps search CTAs, and Brink Cir outside hrefs. About “Request Your Personalized Quote” CTAs use `/contact?quote=1#quote-intake`.
+**Google reviews CTA (2026-08-19):** Do not use a `/maps/place/` URL with a street slug. Sparklean is a service-area listing; that slug opened an empty Bonita Springs map (no reviews panel). `GOOGLE_REVIEWS_HREF` is Maps search `Sparklean Cleaning Bonita Springs` (no street). `test:html-seo` blocks Bernwood/`24221`/Brink Cir. About quote CTAs use `/contact?quote=1#quote-intake`. Direct `cid`/`placeid` URL only if extracted from a working Share link — do not invent IDs.
 
 **City reviews + cost-factors UI (2026-08-18):** Pricing clarity rebuilt as an editorial label/description list (not smashed inline text). Styles inlined on city pages + shared `sparklean-luxury-flow.css`. Google Reviews simplified to centered rating + one city line + one CTA. All five city pages.
 

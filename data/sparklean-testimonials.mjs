@@ -10,11 +10,12 @@
  */
 
 /**
- * Google reviews CTA — verified Maps listing (Sparklean Cleaning, Bonita Springs).
- * Do not put the street in visible copy or schema. Do not use the old Bernwood search URL.
+ * Google reviews CTA. Service-area listings do not resolve from a street
+ * `/maps/place/` slug (that opens an empty map pin). Search by name + city.
+ * Do not encode a street. Do not invent a CID/Place ID.
  */
 export const GOOGLE_REVIEWS_HREF =
-  "https://www.google.com/maps/place/Sparklean+Cleaning,+3423+Brink+Cir,+Bonita+Springs,+FL+34134/";
+  "https://www.google.com/maps/search/?api=1&query=Sparklean%20Cleaning%20Bonita%20Springs";
 
 /** Visible rating only — do not embed reviewCount in schema AggregateRating. */
 export const GOOGLE_RATING_DISPLAY = "4.9";
