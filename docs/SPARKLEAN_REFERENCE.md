@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (residential mobile hero shows the full team photo, no 68vw crop)
+Last updated: **2026-08-19** (residential mobile: hide overflowing header quote, move 24h badge off the cleaner, stack checklist tabs)
 
 ---
 

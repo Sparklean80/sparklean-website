@@ -589,6 +589,10 @@ body.site-header-v2 {
     display: none !important;
   }
 
+  .site-header .nav-btn {
+    display: none !important;
+  }
+
   .rewards-topbar-inner {
     font-size: 0.5rem;
   }
