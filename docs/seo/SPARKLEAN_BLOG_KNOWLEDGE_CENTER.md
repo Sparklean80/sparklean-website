@@ -25,8 +25,8 @@ City pages own local service keywords. Blog owns decisions.
 1. Weekly vs. Biweekly vs. Monthly Cleaning: What Actually Works for Your Home?
 2. What to Expect During Your First Professionally Managed Cleaning Visit
 3. Why Recurring Cleaning Becomes More Consistent After the First Visit
-4. How to Maintain a Southwest Florida Home While You’re Away
-5. Seasonal Arrival Cleaning for Southwest Florida Homeowners
+4. How to Maintain a Home While You’re Away
+5. Seasonal Arrival Cleaning for Homes You Don’t Live in Year-Round
 
 ### Trust and accountability
 6. Before Hiring a Cleaning Company: Seven Questions Every Homeowner Should Ask
@@ -37,10 +37,10 @@ City pages own local service keywords. Blog owns decisions.
 
 ### High-intent service problems
 11. Deep Cleaning vs. Recurring Cleaning: Which One Do You Need?
-12. Move-In Cleaning Checklist for Southwest Florida Homes
+12. Move-In Cleaning Checklist
 13. What Builders Commonly Miss Before a Final Construction Clean
 14. Why Construction Dust Returns After a Property Looks Clean
-15. How Much Does Recurring House Cleaning Cost in Southwest Florida? *(honest ranges only if founder-approved)*
+15. How Much Does Recurring House Cleaning Cost? *(honest ranges only if founder-approved; no Southwest Florida / Marco Island framing)*
 
 ### Referral-partner knowledge
 16. A Realtor’s Pre-Listing Cleaning Checklist

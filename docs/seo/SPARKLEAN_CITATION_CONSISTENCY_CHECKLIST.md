@@ -2,7 +2,7 @@
 
 **Purpose:** Founder worksheet only — verify NAP + identity facts across directories.  
 **Do not** create profiles, submit listings, or paste identical promo paragraphs from this doc.  
-**Date prepared:** 2026-08-05  
+**Date prepared:** 2026-08-05 · **Territory correction:** 2026-08-19  
 
 This file is documentation. Completing rows is a **manual** founder task outside the website deploy.
 
@@ -17,7 +17,7 @@ This file is documentation. Completing rows is a **manual** founder task outside
 | Website | https://www.sparklean.co/ | ☐ | Prefer www canonical |
 | Phone | (239) 888-3588 / +1-239-888-3588 | ☐ | |
 | Email | info@sparklean.co | ☐ | |
-| Positioning | Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Southwest Florida. | ☐ | Adapt tone; keep facts |
+| Positioning | Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral. | ☐ | Adapt tone; keep facts. Do **not** publish Southwest Florida / Marco Island as territory. |
 | Credentials wording | Registered Florida business + bonding + GL insurance + Workers’ Comp (not “fully licensed” / occupational license) | ☐ | |
 | Client-count marketing | Do **not** use “20,000+ clients” unless founder documents the metric | ☐ | Currently removed sitewide |
 | Direct GBP / reviews URL | Paste canonical Google Business Profile or reviews URL (not Maps search) | ☐ | Site uses interim Maps search link |
@@ -25,7 +25,7 @@ This file is documentation. Completing rows is a **manual** founder task outside
 | Product claims evidence | Proprietary formula / non-toxic / pet-safe — SDS, formula notes, or founder attestation | ☐ | Left unresolved |
 | Spanish language | Confirm if Spanish should be in `availableLanguage` | ☐ | |
 | On-site testimonials | Only add via `data/sparklean-testimonials.mjs` with Google URL or private permission | ☐ | Manifest empty; unverified set removed |
-| Service territory | Naples · Bonita Springs · Estero · Fort Myers · Cape Coral · Marco Island | ☐ | All six |
+| Service territory | Naples · Bonita Springs · Estero · Fort Myers · Cape Coral | ☐ | Five cities only |
 | Street address on marketing site | **Intentionally unpublished** (service-area business) | ☐ | Do not invent for directories that require it without founder decision. Site schema has **no** `address` object (including no region-only stub). LocalBusiness rich results may be limited without a complete public address — accepted. |
 | Founders | Tony Giuliano; Roxana “Roxy” Tellez | ☐ | |
 

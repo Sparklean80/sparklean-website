@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (five-city territory + blog JSON-LD idempotency live on production)
+Last updated: **2026-08-19** (five-city work live; SEO worksheets aligned to five markets)
 
 ---
 
@@ -72,10 +72,10 @@ Each new page: unique copy, local refs, FAQs, internal links, CTA to quote intak
 | Flow | Status |
 |------|--------|
 | Structured quote intake (`js/quote-intake.js`, `serviceFlows.js`) | **Live** on contact + preset CTAs |
-| Recurring residential primary journey | **Branch** — preset `recurringResidential`; home/residential/city CTAs |
-| Why Sparklean checklist | **Branch** — `/why-sparklean` |
-| Referral intake | **Branch** — `/refer` + preset `referral` (Brevo via `quote-submit`; tags `REFERRAL`) |
-| Partner hub | **Branch** — `/partners` → `/refer?type=…` |
+| Recurring residential primary journey | **Live** — preset `recurringResidential`; home/residential/city CTAs |
+| Why Sparklean checklist | **Live** — `/why-sparklean` |
+| Referral intake | **Live** — `/refer` + preset `referral` (Brevo via `quote-submit`; tags `REFERRAL`) |
+| Partner hub | **Live** — `/partners` → `/refer?type=…` |
 | One-click call (mobile sticky bar) | **Live** |
 | SMS conversations | **TODO** — Twilio or portal handoff |
 | Fast booking without quote | **Portal** — after first client relationship |
@@ -112,9 +112,9 @@ Track in portal + analytics (not yet wired on marketing site):
 
 ### Suggested execution order
 
-1. **Now (marketing):** CWV headers, preload, prefetch — shipped; migrate hero/CDN images to local WebP
-2. **Next (marketing):** 1–2 commercial geo pages (Phase 2); vacation rental page if search demand
-3. **Parallel (portal):** PWA shell, post-login cache, install prompt after first booking, push/SMS
+1. **Now (marketing):** Five-city territory + city money pages live; next lever is GBP/reviews (founder), not more URLs
+2. **Held:** commercial vertical hubs and city×commercial combos until city rankings stabilize
+3. **Parallel (portal):** PWA shell, post-login cache, install prompt after first booking, push/SMS — Workforce Vision repo
 4. **Then:** UTM + conversion events; GSC CWV monitoring loop
 
 ---

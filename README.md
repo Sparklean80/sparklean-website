@@ -1,6 +1,6 @@
 # Sparklean Cleaning — website
 
-Marketing site for [Sparklean Cleaning](https://www.sparklean.co/) (Southwest Florida luxury residential & commercial cleaning).
+Marketing site for [Sparklean Cleaning](https://www.sparklean.co/) — professionally managed residential and commercial cleaning in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.
 
 **Hosted on Netlify.** Static HTML + `netlify.toml` redirects.
 

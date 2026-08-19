@@ -2,7 +2,7 @@
 
 Founder-facing worksheet for identity consistency across directories. **Do not guess or auto-change live profiles from the website repo.**
 
-Last updated: 2026-08-05
+Last updated: 2026-08-19
 
 ## Canonical identity (site source of truth)
 
@@ -10,7 +10,7 @@ Last updated: 2026-08-05
 |--------|--------|
 | Public name | Sparklean Cleaning |
 | Legal name | Sparklean Cleaning LLC |
-| Positioning | Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Southwest Florida. |
+| Positioning | Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral. |
 | Phone | (239) 888-3588 / `+1-239-888-3588` |
 | Email | info@sparklean.co |
 | Website | https://www.sparklean.co/ |

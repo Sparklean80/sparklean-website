@@ -1,7 +1,12 @@
 # Sparklean entity & schema audit
 
-**Branch:** `feat/entity-schema-consolidation`  
-**Date:** 2026-08-05  
+**Branch:** `feat/entity-schema-consolidation` (historical)  
+**Date:** 2026-08-05 (audit) · **Territory correction:** 2026-08-19  
+
+**Current locked description (source of truth):** Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.
+
+**Current markets:** five cities only. Do **not** publish Southwest Florida / SW Florida / SW FL / Marco Island in copy or `areaServed`. The 2026-08-05 tables below still describe the six-market audit snapshot; they are **not** current publishing rules.
+
 **Scope:** Machine-readable identity consolidation for Google Search, local search, and AI retrieval.  
 **Not claimed:** Rankings, rich-result eligibility, AI recommendations, or lead volume.
 
@@ -15,7 +20,7 @@
 | Legal name | Sparklean Cleaning LLC |
 | Never say | “corporation” |
 | Canonical `@id` | `https://www.sparklean.co/#organization` |
-| Description | Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Southwest Florida. |
+| Description | Sparklean Cleaning is a professionally managed and supervised residential and commercial cleaning company serving Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral. |
 | Phone | `+1-239-888-3588` |
 | Email | `info@sparklean.co` |
 | Types | `Organization` + `LocalBusiness` |
@@ -36,7 +41,7 @@ No Google rich-result eligibility is claimed for any `@type` choice.
 Sparklean operates as a **service-area business**. The marketing site intentionally **does not publish a street address** (home/office privacy). Schema therefore:
 
 - Omits any `address` / `PostalAddress` object entirely (including region-only stubs)
-- Relies on truthful six-city `areaServed` instead of fake branch `LocalBusiness` entities
+- Relies on truthful five-city `areaServed` instead of fake branch `LocalBusiness` entities
 - Accepts that **LocalBusiness rich-result eligibility may be limited** without a complete public address
 
 Do **not** invent or partially fabricate an address to satisfy a schema linter or rich-result checklist. Never expose a private home/office address.
@@ -53,7 +58,7 @@ Pages audited: homepage, About, Residential, Commercial, Post-construction, Spec
 | `legalName` | Missing | `Sparklean Cleaning LLC` |
 | Locked description | Missing / inconsistent | Exact locked sentence on org + visible on Home/About |
 | `sameAs` | Google Maps **search** URL (embeds Bernwood query string) | Removed from schema until verified direct profile URLs |
-| Marco Island in `areaServed` | Often missing | Always present (6 markets) |
+| Marco Island in `areaServed` | Often missing (2026-08-05) | **Removed 2026-08-19** — five published markets only |
 | City pages | Redefined full `LocalBusiness` with city URL | `WebPage` + city `Service` with `provider` → `#organization` |
 | About | Anonymous `LocalBusiness` (no `@id`) | References canonical org + founders |
 | AggregateRating | Hard-coded `4.9` / `96` reviews sitewide | **Removed** from schema until founder verifies live GBP count |
@@ -73,7 +78,7 @@ Pages audited: homepage, About, Residential, Commercial, Post-construction, Spec
 
 ### Marco Island page
 
-No dedicated `/house-cleaning-marco-island` page exists (by design — no thin doorway page). Marco Island is included in territory copy and schema `areaServed`.
+No dedicated `/house-cleaning-marco-island` page exists (by design — no thin doorway page). **As of 2026-08-19 Marco Island is not a published service market** (copy, schema, or intake).
 
 ---
 
@@ -96,7 +101,7 @@ City pages = **service areas**, not physical Sparklean branches.
 
 ## Visible content alignment
 
-- Homepage About + FAQ + service-area band: locked positioning + six markets including Marco Island
+- Homepage About + FAQ + service-area band: locked positioning + five markets (Naples, Bonita Springs, Estero, Fort Myers, Cape Coral)
 - About story: locked sentence + management/accountability language
 - Residential / Commercial / city bands: adapted (not copy-pasted) positioning
 - Provable differentiators reinforced where already evidenced: supervised teams, direct employees, background checks, insurance/bonding/workers’ comp, 24-hour guarantee, documented scheduling/communication
