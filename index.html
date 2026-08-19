@@ -237,16 +237,24 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
   position:relative;
   inset:auto;
   width:100%;
-  height:min(52vw,420px);
-  min-height:260px;
-  max-height:440px;
+  /* Landscape band — tall vw heights vertically compress a 1400×900 photo */
+  height:auto;
+  aspect-ratio:3 / 2;
+  min-height:220px;
+  max-height:380px;
   flex:0 0 auto;
+  overflow:hidden;
 }
 #home.hero .hero-bg img{
-  /* Keep Roxy (left) in frame — not only the artwork */
-  object-position:22% 18%;
-  animation:none;
-  transform:none;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover !important;
+  /* Roxy is on the left wiping the frame — keep her in view */
+  object-position:10% 42%;
+  animation:none !important;
+  transform:none !important;
 }
 #home.hero .hero-ov{
   display:none;
@@ -303,11 +311,11 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 }
 @media(max-width:640px){
 #home.hero .hero-bg{
-  height:78vw;
-  min-height:320px;
-  max-height:460px;
+  aspect-ratio:4 / 3;
+  min-height:200px;
+  max-height:320px;
 }
-#home.hero .hero-bg img{object-position:18% 16%;}
+#home.hero .hero-bg img{object-position:6% 40%;}
 #home.hero .hero-content{padding:32px 20px 44px;}
 #home.hero h1{font-size:clamp(1.7rem,7vw,2.15rem);}
 #home.hero h1 .h1-line{white-space:normal;}
