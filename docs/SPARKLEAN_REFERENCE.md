@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (Bonita Springs Semrush city-ownership SEO)
+Last updated: **2026-08-19** (Estero Semrush city-ownership SEO)
 
 ---
 
@@ -394,6 +394,8 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 **Naples city page SEO ownership (2026-08-18):** `/house-cleaning-naples` now owns the city query. Title/H1/schema: `House Cleaning Services in Naples, Florida`. Discretion/estates kept in supporting copy (Port Royal, Pelican Bay, Park Shore, Old Naples). Removed SWFL trust-card dilution and “maid service” marquee wording. Breadcrumb: Home → Residential Cleaning → Naples. CTA aligned to Build My Cleaning Plan. No UI redesign.
 
 **Bonita Springs city page SEO ownership (2026-08-19):** Same Semrush city-ownership pattern as Naples. Title/H1/schema: `House Cleaning Services in Bonita Springs, Florida`. Home-base angle kept (Bonita Bay, The Colony, Barefoot Beach, Pelican Landing). Breadcrumb: Home → Residential Cleaning → Bonita Springs. Marquee “maid service” → recurring residential. Hero CTA: Build My Cleaning Plan. Mobile photo fit matches Naples/homepage. No UI redesign.
+
+**Estero city page SEO ownership (2026-08-19):** Same Semrush pattern. Title/H1/schema: `House Cleaning Services in Estero, Florida`. Golf-community angle kept (West Bay, Grandezza, The Brooks, Pelican Sound). Breadcrumb: Home → Residential Cleaning → Estero. Marquee maid wording removed. Hero CTA: Build My Cleaning Plan. Mobile photo fit matches sibling city pages. No UI redesign.
 
 **City reviews + cost-factors UI (2026-08-18):** Pricing clarity rebuilt as an editorial label/description list (not smashed inline text). Styles inlined on city pages + shared `sparklean-luxury-flow.css`. Google Reviews simplified to centered rating + one city line + one CTA. All five city pages.
 
