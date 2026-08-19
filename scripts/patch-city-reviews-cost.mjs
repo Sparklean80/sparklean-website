@@ -6,6 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { GOOGLE_REVIEWS_HREF } from "../data/sparklean-testimonials.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -42,8 +43,7 @@ const pages = [
   },
 ];
 
-const googleHref =
-  "https://www.google.com/maps/search/?api=1&amp;query=Sparklean%20Cleaning%2024221%20Bernwood%20Dr%20Suite%202%20Bonita%20Springs%20FL%2034135";
+const googleHref = GOOGLE_REVIEWS_HREF.replace(/&/g, "&amp;");
 
 const INLINE_CSS = `/* Reviews + cost factors — editorial (city pages) */
 .reviews.reviews--google{text-align:center;padding:88px 80px;}

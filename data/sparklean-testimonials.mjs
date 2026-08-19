@@ -9,9 +9,12 @@
  * - Visible 4.9★ rating may remain; live count belongs on Google, not schema.
  */
 
-/** Interim Maps search link until founder provides a direct GBP/review URL. */
+/**
+ * Google reviews CTA. Do **not** put a street address in this URL.
+ * Swap for the founder’s direct GBP/reviews URL when they provide it.
+ */
 export const GOOGLE_REVIEWS_HREF =
- "https://www.google.com/maps/search/?api=1&query=Sparklean%20Cleaning%2024221%20Bernwood%20Dr%20Suite%202%20Bonita%20Springs%20FL%2034135";
+  "https://www.google.com/maps/search/?api=1&query=Sparklean%20Cleaning";
 
 /** Visible rating only — do not embed reviewCount in schema AggregateRating. */
 export const GOOGLE_RATING_DISPLAY = "4.9";

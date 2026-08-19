@@ -131,7 +131,7 @@ ${fullCss}
  <p class="hero-sub">Built from two professional journeys — one belief: people deserve a higher standard of care, professionalism, and trust inside their homes.</p>
  <p class="hero-guar">✦ Bonded &nbsp;·&nbsp; Insured &nbsp;·&nbsp; Workers' Comp &nbsp;·&nbsp; Supervised Teams</p>
  <div class="hero-btns">
- <a href="/contact" class="btn-gold">Request Your Personalized Quote →</a>
+ <a href="/contact?quote=1#quote-intake" class="btn-gold">Request Your Personalized Quote →</a>
  <a href="#our-story" class="btn-outline">Read our story</a>
  </div>
  </div>
@@ -150,7 +150,7 @@ ${fullCss}
  <p class="hero-sub">Built from two professional journeys — one belief: people deserve a higher standard of care, professionalism, and trust inside their homes.</p>
  <p class="hero-guar">✦ Bonded · Insured · Workers' Comp · Supervised Teams</p>
  <div class="hero-btns">
- <a href="/contact" class="btn-gold">Request Your Personalized Quote →</a>
+ <a href="/contact?quote=1#quote-intake" class="btn-gold">Request Your Personalized Quote →</a>
  <a href="tel:2398883588" class="btn-outline">Call (239) 888-3588</a>
  </div>
  </div>
@@ -304,7 +304,7 @@ ${fullCss}
  <p class="cta-sub">Request a personalized quote and discover what elevated cleaning feels like when communication, accountability, and presentation are never optional.</p>
  <p class="cta-guar">✦ Bonded · Insured · Workers' Comp · Same-day response</p>
  <div class="cta-btns">
- <a href="/contact" class="btn-gold">Request Your Personalized Quote →</a>
+ <a href="/contact?quote=1#quote-intake" class="btn-gold">Request Your Personalized Quote →</a>
  <a href="tel:2398883588" class="btn-outline">Call (239) 888-3588</a>
  </div>
 </section>

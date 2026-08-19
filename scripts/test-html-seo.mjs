@@ -116,6 +116,27 @@ assert(
   "homepage hero personalized-quote CTA href is /contact?quote=1#quote-intake"
 );
 
+const aboutQuoteCtas = [
+  ...about.matchAll(
+    /<a\b([^>]*)>[^<]*Request Your Personalized Quote/gi
+  ),
+];
+assert(aboutQuoteCtas.length === 3, "about has three Personalized Quote CTAs");
+for (const m of aboutQuoteCtas) {
+  assert(
+    /href="\/contact\?quote=1#quote-intake"/.test(m[1]),
+    "about Personalized Quote CTA uses durable quote URL"
+  );
+}
+
+for (const rel of files) {
+  const html = fs.readFileSync(path.join(root, rel), "utf8");
+  assert(
+    !/Bernwood|24221/i.test(html),
+    `${rel} does not publish the Bernwood street address`
+  );
+}
+
 if (failed) {
   console.error(`\n${failed} assertion(s) failed`);
   process.exit(1);

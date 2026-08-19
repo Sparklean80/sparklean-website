@@ -5,14 +5,12 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { GOOGLE_REVIEWS_HREF as GOOGLE_REVIEWS } from "../data/sparklean-testimonials.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const indexPath = path.join(root, "index.html");
 let html = fs.readFileSync(indexPath, "utf8");
-
-const GOOGLE_REVIEWS =
-  "https://www.google.com/maps/search/?api=1&query=Sparklean%20Cleaning%2024221%20Bernwood%20Dr%20Suite%202%20Bonita%20Springs%20FL%2034135";
 
 const faqEntities = [
   {

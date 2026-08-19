@@ -4,8 +4,10 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { GOOGLE_REVIEWS_HREF } from "../data/sparklean-testimonials.mjs";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+const GOOGLE_REVIEWS_HREF_HTML = GOOGLE_REVIEWS_HREF.replace(/&/g, "&amp;");
 
 const COLS = `    <div class="footer-cols">
       <div>
@@ -35,7 +37,7 @@ const COLS = `    <div class="footer-cols">
           <a href="mailto:info@sparklean.co">info@sparklean.co</a>
           <a href="/contact" data-sparklean-intake>Request a Quote</a>
           <a href="/customer-portal">Client Login</a>
-          <a href="https://www.google.com/maps/search/?api=1&amp;query=Sparklean%20Cleaning%2024221%20Bernwood%20Dr%20Suite%202%20Bonita%20Springs%20FL%2034135" target="_blank" rel="noopener noreferrer">Google Reviews</a>
+          <a href="${GOOGLE_REVIEWS_HREF_HTML}" target="_blank" rel="noopener noreferrer">Google Reviews</a>
         </div>
       </div>
     </div>`;
