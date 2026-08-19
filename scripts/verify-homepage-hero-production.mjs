@@ -64,6 +64,7 @@ async function measure(page) {
         quoteBox.left >= 0 &&
         quoteBox.right <= window.innerWidth + 0.5,
       textBelowImage: contentBox.top >= box.bottom - 1,
+      correctAsset: /1000051679/.test(image.currentSrc || image.src),
     };
   });
 }
@@ -108,6 +109,7 @@ for (const r of results) {
     imageNotAbsolute: m.imageNotAbsolute,
     quoteInside: m.quoteInside,
     textBelowImage: m.textBelowImage,
+    correctAsset: m.correctAsset,
   };
   const pass = Object.values(checks).every(Boolean);
   allPass = allPass && pass && !m.error;
