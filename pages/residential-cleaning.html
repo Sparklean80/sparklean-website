@@ -217,6 +217,39 @@
  border-bottom: none !important;
  }
 }
+
+@media (max-width: 1024px) {
+ #residential-hero.hero {
+ overflow: visible !important;
+ height: auto !important;
+ min-height: 0 !important;
+ }
+ #residential-hero.hero .hero-bg {
+ display: block !important;
+ height: auto !important;
+ min-height: 0 !important;
+ max-height: none !important;
+ }
+ #residential-hero.hero .hero-bg img {
+ width: 100% !important;
+ height: auto !important;
+ max-height: none !important;
+ object-fit: contain !important;
+ object-position: center center !important;
+ }
+ #residential-hero.hero .hero-content {
+ padding: 28px 20px 40px !important;
+ }
+ #residential-hero.hero .hero-content::before {
+ display: none !important;
+ }
+}
+
+@media (max-width: 700px) {
+ #residential-hero.hero .hero-sub {
+ display: none !important;
+ }
+}
 </style>
 
 <!-- Google tag (gtag.js) -->
