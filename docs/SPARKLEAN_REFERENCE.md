@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-18** (Homepage mobile hero: full landscape wipe/artwork photo)
+Last updated: **2026-08-19** (Homepage hero asset restored to Roxy + team photo)
 
 ---
 
@@ -397,7 +397,7 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **Mobile hero + breadcrumb (2026-08-18):** City pages had a CSS typo grouping `.breadcrumb` with `.pp-img{height:220px}` — created a tall empty black band with Home › Residential › City. Fixed on all five city LPs; mobile heroes taller with `object-position:center 20%`.
 
-**Homepage mobile hero structure (2026-08-18):** One authoritative `<picture>`/`<img>` in `.homepage-hero__media` — **not** CSS background, **not** a second overlaid mobile image. Asset: `69b43aac7e6c8c5cb631739a_1000051679-0982f55a-1400.webp` (cleaner + swimming artwork + doorway; ratio 1400×933 ≡ 2048/1365). At `max-width:767px`: `.homepage-hero` block/`height:auto`; media `aspect-ratio:2048/1365`; img `object-fit:contain` (never cover); content stacks below the full frame. Header Request a Quote kept inside the viewport. CSS: `css/home-hero-mobile.css`. Evidence: `evidence/homepage-hero-mobile-2026-08-18/`.
+**Homepage mobile hero structure (2026-08-18/19):** One authoritative `<picture>`/`<img>` in `.homepage-hero__media` — **not** CSS background, **not** a second overlaid mobile image. Asset: `69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp` (Roxy + two team members; ratio 1400×933 ≡ 2048/1365). At `max-width:767px`: `.homepage-hero` block/`height:auto`; media `aspect-ratio:2048/1365`; img `object-fit:contain` (never cover); content stacks below the full frame. Header Request a Quote kept inside the viewport. CSS: `css/home-hero-mobile.css`.
 
 **Residential LP (2026-08-18 SEO correction):** Service-category hub — **not** SWFL and **not** a five-city H1. Eyebrow `Residential Cleaning`. H1 `Professionally Managed Residential Cleaning`. Title/meta match category positioning (no city list). Lower H2 `Residential Cleaning Service Areas` + five crawlable city cards. City pages exclusively own `House Cleaning Services in [City], Florida`. Homepage H1 stays Naples-primary. Trust strip + tablet/mobile photo-on-top stack unchanged. Evidence: `evidence/residential-service-hub-seo-2026-08-18/`.
 
