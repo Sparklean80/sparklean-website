@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (Google reviews CTA = Maps search by name + city)
+Last updated: **2026-08-19** (mobile photos stacked full-width like residential)
 
 ---
 
@@ -418,7 +418,9 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **Homepage mobile hero structure (2026-08-18/19):** One authoritative `<picture>`/`<img>` in `.homepage-hero__media` — **not** CSS background, **not** a second overlaid mobile image. Asset: `69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp` (Roxy + two team members; ratio 1400×933 ≡ 2048/1365). At `max-width:767px`: `.homepage-hero` block/`height:auto`; media `aspect-ratio:2048/1365`; img `object-fit:contain` (never cover); content stacks below the full frame. Header Request a Quote kept inside the viewport. CSS: `css/home-hero-mobile.css`.
 
-**Naples mobile photo fit (2026-08-19):** `/house-cleaning-naples` only — at `max-width:767px`, hero + body photos (`.hero-mobile-img`, `.ni-img`, `.pp-img`, `.sb-img`) use the same full-frame fit as homepage: `width:100%`, `height:auto`, `object-fit:contain`, no fixed crop heights. Desktop unchanged.
+**Mobile photos (2026-08-19):** Homepage, city pages, commercial, and other money pages stacked two-column photo/copy on phones because mobile CSS selectors were missing commas, plus `object-fit:contain` letterboxed images. Restored residential behavior: one column, full-width `cover`, hero ~68vw (min 280 / max 380). Shared rules in `css/sparklean-mobile-first.css`. Desktop unchanged.
+
+**Naples mobile photo fit (2026-08-19):** Reverted. City pages no longer use `object-fit:contain` on mobile.
 
 **Residential LP (2026-08-18 SEO correction):** Service-category hub — **not** SWFL and **not** a five-city H1. Eyebrow `Residential Cleaning`. H1 `Professionally Managed Residential Cleaning`. Title/meta match category positioning (no city list). Lower H2 `Residential Cleaning Service Areas` + five crawlable city cards. City pages exclusively own `House Cleaning Services in [City], Florida`. Homepage H1 stays Naples-primary. Trust strip + tablet/mobile photo-on-top stack unchanged. Evidence: `evidence/residential-service-hub-seo-2026-08-18/`.
 

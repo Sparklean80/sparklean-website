@@ -12,11 +12,11 @@
 
 .hero-mobile--contact .hero-mobile-img {
   width: 100%;
-  height: auto;
-  max-height: none;
-  min-height: 0;
-  object-fit: contain;
-  object-position: center center;
+  height: 68vw;
+  min-height: 280px;
+  max-height: 380px;
+  object-fit: cover;
+  object-position: center 18%;
 }
 
 .hero--contact .hero-sub {

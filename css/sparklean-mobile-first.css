@@ -268,3 +268,116 @@ a.btn-gold .btn-gold-icon,
 .portal-app-link .btn-gold-icon::after {
   pointer-events: none;
 }
+
+/* Mobile photos: stack like residential (full-width cover). Inline CSS often omitted commas. */
+@media (max-width: 1024px) {
+  .about-grid,
+  .why-grid,
+  .prod-grid,
+  .faq-grid,
+  .rev-band,
+  .ci-grid,
+  .sl-grid,
+  .ni-grid,
+  .sb-grid,
+  .pp-grid,
+  .comm-grid,
+  .intro {
+    grid-template-columns: 1fr !important;
+  }
+
+  .why-img-wrap {
+    order: -1;
+    width: 100%;
+  }
+
+  .why-img-wrap img {
+    width: 100% !important;
+    height: 380px !important;
+    max-height: none !important;
+    object-fit: cover !important;
+  }
+
+  .intro-photo {
+    height: 480px;
+    width: 100%;
+  }
+
+  .intro-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .about-imgs,
+  .why-imgs,
+  .prod-imgs {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .about-main,
+  .why-main,
+  .prod-img {
+    width: 100% !important;
+    max-width: 100%;
+    height: auto !important;
+    object-fit: cover !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-mobile-img,
+  .ni-img,
+  .ci-img,
+  .sb-img,
+  .pp-img,
+  .sl-img {
+    width: 100% !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center 18% !important;
+    transform: none !important;
+  }
+
+  .hero-mobile-img,
+  .ni-img,
+  .ci-img {
+    height: 68vw !important;
+    min-height: 280px !important;
+    max-height: 380px !important;
+    aspect-ratio: auto !important;
+  }
+
+  .pp-img,
+  .sb-img,
+  .sl-img {
+    height: 300px !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    aspect-ratio: auto !important;
+  }
+
+  .photo-pair {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+  }
+
+  .photo-pair-item {
+    height: 300px;
+  }
+
+  .ni-img-wrap,
+  .sb-img-wrap,
+  .pp-item,
+  .ci-img-wrap {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .svc-grid,
+  .rev-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
