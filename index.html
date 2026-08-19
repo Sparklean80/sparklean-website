@@ -171,6 +171,7 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 <link rel="stylesheet" href="/css/sparklean-nav-logo.css">
 <link rel="stylesheet" href="/css/sparklean-site-header.css">
 <link rel="stylesheet" href="/css/sparklean-footer.css">
+<link rel="stylesheet" href="/css/home-hero-mobile.css?v=20260819a">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17027441328"></script>
 <script>
@@ -187,6 +188,16 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 <style id="homepage-rebuild-2026-08-18-hero-full">
 .hero-bg{position:absolute;inset:-2px;overflow:hidden;}
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:left center;display:block;animation:zoomIn 14s ease-out forwards;}
+/* Desktop: hide stacked photo; mobile: hide absolute fill shell */
+.hero-photo-full{display:none;width:100%;height:auto;}
+@media(min-width:1025px){
+  .hero-photo-full{display:none!important;}
+  #home.hero .hero-bg{display:block;}
+}
+@media(max-width:1024px){
+  #home.hero .hero-photo-full{display:block!important;width:100%!important;height:auto!important;order:-1;}
+  #home.hero .hero-bg{display:none!important;}
+}
 .hero-benefit{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.35rem);line-height:1.45;color:var(--white);margin-bottom:14px;opacity:0;animation:up 1s .58s forwards;}
 .hero-sub{margin-bottom:14px;}
 .home-quote{padding:72px 80px;background:var(--dark2);border-top:1px solid rgba(201,168,76,.1);border-bottom:1px solid rgba(201,168,76,.1);}
@@ -234,35 +245,19 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
   overflow:visible !important;
 }
 #home.hero .hero-bg{
-  position:relative !important;
-  inset:auto !important;
-  top:auto !important;
-  right:auto !important;
-  bottom:auto !important;
-  left:auto !important;
-  width:100% !important;
-  height:auto !important;
-  max-height:none !important;
-  min-height:0 !important;
-  aspect-ratio:auto !important;
-  flex:0 0 auto !important;
-  overflow:visible !important;
-  background:#0e0e0e !important;
+  display:none !important;
 }
-#home.hero .hero-bg img{
-  position:static !important;
-  inset:auto !important;
+#home.hero .hero-photo-full{
   display:block !important;
+  position:static !important;
   width:100% !important;
-  max-width:100% !important;
   height:auto !important;
-  object-fit:fill !important; /* ignored when height:auto + intrinsic ratio */
-  object-position:center center !important;
-  animation:none !important;
-  transform:none !important;
+  max-width:100% !important;
+  object-fit:initial !important;
+  order:-1;
 }
 #home.hero .hero-ov{
-  display:none;
+  display:none !important;
 }
 #home.hero .hero-content{
   position:relative;
@@ -315,16 +310,6 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 .home-quote-form{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:640px){
-#home.hero .hero-bg{
-  height:auto !important;
-  max-height:none !important;
-  min-height:0 !important;
-}
-#home.hero .hero-bg img{
-  width:100% !important;
-  height:auto !important;
-  position:static !important;
-}
 #home.hero .hero-content{padding:32px 20px 44px;}
 #home.hero h1{font-size:clamp(1.7rem,7vw,2.15rem);}
 #home.hero h1 .h1-line{white-space:normal;}
@@ -426,8 +411,10 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
   <a href="/refer">Refer Someone</a>
 </div>
 <section class="hero" id="home">
-  <div class="hero-bg">
-    <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp" alt="Sparklean cleaner detailing framed artwork in a Southwest Florida home" width="1400" height="933" fetchpriority="high" decoding="async">
+  <!-- Mobile/tablet: plain stacked photo (full frame). Desktop uses .hero-bg fill. -->
+  <img class="hero-photo-full" src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp" alt="Sparklean cleaner detailing framed artwork in a Southwest Florida home" width="1400" height="933" fetchpriority="high" decoding="async">
+  <div class="hero-bg" aria-hidden="true">
+    <img src="/images/heroes/69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp" alt="" width="1400" height="933" decoding="async">
   </div>
   <div class="hero-ov"></div>
   <div class="hero-content">

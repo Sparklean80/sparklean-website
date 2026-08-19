@@ -1,0 +1,64 @@
+/**
+ * Homepage hero — mobile/tablet: full photo, no crop.
+ * Loaded last so it wins over absolute/cover hero CSS.
+ */
+@media (max-width: 1024px) {
+  #home.hero {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Kill absolute full-bleed shell — use .hero-photo-full instead */
+  #home.hero .hero-bg {
+    display: none !important;
+  }
+
+  #home.hero .hero-photo-full {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: initial !important;
+    transform: none !important;
+    animation: none !important;
+    order: -1;
+  }
+
+  #home.hero .hero-ov {
+    display: none !important;
+  }
+
+  #home.hero .hero-content {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 40px 28px 56px !important;
+    background: #11100e !important;
+  }
+
+  #home.hero .hero-stats {
+    position: static !important;
+    order: 3 !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 36px !important;
+    margin: 0 !important;
+    padding: 18px 20px 28px !important;
+    background: #11100e !important;
+    border: 0 !important;
+    border-top: 1px solid rgba(201, 168, 76, 0.12) !important;
+    backdrop-filter: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #home.hero .hero-content {
+    padding: 32px 20px 44px !important;
+  }
+}
