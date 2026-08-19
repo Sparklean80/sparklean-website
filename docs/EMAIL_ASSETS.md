@@ -11,7 +11,7 @@ These filenames are permanent. Do not rename files in `email-assets/` once deplo
 | Residential kitchen | `residential-kitchen.jpg` | https://www.sparklean.co/email-assets/residential-kitchen.jpg | Luxury kitchen, oven detail |
 | Luxury home | `luxury-home.jpg` | https://www.sparklean.co/email-assets/luxury-home.jpg | Freestanding tub bathroom |
 | Office cleaning | `office-cleaning.jpg` | https://www.sparklean.co/email-assets/office-cleaning.jpg | Team in conference / office doorway |
-| Vacation rental | `vacation-rental.jpg` | https://www.sparklean.co/email-assets/vacation-rental.jpg | Hospitality finishing touch (kitchen) |
+| Vacation rental | `vacation-rental.jpg` | https://www.sparklean.co/email-assets/vacation-rental.jpg | Hospitality finishing touch (kitchen); unwatermarked source `1000052037` (2026-08-19) |
 | Window cleaning | `window-cleaning.jpg` | https://www.sparklean.co/email-assets/window-cleaning.jpg | Interior window + SWFL palms |
 | Pressure washing | `pressure-washing.jpg` | https://www.sparklean.co/email-assets/pressure-washing.jpg | **Stand-in** (ladder / glass exterior work) — replace when true pressure-wash photo exists |
 | Construction cleaning | `construction-cleaning.jpg` | https://www.sparklean.co/email-assets/construction-cleaning.jpg | Post-construction / site documentation |

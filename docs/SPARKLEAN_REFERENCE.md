@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (commercial 24h badge off the vacuuming tech’s face)
+Last updated: **2026-08-19** (vacation rental hero swapped to unwatermarked paper-towel finish photo `1000052037`)
 
 ---
 
