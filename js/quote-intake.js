@@ -763,6 +763,12 @@
  cadence: String(submitAnswers.frequency || "").slice(0, 40),
  service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
  });
+ } else {
+ window.SparkleanEvents.track("quote_submitted", {
+ intake_preset: intakePreset || "standard",
+ service_category: String(submitAnswers.serviceCategory || "").slice(0, 40),
+ form_type: "guided",
+ });
  }
  }
  stepIndex = steps.length;
@@ -1005,6 +1011,23 @@
  var refParams = { intake_preset: "referral" };
  if (referralTypePrefill) refParams.referral_type = referralTypePrefill;
  window.SparkleanEvents.track("referral_started", refParams);
+ } else if (intakePreset === "innerCircle") {
+ if (!/[?&]interest=inner-circle(?:&|$)/.test(location.search || "")) {
+ window.SparkleanEvents.track("membership_interest", {
+ intake_preset: "innerCircle",
+ form_type: "guided",
+ });
+ }
+ } else {
+ var path = (window.location.pathname || "").toLowerCase();
+ var base = {
+ intake_preset: intakePreset || "standard",
+ form_type: "guided",
+ };
+ if (path.indexOf("commercial") !== -1) {
+ window.SparkleanEvents.track("commercial_quote_started", base);
+ } else if (path.indexOf("post-construction") !== -1) {
+ window.SparkleanEvents.track("construction_quote_started", base);
  } else if (paidMode) {
  window.SparkleanEvents.track("paid_quote_started", { intake_preset: "paidMinimum" });
  } else if (intakePreset === "recurringResidential") {
@@ -1012,6 +1035,9 @@
  intake_preset: "recurringResidential",
  service_category: "residential",
  });
+ } else {
+ window.SparkleanEvents.track("quote_started", base);
+ }
  }
  }
  render();

@@ -271,6 +271,40 @@ nav {
   margin-bottom: 12px;
   color: var(--white);
 }
+.article-meta {
+  margin-bottom: 40px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+}
+.article-meta-by {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--w40, rgba(249, 247, 243, 0.45));
+  margin: 0 0 8px;
+}
+.article-meta-by a {
+  color: var(--gold-lt, #d4bf96);
+  text-decoration: none;
+}
+.article-meta-by a:hover {
+  color: var(--gold, #c9a84c);
+  text-decoration: underline;
+}
+.article-meta-dates {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--w30, rgba(249, 247, 243, 0.32));
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+}
+.article-meta-sep {
+  opacity: 0.45;
+}
 .article-byline {
   font-size: 0.6rem;
   letter-spacing: 0.12em;

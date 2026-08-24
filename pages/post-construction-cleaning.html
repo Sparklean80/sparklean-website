@@ -113,6 +113,11 @@ h1 em.hero-mobile-h em{font-style:italic;color:var(--gold)}
 .project-types{padding:100px 80px;background:var(--dark2);}
 .pt-intro{max-width:640px;margin-bottom:60px;}
 .pt-intro p{font-family:var(--serif);font-size:.95rem;line-height:1.9;color:var(--w70);margin-top:16px;}
+.pc-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0 0 28px;max-width:980px;}
+.pc-stage{border:1px solid rgba(201,168,76,.14);background:rgba(18,18,18,.55);padding:22px 20px;}
+.pc-stage-title{font-family:var(--serif);font-size:1.12rem;font-weight:400;color:var(--gold-lt,#d4bf96);margin:0 0 10px;}
+.pc-stage p{font-size:.78rem;line-height:1.7;color:var(--w70);margin:0;}
+.pc-stages-note{max-width:880px;font-size:.72rem;line-height:1.7;color:var(--w50,rgba(249,247,243,.52));margin:0 0 48px;}
 .pt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
 .pt-card{background:var(--dark3);border:1px solid rgba(201,168,76,.07);padding:38px 32px;transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
 .pt-card:hover{border-color:rgba(201,168,76,.26);background:rgba(184,164,122,.04);}
@@ -230,7 +235,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
  .footer-logo-wrap img{height:120px !important;}
  .footer-bottom.footer-btm{flex-direction:column !important;gap:8px !important;text-align:center !important;padding:14px 20px !important;}
  .ci-grid,.sl-grid,.ni-grid,.sb-grid,.pp-grid,.comm-grid,.pb-inner,.about-grid,.why-grid,.prod-grid,.faq-grid,.rev-band{grid-template-columns:1fr !important;gap:32px !important;}
- .pt-grid,.wb-grid,.hoods-grid,.ss-grid,.ind-grid,.why-grid,.svc-grid,.rev-grid{grid-template-columns:1fr !important;gap:3px !important;}
+ .pt-grid,.wb-grid,.hoods-grid,.ss-grid,.ind-grid,.why-grid,.svc-grid,.rev-grid,.pc-stages{grid-template-columns:1fr !important;gap:3px !important;}
  .pc-intro,.project-types,.svc-list,.why-builders,.community,.cta,.naples-intro,.hoods,.svc-sum,.photo-pair,.snowbird,.faq,.about,.services,.why,.products,.reviews,.areas,.inner,.comm-intro,.industries{padding:52px 20px !important;}
  .breadcrumb,.city-band{padding-left:20px !important;padding-right:20px !important;}
  .photo-pair{padding:52px 20px !important;}
@@ -444,6 +449,21 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);}
  <h2 class="sec-h">From Rough Clean<br>to <em>Final Delivery</em></h2>
  <p>From initial rough cleans to detailed final cleanings, Sparklean is trusted for precision, professionalism, and spotless delivery on every project type.</p>
  </div>
+ <div class="pc-stages" aria-label="Post-construction cleaning stages">
+ <article class="pc-stage">
+ <h3 class="pc-stage-title">Rough Clean</h3>
+ <p>Bulk dust and construction debris removal after major trades, scoped to site conditions and the areas Sparklean is asked to address.</p>
+ </article>
+ <article class="pc-stage">
+ <h3 class="pc-stage-title">Final Clean</h3>
+ <p>Detailed cleaning before walkthrough, photography, turnover, or occupancy — including interiors, fixtures, floors, and finishing surfaces in the agreed scope.</p>
+ </article>
+ <article class="pc-stage">
+ <h3 class="pc-stage-title">Punch-List / Touch-Up Clean</h3>
+ <p>A return after final trade corrections for newly created dust, fingerprints, labels, and minor detail work that appears after the final clean.</p>
+ </article>
+ </div>
+ <p class="pc-stages-note">Stages are priced according to the requested scope. Exterior glass is included only when specifically written into the proposal. Hazardous materials, heavy debris hauling, and trade work are excluded unless expressly included. Return mobilizations caused by continued construction are additional unless included in the proposal.</p>
  <div class="pt-grid">
  <div class="pt-card pt-card-featured"><span class="pt-icon">🏠</span><div class="pt-name">Luxury New Builds</div><div class="pt-desc">Custom homes, spec homes, and luxury estates throughout Naples, Estero, and Bonita Springs. We handle the final clean so your buyer walks into perfection.</div></div>
  <div class="pt-card"><span class="pt-icon">🔨</span><div class="pt-name">Remodels &amp; Renovations</div><div class="pt-desc">Kitchen overhauls, bathroom remodels, and whole-home renovations. We remove the dust, debris, and grime left behind so the finish work truly shines.</div></div>

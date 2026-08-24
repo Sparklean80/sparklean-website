@@ -304,11 +304,11 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 <section class="cp-wrap" id="contact-experience">
  <div class="cp-inner">
  <div id="quote-intake" class="cp-quote-landmark" tabindex="-1">
- <h2 class="cp-quote-landmark__title">Guided quote request</h2>
- <p class="cp-quote-landmark__lede">The structured intake opens here when available. If it does not appear, use the simple form below or call <a href="tel:2398883588">(239) 888-3588</a> — either path reaches Sparklean.</p>
+ <h2 class="cp-quote-landmark__title">Start Guided Quote</h2>
+ <p class="cp-quote-landmark__lede">Use our guided quote request to share your property type, timing, and service needs. Prefer a shorter message? Use the simple contact form below. Both paths reach Sparklean.</p>
  <p class="cp-quote-landmark__actions">
- <a href="/contact?quote=1#quote-intake" class="btn-gold" data-sparklean-intake>Open guided quote →</a>
- <a href="#sparklean-contact-form" class="btn-outline">Use the simple form</a>
+ <a href="/contact?quote=1#quote-intake" class="btn-gold" data-sparklean-intake>Start Guided Quote</a>
+ <a href="#sparklean-contact-form" class="btn-outline">Send a Quick Message</a>
  </p>
  <noscript>
  <p class="cp-quote-landmark__noscript"><strong>JavaScript is off.</strong> Please use the contact form on this page or call <a href="tel:2398883588">(239) 888-3588</a>.</p>
@@ -318,13 +318,23 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  <div class="cp-form-card">
  <p id="cp-thanks" class="cp-thanks" role="status">Thank you. Your message has been received. A Sparklean team member will follow up shortly.</p>
  <p id="cp-form-error" class="cp-form-error" role="alert" hidden></p>
- <h2 class="cp-form-title">Write to us <em>directly</em></h2>
- <p class="cp-form-lede">This simpler form is a separate path from the guided quote. Both deliver to the same Sparklean lead system — use whichever is easier. For structured scheduling notes, open the guided quote above.</p>
+ <div id="cp-interest-banner" class="cp-interest-banner" hidden>
+ <p class="cp-interest-banner__title">Inner Circle membership inquiry</p>
+ <p>You are requesting membership consideration for Sparklean Inner Circle. Submitting this form starts a conversation about fit and availability — it does not guarantee acceptance.</p>
+ </div>
+ <h2 class="cp-form-title">Send a Quick <em>Message</em></h2>
+ <p class="cp-form-lede">Share a short note with your property details. For a structured walkthrough of property type, timing, and scope, use <a href="#quote-intake">Start Guided Quote</a> above. Both reach the same Sparklean team.</p>
 
  <form id="sparklean-contact-form" class="cp-form" name="sparklean-contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/contact?sent=1#contact-experience">
  <input type="hidden" name="form-name" value="sparklean-contact">
- <div class="cp-hp" aria-hidden="true">
- <label>Do not fill this in: <input name="bot-field" type="text" autocomplete="off" tabindex="-1"></label>
+ <input type="hidden" name="interest" id="cf-interest" value="">
+ <input type="hidden" name="landingPage" id="cf-landing" value="">
+ <input type="hidden" name="utmSource" id="cf-utm-source" value="">
+ <input type="hidden" name="utmMedium" id="cf-utm-medium" value="">
+ <input type="hidden" name="utmCampaign" id="cf-utm-campaign" value="">
+ <div class="cp-hp">
+ <label for="cf-bot">Do not fill this in:</label>
+ <input id="cf-bot" name="bot-field" type="text" autocomplete="off" tabindex="-1" aria-hidden="true">
  </div>
 
  <div class="cp-fields">
@@ -334,11 +344,11 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  </div>
  <div class="cp-field">
  <label for="cf-phone">Phone number</label>
- <input id="cf-phone" name="phone" type="tel" autocomplete="tel" required maxlength="32" placeholder="(239) 555-0100">
+ <input id="cf-phone" name="phone" type="tel" autocomplete="tel" maxlength="32" placeholder="(239) 555-0100" inputmode="tel">
  </div>
  <div class="cp-field">
  <label for="cf-email">Email address</label>
- <input id="cf-email" name="email" type="email" autocomplete="email" required maxlength="160" placeholder="you@example.com">
+ <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="160" placeholder="you@example.com">
  </div>
  <div class="cp-field">
  <label for="cf-property">Property type</label>
@@ -403,11 +413,11 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  <div class="cp-trust" aria-label="Trust highlights">
  <div class="cp-trust-item">
  <div class="cp-trust-n">5</div>
- <div class="cp-trust-l">Service area</div>
+ <div class="cp-trust-l">Service Cities</div>
  </div>
  <div class="cp-trust-item">
- <div class="cp-trust-n">5</div>
- <div class="cp-trust-l">Five service cities</div>
+ <div class="cp-trust-n">Bonded</div>
+ <div class="cp-trust-l">&amp; Insured</div>
  </div>
  <div class="cp-trust-item">
  <div class="cp-trust-n">Luxury</div>
@@ -415,7 +425,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  </div>
  <div class="cp-trust-item">
  <div class="cp-trust-n">24h</div>
- <div class="cp-trust-l">Happiness guarantee</div>
+ <div class="cp-trust-l">Satisfaction Window</div>
  </div>
  </div>
  </div>
@@ -452,11 +462,11 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  </div>
  <div class="cp-info-block">
  <div class="cp-info-k">Response time</div>
- <div class="cp-info-v">Most inquiries receive a reply within minutes during business hours.</div>
+ <div class="cp-info-v">We typically reply during business hours, Monday–Saturday.</div>
  </div>
- <p class="cp-info-note">For the fastest structured intake — property type, timing, and service scope — open the guided quote.</p>
+ <p class="cp-info-note">Prefer a structured intake? Use <a href="#quote-intake">Start Guided Quote</a> for property type, timing, and service scope.</p>
  <div style="margin-top:22px;">
- <a href="/contact?quote=1#quote-intake" class="btn-gold" style="width:100%;box-sizing:border-box;" data-sparklean-intake>Request Your Personalized Quote →</a>
+ <a href="/contact?quote=1#quote-intake" class="btn-gold" style="width:100%;box-sizing:border-box;" data-sparklean-intake>Start Guided Quote</a>
  </div>
  </aside>
  </div>
@@ -527,13 +537,53 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  var fm=document.getElementById("sparklean-contact-form");
  var th=document.getElementById("cp-thanks");
  var errEl=document.getElementById("cp-form-error");
+ var interestBanner=document.getElementById("cp-interest-banner");
  var PUBLIC_FAIL="We're having trouble submitting your request right now. Your information is still on this form — please try again, or call Sparklean directly at (239) 888-3588.";
+
+ function qs(name){
+ try{return new URLSearchParams(location.search).get(name)||"";}catch(e){return "";}
+ }
+
+ function applyInterest(){
+ var interest=(qs("interest")||"").trim().toLowerCase();
+ var interestField=document.getElementById("cf-interest");
+ var serviceField=document.getElementById("cf-service");
+ if(interestField) interestField.value=interest;
+ if(interest==="inner-circle"){
+ if(interestBanner) interestBanner.hidden=false;
+ if(serviceField && !String(serviceField.value||"").trim()){
+ serviceField.value="Sparklean Inner Circle / recurring membership";
+ }
+ if(window.SparkleanEvents&&typeof window.SparkleanEvents.track==="function"){
+ window.SparkleanEvents.track("membership_interest",{form_type:"contact",cta_location:"query"});
+ }
+ }
+ }
+
+ function applyAttributionFields(){
+ var landing=document.getElementById("cf-landing");
+ if(landing) landing.value=location.pathname+(location.search||"");
+ try{
+ var sp=new URLSearchParams(location.search);
+ var map={utm_source:"cf-utm-source",utm_medium:"cf-utm-medium",utm_campaign:"cf-utm-campaign"};
+ Object.keys(map).forEach(function(k){
+ var el=document.getElementById(map[k]);
+ if(el) el.value=sp.get(k)||"";
+ });
+ }catch(e0){}
+ }
+
+ applyInterest();
+ applyAttributionFields();
 
  function showThanks(trackingDelayed){
  if(th){
  th.classList.add("is-visible");
+ th.setAttribute("tabindex","-1");
+ try{th.focus();}catch(e1){}
  }
  if(fm)fm.style.display="none";
+ if(interestBanner) interestBanner.hidden=true;
  if(trackingDelayed){
  var host=th&&th.parentNode?th.parentNode:th;
  if(host&&!host.querySelector(".sparklean-tracking-delayed")){
@@ -558,16 +608,50 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  try{history.replaceState(null,"",location.pathname+location.hash);}catch(e){}
  }
 
+ function validateContactForm(){
+ if(!fm) return false;
+ var nameEl=document.getElementById("cf-name");
+ var phoneEl=document.getElementById("cf-phone");
+ var emailEl=document.getElementById("cf-email");
+ var consentEl=document.getElementById("cf-consent-required");
+ var name=nameEl?String(nameEl.value||"").trim():"";
+ var phone=phoneEl?String(phoneEl.value||"").trim():"";
+ var email=emailEl?String(emailEl.value||"").trim():"";
+ if(!name){
+ if(errEl){errEl.hidden=false;errEl.textContent="Please enter your full name.";}
+ if(nameEl) nameEl.focus();
+ return false;
+ }
+ if(!phone && !email){
+ if(errEl){errEl.hidden=false;errEl.textContent="Please provide a phone number or email so we can reach you.";}
+ if(phoneEl) phoneEl.focus();
+ return false;
+ }
+ if(email && emailEl && !emailEl.checkValidity()){
+ if(errEl){errEl.hidden=false;errEl.textContent="Please enter a valid email address.";}
+ emailEl.focus();
+ return false;
+ }
+ if(consentEl && !consentEl.checked){
+ if(errEl){errEl.hidden=false;errEl.textContent="Please confirm you agree to be contacted about your inquiry.";}
+ consentEl.focus();
+ return false;
+ }
+ if(!fm.checkValidity()){
+ fm.reportValidity();
+ return false;
+ }
+ return true;
+ }
+
  if(fm){
  fm.addEventListener("submit",function(ev){
  ev.preventDefault();
  if(errEl){errEl.hidden=true;errEl.textContent="";}
- if(!fm.checkValidity()){
- fm.reportValidity();
- return;
- }
+ if(!validateContactForm()) return;
  var btn=fm.querySelector(".cp-submit");
  if(btn){btn.disabled=true;btn.textContent="Sending…";}
+ applyAttributionFields();
  var fd=new FormData(fm);
  var payload={};
  fd.forEach(function(v,k){payload[k]=typeof v==="string"?v:String(v);});
@@ -600,6 +684,12 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  }
  var leadId=String(res.j.leadId);
  var reportToken=String(res.j.reportToken);
+ if(window.SparkleanEvents&&typeof window.SparkleanEvents.track==="function"){
+ window.SparkleanEvents.track("contact_form_submitted",{
+ form_type:"simple",
+ service_category:String(payload.interest||"contact").replace(/[^a-zA-Z0-9_\-]/g,"_").slice(0,40)
+ });
+ }
  showThanks(false);
  function afterOutcome(outcome){
  if(outcome&&(outcome.delayed||!outcome.browserSent||!outcome.reportOk)) showThanks(true);
@@ -631,7 +721,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  })
  .catch(function(){
  if(errEl){errEl.hidden=false;errEl.textContent=PUBLIC_FAIL;}
- if(btn){btn.disabled=false;btn.textContent="Send message";}
+ if(btn){btn.disabled=false;btn.textContent="Request My Cleaning Quote";}
  });
  });
  }

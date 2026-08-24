@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-24** (SEO audit cleanup verified: LocalBusiness+Service only — CleaningService is not a schema.org type; legal pages noindex + excluded from sitemap; metas shortened)
+Last updated: **2026-08-24** (Final cleanup pass on `seo-audit-cleanup-20260824`: About meta, visible blog author/dates, Inner Circle interest CTAs, contact hierarchy/trust, analytics events, post-construction stages)
 
 ---
 
