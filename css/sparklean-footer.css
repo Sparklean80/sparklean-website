@@ -53,13 +53,42 @@
   gap: 12px !important;
 }
 
-.footer-btm {
+.footer-btm,
+.footer-bottom {
   justify-content: center !important;
+  flex-wrap: wrap;
+  gap: 8px 16px;
 }
 
 .footer-copy {
   color: rgba(249, 247, 243, 0.28) !important;
   text-align: center;
+}
+
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.footer-legal a {
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  color: rgba(249, 247, 243, 0.35);
+  text-decoration: none;
+}
+
+.footer-legal a:hover {
+  color: var(--gold-lt, #d4bf96);
+}
+
+.footer-legal span {
+  font-size: 0.58rem;
+  color: rgba(249, 247, 243, 0.2);
 }
 
 .footer-logo-wrap {

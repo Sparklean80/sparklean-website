@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-19** (kept Request a Quote on phones; shrink header so it fits instead of hiding it)
+Last updated: **2026-08-24** (SEO audit cleanup verified: LocalBusiness+Service only — CleaningService is not a schema.org type; legal pages noindex + excluded from sitemap; metas shortened)
 
 ---
 
@@ -288,7 +288,7 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 | Item | Value |
 |------|--------|
 | Canonical `@id` | `https://www.sparklean.co/#organization` |
-| `@type` | `Organization` + `LocalBusiness` only (not deprecated `ProfessionalService`) |
+| `@type` | `Organization` + `LocalBusiness` only — `CleaningService` is **not** a schema.org type (404); offerings use `Service` + `OfferCatalog` |
 | Legal name | Sparklean Cleaning LLC (never “corporation”) |
 | Locked description | Professionally managed and supervised residential and commercial cleaning company serving Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral |
 | Service markets | **Five cities only:** Naples, Bonita Springs, Estero, Fort Myers, Cape Coral — do **not** publish Southwest Florida / SW Florida / SW FL / Marco Island as territory copy or schema `areaServed` |

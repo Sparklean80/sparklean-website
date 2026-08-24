@@ -621,6 +621,56 @@ syncServicePage({
  },
  ],
  faqFromFile: false,
+ extraFaq: [
+ {
+ "@type": "Question",
+ name: "How much does residential house cleaning cost?",
+ acceptedAnswer: {
+ "@type": "Answer",
+ text: "Pricing depends on home size, service level, and cleaning frequency. Sparklean offers recurring maintenance cleaning, deep cleaning, move-in and move-out, and one-time residential service. Contact us for a free, no-obligation quote tailored to your home.",
+ },
+ },
+ {
+ "@type": "Question",
+ name: "Do you bring your own cleaning supplies?",
+ acceptedAnswer: {
+ "@type": "Answer",
+ text: "Yes. Our teams arrive fully equipped with professional cleaning products and tools — effective and suitable for families and pets. You never need to provide anything.",
+ },
+ },
+ {
+ "@type": "Question",
+ name: "What areas do you serve?",
+ acceptedAnswer: {
+ "@type": "Answer",
+ text: "Sparklean serves homes in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral. If you're unsure whether we cover your neighborhood, call (239) 888-3588.",
+ },
+ },
+ {
+ "@type": "Question",
+ name: "How often should a home be professionally cleaned?",
+ acceptedAnswer: {
+ "@type": "Answer",
+ text: "Most clients choose weekly or bi-weekly maintenance cleaning to keep their home in consistent condition. Deep cleaning or white-glove services are recommended periodically — after events, seasonal transitions, or move-ins.",
+ },
+ },
+ {
+ "@type": "Question",
+ name: "Are your cleaners background checked and insured?",
+ acceptedAnswer: {
+ "@type": "Answer",
+ text: "Every Sparklean team member is a direct employee — never a subcontractor. All staff are fully background checked, bonded, and insured.",
+ },
+ },
+ {
+ "@type": "Question",
+ name: "What is the difference between recurring cleaning and deep cleaning?",
+ acceptedAnswer: {
+ "@type": "Answer",
+ text: "Recurring cleaning maintains your home between visits — dusting, sanitizing, floors, kitchens, and bathrooms on a regular schedule. Deep cleaning is a comprehensive top-to-bottom service that reaches every corner, surface, and detail including ceiling fans, blinds, baseboards, and wall scuffs.",
+ },
+ },
+ ],
 });
 
 syncServicePage({

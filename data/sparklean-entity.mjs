@@ -8,6 +8,8 @@
  * - No street address (service-area business; home address intentionally unpublished)
  * - No Google Maps search URLs in sameAs
  * - No invented profiles, ratings, hours, or credentials
+ * - Do not use @type CleaningService — not a real schema.org type (404);
+ *   keep Organization + LocalBusiness and describe offerings as Service nodes
  */
 
 export const ORG_ID = "https://www.sparklean.co/#organization";

@@ -89,6 +89,20 @@ assert(
   "sitemap.xml excludes /customer-portal"
 );
 
+for (const legal of ["privacy", "terms", "accessibility"]) {
+  const legalPath = path.join(root, `pages/${legal}.html`);
+  assert(fs.existsSync(legalPath), `pages/${legal}.html exists`);
+  const html = fs.readFileSync(legalPath, "utf8");
+  assert(
+    /<meta[^>]+name=["']robots["'][^>]*content=["']noindex,\s*follow["']/i.test(html),
+    `${legal} has robots noindex, follow`
+  );
+  assert(
+    !sitemap.includes(`https://www.sparklean.co/${legal}</loc>`),
+    `sitemap.xml excludes /${legal}`
+  );
+}
+
 const MOJIBAKE = /â€|Â·|Â©|Â®|Â†|â€™|â€œ|â€|â€“|â€”|â†/;
 const blogDir = path.join(root, "pages/blog");
 const blogFiles = fs.readdirSync(blogDir).filter((f) => f.endsWith(".html"));

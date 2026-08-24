@@ -110,8 +110,9 @@ function main() {
     if (!r.to || !r.to.startsWith("/pages/") || !r.to.endsWith(".html")) continue;
     const key = normalizePath(r.from);
     if (key === "/signalhouse" || key.startsWith("/signalhouse/")) continue;
-    // Utility portal for existing clients — noindex; keep page live, exclude from sitemap
+    // Utility / legal — noindex; keep pages live, exclude from sitemap
     if (key === "/customer-portal") continue;
+    if (key === "/privacy" || key === "/terms" || key === "/accessibility") continue;
     const diskPath = path.join(ROOT, r.to.replace(/^\//, ""));
     if (!fs.existsSync(diskPath)) {
       console.warn(`[sitemap] missing file for redirect: ${r.from} → ${r.to}`);
@@ -144,6 +145,13 @@ function main() {
     const rel = `pages/${f}`;
     if (rel.startsWith("pages/signalhouse/")) continue;
     if (rel === "pages/customer-portal.html") continue; // noindex utility; excluded above
+    if (
+      rel === "pages/privacy.html" ||
+      rel === "pages/terms.html" ||
+      rel === "pages/accessibility.html"
+    ) {
+      continue; // noindex legal; excluded above
+    }
     if (!targets.has(rel)) {
       console.warn(`[sitemap] orphan page (no 200 rewrite in netlify.toml): ${rel}`);
     }

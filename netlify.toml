@@ -423,11 +423,11 @@
   status = 301
 [[redirects]]
   from = "/privacy-policy"
-  to = "/contact"
+  to = "/privacy"
   status = 301
 [[redirects]]
   from = "/privacy-policy/"
-  to = "/contact"
+  to = "/privacy"
   status = 301
 [[redirects]]
   from = "/sparkleanvision"
@@ -829,3 +829,29 @@
   for = "/email-assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+
+[[redirects]]
+  from = "/privacy"
+  to = "/pages/privacy.html"
+  status = 200
+[[redirects]]
+  from = "/privacy/"
+  to = "/pages/privacy.html"
+  status = 200
+[[redirects]]
+  from = "/terms"
+  to = "/pages/terms.html"
+  status = 200
+[[redirects]]
+  from = "/terms/"
+  to = "/pages/terms.html"
+  status = 200
+[[redirects]]
+  from = "/accessibility"
+  to = "/pages/accessibility.html"
+  status = 200
+[[redirects]]
+  from = "/accessibility/"
+  to = "/pages/accessibility.html"
+  status = 200

@@ -114,6 +114,7 @@ assert(
 const orgTypes = [].concat(org["@type"]);
 assert(orgTypes.includes("Organization"), "Organization type");
 assert(orgTypes.includes("LocalBusiness"), "LocalBusiness type");
+assert(!orgTypes.includes("CleaningService"), "CleaningService is not a schema.org type — use LocalBusiness + Service nodes");
 assert(!orgTypes.includes("ProfessionalService"), "no deprecated ProfessionalService");
 assert(
  JSON.stringify(org).includes('"@type":"Service"') ||
