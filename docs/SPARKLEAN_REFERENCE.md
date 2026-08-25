@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-24** (`seo-audit-cleanup-20260824` — Cape Coral intent ownership correction; see `docs/INTENT_MAP_CAPE_CORAL.md`; production merge still paused)
+Last updated: **2026-08-24** (`seo-audit-cleanup-20260824` — OSHA claim removed from post-construction; production was at `a2869a9`; awaiting next merge SHA)
 
 ---
 
