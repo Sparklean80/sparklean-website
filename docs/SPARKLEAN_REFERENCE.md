@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-24** (`seo-audit-cleanup-20260824` checklist through #9: claims/vinegar/medical; blog differentiation; meta lengths; image dimensions; durable form presets + Airbnb intake; **no production merge yet** — #10 GSC/CWV waits for deploy)
+Last updated: **2026-08-24** (`seo-audit-cleanup-20260824` checklist #1–#9 complete; #10 post-deploy GSC/CWV blocked until production merge — see `docs/POST_DEPLOY_CHECKLIST.md`)
 
 ---
 
