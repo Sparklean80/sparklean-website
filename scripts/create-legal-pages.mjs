@@ -78,6 +78,16 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12)}
 .footer-copy{font-size:.58rem;color:rgba(249,247,243,.28);letter-spacing:.06em}
 @media(max-width:1024px){:root{--nav-h:96px}.footer-top,.footer-btm{padding-left:20px;padding-right:20px}}
 </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17027441328"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17027441328');
+</script>
+<script src="/js/sparklean-ads.js"></script>
 </head>
 <body>
 <header class="site-header">
