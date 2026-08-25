@@ -200,9 +200,14 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
 .home-quote-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:end;}
 .home-quote-field{display:flex;flex-direction:column;gap:8px;}
 .home-quote-field label{font-size:.5rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);}
-.home-quote-field input.home-quote-field select{width:100%;background:rgba(14,14,14,.55);border:1px solid rgba(201,168,76,.22);color:var(--white);font-family:var(--sans);font-size:.78rem;padding:14px 14px;outline:none;transition:border-color .2s;}
-.home-quote-field input:focus.home-quote-field select:focus{border-color:rgba(201,168,76,.55);}
-.home-quote-field select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 18px) calc(50% - 3px),calc(100% - 12px) calc(50% - 3px);background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:34px;}
+.home-quote-field input,
+.home-quote-field select{width:100%;background:rgba(14,14,14,.55);border:1px solid rgba(201,168,76,.22);color:var(--white);font-family:var(--sans);font-size:.78rem;padding:14px 14px;outline:none;transition:border-color .2s,box-shadow .2s;accent-color:var(--gold);color-scheme:dark;}
+.home-quote-field input:focus,
+.home-quote-field select:focus{border-color:rgba(201,168,76,.55);box-shadow:0 0 0 1px rgba(184,164,122,.35);}
+.home-quote-field select{appearance:none;-webkit-appearance:none;background-color:rgba(14,14,14,.55);background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 18px) calc(50% - 3px),calc(100% - 12px) calc(50% - 3px);background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:34px;cursor:pointer;}
+.home-quote-field select option{background:#161616;color:var(--white);}
+.home-quote-field select option:checked,
+.home-quote-field select option:hover{background:rgba(184,164,122,.28);color:var(--white);}
 .home-quote-field--cta .btn-gold{width:100%;justify-content:center;border:0;cursor:pointer;font-family:var(--sans);}
 .home-quote-note{margin-top:14px;font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(249,247,243,.34);line-height:1.6;}
 .svc-card .svc-intents{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;position:relative;z-index:1;}
@@ -557,7 +562,7 @@ h1{font-size:clamp(1.8rem,7vw,2.4rem);}
  <div class="eyebrow"><div class="ey-line"></div><span>Our Products</span></div>
  <h2 class="sec-h">Professional cleaning powered by the<br><em>Sparklean Green Clean</em> line.</h2>
  <div class="gold-line"></div>
- <p class="prod-body">Sparklean arrives prepared with its own professional-grade cleaning products, developed for dependable results across residential and commercial environments. Product preferences, sensitive surfaces, children, and pets can be discussed during your personalized quote.</p>
+ <p class="prod-body">Sparklean arrives prepared with professional-grade cleaning products selected for dependable results across residential and commercial environments. Product preferences, sensitive surfaces, children, and pets can be discussed during your personalized quote.</p>
  <div class="prod-range">
  <div class="prod-row"><div class="prod-dot" style="background:#e8a0a0"></div><div><div class="prod-name">Multipurpose Cleaner</div><div class="prod-desc-t">All-surface everyday clean</div></div></div>
  <div class="prod-row"><div class="prod-dot" style="background:#c9a84c"></div><div><div class="prod-name">Green Clean Degreaser</div><div class="prod-desc-t">Kitchen and surface degreaser</div></div></div>
