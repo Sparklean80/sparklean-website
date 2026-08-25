@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-24** (`seo-audit-cleanup-20260824`: claims/vinegar/medical cleanup; blog hub dates; city hire-a-pro articles differentiated with established city-page communities only — URLs preserved; no production merge yet)
+Last updated: **2026-08-24** (`seo-audit-cleanup-20260824` checklist through #9: claims/vinegar/medical; blog differentiation; meta lengths; image dimensions; durable form presets + Airbnb intake; **no production merge yet** — #10 GSC/CWV waits for deploy)
 
 ---
 
