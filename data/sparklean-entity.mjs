@@ -81,10 +81,10 @@ export const CITY_PAGES = {
   "cape-coral": {
     slug: "house-cleaning-cape-coral",
     city: "Cape Coral",
-    name: "House Cleaning Cape Coral FL",
-    serviceName: "House Cleaning in Cape Coral, FL",
+    name: "Cape Coral House Cleaning Services",
+    serviceName: "Cape Coral House Cleaning Services",
     serviceDescription:
-      "Supervised residential house cleaning in Cape Coral, FL — canal and waterfront homes. Provided by Sparklean Cleaning.",
+      "Cape Coral cleaning service for canal and waterfront homes—Cape Harbour, Tarpon Point, Sandoval. Supervised residential house cleaning by Sparklean Cleaning.",
   },
 };
 

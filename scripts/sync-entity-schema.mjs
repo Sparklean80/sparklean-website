@@ -79,7 +79,7 @@ function homepageFaqs() {
  name: "What cleaning services does Sparklean offer?",
  acceptedAnswer: {
  "@type": "Answer",
- text: "Sparklean offers recurring residential cleaning, one-time deep cleans, move-in and move-out, commercial and janitorial, post-construction and final cleans, and specialized add-ons in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
+        text: "Sparklean offers recurring residential cleaning, one-time deep cleans, move-in and move-out, commercial and janitorial, post-construction and final cleans, and specialized add-ons. City-specific house cleaning details live on each local service page.",
  },
  },
  {

@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-24** (`seo-audit-cleanup-20260824` checklist #1–#9 complete; #10 post-deploy GSC/CWV blocked until production merge — see `docs/POST_DEPLOY_CHECKLIST.md`)
+Last updated: **2026-08-24** (`seo-audit-cleanup-20260824` — Cape Coral intent ownership correction; see `docs/INTENT_MAP_CAPE_CORAL.md`; production merge still paused)
 
 ---
 
@@ -403,6 +403,8 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 **Fort Myers city page SEO ownership (2026-08-19):** Same Semrush pattern. Title/H1/schema: `House Cleaning Services in Fort Myers, Florida`. Across-the-city angle kept (Gulf Harbour, McGregor, Heritage Palms, Gateway). Breadcrumb: Home → Residential Cleaning → Fort Myers. Marquee maid wording removed. Hero CTA: Build My Cleaning Plan. Full-frame mobile hero fit + header clearance. No UI redesign.
 
 **Cape Coral city page SEO ownership (2026-08-19):** Same Semrush pattern. Title/H1/schema: `House Cleaning Services in Cape Coral, Florida`. Canal-homes angle kept (Cape Harbour, Tarpon Point, Sandoval, Cape Royal). Breadcrumb: Home → Residential Cleaning → Cape Coral. Marquee maid wording removed. Hero CTA: Build My Cleaning Plan. Full-frame mobile hero + desktop photo below header + mobile 24h badge bottom-right. **All five city money pages now on this pattern.**
+
+**Cape Coral vs homepage intent split (2026-08-24, GSC evidence):** Query cluster `cleaning service cape coral` showed homepage (~609 impressions) competing with `/house-cleaning-cape-coral` (~570), avg position ~55.6, 0 clicks. Correction: city page owns Cape Coral residential intent; homepage/residential hub de-compete exact city+service targeting while keeping Cape Coral in `areaServed`, nav, and service-area copy. Intent map: `docs/INTENT_MAP_CAPE_CORAL.md`.
 
 **Desktop hero sharpness (2026-08-19):** All photo-hero pages use **1400 JPG** (not heavily compressed WebP) for desktop `.hero-bg` / homepage `<img>` / residential hero `<img>` / contact CSS / About local JPGs. Desktop `zoomIn` / scale animation removed (`css/hero-desktop-sharp.css`). Mobile still uses WebP sources + existing contain layout. Pages: `/`, `/house-cleaning-{naples,bonita-springs,estero,fort-myers,cape-coral}`, `/residential-cleaning`, `/commercial-cleaning`, `/post-construction-cleaning`, `/vacation-rental-cleaning`, `/specialized-cleaning`, `/contact`, `/about`. No larger-than-1400 originals in repo.
 
