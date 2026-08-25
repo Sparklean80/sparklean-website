@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-24** (Pre-merge fixes on `seo-audit-cleanup-20260824`: contact attribution session capture + browser DOM test; sitewide **24-Hour Happiness Guarantee** naming; hire-a-pro blogs no longer publish outdated $/hour rates)
+Last updated: **2026-08-24** (`seo-audit-cleanup-20260824`: claims/vinegar/medical cleanup; blog hub dates; city hire-a-pro articles differentiated with established city-page communities only — URLs preserved; no production merge yet)
 
 ---
 
