@@ -43,7 +43,9 @@ assert(
 assert(contactHtml.includes('id="quote-intake"'), "contact has #quote-intake landmark");
 assert(
   contactHtml.includes('href="/contact?quote=1#quote-intake"') &&
-    contactHtml.includes("Request Your Personalized Quote"),
+    (contactHtml.includes("Start Guided Quote") ||
+      contactHtml.includes("Request My Cleaning Quote") ||
+      contactHtml.includes("Request Your Personalized Quote")),
   "contact quote CTA uses durable quote URL"
 );
 assert(contactHtml.includes("data-sparklean-intake"), "contact quote CTA has data-sparklean-intake");

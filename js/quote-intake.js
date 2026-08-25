@@ -76,6 +76,12 @@
  intro:
  "Tell us about the home and preferred cadence. Most clients continue weekly, biweekly, or monthly with supervised recurring care.",
  };
+ var INTAKE_CHROME_AIRBNB = {
+ eyebrow: "Vacation rental turnover",
+ title: "Plan guest-ready turnovers",
+ intro:
+ "Share typical turnover volume, linen needs, and restocking preferences. Same-day turns are confirmed case by case against the schedule.",
+ };
  var INTAKE_FAILURE_MSG =
  "We're having trouble submitting your request right now. Your answers are still here — please try again, or call Sparklean directly at (239) 888-3588.";
  var referralTypePrefill = "";
@@ -148,7 +154,13 @@
 
  function presetFromQuery(search) {
  var raw = String(parseSearch(search).get("preset") || "").trim();
- if (raw === "recurringResidential" || raw === "innerCircle" || raw === "referral") return raw;
+ if (
+ raw === "recurringResidential" ||
+ raw === "innerCircle" ||
+ raw === "referral" ||
+ raw === "airbnbRental"
+ )
+ return raw;
  return "";
  }
 
@@ -647,6 +659,13 @@
  render();
  return;
  }
+ if (intakePreset === "airbnbRental") {
+ if (stepIndex < 4) {
+ steps = F.flows.universal.slice(0, 4).concat(F.flows.airbnbRental);
+ }
+ render();
+ return;
+ }
  if (intakePreset === "referral") {
  steps = F.flows.referralIntro.slice();
  render();
@@ -847,6 +866,7 @@
  else if (preset === "innerCircle") pack = INTAKE_CHROME_INNER_CIRCLE;
  else if (preset === "referral") pack = INTAKE_CHROME_REFERRAL;
  else if (preset === "recurringResidential") pack = INTAKE_CHROME_RECURRING;
+ else if (preset === "airbnbRental") pack = INTAKE_CHROME_AIRBNB;
  var ey = root.querySelector(".sq-intake__eyebrow");
  var ti = root.querySelector("#sq-intake-title");
  var intro = root.querySelector(".sq-intake__intro");
@@ -953,11 +973,15 @@
  if (preset === "innerCircle") intakePreset = "innerCircle";
  else if (preset === "referral") intakePreset = "referral";
  else if (preset === "recurringResidential") intakePreset = "recurringResidential";
+ else if (preset === "airbnbRental") intakePreset = "airbnbRental";
  else intakePreset = null;
 
  // Referral / Inner Circle keep their dedicated flows even on paid landings.
  paidMode =
- shouldUsePaidMode(opts) && intakePreset !== "referral" && intakePreset !== "innerCircle";
+ shouldUsePaidMode(opts) &&
+ intakePreset !== "referral" &&
+ intakePreset !== "innerCircle" &&
+ intakePreset !== "airbnbRental";
  leadDelivered = false;
  trackingDelayed = false;
 
@@ -994,6 +1018,9 @@
  } else if (intakePreset === "recurringResidential") {
  answers = { serviceCategory: "residential" };
  steps = F.flows.universal.slice(0, 4).concat(F.flows.residential);
+ } else if (intakePreset === "airbnbRental") {
+ answers = { serviceCategory: "airbnbRental" };
+ steps = F.flows.universal.slice(0, 4).concat(F.flows.airbnbRental);
  } else {
  answers = {};
  steps = F.flows.universal.slice();
@@ -1034,6 +1061,12 @@
  window.SparkleanEvents.track("recurring_quote_started", {
  intake_preset: "recurringResidential",
  service_category: "residential",
+ });
+ } else if (intakePreset === "airbnbRental") {
+ window.SparkleanEvents.track("quote_started", {
+ intake_preset: "airbnbRental",
+ form_type: "guided",
+ service_category: "airbnbRental",
  });
  } else {
  window.SparkleanEvents.track("quote_started", base);
