@@ -20,7 +20,8 @@
     "test:testimonials": "node scripts/test-testimonials.mjs",
     "test:referral": "node scripts/test-referral-recurring.mjs",
     "test:final-cleanup": "node scripts/test-final-cleanup-pass.mjs",
-    "test:site": "npm run test:schema && npm run test:html-seo && npm run test:testimonials && npm run test:referral && npm run test:final-cleanup && npm run test:funnel",
+    "test:contact-attribution": "node scripts/test-contact-attribution.mjs",
+    "test:site": "npm run test:schema && npm run test:html-seo && npm run test:testimonials && npm run test:referral && npm run test:final-cleanup && npm run test:contact-attribution && npm run test:funnel",
     "gen:trust-pages": "node scripts/gen-trust-layer-pages.mjs"
   },
   "devDependencies": {

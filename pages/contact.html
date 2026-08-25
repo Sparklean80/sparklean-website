@@ -167,6 +167,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 <script src="/js/sparklean-attribution.js"></script>
 <script src="/js/sparklean-ads.js"></script>
 <script src="/js/sparklean-events.js"></script>
+<script src="/js/sparklean-contact-attribution.js"></script>
 </head>
 <body>
 
@@ -425,7 +426,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  </div>
  <div class="cp-trust-item">
  <div class="cp-trust-n">24h</div>
- <div class="cp-trust-l">Satisfaction Window</div>
+ <div class="cp-trust-l">Happiness Guarantee</div>
  </div>
  </div>
  </div>
@@ -545,10 +546,17 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  }
 
  function applyInterest(){
+ if(window.SparkleanContactAttribution&&typeof window.SparkleanContactAttribution.applyToForm==="function"){
+ var data=window.SparkleanContactAttribution.applyToForm();
+ if(data&&data.interest==="inner-circle"&&window.SparkleanEvents&&typeof window.SparkleanEvents.track==="function"){
+ window.SparkleanEvents.track("membership_interest",{form_type:"contact",cta_location:"query"});
+ }
+ return;
+ }
  var interest=(qs("interest")||"").trim().toLowerCase();
  var interestField=document.getElementById("cf-interest");
  var serviceField=document.getElementById("cf-service");
- if(interestField) interestField.value=interest;
+ if(interestField){interestField.value=interest;try{interestField.setAttribute("value",interest);}catch(eA){}}
  if(interest==="inner-circle"){
  if(interestBanner) interestBanner.hidden=false;
  if(serviceField && !String(serviceField.value||"").trim()){
@@ -561,14 +569,26 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  }
 
  function applyAttributionFields(){
+ if(window.SparkleanContactAttribution&&typeof window.SparkleanContactAttribution.applyToForm==="function"){
+ window.SparkleanContactAttribution.applyToForm();
+ return;
+ }
  var landing=document.getElementById("cf-landing");
- if(landing) landing.value=location.pathname+(location.search||"");
+ if(landing){
+ var lp=location.pathname+(location.search||"");
+ landing.value=lp;
+ try{landing.setAttribute("value",lp);}catch(eB){}
+ }
  try{
  var sp=new URLSearchParams(location.search);
  var map={utm_source:"cf-utm-source",utm_medium:"cf-utm-medium",utm_campaign:"cf-utm-campaign"};
  Object.keys(map).forEach(function(k){
  var el=document.getElementById(map[k]);
- if(el) el.value=sp.get(k)||"";
+ if(el){
+ var v=sp.get(k)||"";
+ el.value=v;
+ try{el.setAttribute("value",v);}catch(eC){}
+ }
  });
  }catch(e0){}
  }

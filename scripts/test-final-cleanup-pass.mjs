@@ -124,7 +124,8 @@ assert(
 );
 assert(contact.includes("Service Cities"), "contact keeps one 5-city trust item");
 assert(!/Five service cities/i.test(contact), "contact removes duplicate five-cities trust item");
-assert(contact.includes("Satisfaction Window"), "contact uses satisfaction window wording");
+assert(contact.includes("Happiness Guarantee"), "contact uses Happiness Guarantee wording");
+assert(!/Satisfaction Window/i.test(contact), "contact does not use Satisfaction Window");
 assert(contact.includes('type="email"'), "contact email type=email");
 assert(contact.includes('type="tel"'), "contact phone type=tel");
 assert(contact.includes('name="consentContact"') && contact.includes("required"), "contact consent required");
@@ -134,6 +135,10 @@ assert(
   "marketing consent unchecked by default"
 );
 assert(contact.includes('href="/privacy"') && contact.includes('href="/terms"'), "contact legal links");
+assert(
+  contact.includes('src="/js/sparklean-contact-attribution.js"'),
+  "contact loads attribution helper"
+);
 
 // --- Partners alt + referral params ---
 const partners = read("pages/partners.html");
@@ -198,6 +203,23 @@ assert(intake.includes("membership_interest"), "intake can fire membership_inter
 const pc = read("pages/post-construction-cleaning.html");
 assert(pc.includes("Rough Clean") && pc.includes("Final Clean") && pc.includes("Punch-List"), "post-construction stages present");
 assert(pc.includes("Exterior glass is included only when"), "post-construction scope caveats present");
+
+// --- Guarantee naming (approved: 24-Hour Happiness Guarantee) ---
+const home = read("index.html");
+const residential = read("pages/residential-cleaning.html");
+assert(home.includes("24-Hour Happiness Guarantee"), "homepage uses approved guarantee name");
+assert(!/24-Hour Guarantee(?!d)/.test(home.replaceAll("24-Hour Happiness Guarantee", "")), "homepage has no truncated 24-Hour Guarantee");
+assert(contact.includes("Happiness Guarantee"), "contact trust uses Happiness Guarantee");
+assert(residential.includes("24-Hour Happiness Guarantee"), "residential uses approved guarantee name");
+assert(!/>24-Hour Guarantee</.test(residential), "residential trust strip not truncated");
+
+// --- Blog hire-a-pro articles: no outdated published hourly rates ---
+for (const f of articles) {
+  if (!f.includes("when-to-hire-a-pro")) continue;
+  const html = read(path.join("pages", "blog", f));
+  assert(!/\$\d+\s*per\s*hour/i.test(html), `${f} has no published $/hour rates`);
+  assert(/pricing depends on/i.test(html), `${f} explains scope-based pricing`);
+}
 
 if (failed) {
   console.error(`\n${failed} failure(s)`);

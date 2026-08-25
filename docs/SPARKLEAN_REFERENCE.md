@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-24** (Final cleanup pass on `seo-audit-cleanup-20260824`: About meta, visible blog author/dates, Inner Circle interest CTAs, contact hierarchy/trust, analytics events, post-construction stages)
+Last updated: **2026-08-24** (Pre-merge fixes on `seo-audit-cleanup-20260824`: contact attribution session capture + browser DOM test; sitewide **24-Hour Happiness Guarantee** naming; hire-a-pro blogs no longer publish outdated $/hour rates)
 
 ---
 
