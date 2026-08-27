@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Apply | Sparklean Cleaning Careers</title>
+<meta name="description" content="Sparklean employment application. Same job-related requirements for every applicant.">
+<link rel="canonical" href="https://www.sparklean.co/careers/apply">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/sparklean-mobile-first.css">
+<link rel="stylesheet" href="/css/sparklean-nav-logo.css">
+<link rel="stylesheet" href="/css/sparklean-site-header.css">
+<link rel="stylesheet" href="/css/sparklean-footer.css">
+<link rel="stylesheet" href="/css/sparklean-careers.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#B8A47A;--gold-lt:#D4BF96;--dark:#0E0E0E;--nav-bg:#131313;--white:#F9F7F3;--w70:rgba(249,247,243,.7);--serif:'Playfair Display',Georgia,serif;--sans:'Montserrat',sans-serif;--nav-h:120px;}
+body{background:var(--dark);color:var(--white);font-family:var(--sans);font-weight:300;}
+.btn-gold{display:inline-flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#0E0E0E;background:var(--gold);padding:15px 32px;text-decoration:none;border:0;cursor:pointer;}
+</style>
+</head>
+<body>
+<header class="site-header" id="site-header">
+ <nav aria-label="Primary">
+ <a href="/" class="nav-logo"><img width="2048" height="1449" src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning"></a>
+ <div class="nav-right">
+ <a href="tel:2398883588" class="nav-phone">(239) 888-3588</a>
+ <button class="nav-hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
+ <a href="/careers" class="nav-btn">Careers</a>
+ </div>
+ </nav>
+</header>
+<div class="nav-mobile-menu" id="mobileMenu"><a href="/careers">Careers</a><a href="/contact">Contact</a></div>
+<main class="careers-shell">
+ <p class="careers-kicker">Employment application</p>
+ <h1>Apply for <em data-job-title>Sparklean</em></h1>
+ <p class="careers-lede">Starting pay is <span data-job-pay>$18.00</span>/hour and is nonnegotiable. Overtime is <span data-job-ot>$27.00</span>/hour when hours exceed 40. Earliest report time: <span data-job-time>07:00</span>. Required days: <span data-job-days>weekdays</span>.</p>
+ <div class="careers-error" id="careers-error" hidden></div>
+
+ <section class="careers-card" data-careers-step id="step-gate">
+  <p class="careers-step">Step 1 · Eligibility</p>
+  <form id="form-gate">
+   <label>Full legal name <input id="full_legal_name" name="full_legal_name" required autocomplete="name"></label>
+   <label>Phone <input id="phone" name="phone" required type="tel" autocomplete="tel"></label>
+   <label>Email <input id="email" name="email" required type="email" autocomplete="email"></label>
+   <label>City <input id="city" name="city" required></label>
+   <label>ZIP code <input id="zip" name="zip" required inputmode="numeric"></label>
+   <label class="careers-check"><input id="at_least_18" type="checkbox"> I am at least 18 years old.</label>
+   <label class="careers-check"><input id="work_authorized" type="checkbox"> I am currently legally authorized to work in the United States.</label>
+   <label class="careers-check"><input id="requires_sponsorship" type="checkbox"> I will now or in the future require Sparklean to sponsor an employment visa. Leave unchecked if you will not require sponsorship.</label>
+   <label class="careers-check"><input id="accepts_starting_pay" type="checkbox"> I accept starting pay of exactly <span data-job-pay>$18.00</span>/hour.</label>
+   <label class="careers-check"><input id="understands_rate_nonnegotiable" type="checkbox"> I understand the starting rate is nonnegotiable.</label>
+   <label class="careers-check"><input id="can_report_earliest_time" type="checkbox"> I can consistently report at <span data-job-time>07:00</span>.</label>
+   <label class="careers-check"><input id="available_full_time" type="checkbox"> I am available for the required full-time schedule.</label>
+   <label class="careers-check"><input id="willing_over_40" type="checkbox"> I am willing and available to work over 40 hours during scheduled busy weeks.</label>
+   <label class="careers-check"><input id="understands_ot_rate" type="checkbox"> I understand overtime is paid at <span data-job-ot>$27.00</span>/hour when hours exceed 40 in Sparklean’s workweek.</label>
+   <label class="careers-check"><input id="understands_ot_not_guaranteed" type="checkbox"> I understand overtime is based on business needs and is not guaranteed.</label>
+   <label class="careers-check"><input id="can_work_required_days" type="checkbox"> I can work all required days: <span data-job-days>weekdays</span>.</label>
+   <div id="dl-wrap">
+    <label class="careers-check"><input id="has_valid_fl_dl" type="checkbox"> I currently hold a valid Florida driver’s license. This position requires driving a company vehicle.</label>
+   </div>
+   <label class="careers-check"><input id="reliable_transport" type="checkbox"> I have reliable transportation to the assigned reporting location.</label>
+   <p class="careers-lede" data-job-functions></p>
+   <label class="careers-check"><input id="can_perform_essential_duties" type="checkbox"> I can perform the listed essential job functions with or without reasonable accommodation.</label>
+   <label class="careers-check"><input id="accepts_conduct_requirements" type="checkbox"> I accept Sparklean attendance, uniform, company-vehicle, timekeeping, and client-conduct requirements.</label>
+   <label class="careers-check"><input id="agrees_later_screening" type="checkbox"> I agree to later background, MVR, reference, Form I-9, and E-Verify processes when required.</label>
+   <div class="careers-actions"><button class="btn-gold" type="submit">Continue</button></div>
+  </form>
+ </section>
+
+ <section class="careers-card careers-hidden" data-careers-step id="step-app">
+  <p class="careers-step">Step 2 · Experience</p>
+  <form id="form-app">
+   <label>Most recent employer <input id="employer" required></label>
+   <label>Role <input id="role_title" required></label>
+   <label>Started <input id="started_on" type="date" required></label>
+   <label>Ended <input id="ended_on" type="date"></label>
+   <label>Reason for leaving <input id="reason_for_leaving" required></label>
+   <label class="careers-check"><input id="cleaning_experience" type="checkbox"> I have cleaning experience.</label>
+   <label class="careers-check"><input id="residential_experience" type="checkbox"> Residential</label>
+   <label class="careers-check"><input id="commercial_experience" type="checkbox"> Commercial</label>
+   <label class="careers-check"><input id="post_construction_experience" type="checkbox"> Post-construction</label>
+   <label class="careers-check"><input id="team_lead_experience" type="checkbox"> Team-lead experience</label>
+   <label>Languages spoken (optional) <input id="languages"></label>
+   <h2>Reference 1</h2>
+   <label>Name <input id="ref1_name" required></label>
+   <label>Phone <input id="ref1_phone" required type="tel"></label>
+   <label>Relationship <input id="ref1_rel" required></label>
+   <h2>Reference 2</h2>
+   <label>Name <input id="ref2_name" required></label>
+   <label>Phone <input id="ref2_phone" required type="tel"></label>
+   <label>Relationship <input id="ref2_rel" required></label>
+   <label>Earliest start date <input id="earliest_start_date" type="date" required></label>
+   <label>You arrive and a bedroom door says do not enter. What do you do? <textarea id="q_locked_room" required></textarea></label>
+   <label>A client asks you to skip bathrooms that are on the work order. What do you do? <textarea id="q_skip_request" required></textarea></label>
+   <label>You notice a cracked vase while dusting. What do you do? <textarea id="q_damage" required></textarea></label>
+   <div class="careers-actions"><button class="btn-gold" type="submit">Continue</button></div>
+  </form>
+ </section>
+
+ <section class="careers-card careers-hidden" data-careers-step id="step-cert">
+  <p class="careers-step">Step 3 · Certification</p>
+  <form id="form-cert">
+   <label class="careers-check"><input id="truthful" type="checkbox" required> I certify that the information submitted is truthful. I understand that false information may disqualify me, subject to applicable law.</label>
+   <label>Type your full legal name as signature <input id="cert_signature" required autocomplete="name"></label>
+   <div class="careers-actions"><button class="btn-gold" type="submit">Submit application</button></div>
+  </form>
+ </section>
+
+ <section class="careers-card careers-hidden" data-careers-step id="step-rejected">
+  <h2>Application not continued</h2>
+  <p class="careers-lede">Based on the answers provided, you do not currently meet one or more minimum requirements for this position. Sparklean applies the same job-related requirements to every applicant. If your eligibility or availability changes, you may submit a new application.</p>
+  <a class="btn-gold" href="/careers">Back to careers</a>
+ </section>
+</main>
+<footer>
+ <div class="footer-bottom"><span class="footer-copy">© 2026 Sparklean Cleaning. All rights reserved.</span>
+ <nav class="footer-legal" aria-label="Legal"><a href="/privacy">Privacy Policy</a><span aria-hidden="true">·</span><a href="/terms">Terms of Service</a></nav></div>
+</footer>
+<script>
+var hb=document.getElementById("hamburger"); var mm=document.getElementById("mobileMenu");
+if(hb&&mm){ hb.addEventListener("click",function(){hb.classList.toggle("open");mm.classList.toggle("open");}); }
+</script>
+<script src="/js/sparklean-site-header.js" defer></script>
+<script src="/js/sparklean-careers-apply.js"></script>
+</body>
+</html>

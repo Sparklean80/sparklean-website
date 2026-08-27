@@ -575,6 +575,46 @@
   to = "/pages/contact.html"
   status = 200
 [[redirects]]
+  from = "/careers"
+  to = "/pages/careers.html"
+  status = 200
+[[redirects]]
+  from = "/careers/"
+  to = "/pages/careers.html"
+  status = 200
+[[redirects]]
+  from = "/careers/apply"
+  to = "/pages/careers-apply.html"
+  status = 200
+[[redirects]]
+  from = "/careers/apply/"
+  to = "/pages/careers-apply.html"
+  status = 200
+[[redirects]]
+  from = "/careers/offer"
+  to = "/pages/careers-offer.html"
+  status = 200
+[[redirects]]
+  from = "/careers/offer/"
+  to = "/pages/careers-offer.html"
+  status = 200
+[[redirects]]
+  from = "/careers/offer/*"
+  to = "/pages/careers-offer.html"
+  status = 200
+[[redirects]]
+  from = "/careers/documents"
+  to = "/pages/careers-documents.html"
+  status = 200
+[[redirects]]
+  from = "/careers/documents/"
+  to = "/pages/careers-documents.html"
+  status = 200
+[[redirects]]
+  from = "/careers/documents/*"
+  to = "/pages/careers-documents.html"
+  status = 200
+[[redirects]]
   from = "/residential-cleaning"
   to = "/pages/residential-cleaning.html"
   status = 200
