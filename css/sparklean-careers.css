@@ -1,3 +1,12 @@
+.careers-review-banner {
+  background: #5c3d12;
+  color: #F9F7F3;
+  font-size: .78rem;
+  letter-spacing: .04em;
+  line-height: 1.45;
+  padding: 10px 16px;
+  text-align: center;
+}
 .careers-shell {
   padding: calc(var(--nav-h) + 48px) 24px 80px;
   max-width: 760px;

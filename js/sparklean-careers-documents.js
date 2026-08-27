@@ -1,8 +1,10 @@
 (function () {
-  var API =
-    location.hostname === "127.0.0.1" || location.hostname === "localhost"
-      ? "http://127.0.0.1:8787"
-      : "https://api.sparklean.co";
+  var LOCAL = location.hostname === "127.0.0.1" || location.hostname === "localhost";
+  var API = "http://127.0.0.1:8787";
+
+  function review() {
+    return !LOCAL;
+  }
 
   function resume() {
     return new URLSearchParams(location.search).get("resume") || sessionStorage.getItem("sk_hiring_resume") || "";
@@ -11,6 +13,7 @@
     return { "content-type": "application/json", "x-hiring-resume": resume() };
   }
   async function req(path, opts) {
+    if (!LOCAL) throw new Error("Hiring API is not connected in founder review.");
     var res = await fetch(API + path, Object.assign({ credentials: "include", headers: headers() }, opts || {}));
     var data = await res.json().catch(function () {
       return {};
@@ -19,45 +22,21 @@
     return data;
   }
 
-  function qualityMessage(code) {
-    if (code === "blur") return "That image looks too blurry. Retake in better light.";
-    if (code === "glare") return "That image has too much glare. Retake without flash bouncing off the card.";
-    if (code === "cropped_or_tiny") return "The document edges look cropped. Fill the frame and retake.";
-    if (code === "too_small") return "The file is too small. Use the phone camera, not a screenshot thumbnail.";
-    return "Please retake that photo.";
-  }
-
-  async function uploadFile(purpose, file, statusEl) {
-    var signed = await req("/api/hiring/applications/me/documents/upload-url", {
-      method: "POST",
-      body: JSON.stringify({ purpose: purpose }),
-    });
-    var put = await fetch(signed.url, { method: "PUT", body: file });
-    if (!put.ok) throw new Error("upload_failed");
-    try {
-      await req("/api/hiring/applications/me/documents/complete", {
-        method: "POST",
-        body: JSON.stringify({ purpose: purpose, key: signed.key }),
-      });
-      statusEl.textContent = "Accepted.";
-    } catch (err) {
-      statusEl.textContent = qualityMessage(err.body && err.body.code);
-      throw err;
-    }
+  function options(sel, items) {
+    sel.innerHTML = items
+      .map(function (d) {
+        return '<option value="' + d.code + '">' + d.label + "</option>";
+      })
+      .join("");
   }
 
   document.addEventListener("DOMContentLoaded", async function () {
     var err = document.getElementById("careers-error");
-    var lists = await fetch(API + "/api/hiring/i9-lists").then(function (r) {
-      return r.json();
-    });
-    function options(sel, items) {
-      sel.innerHTML = items
-        .map(function (d) {
-          return '<option value="' + d.code + '">' + d.label + "</option>";
-        })
-        .join("");
-    }
+    var lists = review()
+      ? SparkleanHiringReview.lists
+      : await fetch(API + "/api/hiring/i9-lists").then(function (r) {
+          return r.json();
+        });
     options(document.getElementById("list_a"), lists.list_a);
     options(document.getElementById("list_b"), lists.list_b);
     options(document.getElementById("list_c"), lists.list_c);
@@ -73,6 +52,17 @@
       ev.preventDefault();
       err.hidden = true;
       var mode = document.querySelector("input[name=i9mode]:checked").value;
+      if (review()) {
+        document.getElementById("form-scans").hidden = false;
+        var uploadBtn = document.querySelector("#form-scans .btn-gold");
+        if (uploadBtn) uploadBtn.hidden = true;
+        document.getElementById("scan-inputs").innerHTML =
+          "<p class=\"careers-lede\">Review demo: document uploads are disabled. Do not photograph or upload I-9, driver’s-license, or immigration documents.</p>";
+        document.getElementById("docs-done").hidden = false;
+        document.getElementById("docs-done").textContent =
+          "FOUNDER REVIEW complete. No files were uploaded. No applicant record was created. The system does not decide that documents are genuine.";
+        return;
+      }
       var body =
         mode === "list_a"
           ? { mode: "list_a", list_a: document.getElementById("list_a").value }
@@ -104,19 +94,9 @@
 
     document.getElementById("form-scans").addEventListener("submit", async function (ev) {
       ev.preventDefault();
-      var inputs = document.querySelectorAll("#form-scans input[type=file]");
-      try {
-        for (var i = 0; i < inputs.length; i++) {
-          var input = inputs[i];
-          if (!input.files[0]) continue;
-          var status = input.parentElement.querySelector(".scan-status");
-          await uploadFile(input.getAttribute("data-purpose"), input.files[0], status);
-        }
-        document.getElementById("docs-done").hidden = false;
-      } catch (e) {
-        err.hidden = false;
-        err.textContent = (e.body && e.body.code && qualityMessage(e.body.code)) || "Upload could not be completed. Retake and try again.";
-      }
+      if (review()) return;
+      err.hidden = false;
+      err.textContent = "Uploads are not enabled in this environment.";
     });
   });
 })();

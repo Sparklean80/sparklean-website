@@ -88,6 +88,9 @@ assert(
   !sitemap.includes("/customer-portal"),
   "sitemap.xml excludes /customer-portal"
 );
+assert(!sitemap.includes("/careers"), "sitemap.xml excludes /careers");
+const robotsTxt = fs.readFileSync(path.join(root, "robots.txt"), "utf8");
+assert(robotsTxt.includes("Disallow: /careers"), "robots.txt disallows /careers");
 
 for (const legal of ["privacy", "terms", "accessibility"]) {
   const legalPath = path.join(root, `pages/${legal}.html`);

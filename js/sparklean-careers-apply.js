@@ -1,9 +1,10 @@
 (function () {
-  var API =
-    location.hostname === "127.0.0.1" || location.hostname === "localhost"
-      ? "http://127.0.0.1:8787"
-      : "https://api.sparklean.co";
+  var LOCAL = location.hostname === "127.0.0.1" || location.hostname === "localhost";
+  var API = "http://127.0.0.1:8787";
   var TOKEN_KEY = "sk_hiring_resume";
+  function review() {
+    return !LOCAL;
+  }
 
   function token() {
     return sessionStorage.getItem(TOKEN_KEY) || "";
@@ -17,6 +18,7 @@
     return h;
   }
   async function req(path, opts) {
+    if (!LOCAL) throw new Error("Hiring API is not connected in founder review.");
     var res = await fetch(API + path, Object.assign({ credentials: "include", headers: headers() }, opts || {}));
     var data = await res.json().catch(function () {
       return {};
@@ -86,6 +88,16 @@
 
   async function boot() {
     try {
+      if (review()) {
+        if (!globalThis.SparkleanHiringReview) {
+          fail({ message: "Review demo failed to load." });
+          return;
+        }
+        fillJob(SparkleanHiringReview.job);
+        applicationId = "review-demo";
+        show("step-gate");
+        return;
+      }
       var data = await req("/api/hiring/openings");
       if (!data.openings || !data.openings[0]) {
         el("careers-error").hidden = false;
@@ -137,6 +149,14 @@
     e.preventDefault();
     el("careers-error").hidden = true;
     try {
+      if (review()) {
+        if (!SparkleanHiringReview.gatesPass(gateBody())) {
+          fail({ body: { notice: SparkleanHiringReview.notice }, message: SparkleanHiringReview.notice });
+          return;
+        }
+        show("step-app");
+        return;
+      }
       await req("/api/hiring/applications/" + applicationId + "/gate", {
         method: "PATCH",
         body: JSON.stringify(gateBody()),
@@ -180,6 +200,10 @@
   async function submitApp(e) {
     e.preventDefault();
     try {
+      if (review()) {
+        show("step-cert");
+        return;
+      }
       await req("/api/hiring/applications/" + applicationId + "/application", {
         method: "PATCH",
         body: JSON.stringify(appBody()),
@@ -193,6 +217,10 @@
   async function submitCert(e) {
     e.preventDefault();
     try {
+      if (review()) {
+        location.href = "/careers/offer/review-demo";
+        return;
+      }
       var out = await req("/api/hiring/applications/" + applicationId + "/certify", {
         method: "POST",
         body: JSON.stringify({ signature: val("cert_signature"), truthful: checked("truthful") }),
@@ -214,6 +242,13 @@
     if (g) g.addEventListener("submit", submitGate);
     if (a) a.addEventListener("submit", submitApp);
     if (c) c.addEventListener("submit", submitCert);
+    var fill = el("fill-test-applicant");
+    if (fill && review()) {
+      fill.hidden = false;
+      fill.addEventListener("click", function () {
+        SparkleanHiringReview.fillTestApplicant();
+      });
+    }
     boot();
   });
 })();

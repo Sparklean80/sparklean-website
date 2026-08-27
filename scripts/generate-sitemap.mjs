@@ -113,8 +113,8 @@ function main() {
     // Utility / legal — noindex; keep pages live, exclude from sitemap
     if (key === "/customer-portal") continue;
     if (key === "/privacy" || key === "/terms" || key === "/accessibility") continue;
+    if (key === "/careers" || key.startsWith("/careers/")) continue;
     if (key.includes("*")) continue;
-    if (key === "/careers/offer" || key.startsWith("/careers/offer/") || key === "/careers/documents" || key.startsWith("/careers/documents/")) continue;
     const diskPath = path.join(ROOT, r.to.replace(/^\//, ""));
     if (!fs.existsSync(diskPath)) {
       console.warn(`[sitemap] missing file for redirect: ${r.from} → ${r.to}`);
@@ -151,6 +151,8 @@ function main() {
       rel === "pages/privacy.html" ||
       rel === "pages/terms.html" ||
       rel === "pages/accessibility.html" ||
+      rel === "pages/careers.html" ||
+      rel === "pages/careers-apply.html" ||
       rel === "pages/careers-offer.html" ||
       rel === "pages/careers-documents.html"
     ) {

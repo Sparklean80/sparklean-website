@@ -866,6 +866,46 @@
   status = 200
 
 [[headers]]
+  for = "/careers"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/careers/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/pages/careers.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/pages/careers-*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+
+[[edge_functions]]
+  function = "hiring-review-gate"
+  path = "/careers"
+[[edge_functions]]
+  function = "hiring-review-gate"
+  path = "/careers/*"
+[[edge_functions]]
+  function = "hiring-review-gate"
+  path = "/pages/careers.html"
+[[edge_functions]]
+  function = "hiring-review-gate"
+  path = "/pages/careers-apply.html"
+[[edge_functions]]
+  function = "hiring-review-gate"
+  path = "/pages/careers-offer.html"
+[[edge_functions]]
+  function = "hiring-review-gate"
+  path = "/pages/careers-documents.html"
+
+[[headers]]
   for = "/email-assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"

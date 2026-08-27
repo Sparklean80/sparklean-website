@@ -1,8 +1,10 @@
 (function () {
-  var API =
-    location.hostname === "127.0.0.1" || location.hostname === "localhost"
-      ? "http://127.0.0.1:8787"
-      : "https://api.sparklean.co";
+  var LOCAL = location.hostname === "127.0.0.1" || location.hostname === "localhost";
+  var API = "http://127.0.0.1:8787";
+
+  function review() {
+    return !LOCAL;
+  }
 
   function tokenFromPath() {
     if (location.hash && location.hash.length > 1) return decodeURIComponent(location.hash.slice(1));
@@ -15,10 +17,31 @@
   }
 
   document.addEventListener("DOMContentLoaded", async function () {
-    var token = tokenFromPath();
     var err = document.getElementById("careers-error");
     var pre = document.getElementById("offer-body");
     var form = document.getElementById("form-offer");
+    if (review()) {
+      if (!window.SparkleanHiringReview) {
+        err.hidden = false;
+        err.textContent = "Review demo failed to load.";
+        form.hidden = true;
+        return;
+      }
+      pre.textContent = SparkleanHiringReview.offerText;
+      var fill = document.getElementById("fill-test-applicant");
+      if (fill) {
+        fill.hidden = false;
+        fill.addEventListener("click", function () {
+          SparkleanHiringReview.fillTestApplicant();
+        });
+      }
+      form.addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        location.href = "/careers/documents";
+      });
+      return;
+    }
+    var token = tokenFromPath();
     try {
       var res = await fetch(API + "/api/hiring/offers/" + encodeURIComponent(token), { credentials: "include" });
       var data = await res.json();
