@@ -2,10 +2,11 @@
   var LOCAL = location.hostname === "127.0.0.1" || location.hostname === "localhost";
   var API = "http://127.0.0.1:8787";
   var TOKEN_KEY = "sk_hiring_resume";
+  var STEPS = ["step-gate", "step-app", "step-scenarios", "step-review"];
+
   function review() {
     return !LOCAL;
   }
-
   function token() {
     return sessionStorage.getItem(TOKEN_KEY) || "";
   }
@@ -34,12 +35,35 @@
   function el(id) {
     return document.getElementById(id);
   }
+  function fmt() {
+    return globalThis.SparkleanHiringReview || {};
+  }
+  function formatPay(cents) {
+    return fmt().formatPay ? fmt().formatPay(cents) : "$" + (cents / 100).toFixed(2) + " per hour";
+  }
+  function formatTime(local) {
+    return fmt().formatTime ? fmt().formatTime(local) : local;
+  }
+  function formatDays(days) {
+    return fmt().formatDays ? fmt().formatDays(days) : (days || []).join(", ");
+  }
   function show(id) {
     document.querySelectorAll("[data-careers-step]").forEach(function (n) {
       n.classList.add("careers-hidden");
     });
     var node = el(id);
     if (node) node.classList.remove("careers-hidden");
+    var progress = document.querySelector(".careers-progress");
+    if (progress) progress.hidden = id === "step-rejected";
+    var idx = STEPS.indexOf(id);
+    document.querySelectorAll(".careers-progress li").forEach(function (item, i) {
+      item.classList.toggle("is-current", i === idx);
+      item.classList.toggle("is-complete", idx > i);
+    });
+    var fill = el("fill-demo-answers");
+    if (fill) fill.hidden = !(review() && id === "step-gate");
+    var err = el("careers-error");
+    if (err && id === "step-rejected") err.hidden = true;
   }
   function val(id) {
     var n = el(id);
@@ -49,15 +73,19 @@
     var n = el(id);
     return !!(n && n.checked);
   }
-  function money(cents) {
-    return "$" + (cents / 100).toFixed(2);
+  function radio(name) {
+    var n = document.querySelector('input[name="' + name + '"]:checked');
+    return n ? n.value : "";
   }
   function fail(err) {
+    if (err.body && err.body.notice) {
+      show("step-rejected");
+      return;
+    }
     var box = el("careers-error");
     if (!box) return;
     box.hidden = false;
-    box.textContent = (err.body && err.body.notice) || err.message || "Unable to continue.";
-    if (err.body && err.body.notice) show("step-rejected");
+    box.textContent = err.message || "Unable to continue.";
   }
 
   var job = null;
@@ -69,28 +97,40 @@
       n.textContent = j.title;
     });
     document.querySelectorAll("[data-job-pay]").forEach(function (n) {
-      n.textContent = money(j.base_rate_cents);
+      n.textContent = formatPay(j.base_rate_cents);
     });
     document.querySelectorAll("[data-job-ot]").forEach(function (n) {
-      n.textContent = money(j.overtime_rate_cents);
+      n.textContent = formatPay(j.overtime_rate_cents);
     });
     document.querySelectorAll("[data-job-time]").forEach(function (n) {
-      n.textContent = j.earliest_report_local;
+      n.textContent = formatTime(j.earliest_report_local);
     });
     document.querySelectorAll("[data-job-days]").forEach(function (n) {
-      n.textContent = (j.required_days || []).join(", ");
+      n.textContent = formatDays(j.required_days);
+    });
+    document.querySelectorAll("[data-job-status]").forEach(function (n) {
+      n.textContent = j.full_time ? "Full-time" : "Part-time";
+    });
+    document.querySelectorAll("[data-job-location]").forEach(function (n) {
+      n.textContent = j.reporting_location_label || "Assigned by Sparklean";
+    });
+    document.querySelectorAll("[data-job-driving]").forEach(function (n) {
+      n.textContent = j.driving_required
+        ? "This position requires driving a company vehicle and a valid Florida driver’s license."
+        : "This opening does not require driving a company vehicle.";
     });
     document.querySelectorAll("[data-job-functions]").forEach(function (n) {
       n.textContent = j.essential_functions;
     });
-    el("dl-wrap").hidden = !j.driving_required;
+    var dl = el("dl-wrap");
+    if (dl) dl.hidden = !j.driving_required;
   }
 
   async function boot() {
     try {
       if (review()) {
         if (!globalThis.SparkleanHiringReview) {
-          fail({ message: "Review demo failed to load." });
+          fail({ message: "This page could not load." });
           return;
         }
         fillJob(SparkleanHiringReview.job);
@@ -120,6 +160,7 @@
   }
 
   function gateBody() {
+    var pack = checked("confirm_package");
     return {
       full_legal_name: val("full_legal_name"),
       phone: val("phone"),
@@ -128,20 +169,20 @@
       zip: val("zip"),
       at_least_18: checked("at_least_18"),
       work_authorized: checked("work_authorized"),
-      requires_sponsorship: checked("requires_sponsorship"),
-      accepts_starting_pay: checked("accepts_starting_pay"),
-      understands_rate_nonnegotiable: checked("understands_rate_nonnegotiable"),
-      can_report_earliest_time: checked("can_report_earliest_time"),
-      available_full_time: checked("available_full_time"),
-      willing_over_40: checked("willing_over_40"),
-      understands_ot_rate: checked("understands_ot_rate"),
-      understands_ot_not_guaranteed: checked("understands_ot_not_guaranteed"),
-      can_work_required_days: checked("can_work_required_days"),
+      requires_sponsorship: radio("sponsorship") === "yes",
+      confirm_package: pack,
+      accepts_starting_pay: pack,
+      understands_rate_nonnegotiable: pack,
+      can_report_earliest_time: pack,
+      available_full_time: pack,
+      willing_over_40: pack,
+      understands_ot_rate: pack,
+      understands_ot_not_guaranteed: pack,
+      can_work_required_days: pack,
       has_valid_fl_dl: job && job.driving_required ? checked("has_valid_fl_dl") : null,
       reliable_transport: checked("reliable_transport"),
       can_perform_essential_duties: checked("can_perform_essential_duties"),
       accepts_conduct_requirements: checked("accepts_conduct_requirements"),
-      agrees_later_screening: checked("agrees_later_screening"),
     };
   }
 
@@ -149,9 +190,13 @@
     e.preventDefault();
     el("careers-error").hidden = true;
     try {
+      if (!radio("sponsorship")) {
+        fail({ message: "Please answer the sponsorship question." });
+        return;
+      }
       if (review()) {
         if (!SparkleanHiringReview.gatesPass(gateBody())) {
-          fail({ body: { notice: SparkleanHiringReview.notice }, message: SparkleanHiringReview.notice });
+          fail({ body: { notice: SparkleanHiringReview.notice } });
           return;
         }
         show("step-app");
@@ -159,7 +204,7 @@
       }
       await req("/api/hiring/applications/" + applicationId + "/gate", {
         method: "PATCH",
-        body: JSON.stringify(gateBody()),
+        body: JSON.stringify(Object.assign({ agrees_later_screening: true }, gateBody())),
       });
       show("step-app");
     } catch (err) {
@@ -168,6 +213,7 @@
   }
 
   function appBody() {
+    var refs = [{ name: val("ref1_name"), phone: val("ref1_phone"), relationship: val("ref1_rel") }];
     return {
       employment_history: [
         {
@@ -184,10 +230,7 @@
       post_construction_experience: checked("post_construction_experience"),
       team_lead_experience: checked("team_lead_experience"),
       languages: val("languages"),
-      references: [
-        { name: val("ref1_name"), phone: val("ref1_phone"), relationship: val("ref1_rel") },
-        { name: val("ref2_name"), phone: val("ref2_phone"), relationship: val("ref2_rel") },
-      ],
+      references: refs,
       earliest_start_date: val("earliest_start_date"),
       scenario_answers: {
         locked_room: val("q_locked_room"),
@@ -199,37 +242,30 @@
 
   async function submitApp(e) {
     e.preventDefault();
-    try {
-      if (review()) {
-        show("step-cert");
-        return;
-      }
-      await req("/api/hiring/applications/" + applicationId + "/application", {
-        method: "PATCH",
-        body: JSON.stringify(appBody()),
-      });
-      show("step-cert");
-    } catch (err) {
-      fail(err);
-    }
+    show("step-scenarios");
   }
 
-  async function submitCert(e) {
+  async function submitScenarios(e) {
+    e.preventDefault();
+    show("step-review");
+  }
+
+  async function submitReview(e) {
     e.preventDefault();
     try {
       if (review()) {
         location.href = "/careers/offer/review-demo";
         return;
       }
+      await req("/api/hiring/applications/" + applicationId + "/application", {
+        method: "PATCH",
+        body: JSON.stringify(appBody()),
+      });
       var out = await req("/api/hiring/applications/" + applicationId + "/certify", {
         method: "POST",
         body: JSON.stringify({ signature: val("cert_signature"), truthful: checked("truthful") }),
       });
-      var local =
-        location.hostname === "127.0.0.1" || location.hostname === "localhost";
-      location.href = local
-        ? "/pages/careers-offer.html#" + encodeURIComponent(out.offer_token)
-        : "/careers/offer/" + encodeURIComponent(out.offer_token);
+      location.href = "/pages/careers-offer.html#" + encodeURIComponent(out.offer_token);
     } catch (err) {
       fail(err);
     }
@@ -238,13 +274,19 @@
   document.addEventListener("DOMContentLoaded", function () {
     var g = el("form-gate");
     var a = el("form-app");
-    var c = el("form-cert");
+    var s = el("form-scenarios");
+    var r = el("form-review");
     if (g) g.addEventListener("submit", submitGate);
     if (a) a.addEventListener("submit", submitApp);
-    if (c) c.addEventListener("submit", submitCert);
-    var fill = el("fill-test-applicant");
+    if (s) s.addEventListener("submit", submitScenarios);
+    if (r) r.addEventListener("submit", submitReview);
+    document.querySelectorAll("[data-back]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        show(btn.getAttribute("data-back"));
+      });
+    });
+    var fill = el("fill-demo-answers");
     if (fill && review()) {
-      fill.hidden = false;
       fill.addEventListener("click", function () {
         SparkleanHiringReview.fillTestApplicant();
       });

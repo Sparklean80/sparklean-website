@@ -30,6 +30,16 @@
       .join("");
   }
 
+  function setMode(mode) {
+    document.getElementById("wrap-a").hidden = mode !== "list_a";
+    document.getElementById("wrap-bc").hidden = mode !== "list_b_c";
+    document.querySelectorAll(".docs-mode").forEach(function (btn) {
+      btn.classList.toggle("is-selected", btn.getAttribute("data-i9-mode") === mode);
+    });
+    var radio = document.querySelector('input[name="i9mode"][value="' + mode + '"]');
+    if (radio) radio.checked = true;
+  }
+
   document.addEventListener("DOMContentLoaded", async function () {
     var err = document.getElementById("careers-error");
     var lists = review()
@@ -40,11 +50,11 @@
     options(document.getElementById("list_a"), lists.list_a);
     options(document.getElementById("list_b"), lists.list_b);
     options(document.getElementById("list_c"), lists.list_c);
+    setMode("list_a");
 
-    document.querySelectorAll("input[name=i9mode]").forEach(function (r) {
-      r.addEventListener("change", function () {
-        document.getElementById("wrap-a").hidden = r.value !== "list_a";
-        document.getElementById("wrap-bc").hidden = r.value !== "list_b_c";
+    document.querySelectorAll(".docs-mode").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        setMode(btn.getAttribute("data-i9-mode"));
       });
     });
 
@@ -53,14 +63,7 @@
       err.hidden = true;
       var mode = document.querySelector("input[name=i9mode]:checked").value;
       if (review()) {
-        document.getElementById("form-scans").hidden = false;
-        var uploadBtn = document.querySelector("#form-scans .btn-gold");
-        if (uploadBtn) uploadBtn.hidden = true;
-        document.getElementById("scan-inputs").innerHTML =
-          "<p class=\"careers-lede\">Review demo: document uploads are disabled. Do not photograph or upload I-9, driver’s-license, or immigration documents.</p>";
         document.getElementById("docs-done").hidden = false;
-        document.getElementById("docs-done").textContent =
-          "FOUNDER REVIEW complete. No files were uploaded. No applicant record was created. The system does not decide that documents are genuine.";
         return;
       }
       var body =
@@ -72,31 +75,12 @@
               list_c: document.getElementById("list_c").value,
             };
       try {
-        var out = await req("/api/hiring/applications/me/i9-selection", { method: "POST", body: JSON.stringify(body) });
-        document.getElementById("form-scans").hidden = false;
-        var box = document.getElementById("scan-inputs");
-        box.innerHTML = out.required
-          .map(function (p) {
-            return (
-              '<label class="careers-file">' +
-              p.replace(/_/g, " ") +
-              ' <input type="file" accept="image/*" capture="environment" data-purpose="' +
-              p +
-              '" required><span class="scan-status"></span></label>'
-            );
-          })
-          .join("");
+        await req("/api/hiring/applications/me/i9-selection", { method: "POST", body: JSON.stringify(body) });
+        document.getElementById("docs-done").hidden = false;
       } catch (e) {
         err.hidden = false;
-        err.textContent = e.message === "offer_required" ? "Accept the conditional offer before uploading documents." : e.message;
+        err.textContent = e.message === "offer_required" ? "Accept the conditional offer before choosing documents." : e.message;
       }
-    });
-
-    document.getElementById("form-scans").addEventListener("submit", async function (ev) {
-      ev.preventDefault();
-      if (review()) return;
-      err.hidden = false;
-      err.textContent = "Uploads are not enabled in this environment.";
     });
   });
 })();

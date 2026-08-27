@@ -17,42 +17,82 @@
     base_rate_cents: 1800,
     overtime_rate_cents: 2700,
     essential_functions:
-      "Stand, walk, bend, reach, and clean bathrooms, kitchens, floors, and living areas for a full shift; lift up to 25 pounds; use Sparklean products and equipment; communicate with the assigned team and office; drive a company vehicle when the opening requires it.",
+      "Stand, walk, bend, reach, and clean bathrooms, kitchens, and living areas for a full shift; lift up to 25 pounds; use Sparklean products and equipment; communicate with the assigned team and office; and drive a company vehicle when the opening requires it.",
   };
-
-  var offerText = [
-    "FOUNDER REVIEW — TEST DATA ONLY.",
-    "THIS IS NOT A REAL CONDITIONAL OFFER. It creates no employment relationship and is not sent by email.",
-    "",
-    "Sparklean Cleaning — Conditional offer of employment (review sample)",
-    "",
-    "Position: Residential Cleaner",
-    "Starting pay: $18.00 per hour. This starting rate is nonnegotiable.",
-    "Overtime: $27.00 per hour for compensable hours over 40 in Sparklean’s established workweek.",
-    "Overtime may be required during scheduled busy weeks and is not guaranteed.",
-    "Status: Full-time",
-    "Earliest reporting time: 7:00 AM",
-    "Required days: Monday through Friday",
-    "Reporting location: Southwest Florida reporting location assigned by Sparklean",
-    "Driving: This position requires driving a company vehicle and a valid Florida driver’s license.",
-    "",
-    "Employment is at-will.",
-    "This sample is for founder review of the funnel only.",
-    "Offer template version: 2026-08-27.1-review",
-  ].join("\n");
 
   var lists = {
     list_a: [
       { code: "us_passport", label: "U.S. Passport or U.S. Passport Card" },
-      { code: "permanent_resident_card", label: "Permanent Resident Card (Form I-551)" },
-      { code: "ead_i766", label: "Employment Authorization Document (Form I-766)" },
+      { code: "permanent_resident_card", label: "Permanent Resident Card or Alien Registration Receipt Card (Form I-551)" },
+      { code: "foreign_passport_i551", label: "Foreign passport with a temporary I-551 stamp or printed notation on a machine-readable immigrant visa" },
+      { code: "ead_i766", label: "Employment Authorization Document that contains a photograph (Form I-766)" },
+      {
+        code: "foreign_passport_i94",
+        label: "Foreign passport with Form I-94 or Form I-94A containing an endorsement of the nonimmigrant status and work authorization",
+      },
+      {
+        code: "fsm_rmi_passport",
+        label: "Passport from the Federated States of Micronesia or the Republic of the Marshall Islands with Form I-94 or Form I-94A",
+      },
     ],
-    list_b: [{ code: "state_dl", label: "Driver’s license or ID card issued by a U.S. state or outlying possession" }],
-    list_c: [{ code: "ssn_card", label: "Social Security account number card (unrestricted)" }],
+    list_b: [
+      { code: "state_dl", label: "Driver’s license or ID card issued by a U.S. state or outlying possession, with a photograph or identifying information" },
+      { code: "government_id", label: "ID card issued by a federal, state, or local government agency, with a photograph or identifying information" },
+      { code: "school_id", label: "School ID card with a photograph" },
+      { code: "voter_card", label: "Voter’s registration card" },
+      { code: "us_military", label: "U.S. military card or draft record" },
+      { code: "military_dependent", label: "Military dependent’s ID card" },
+      { code: "merchant_mariner", label: "U.S. Coast Guard Merchant Mariner Card" },
+      { code: "tribal_b", label: "Native American tribal document" },
+      { code: "canadian_dl", label: "Driver’s license issued by a Canadian government authority" },
+    ],
+    list_c: [
+      { code: "ssn_card", label: "U.S. Social Security card (unrestricted)" },
+      { code: "dos_birth", label: "Certification of report of birth issued by the U.S. Department of State (Forms DS-1350, FS-545, or FS-240)" },
+      { code: "birth_certificate", label: "Original or certified copy of a birth certificate issued by a U.S. state, county, municipal authority, or territory, bearing an official seal" },
+      { code: "tribal_c", label: "Native American tribal document" },
+      { code: "i197", label: "U.S. Citizen ID Card (Form I-197)" },
+      { code: "i179", label: "Identification Card for Use of Resident Citizen in the United States (Form I-179)" },
+      { code: "dhs_employment_auth", label: "Employment authorization document issued by the Department of Homeland Security (other than Form I-766)" },
+    ],
   };
+
+  var DAY_NAMES = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" };
 
   function isReviewMode() {
     return location.hostname !== "127.0.0.1" && location.hostname !== "localhost";
+  }
+
+  function money(cents) {
+    return "$" + (Number(cents) / 100).toFixed(2);
+  }
+
+  function formatPay(cents) {
+    return money(cents) + " per hour";
+  }
+
+  function formatTime(local) {
+    var parts = String(local || "").split(":");
+    var h = parseInt(parts[0], 10);
+    if (isNaN(h)) return String(local || "");
+    var m = parts[1] ? String(parts[1]).padStart(2, "0") : "00";
+    var ap = h >= 12 ? "PM" : "AM";
+    var h12 = h % 12 || 12;
+    return h12 + ":" + m + " " + ap;
+  }
+
+  function formatDays(days) {
+    var list = Array.isArray(days) ? days : [];
+    var key = list.map(function (d) {
+      return String(d).toLowerCase().slice(0, 3);
+    });
+    if (key.join(",") === "mon,tue,wed,thu,fri") return "Monday through Friday";
+    return list
+      .map(function (d) {
+        var k = String(d).toLowerCase().slice(0, 3);
+        return DAY_NAMES[k] || d;
+      })
+      .join(", ");
   }
 
   function emailOk(v) {
@@ -62,13 +102,9 @@
   function gatesPass(answers) {
     if (!answers.full_legal_name || !answers.phone || !emailOk(answers.email) || !answers.city || !answers.zip) return false;
     if (!answers.at_least_18 || !answers.work_authorized || answers.requires_sponsorship) return false;
-    if (!answers.accepts_starting_pay || !answers.understands_rate_nonnegotiable) return false;
-    if (!answers.can_report_earliest_time || !answers.available_full_time || !answers.willing_over_40) return false;
-    if (!answers.understands_ot_rate || !answers.understands_ot_not_guaranteed || !answers.can_work_required_days) return false;
+    if (!answers.confirm_package) return false;
     if (!answers.has_valid_fl_dl || !answers.reliable_transport) return false;
-    if (!answers.can_perform_essential_duties || !answers.accepts_conduct_requirements || !answers.agrees_later_screening) {
-      return false;
-    }
+    if (!answers.can_perform_essential_duties || !answers.accepts_conduct_requirements) return false;
     return true;
   }
 
@@ -82,74 +118,52 @@
   }
 
   function fillTestApplicant() {
-    fill("full_legal_name", "TEST APPLICANT — NOT A REAL APPLICATION");
+    fill("full_legal_name", "Jordan Hale");
     fill("phone", "2395550100");
-    fill("email", "test.applicant.review@sparklean.invalid");
-    fill("city", "TEST CITY");
+    fill("email", "jordan.hale.review@sparklean.invalid");
+    fill("city", "Naples");
     fill("zip", "34102");
-    [
-      "at_least_18",
-      "work_authorized",
-      "accepts_starting_pay",
-      "understands_rate_nonnegotiable",
-      "can_report_earliest_time",
-      "available_full_time",
-      "willing_over_40",
-      "understands_ot_rate",
-      "understands_ot_not_guaranteed",
-      "can_work_required_days",
-      "has_valid_fl_dl",
-      "reliable_transport",
-      "can_perform_essential_duties",
-      "accepts_conduct_requirements",
-      "agrees_later_screening",
-    ].forEach(function (id) {
-      check(id, true);
-    });
-    check("requires_sponsorship", false);
-    fill("employer", "TEST EMPLOYER — NOT REAL");
-    fill("role_title", "TEST ROLE");
+    ["at_least_18", "work_authorized", "confirm_package", "has_valid_fl_dl", "reliable_transport", "can_perform_essential_duties", "accepts_conduct_requirements", "truthful"].forEach(
+      function (id) {
+        check(id, true);
+      }
+    );
+    var no = document.querySelector('input[name="sponsorship"][value="no"]');
+    if (no) no.checked = true;
+    fill("employer", "Coastal Home Services");
+    fill("role_title", "Housekeeper");
     fill("started_on", "2024-01-01");
     fill("ended_on", "2026-01-01");
-    fill("reason_for_leaving", "TEST DATA ONLY");
+    fill("reason_for_leaving", "Seeking a supervised full-time cleaning role");
     check("cleaning_experience", true);
     check("residential_experience", true);
-    fill("languages", "TEST");
-    fill("ref1_name", "TEST REFERENCE ONE");
+    fill("languages", "English");
+    fill("ref1_name", "Alex Rivera");
     fill("ref1_phone", "2395550101");
-    fill("ref1_rel", "TEST");
-    fill("ref2_name", "TEST REFERENCE TWO");
-    fill("ref2_phone", "2395550102");
-    fill("ref2_rel", "TEST");
+    fill("ref1_rel", "Former supervisor");
     fill("earliest_start_date", "2026-09-08");
-    fill("q_locked_room", "TEST ANSWER — I do not enter and I call the office.");
-    fill("q_skip_request", "TEST ANSWER — I keep the work order and call the office.");
-    fill("q_damage", "TEST ANSWER — I report it immediately and do not hide it.");
-    fill("cert_signature", "TEST APPLICANT — NOT A REAL APPLICATION");
-    fill("offer_signature", "TEST APPLICANT — NOT A REAL APPLICATION");
-    check("truthful", true);
+    fill("q_locked_room", "I do not enter the room and I call the Sparklean office.");
+    fill("q_skip_request", "I keep the work order and call the office.");
+    fill("q_damage", "I report it immediately and do not hide it.");
+    fill("cert_signature", "Jordan Hale");
+    fill("offer_signature", "Jordan Hale");
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    if (isReviewMode()) return;
-    document.querySelectorAll(".careers-review-banner").forEach(function (n) {
-      n.hidden = true;
-    });
+    var badge = document.querySelector(".careers-demo-badge");
+    if (badge) badge.hidden = !isReviewMode();
   });
-
-  function requiredSides(mode) {
-    if (mode === "list_b_c") return ["i9_list_b_front", "i9_list_b_back", "i9_list_c_front", "dl_front", "dl_back"];
-    return ["i9_list_a_front", "i9_list_a_back", "dl_front", "dl_back"];
-  }
 
   global.SparkleanHiringReview = {
     isReviewMode: isReviewMode,
     job: job,
     notice: NOTICE,
-    offerText: offerText,
     lists: lists,
     gatesPass: gatesPass,
     fillTestApplicant: fillTestApplicant,
-    requiredSides: requiredSides,
+    formatPay: formatPay,
+    formatTime: formatTime,
+    formatDays: formatDays,
+    money: money,
   };
 })(window);
