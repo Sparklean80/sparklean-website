@@ -60,7 +60,7 @@
   var DAY_NAMES = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" };
 
   function isReviewMode() {
-    return location.hostname !== "127.0.0.1" && location.hostname !== "localhost";
+    return document.body.classList.contains("founder-demo");
   }
 
   function money(cents) {

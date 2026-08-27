@@ -94,7 +94,11 @@ export default async (request, context) => {
   const response = await context.next();
   response.headers.set("X-Robots-Tag", ROBOTS);
   response.headers.set("cache-control", "no-store");
-  return response;
+  const type = response.headers.get("content-type") || "";
+  if (!type.includes("text/html")) return response;
+  const html = await response.text();
+  const marked = html.replace(/class="careers-page([^"]*)"/, 'class="careers-page$1 founder-demo"');
+  return new Response(marked, { status: response.status, headers: response.headers });
 };
 
 export const config = {

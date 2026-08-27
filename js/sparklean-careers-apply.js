@@ -60,8 +60,6 @@
       item.classList.toggle("is-current", i === idx);
       item.classList.toggle("is-complete", idx > i);
     });
-    var fill = el("fill-demo-answers");
-    if (fill) fill.hidden = !(review() && id === "step-gate");
     if (id === "step-review") paintReview();
     var err = el("careers-error");
     if (err && id === "step-rejected") err.hidden = true;
@@ -304,7 +302,8 @@
       });
     });
     var fill = el("fill-demo-answers");
-    if (fill && review()) {
+    if (fill && document.body.classList.contains("founder-demo")) {
+      fill.hidden = false;
       fill.addEventListener("click", function () {
         SparkleanHiringReview.fillTestApplicant();
       });
