@@ -62,12 +62,30 @@
     });
     var fill = el("fill-demo-answers");
     if (fill) fill.hidden = !(review() && id === "step-gate");
+    if (id === "step-review") paintReview();
     var err = el("careers-error");
     if (err && id === "step-rejected") err.hidden = true;
   }
   function val(id) {
     var n = el(id);
     return n ? n.value.trim() : "";
+  }
+  function setText(id, value) {
+    var n = el(id);
+    if (n) n.textContent = value || "—";
+  }
+  function paintReview() {
+    setText("review-name", val("full_legal_name"));
+    setText("review-contact", [val("phone"), val("email")].filter(Boolean).join(" · "));
+    setText("review-location", [val("city"), val("zip")].filter(Boolean).join(", "));
+    var role = val("role_title");
+    var employer = val("employer");
+    setText("review-employer", [role, employer].filter(Boolean).join(" at "));
+    var start = val("earliest_start_date");
+    if (start && /^\d{4}-\d{2}-\d{2}$/.test(start)) {
+      start = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" }).format(new Date(start + "T12:00:00"));
+    }
+    setText("review-start", start);
   }
   function checked(id) {
     var n = el(id);
