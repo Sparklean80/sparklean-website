@@ -110,7 +110,11 @@
 
   function fill(id, value) {
     var n = document.getElementById(id);
-    if (n) n.value = value;
+    if (!n) return;
+    n.value = value;
+    n.setAttribute("value", value);
+    n.dispatchEvent(new Event("input", { bubbles: true }));
+    n.dispatchEvent(new Event("change", { bubbles: true }));
   }
   function check(id, on) {
     var n = document.getElementById(id);
@@ -139,7 +143,7 @@
     check("residential_experience", true);
     fill("languages", "English");
     fill("ref1_name", "Alex Rivera");
-    fill("ref1_phone", "2395550101");
+    fill("ref1_phone", "(239) 555-0101");
     fill("ref1_rel", "Former supervisor");
     fill("earliest_start_date", "2026-09-08");
     fill("q_locked_room", "I do not enter the room and I call the Sparklean office.");

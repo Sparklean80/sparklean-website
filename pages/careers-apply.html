@@ -205,9 +205,9 @@ body{background:var(--dark);color:var(--white);font-family:var(--sans);font-weig
     </dl>
     <div>
      <p class="careers-kicker">Reference 1</p>
-     <label>Name <input id="ref1_name" required></label>
-     <label>Phone Number <input id="ref1_phone" required type="tel"></label>
-     <label>Relationship <input id="ref1_rel" required></label>
+     <label>Name <input id="ref1_name" required autocomplete="off"></label>
+     <label>Phone Number <input id="ref1_phone" required type="text" inputmode="tel" autocomplete="off"></label>
+     <label>Relationship <input id="ref1_rel" required autocomplete="off"></label>
     </div>
    </div>
    <label class="careers-check"><input id="truthful" type="checkbox" required> I certify that the information submitted is truthful. I understand that false information may disqualify me, subject to applicable law.</label>
@@ -247,7 +247,7 @@ var hb=document.getElementById("hamburger"); var mm=document.getElementById("mob
 if(hb&&mm){ hb.addEventListener("click",function(){hb.classList.toggle("open");mm.classList.toggle("open");}); }
 </script>
 <script src="/js/sparklean-site-header.js" defer></script>
-<script src="/js/sparklean-careers-review.js?v=present-3"></script>
-<script src="/js/sparklean-careers-apply.js?v=present-3"></script>
+<script src="/js/sparklean-careers-review.js?v=present-4"></script>
+<script src="/js/sparklean-careers-apply.js?v=present-4"></script>
 </body>
 </html>

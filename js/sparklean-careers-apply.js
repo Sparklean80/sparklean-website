@@ -60,7 +60,14 @@
       item.classList.toggle("is-current", i === idx);
       item.classList.toggle("is-complete", idx > i);
     });
-    if (id === "step-review") paintReview();
+    if (id === "step-review") {
+      var phone = el("ref1_phone");
+      if (phone && !phone.value.trim() && document.body.classList.contains("founder-demo") && val("ref1_name")) {
+        phone.value = "(239) 555-0101";
+        phone.setAttribute("value", "(239) 555-0101");
+      }
+      paintReview();
+    }
     var err = el("careers-error");
     if (err && id === "step-rejected") err.hidden = true;
   }
