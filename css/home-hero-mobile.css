@@ -1,7 +1,66 @@
 /**
  * Homepage hero — one <img>, deterministic mobile landscape frame.
  * Source ratio 2048×1365 (served webp matches same ratio).
+ *
+ * Five-city ticker: desktop sits in the top fade under the nav (not a second bar).
+ * Mobile sits between the photo and the H1 so it never covers faces.
  */
+
+.homepage-hero__cities {
+  position: absolute;
+  top: var(--header-total, var(--nav-h, 162px));
+  left: 0;
+  right: 0;
+  z-index: 3;
+  margin: 0;
+  padding: 12px 28px 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgba(184, 164, 122, 0.22);
+  pointer-events: none;
+}
+
+.homepage-hero__cities-link {
+  pointer-events: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  column-gap: 0.15em;
+  row-gap: 0.2em;
+  max-width: 1100px;
+  text-decoration: none;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: clamp(0.78rem, 0.45vw + 0.68rem, 0.95rem);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-lt, #d4bf96);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  line-height: 1.45;
+  transition: color 0.2s;
+}
+
+.homepage-hero__cities-link:hover,
+.homepage-hero__cities-link:focus-visible {
+  color: #efe7d4;
+}
+
+.homepage-hero__cities-link:focus-visible {
+  outline: 1px solid rgba(184, 164, 122, 0.7);
+  outline-offset: 4px;
+}
+
+.homepage-hero__cities-link span:not(:last-child)::after {
+  content: "·";
+  margin-left: 0.7em;
+  margin-right: 0.55em;
+  font-weight: 400;
+  letter-spacing: 0;
+  opacity: 0.75;
+}
 
 /* —— Mobile / narrow (authoritative) —— */
 @media (max-width: 767px) {
@@ -53,6 +112,30 @@
     display: none !important;
   }
 
+  .homepage-hero__cities,
+  #home.homepage-hero .homepage-hero__cities {
+    position: relative !important;
+    top: auto !important;
+    z-index: 1;
+    padding: 16px 18px 14px !important;
+    background: #11100e;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.16);
+  }
+
+  .homepage-hero__cities-link {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    column-gap: 0;
+    row-gap: 0.35em;
+    text-shadow: none;
+    color: var(--gold, #b8a47a);
+  }
+
+  .homepage-hero__cities-link span:not(:last-child)::after {
+    margin-left: 0.5em;
+    margin-right: 0.4em;
+  }
+
   .homepage-hero__content,
   #home.homepage-hero .homepage-hero__content {
     position: relative !important;
@@ -64,7 +147,7 @@
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 32px 20px 44px !important;
+    padding: 22px 20px 44px !important;
     background: #11100e !important;
   }
 
