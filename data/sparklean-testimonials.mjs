@@ -10,12 +10,12 @@
  */
 
 /**
- * Google reviews CTA. Service-area listings do not resolve from a street
- * `/maps/place/` slug (that opens an empty map pin). Search by name + city.
- * Do not encode a street. Do not invent a CID/Place ID.
+ * Google reviews CTA. Direct Google Business profile (CID extracted from the
+ * live Sparklean Cleaning Maps listing). Do not use a street `/maps/place/`
+ * slug. Do not encode Brink Cir / Bernwood.
  */
 export const GOOGLE_REVIEWS_HREF =
-  "https://www.google.com/maps/search/?api=1&query=Sparklean%20Cleaning%20Bonita%20Springs";
+  "https://www.google.com/maps/place/Sparklean+Cleaning/data=!4m2!3m1!1s0x88db1909eb93ce35:0xd59b4e7f5e794ae6";
 
 /** Visible rating only — do not embed reviewCount in schema AggregateRating. */
 export const GOOGLE_RATING_DISPLAY = "4.9";

@@ -279,9 +279,9 @@ ${JSON.stringify(jsonLd)}
  <div class="footer-divider"></div>
  <div class="footer-cities">
  <a href="/house-cleaning-naples">Naples</a> &nbsp;·&nbsp;
+ <a href="/house-cleaning-bonita-springs">Bonita Springs</a> &nbsp;·&nbsp;
  <a href="/house-cleaning-estero">Estero</a> &nbsp;·&nbsp;
  <a href="/house-cleaning-fort-myers">Fort Myers</a> &nbsp;·&nbsp;
- <a href="/house-cleaning-bonita-springs">Bonita Springs</a> &nbsp;·&nbsp;
  <a href="/house-cleaning-cape-coral">Cape Coral</a>
  </div>
  </div>
@@ -315,7 +315,7 @@ ${JSON.stringify(jsonLd)}
  </div>
  </div>
  <div class="footer-btm">
- <div class="footer-copy">© 2026 Sparklean Cleaning. All Rights Reserved.</div>
+ <div class="footer-copy">© 2026 Sparklean Cleaning. All rights reserved.</div>
  </div>
 </footer>
 

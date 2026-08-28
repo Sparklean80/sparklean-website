@@ -12,13 +12,13 @@
   border: none !important;
   box-shadow: none !important;
   outline: none !important;
-  padding: 2px 0 !important;
+  padding: 0 !important;
 }
 
 .nav-logo img {
-  height: 124px !important;
+  height: 132px !important;
   width: auto !important;
-  max-width: min(380px, 48vw);
+  max-width: min(420px, 52vw);
   display: block !important;
   aspect-ratio: auto !important;
   object-fit: contain !important;
@@ -157,8 +157,8 @@ a.nav-mobile-quote {
   }
 
   .nav-logo img {
-    height: 90px !important;
-    max-width: min(300px, 52vw);
+    height: 96px !important;
+    max-width: min(320px, 54vw);
   }
 
   /* Keep quote CTA in the header bar on tablet/mobile; Client App remains in the menu. */
@@ -189,8 +189,8 @@ a.nav-mobile-quote {
   }
 
   .nav-logo img {
-    height: 62px !important;
-    max-width: min(240px, 58vw);
+    height: 70px !important;
+    max-width: min(260px, 62vw);
   }
 
   .nav-btn {
@@ -202,7 +202,7 @@ a.nav-mobile-quote {
 
 @media (max-width: 479px) {
   .nav-logo img {
-    height: 56px !important;
-    max-width: min(210px, 62vw);
+    height: 68px !important;
+    max-width: min(240px, 64vw);
   }
 }

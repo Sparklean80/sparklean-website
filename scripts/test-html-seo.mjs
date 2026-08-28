@@ -157,7 +157,7 @@ for (const rel of files) {
     assert(
       html.includes(GOOGLE_REVIEWS_HREF) ||
         html.includes(GOOGLE_REVIEWS_HREF.replace(/&/g, "&amp;")),
-      `${rel} Google Maps links use name+city search (not a street place URL)`
+      `${rel} Google Maps links use the direct Sparklean Business profile URL`
     );
   }
 }
