@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-27** (homepage hero five-city ticker under the nav; H1 stays Naples-primary; no Southwest Florida)
+Last updated: **2026-08-28** (residential hub shared-frame correction — homepage footer structure, header CSS versions, FAQ schema sync)
 
 ---
 
@@ -421,6 +421,8 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 **Homepage mobile hero structure (2026-08-18/19):** One authoritative `<picture>`/`<img>` in `.homepage-hero__media` — **not** CSS background, **not** a second overlaid mobile image. Asset: `69b21c822d48a61eeebb9364_Roxy1-aae74a30-1400.webp` (Roxy + two team members; ratio 1400×933 ≡ 2048/1365). At `max-width:767px`: `.homepage-hero` block/`height:auto`; media `aspect-ratio:2048/1365`; img `object-fit:contain` (never cover); content stacks below the full frame. Header Request a Quote kept inside the viewport. CSS: `css/home-hero-mobile.css`.
 
 **Homepage five-city ticker (2026-08-27):** Gold line `Naples · Bonita Springs · Estero · Fort Myers · Cape Coral` across the top of the homepage hero (under the nav, in the existing fade — not a second bar, not Southwest Florida). Links to `#areas`. H1 stays `Full-Service Cleaning Company in Naples, Florida`. Eyebrow stays `Professionally Managed Cleaning`. On mobile the ticker sits **between the photo and the H1** so it does not cover faces.
+
+**Residential hub tightening (2026-08-27 / shared-frame 2026-08-28):** Copy/footer pass only — no UI redesign of body content. Footer matches homepage structure (logo wrap contains only the logo; divider and city links follow). Footer copy matches homepage (`All rights reserved.` + `Bonded · Insured · Workers' Comp`). Hero tightened to two lines; Google strip is `★ 4.9-Star Google Rating` (no double star). Founder copy is singular. Service names: Recurring cleaning, Deep cleaning, Move-in / move-out, White-glove cleaning. Cape Coral card is customer-facing. Guarantee kept in the trust strip plus one explanation in the intro; extra 24h repeats removed. Process block retitled away from a second “accountability” headline. Shared header CSS query strings match homepage (`sparklean-site-header.css?v=rewards-m`). FAQ JSON-LD synced to visible FAQ terminology.
 
 **Mobile photos (2026-08-19):** Phone layouts stack photo then copy. Do **not** force a short landscape crop (`68vw` + `object-fit:cover`) — that cut bodies and tools. Mobile photos use full-width `height:auto` + `object-fit:contain`. Footer/header logos use the homepage transparent CDN asset (not the plaque PNG). `css/sparklean-footer.css` sizes the footer logo to 200px / 120px mobile.
 
