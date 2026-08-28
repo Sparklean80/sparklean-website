@@ -264,7 +264,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 .fcol-contact{display:flex;flex-direction:column;gap:10px;}
 .fcol-contact a{font-size:.72rem;color:rgba(249,247,243,.38);text-decoration:none;transition:color .22s;}
 .fcol-contact a:hover{color:var(--gold-lt);}
-.footer-btm{padding:18px 80px;display:flex;justify-content:space-between;align-items:center;}
+.footer-btm,.footer-bottom{padding:18px 80px;display:flex;justify-content:space-between;align-items:center;}
 .footer-copy{font-size:.58rem;color:rgba(249,247,243,.16);letter-spacing:.06em;}
 
 @media(max-width:1024px){
@@ -311,7 +311,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  .footer-top{padding:48px 20px 40px;}
  .footer-cols{grid-template-columns:1fr;gap:36px;}
  .footer-logo-wrap img{height:150px;}
- .footer-btm{flex-direction:column;gap:8px;text-align:center;padding:16px 20px;}
+ .footer-btm,.footer-bottom{flex-direction:column;gap:8px;text-align:center;padding:16px 20px;}
  .sec-h{font-size:1.8rem;}
  h1{font-size:2.2rem;}
 }
@@ -359,7 +359,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  .footer-top{padding:44px 20px 36px !important;}
  .footer-cols{grid-template-columns:1fr !important;gap:28px !important;}
  .footer-logo-wrap img{height:120px !important;}
- .footer-bottom.footer-btm{flex-direction:column !important;gap:8px !important;text-align:center !important;padding:14px 20px !important;}
+ .footer-bottom,.footer-btm{flex-direction:column !important;gap:8px !important;text-align:center !important;padding:14px 20px !important;}
  .ci-grid,.sl-grid,.ni-grid,.sb-grid,.pp-grid,.comm-grid,.pb-inner,.about-grid,.why-grid,.prod-grid,.faq-grid,.rev-band{grid-template-columns:1fr !important;gap:32px !important;}
  .pt-grid,.wb-grid,.hoods-grid,.ss-grid,.ind-grid,.why-grid,.svc-grid,.rev-grid{grid-template-columns:1fr !important;gap:3px !important;}
  .pc-intro,.project-types,.svc-list,.why-builders,.community,.cta,.naples-intro,.hoods,.svc-sum,.photo-pair,.snowbird,.faq,.about,.services,.why,.products,.reviews,.areas,.inner,.comm-intro,.industries{padding:52px 20px !important;}
@@ -526,9 +526,9 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  </nav>
  <div class="rewards-panel" id="rewards-panel" role="region" aria-label="Sparklean Rewards">
  <div class="rewards-panel-title">Sparklean Rewards</div>
- <p>Earn $5 in Sparklean cleaning credit for every $100 you spend.</p>
+ <p>Earn $5 in Sparklean cleaning credit for every $100 you spend on qualifying Sparklean services.</p>
  <p class="rewards-panel-example">Spend $500 → Earn $25 Credit</p>
- <p>Use your cleaning credit toward future residential, commercial, construction, remodeling or vacation-rental cleaning.</p>
+ <p>Credits apply toward future residential, commercial, construction, remodeling, or vacation-rental cleaning with Sparklean. Redemption and current balance are managed in the Client App after you become a client.</p>
  <div class="rewards-panel-actions">
  <a class="rewards-panel-cta" href="/contact" data-sparklean-intake>Request a Quote</a>
  <a class="rewards-panel-cta-outline" href="/customer-portal">View Rewards in Client App</a>
@@ -906,53 +906,19 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 
 <footer>
  <div class="footer-top">
- <div class="footer-logo-wrap">
- <img width="2048" height="1449" src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning">
+ <div class="footer-logo-wrap"><img width="2048" height="1449" src="https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png" alt="Sparklean Cleaning"></div>
  <div class="footer-divider"></div>
- <div class="footer-cities"><a href="/house-cleaning-naples" style="color:inherit;text-decoration:none;">Naples</a> &nbsp;·&nbsp; <a href="/house-cleaning-bonita-springs" style="color:inherit;text-decoration:none;">Bonita Springs</a> &nbsp;·&nbsp; <a href="/house-cleaning-estero" style="color:inherit;text-decoration:none;">Estero</a> &nbsp;·&nbsp; <a href="/house-cleaning-fort-myers" style="color:inherit;text-decoration:none;">Fort Myers</a> &nbsp;·&nbsp; <a href="/house-cleaning-cape-coral" style="color:inherit;text-decoration:none;">Cape Coral</a></div>
- </div>
+ <div class="footer-cities"><a href="/house-cleaning-naples">Naples</a> &nbsp;·&nbsp; <a href="/house-cleaning-bonita-springs">Bonita Springs</a> &nbsp;·&nbsp; <a href="/house-cleaning-estero">Estero</a> &nbsp;·&nbsp; <a href="/house-cleaning-fort-myers">Fort Myers</a> &nbsp;·&nbsp; <a href="/house-cleaning-cape-coral">Cape Coral</a></div>
  <div class="footer-cols">
- <div>
- <div class="fcol-t">Explore</div>
- <ul class="fcol-links">
- <li><a href="/why-sparklean">Why Sparklean</a></li>
- <li><a href="/about">About</a></li>
- <li><a href="/partners">Partners</a></li>
- <li><a href="/blog">Blog</a></li>
- <li><a href="/refer">Refer Someone</a></li>
- </ul>
- </div>
- <div>
- <div class="fcol-t">Services</div>
- <ul class="fcol-links">
- <li><a href="/residential-cleaning">Residential Cleaning</a></li>
- <li><a href="/commercial-cleaning">Commercial &amp; Janitorial</a></li>
- <li><a href="/post-construction-cleaning">Post-Construction</a></li>
- <li><a href="/vacation-rental-cleaning">Vacation Rental &amp; Property Care</a></li>
- <li><a href="/specialized-cleaning">Specialized &amp; Add-Ons</a></li>
- </ul>
- </div>
- <div>
- <div class="fcol-t">Contact</div>
- <div class="fcol-contact">
- <a href="tel:2398883588">(239) 888-3588</a>
- <a href="mailto:info@sparklean.co">info@sparklean.co</a>
- <a href="/contact" data-sparklean-intake>Request a Quote</a>
- <a href="/customer-portal">Client Login</a>
- <a href="https://www.google.com/maps/place/Sparklean+Cleaning/data=!4m2!3m1!1s0x88db1909eb93ce35:0xd59b4e7f5e794ae6" target="_blank" rel="noopener noreferrer">Google Reviews</a>
+ <div><div class="fcol-t">Explore</div><ul class="fcol-links"><li><a href="/why-sparklean">Why Sparklean</a></li><li><a href="/about">About</a></li><li><a href="/partners">Partners</a></li><li><a href="/blog">Blog</a></li><li><a href="/refer">Refer Someone</a></li></ul></div>
+ <div><div class="fcol-t">Services</div><ul class="fcol-links"><li><a href="/residential-cleaning">Residential Cleaning</a></li><li><a href="/commercial-cleaning">Commercial &amp; Janitorial</a></li><li><a href="/post-construction-cleaning">Post-Construction</a></li><li><a href="/vacation-rental-cleaning">Vacation Rental &amp; Property Care</a></li><li><a href="/specialized-cleaning">Specialized &amp; Add-Ons</a></li></ul></div>
+ <div><div class="fcol-t">Contact</div><div class="fcol-contact"><a href="tel:2398883588">(239) 888-3588</a><a href="mailto:info@sparklean.co">info@sparklean.co</a><a href="/contact" data-sparklean-intake>Request a Quote</a><a href="/customer-portal">Client Login</a></div></div>
  </div>
  </div>
- </div>
- </div>
- <div class="footer-btm">
+ <div class="footer-bottom">
  <span class="footer-copy">© 2026 Sparklean Cleaning. All rights reserved.</span>
-<nav class="footer-legal" aria-label="Legal">
- <a href="/privacy">Privacy Policy</a>
- <span aria-hidden="true">·</span>
- <a href="/terms">Terms of Service</a>
- <span aria-hidden="true">·</span>
- <a href="/accessibility">Accessibility</a>
-</nav>
+ <span class="footer-copy">Bonded · Insured · Workers' Comp</span>
+ <nav class="footer-legal" aria-label="Legal"><a href="/privacy">Privacy Policy</a><span aria-hidden="true">·</span><a href="/terms">Terms of Service</a><span aria-hidden="true">·</span><a href="/accessibility">Accessibility</a></nav>
  </div>
 </footer>
 
@@ -970,8 +936,12 @@ document.querySelectorAll('.faq-q').forEach(btn=>{
 var hb=document.getElementById('hamburger');
 var mm=document.getElementById('mobileMenu');
 if(hb&&mm){
- hb.addEventListener('click',function(){hb.classList.toggle('open');mm.classList.toggle('open');});
- mm.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){hb.classList.remove('open');mm.classList.remove('open');});});
+ hb.addEventListener('click',function(){
+ hb.classList.toggle('open');
+ mm.classList.toggle('open');
+ hb.setAttribute('aria-expanded', mm.classList.contains('open') ? 'true' : 'false');
+ });
+ mm.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){hb.classList.remove('open');mm.classList.remove('open');hb.setAttribute('aria-expanded','false');});});
 }
 </script>
 <script src="/js/serviceFlows.js"></script>
