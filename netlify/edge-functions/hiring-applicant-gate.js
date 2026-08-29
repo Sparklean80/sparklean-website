@@ -1,4 +1,15 @@
+const API = "https://api.sparklean.co";
 const ROBOTS = "noindex, nofollow";
+const TOKEN_RE = /^[a-f0-9]{64}$/i;
+
+function denyHeaders() {
+  return {
+    "content-type": "text/html; charset=utf-8",
+    "X-Robots-Tag": ROBOTS,
+    "cache-control": "no-store",
+    "referrer-policy": "no-referrer",
+  };
+}
 
 function denyPage() {
   return `<!DOCTYPE html>
@@ -6,6 +17,7 @@ function denyPage() {
 <head>
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Link not valid | Sparklean Cleaning</title>
 <style>
@@ -20,33 +32,72 @@ a{color:#D4BF96}
 <section>
 <h1>This link is not valid</h1>
 <p>Offer and document pages are only available with a personal applicant link. They are not public career listings.</p>
-<p><a href="/careers">Back to careers</a></p>
+<p><a href="/careers" rel="noreferrer">Back to careers</a></p>
 </section>
 </body>
 </html>`;
 }
 
+function deny(status) {
+  return new Response(denyPage(), { status, headers: denyHeaders() });
+}
+
 function applicantToken(url) {
   const parts = url.pathname.replace(/\/+$/, "").split("/").filter(Boolean);
   const kindIdx = parts.findIndex((p) => p === "offer" || p === "documents");
-  if (kindIdx >= 0 && parts[kindIdx + 1]) return decodeURIComponent(parts[kindIdx + 1]);
+  if (kindIdx >= 0 && parts[kindIdx + 1] && !parts[kindIdx + 1].startsWith("careers-")) {
+    return decodeURIComponent(parts[kindIdx + 1]);
+  }
   return url.searchParams.get("token") || url.searchParams.get("resume") || "";
+}
+
+function tokenKind(url) {
+  const path = url.pathname;
+  if (path.includes("/careers/offer") || path.includes("careers-offer")) return "offer";
+  if (path.includes("/careers/documents") || path.includes("careers-documents")) return "documents";
+  return "";
+}
+
+async function tokenIsValid(kind, token) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 4000);
+  try {
+    const res =
+      kind === "offer"
+        ? await fetch(`${API}/api/hiring/offers/${encodeURIComponent(token)}`, {
+            method: "GET",
+            redirect: "manual",
+            signal: ctrl.signal,
+            headers: { accept: "application/json" },
+          })
+        : await fetch(`${API}/api/hiring/documents/status`, {
+            method: "GET",
+            redirect: "manual",
+            signal: ctrl.signal,
+            headers: { accept: "application/json", "x-hiring-resume": token },
+          });
+    await res.arrayBuffer();
+    return res.ok;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export default async (request, context) => {
   const url = new URL(request.url);
   const token = applicantToken(url);
-  const headers = {
-    "content-type": "text/html; charset=utf-8",
-    "X-Robots-Tag": ROBOTS,
-    "cache-control": "no-store",
-  };
-  if (!token) {
-    return new Response(denyPage(), { status: 401, headers });
-  }
+  const kind = tokenKind(url);
+  if (!token) return deny(401);
+  if (!TOKEN_RE.test(token) || (kind !== "offer" && kind !== "documents")) return deny(404);
+  const ok = await tokenIsValid(kind, token);
+  if (!ok) return deny(404);
+
   const response = await context.next();
   response.headers.set("X-Robots-Tag", ROBOTS);
   response.headers.set("cache-control", "no-store");
+  response.headers.set("referrer-policy", "no-referrer");
   return response;
 };
 

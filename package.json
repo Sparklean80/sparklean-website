@@ -17,6 +17,7 @@
     "test:funnel": "npm run test:ads && npm run test:paid-intake && npm run test:leads-store && npm run test:conversion-adversarial && npm run test:blob-concurrency && npm run test:idempotency-lease",
     "test:schema": "node scripts/test-entity-schema.mjs",
     "test:careers": "node scripts/test-careers-hiring.mjs",
+    "test:careers:live-mutation": "node scripts/refuse-live-hiring-mutation.mjs",
     "test:html-seo": "node scripts/test-html-seo.mjs",
     "test:testimonials": "node scripts/test-testimonials.mjs",
     "test:referral": "node scripts/test-referral-recurring.mjs",

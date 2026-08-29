@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-28** (public `/careers` hiring landing + live Sparklean OS apply; offer/documents remain token-only)
+Last updated: **2026-08-28** (careers hiring: read-only site tests; edge token validation against Sparklean OS)
 
 ---
 
@@ -155,6 +155,7 @@ Track in portal + analytics (not yet wired on marketing site):
 - **`netlify.toml`** — all redirects (301 legacy + 200 clean-url rewrites)
 - **`sitemap.xml`** — generated at build by `scripts/generate-sitemap.mjs` from `netlify.toml` 200 rules
 - **`robots.txt`** — disallows `/pages/`, `/signalhouse/`, `/careers/apply`, `/careers/offer`, and `/careers/documents`
+- **`netlify/edge-functions/hiring-applicant-gate.js`** — offer/document HTML is served only after Sparklean OS confirms the applicant token (`GET /api/hiring/offers/:token` or `GET /api/hiring/documents/status`). Missing token → 401; invalid/unverified → 404. Responses are `noindex`, `no-store`, `no-referrer`. The gate does not return applicant records.
 - **`js/serviceFlows.js`** — structured quote intake flows on contact/home
 - **`netlify/functions/`** — quote submit etc.
 - **Images:** mix of `/images/` local + Webflow CDN `cdn.prod.website-files.com/...`
@@ -440,7 +441,7 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **City page shared-frame parity (2026-08-28):** All five `/house-cleaning-*` pages use the homepage shared frame: rewards-panel wording, footer structure (logo wrap contains only the logo; divider and cities follow), `.footer-bottom` with `© 2026 Sparklean Cleaning. All rights reserved.` + `Bonded · Insured · Workers' Comp`, and hamburger `aria-expanded`. City-page-only footer Google Reviews link removed; Google reviews remain in each city’s unique body. No city title/meta/canonical/H1/schema or local-copy changes.
 
-**Public Careers hiring flow (2026-08-28):** `/careers` is the indexable careers landing. It loads published jobs only from `https://api.sparklean.co` and injects `JobPosting` JSON-LD for those jobs (no invented dates). Empty state copy is “There are no open positions at this time. Please check back soon.” `/careers/apply` is the public application flow but stays `noindex, nofollow`, out of the sitemap, and blocked in `robots.txt`. `/careers/offer/:token` and `/careers/documents/:token` stay `noindex`, unlisted, and blocked without an applicant token. Founder review gates and demo answers are removed from production. Identity-document files are captured on Sparklean OS (`/hiring/onboarding/...`) and must never pass through Netlify; if private R2/S3 is not configured (`HIRING_OBJECT_BUCKET` and related Render vars), document collection stays unavailable with a clear message and no website fallback. Office hiring controls remain on `office.sparklean.co` / `/api/office/hiring/*`.
+**Public Careers hiring flow (2026-08-28):** `/careers` is the indexable careers landing. It loads published jobs only from `https://api.sparklean.co` and injects `JobPosting` JSON-LD for those jobs (no invented dates). Empty state copy is “There are no open positions at this time. Please check back soon.” `/careers/apply` is the public application flow but stays `noindex, nofollow`, out of the sitemap, and blocked in `robots.txt`. `/careers/offer/:token` and `/careers/documents/:token` stay `noindex`, unlisted, and are refused by `hiring-applicant-gate` unless Sparklean OS accepts the token (401 without a token, 404 if invalid). Founder review gates and demo answers are removed from production. Identity-document files are captured on Sparklean OS (`/hiring/onboarding/...`) and must never pass through Netlify; if private R2/S3 is not configured (`HIRING_OBJECT_BUCKET` and related Render vars), document collection stays unavailable with a clear message and no website fallback. Office hiring controls remain on `office.sparklean.co` / `/api/office/hiring/*`. `npm run test:site` is read-only against `api.sparklean.co`. A synthetic live application is DESTRUCTIVE and requires `SPARKLEAN_LIVE_HIRING_MUTATION=1` in a local non-CI shell (`npm run test:careers:live-mutation` refuses to write).
 
 **Production hiring prerequisites (Render `sparklean-os-api`):** confirm `WEBSITE_ORIGIN=https://www.sparklean.co`, `HIRING_OBJECT_BUCKET`, `HIRING_S3_ENDPOINT`, `HIRING_S3_ACCESS_KEY_ID`, `HIRING_S3_SECRET_ACCESS_KEY`, and `HIRING_NOTIFY_TO` before enabling I-9 / driver’s-license collection. Application submission can go live without those bucket credentials; document collection cannot.
 **Mobile photos (2026-08-19):** Phone layouts stack photo then copy. Do **not** force a short landscape crop (`68vw` + `object-fit:cover`) — that cut bodies and tools. Mobile photos use full-width `height:auto` + `object-fit:contain`. Footer/header logos use the homepage transparent CDN asset (not the plaque PNG). `css/sparklean-footer.css` sizes the footer logo to 200px / 120px mobile.

@@ -1,6 +1,11 @@
 /**
  * Public careers hiring funnel regressions.
  * Run: node scripts/test-careers-hiring.mjs
+ *
+ * Default (including `npm run test:site`) is read-only against api.sparklean.co.
+ * A synthetic application is DESTRUCTIVE to production Sparklean OS hiring data.
+ * Enable only in a local non-CI shell:
+ *   SPARKLEAN_LIVE_HIRING_MUTATION=1 npm run test:careers
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -116,21 +121,52 @@ assert(/for = "\/pages\/careers-apply.html"[\s\S]{0,160}X-Robots-Tag = "noindex/
 
 const gate = read("netlify/edge-functions/hiring-applicant-gate.js");
 assert(gate.includes("applicantToken"), "edge gate requires an applicant token");
+assert(gate.includes("https://api.sparklean.co"), "edge gate validates tokens against Sparklean OS");
+assert(gate.includes("/api/hiring/offers/"), "edge gate checks offer tokens with the hiring API");
+assert(gate.includes("/api/hiring/documents/status"), "edge gate checks document tokens with the hiring API");
+assert(gate.includes("x-hiring-resume"), "edge gate sends the resume token only as an API header");
+assert(gate.includes("referrer-policy"), "edge deny/pass responses set referrer-policy");
+assert(gate.includes("no-referrer"), "edge gate uses no-referrer");
+assert(gate.includes("no-store"), "edge gate uses no-store");
 assert(!gate.includes("HIRING_REVIEW_TOKEN"), "edge gate does not use founder review secret");
 assert(!gate.includes("founder-demo"), "edge gate does not mark founder demo");
+assert(!/full_legal_name|email|phone/.test(gate), "edge gate does not read applicant fields");
 
-const live = { openings: null, office: null, offer: null, documents: null, application: null };
+const pkg = read("package.json");
+assert(pkg.includes("test:careers:live-mutation"), "destructive live-mutation script is named");
+assert(!/SPARKLEAN_LIVE_HIRING_MUTATION=1/.test(pkg), "package.json does not enable live hiring mutations");
+assert(
+  read("scripts/refuse-live-hiring-mutation.mjs").includes("DESTRUCTIVE"),
+  "live-mutation npm script refuses to write"
+);
+assert(
+  read("scripts/test-careers-hiring.mjs").indexOf("mutationRequested") <
+    read("scripts/test-careers-hiring.mjs").indexOf('method: "POST"'),
+  "synthetic application POST is behind the explicit mutation flag"
+);
+
+const LIVE_MUTATION_FLAG = "SPARKLEAN_LIVE_HIRING_MUTATION";
+const inCi = Boolean(
+  process.env.CI || process.env.GITHUB_ACTIONS || process.env.NETLIFY || process.env.TF_BUILD || process.env.GITLAB_CI
+);
+const mutationRequested = process.env[LIVE_MUTATION_FLAG] === "1";
+assert(
+  !inCi || !mutationRequested,
+  "synthetic live applications must not run in CI"
+);
+
+const live = { openings: null, office: null, offer: null, documents: null, application: null, mutation: "skipped" };
 
 try {
   const openingsRes = await fetch(`${API}/api/hiring/openings`);
   const openingsJson = await openingsRes.json();
-  live.openings = { status: openingsRes.status, body: openingsJson };
+  live.openings = { status: openingsRes.status, count: Array.isArray(openingsJson.openings) ? openingsJson.openings.length : null };
   assert(openingsRes.ok, `live openings HTTP ${openingsRes.status}`);
   assert(Array.isArray(openingsJson.openings), "live openings is an array, not fixtures");
   console.log("LIVE openings count:", openingsJson.openings.length);
 
   const officeRes = await fetch(`${API}/api/office/hiring/review`);
-  live.office = { status: officeRes.status, body: await officeRes.json().catch(() => ({})) };
+  live.office = { status: officeRes.status };
   assert(officeRes.status === 401, `office hiring review is 401 (got ${officeRes.status})`);
 
   const jobsRes = await fetch(`${API}/api/office/hiring/jobs`);
@@ -144,7 +180,15 @@ try {
   live.documents = { status: docsRes.status };
   assert(docsRes.status === 401, `documents status without token is 401 (got ${docsRes.status})`);
 
-  if (openingsJson.openings[0]) {
+  if (!mutationRequested) {
+    console.log(
+      "SKIP DESTRUCTIVE live application — npm run test:site is read-only against api.sparklean.co. Local founder proof: SPARKLEAN_LIVE_HIRING_MUTATION=1 npm run test:careers (blocked in CI)."
+    );
+  } else if (inCi) {
+    failed += 1;
+    console.error("FAIL: SPARKLEAN_LIVE_HIRING_MUTATION is blocked in CI");
+  } else if (openingsJson.openings[0]) {
+    console.warn("DESTRUCTIVE: writing a synthetic application to production Sparklean OS hiring data");
     const job = openingsJson.openings[0];
     const startedRes = await fetch(`${API}/api/hiring/applications`, {
       method: "POST",
@@ -152,6 +196,7 @@ try {
       body: JSON.stringify({ job_id: job.id }),
     });
     const started = await startedRes.json();
+    live.mutation = "wrote";
     live.application = { status: startedRes.status, id: started.application_id || null };
     assert(startedRes.ok && started.resume_token && started.application_id, "test application started on live API");
     const stamp = String(Date.now()).slice(-6);
@@ -184,10 +229,11 @@ try {
       body: JSON.stringify(gateBody),
     });
     const gateJson = await gateRes.json();
-    live.application.gate = { status: gateRes.status, body: gateJson };
+    live.application.gate = { status: gateRes.status, error: gateJson.error || null };
     assert(gateRes.ok, `test application gate reached Sparklean OS (${gateRes.status})`);
   } else {
-    console.log("LIVE no published openings — application queue proof deferred until Office publishes a job");
+    live.mutation = "no-openings";
+    console.log("LIVE no published openings — destructive application proof deferred until Office publishes a job");
   }
 } catch (err) {
   failed += 1;
