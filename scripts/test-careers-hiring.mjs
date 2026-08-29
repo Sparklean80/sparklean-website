@@ -71,6 +71,12 @@ assert(
     read("js/sparklean-careers-api.js").includes("storage_not_configured"),
   "storage 503 remains the document-collection failure"
 );
+assert(read("css/sparklean-careers.css").includes(".careers-faq .faq-q"), "careers FAQ questions are styled");
+assert(
+  /\.careers-faq \.faq-q[\s\S]{0,280}background:\s*transparent/.test(read("css/sparklean-careers.css")),
+  "FAQ questions are not default white buttons"
+);
+assert(!/Residential Cleaner — Full-Time/.test(read("js/sparklean-careers.js")), "job cards are rendered from the live API");
 
 for (const rel of [landing]) {
   const html = read(rel);

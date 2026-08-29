@@ -150,6 +150,136 @@
   margin-top: 28px;
 }
 
+.careers-page details,
+.careers-page summary {
+  background: transparent;
+  color: inherit;
+  border: 0;
+  list-style: none;
+}
+
+.careers-page summary::-webkit-details-marker,
+.careers-page summary::marker {
+  display: none;
+}
+
+.careers-faq {
+  max-width: 42rem;
+  margin: 12px 0 0;
+}
+
+.careers-faq h2 {
+  font-family: var(--serif, "Playfair Display", Georgia, serif);
+  font-size: 1.55rem;
+  font-weight: 400;
+  color: #f9f7f3;
+  margin: 0 0 8px;
+}
+
+.careers-faq .faq-item,
+.careers-page details.faq-item {
+  border-bottom: 1px solid rgba(184, 164, 122, 0.14);
+  background: transparent;
+}
+
+.careers-faq .faq-q,
+.careers-faq summary,
+.careers-page .faq-q {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: #f9f7f3;
+  font-family: var(--serif, "Playfair Display", Georgia, serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.4;
+  padding: 22px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.careers-faq .faq-q:hover,
+.careers-faq .faq-q:focus-visible,
+.careers-faq summary:hover {
+  color: #d4bf96;
+  outline: none;
+}
+
+.careers-faq .faq-plus,
+.careers-faq .faq-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(184, 164, 122, 0.45);
+  background: transparent;
+  color: #b8a47a;
+  font-family: var(--sans, Montserrat, sans-serif);
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.careers-faq .faq-item.open .faq-plus,
+.careers-faq .faq-item.open .faq-icon,
+.careers-faq details[open] .faq-plus {
+  background: #b8a47a;
+  color: #0e0e0e;
+  transform: rotate(45deg);
+}
+
+.careers-faq .faq-ans,
+.careers-faq .faq-a {
+  display: none;
+  padding: 0 0 22px;
+  color: rgba(249, 247, 243, 0.72);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  background: transparent;
+}
+
+.careers-faq .faq-item.open .faq-ans,
+.careers-faq .faq-item.open .faq-a,
+.careers-faq details[open] .faq-ans {
+  display: block;
+}
+
+.careers-duties {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.careers-duties li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(249, 247, 243, 0.72);
+}
+
+.careers-duties li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 1px;
+  background: #b8a47a;
+}
+
 .careers-details,
 .careers-progress,
 .careers-form-card,

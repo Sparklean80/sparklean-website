@@ -6,12 +6,35 @@
       return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch];
     });
   }
-  function card(job) {
-    var pay = hiring.formatPay(job.base_rate_cents);
-    var ot = hiring.formatPay(job.overtime_rate_cents);
+  function duties(job) {
+    var lines = String(job.essential_functions || "")
+      .split(/\r?\n/)
+      .map(function (line) {
+        return line.replace(/^[\s•\-]+/, "").trim();
+      })
+      .filter(Boolean);
+    if (!lines.length) return "";
+    return (
+      '<ul class="careers-duties">' +
+      lines
+        .map(function (line) {
+          return "<li>" + esc(line) + "</li>";
+        })
+        .join("") +
+      "</ul>"
+    );
+  }
+  function overtimeLine(job) {
+    if (job.overtime_not_guaranteed && !job.full_time) return "No guaranteed overtime";
+    return hiring.formatPay(job.overtime_rate_cents) + " after 40 hours";
+  }
+  function scheduleLine(job) {
     var days = hiring.formatDays(job.required_days);
     var time = hiring.formatTime(job.earliest_report_local);
-    var status = job.full_time ? "Full-time" : "Part-time";
+    if (job.full_time) return "Full-time · " + days + " · Must consistently report by " + time;
+    return "Part-time · " + days + " availability · Shifts may begin at " + time;
+  }
+  function card(job) {
     var href = "/careers/apply?job=" + encodeURIComponent(job.id);
     return (
       '<article class="careers-card">' +
@@ -19,30 +42,26 @@
       "<h2>" +
       esc(job.title) +
       "</h2>" +
-      '<p class="careers-card-note">A supervised Sparklean cleaning role. Pay, schedule, and driving requirements are set by the published opening.</p>' +
       '<dl class="careers-dl">' +
       "<div><dt>Starting pay</dt><dd>" +
-      pay +
+      hiring.formatPay(job.base_rate_cents) +
       "</dd></div>" +
       "<div><dt>Overtime</dt><dd>" +
-      ot +
-      " when hours exceed 40</dd></div>" +
+      overtimeLine(job) +
+      "</dd></div>" +
       "<div><dt>Schedule</dt><dd>" +
-      status +
-      " · " +
-      days +
-      " · report by " +
-      time +
+      scheduleLine(job) +
       "</dd></div>" +
       "<div><dt>Reporting location</dt><dd>" +
-      esc(job.reporting_location_label || "Assigned by Sparklean") +
+      esc(job.reporting_location_label || "Southwest Florida") +
       "</dd></div>" +
       "<div><dt>Driving</dt><dd>" +
       (job.driving_required
-        ? "Valid Florida driver’s license required"
-        : "This opening does not require driving a company vehicle.") +
+        ? "Valid Florida driver’s license and reliable transportation"
+        : "This opening does not require driving.") +
       "</dd></div>" +
       "</dl>" +
+      duties(job) +
       '<div class="careers-actions"><a class="btn-gold" href="' +
       href +
       '">Begin application</a></div>' +

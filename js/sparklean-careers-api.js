@@ -75,10 +75,11 @@
     return q.get("token") || q.get("resume") || "";
   }
   function money(cents) {
-    return "$" + (Number(cents) / 100).toFixed(2);
+    var n = Number(cents) / 100;
+    return n % 1 === 0 ? "$" + n.toFixed(0) : "$" + n.toFixed(2);
   }
   function formatPay(cents) {
-    return money(cents) + " per hour";
+    return money(cents) + "/hour";
   }
   function formatTime(local) {
     var parts = String(local || "").split(":");
