@@ -461,7 +461,7 @@ body.site-header-v2 {
   display: none !important;
 }
 
-.site-header.is-scrolled .nav-links > li:nth-child(n + 4) {
+.site-header.is-scrolled .nav-links > li:nth-child(n + 5) {
   display: none;
 }
 

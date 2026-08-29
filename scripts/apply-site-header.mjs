@@ -44,6 +44,7 @@ const HEADER_BLOCK = `<header class="site-header" id="site-header">
         </ul>
       </li>
       <li><a href="/why-sparklean">Why Sparklean</a></li>
+      <li><a href="/careers">Careers</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/partners">Partners</a></li>
       <li><a href="/blog">Blog</a></li>
@@ -85,6 +86,7 @@ const HEADER_BLOCK = `<header class="site-header" id="site-header">
   <a href="/house-cleaning-fort-myers" class="mob-sub">Fort Myers</a>
   <a href="/house-cleaning-cape-coral" class="mob-sub">Cape Coral</a>
   <a href="/why-sparklean">Why Sparklean</a>
+  <a href="/careers">Careers</a>
   <a href="/partners">Partners</a>
   <a href="/about">About Us</a>
   <a href="/blog">Blog</a>
