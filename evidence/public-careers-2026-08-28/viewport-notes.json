@@ -1,0 +1,9 @@
+﻿{
+  "viewports": {
+    "careers": { "1440": {"overflow": false}, "1280": {"overflow": false}, "768": {"overflow": false}, "390": {"overflow": false, "hamburgerAriaExpanded": "false->true"} },
+    "apply": { "1440": {"overflow": false}, "390": {"overflow": false} },
+    "offer": { "1440": {"overflow": false, "invalidTokenMessage": true} },
+    "documents": { "1440": {"overflow": false, "invalidTokenMessage": true} }
+  },
+  "notes": "Overflow is documentElement.scrollWidth vs clientWidth. Localhost API calls may CORS-fail; live openings from api.sparklean.co returned []."
+}

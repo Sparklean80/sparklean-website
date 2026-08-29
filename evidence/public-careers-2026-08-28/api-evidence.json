@@ -1,0 +1,39 @@
+{
+  "api": "https://api.sparklean.co",
+  "live": {
+    "openings": {
+      "status": 200,
+      "body": {
+        "openings": [],
+        "questions": [
+          {
+            "id": "locked_room",
+            "prompt": "You arrive at a home and a bedroom door is closed with a note that says do not enter. What do you do?"
+          },
+          {
+            "id": "skip_request",
+            "prompt": "A client asks you to skip bathrooms so the visit finishes early. Sparklean’s work order includes bathrooms. What do you do?"
+          },
+          {
+            "id": "damage",
+            "prompt": "You notice a cracked vase while dusting. What do you do before leaving the property?"
+          }
+        ]
+      }
+    },
+    "office": {
+      "status": 401,
+      "body": {
+        "error": "unauthorized"
+      }
+    },
+    "offer": {
+      "status": 404
+    },
+    "documents": {
+      "status": 401
+    },
+    "application": null
+  },
+  "at": "2026-08-29T00:09:08.057Z"
+}

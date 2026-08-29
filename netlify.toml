@@ -866,43 +866,68 @@
   status = 200
 
 [[headers]]
-  for = "/careers"
+  for = "/careers/apply"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
     Cache-Control = "no-store"
 [[headers]]
-  for = "/careers/*"
+  for = "/careers/apply/"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
     Cache-Control = "no-store"
 [[headers]]
-  for = "/pages/careers.html"
+  for = "/pages/careers-apply.html"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
     Cache-Control = "no-store"
 [[headers]]
-  for = "/pages/careers-*"
+  for = "/careers/offer"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/careers/offer/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/careers/documents"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/careers/documents/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/pages/careers-offer.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/pages/careers-documents.html"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
     Cache-Control = "no-store"
 
 [[edge_functions]]
-  function = "hiring-review-gate"
-  path = "/careers"
+  function = "hiring-applicant-gate"
+  path = "/careers/offer"
 [[edge_functions]]
-  function = "hiring-review-gate"
-  path = "/careers/*"
+  function = "hiring-applicant-gate"
+  path = "/careers/offer/*"
 [[edge_functions]]
-  function = "hiring-review-gate"
-  path = "/pages/careers.html"
+  function = "hiring-applicant-gate"
+  path = "/careers/documents"
 [[edge_functions]]
-  function = "hiring-review-gate"
-  path = "/pages/careers-apply.html"
+  function = "hiring-applicant-gate"
+  path = "/careers/documents/*"
 [[edge_functions]]
-  function = "hiring-review-gate"
+  function = "hiring-applicant-gate"
   path = "/pages/careers-offer.html"
 [[edge_functions]]
-  function = "hiring-review-gate"
+  function = "hiring-applicant-gate"
   path = "/pages/careers-documents.html"
 
 [[headers]]

@@ -16,12 +16,13 @@
     "test:idempotency-lease": "node scripts/test-idempotency-lease-recovery.mjs",
     "test:funnel": "npm run test:ads && npm run test:paid-intake && npm run test:leads-store && npm run test:conversion-adversarial && npm run test:blob-concurrency && npm run test:idempotency-lease",
     "test:schema": "node scripts/test-entity-schema.mjs",
+    "test:careers": "node scripts/test-careers-hiring.mjs",
     "test:html-seo": "node scripts/test-html-seo.mjs",
     "test:testimonials": "node scripts/test-testimonials.mjs",
     "test:referral": "node scripts/test-referral-recurring.mjs",
     "test:final-cleanup": "node scripts/test-final-cleanup-pass.mjs",
     "test:contact-attribution": "node scripts/test-contact-attribution.mjs",
-    "test:site": "npm run test:schema && npm run test:html-seo && npm run test:testimonials && npm run test:referral && npm run test:final-cleanup && npm run test:contact-attribution && npm run test:funnel",
+    "test:site": "npm run test:schema && npm run test:html-seo && npm run test:careers && npm run test:testimonials && npm run test:referral && npm run test:final-cleanup && npm run test:contact-attribution && npm run test:funnel",
     "gen:trust-pages": "node scripts/gen-trust-layer-pages.mjs"
   },
   "devDependencies": {

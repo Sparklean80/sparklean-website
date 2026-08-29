@@ -88,9 +88,27 @@ assert(
   !sitemap.includes("/customer-portal"),
   "sitemap.xml excludes /customer-portal"
 );
-assert(!sitemap.includes("/careers"), "sitemap.xml excludes /careers");
+assert(
+  sitemap.includes("https://www.sparklean.co/careers</loc>"),
+  "sitemap.xml includes /careers"
+);
+assert(!sitemap.includes("/careers/apply"), "sitemap.xml excludes /careers/apply");
+assert(!sitemap.includes("/careers/offer"), "sitemap.xml excludes /careers/offer");
+assert(
+  !sitemap.includes("/careers/documents"),
+  "sitemap.xml excludes /careers/documents"
+);
 const robotsTxt = fs.readFileSync(path.join(root, "robots.txt"), "utf8");
-assert(robotsTxt.includes("Disallow: /careers"), "robots.txt disallows /careers");
+assert(
+  !/^Disallow:\s*\/careers\s*$/m.test(robotsTxt),
+  "robots.txt does not blanket-disallow /careers"
+);
+assert(robotsTxt.includes("Disallow: /careers/apply"), "robots.txt disallows /careers/apply");
+assert(robotsTxt.includes("Disallow: /careers/offer"), "robots.txt disallows /careers/offer");
+assert(
+  robotsTxt.includes("Disallow: /careers/documents"),
+  "robots.txt disallows /careers/documents"
+);
 
 for (const legal of ["privacy", "terms", "accessibility"]) {
   const legalPath = path.join(root, `pages/${legal}.html`);

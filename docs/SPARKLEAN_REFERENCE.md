@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-28** (city page shared-frame parity — homepage header/rewards/footer on all five `/house-cleaning-*` pages)
+Last updated: **2026-08-28** (public `/careers` hiring landing + live Sparklean OS apply; offer/documents remain token-only)
 
 ---
 
@@ -154,7 +154,7 @@ Track in portal + analytics (not yet wired on marketing site):
 - **`pages/*.html`** — all other public pages (served via Netlify **200 rewrites**)
 - **`netlify.toml`** — all redirects (301 legacy + 200 clean-url rewrites)
 - **`sitemap.xml`** — generated at build by `scripts/generate-sitemap.mjs` from `netlify.toml` 200 rules
-- **`robots.txt`** — disallows `/pages/` and `/signalhouse/`
+- **`robots.txt`** — disallows `/pages/`, `/signalhouse/`, `/careers/apply`, `/careers/offer`, and `/careers/documents`
 - **`js/serviceFlows.js`** — structured quote intake flows on contact/home
 - **`netlify/functions/`** — quote submit etc.
 - **Images:** mix of `/images/` local + Webflow CDN `cdn.prod.website-files.com/...`
@@ -176,10 +176,24 @@ Track in portal + analytics (not yet wired on marketing site):
 | `/post-construction-cleaning` | `pages/post-construction-cleaning.html` |
 | `/specialized-cleaning` | `pages/specialized-cleaning.html` |
 | `/inner-circle` | `pages/inner-circle.html` |
+| `/careers` | `pages/careers.html` |
 | `/customer-portal` | `pages/customer-portal.html` |
 | `/house-cleaning-{city}` | `pages/house-cleaning-{city}.html` |
 
 Cities: `naples`, `fort-myers`, `bonita-springs`, `estero`, `cape-coral`
+
+### Public hiring apply (noindex, not in sitemap)
+
+| Path | File | Notes |
+|------|------|--------|
+| `/careers/apply` | `pages/careers-apply.html` | Public application flow; `noindex, nofollow`; live Sparklean OS only |
+
+### Tokenized hiring URLs (not in sitemap)
+
+| Path | File | Notes |
+|------|------|--------|
+| `/careers/offer/:token` | `pages/careers-offer.html` | Applicant offer token required; `noindex` |
+| `/careers/documents/:token` | `pages/careers-documents.html` | Applicant resume or accepted-offer token required; `noindex` |
 
 ### Blog / Knowledge Center
 
@@ -426,6 +440,9 @@ Contact page + homepage `#quote` use these flows → `netlify/functions/quote-su
 
 **City page shared-frame parity (2026-08-28):** All five `/house-cleaning-*` pages use the homepage shared frame: rewards-panel wording, footer structure (logo wrap contains only the logo; divider and cities follow), `.footer-bottom` with `© 2026 Sparklean Cleaning. All rights reserved.` + `Bonded · Insured · Workers' Comp`, and hamburger `aria-expanded`. City-page-only footer Google Reviews link removed; Google reviews remain in each city’s unique body. No city title/meta/canonical/H1/schema or local-copy changes.
 
+**Public Careers hiring flow (2026-08-28):** `/careers` is the indexable careers landing. It loads published jobs only from `https://api.sparklean.co` and injects `JobPosting` JSON-LD for those jobs (no invented dates). Empty state copy is “There are no open positions at this time. Please check back soon.” `/careers/apply` is the public application flow but stays `noindex, nofollow`, out of the sitemap, and blocked in `robots.txt`. `/careers/offer/:token` and `/careers/documents/:token` stay `noindex`, unlisted, and blocked without an applicant token. Founder review gates and demo answers are removed from production. Identity-document files are captured on Sparklean OS (`/hiring/onboarding/...`) and must never pass through Netlify; if private R2/S3 is not configured (`HIRING_OBJECT_BUCKET` and related Render vars), document collection stays unavailable with a clear message and no website fallback. Office hiring controls remain on `office.sparklean.co` / `/api/office/hiring/*`.
+
+**Production hiring prerequisites (Render `sparklean-os-api`):** confirm `WEBSITE_ORIGIN=https://www.sparklean.co`, `HIRING_OBJECT_BUCKET`, `HIRING_S3_ENDPOINT`, `HIRING_S3_ACCESS_KEY_ID`, `HIRING_S3_SECRET_ACCESS_KEY`, and `HIRING_NOTIFY_TO` before enabling I-9 / driver’s-license collection. Application submission can go live without those bucket credentials; document collection cannot.
 **Mobile photos (2026-08-19):** Phone layouts stack photo then copy. Do **not** force a short landscape crop (`68vw` + `object-fit:cover`) — that cut bodies and tools. Mobile photos use full-width `height:auto` + `object-fit:contain`. Footer/header logos use the homepage transparent CDN asset (not the plaque PNG). `css/sparklean-footer.css` sizes the footer logo to 200px / 120px mobile.
 
 **Residential LP (2026-08-18 SEO correction):** Service-category hub — **not** SWFL and **not** a five-city H1. Eyebrow `Residential Cleaning`. H1 `Professionally Managed Residential Cleaning`. Title/meta match category positioning (no city list). Lower H2 `Residential Cleaning Service Areas` + five crawlable city cards. City pages exclusively own `House Cleaning Services in [City], Florida`. Homepage H1 stays Naples-primary. Trust strip + tablet/mobile photo-on-top stack unchanged. Evidence: `evidence/residential-service-hub-seo-2026-08-18/`.

@@ -4,8 +4,10 @@ Allow: /
 # Raw HTML lives under /pages/ for Netlify rewrites; index the clean URLs from the sitemap instead.
 Disallow: /pages/
 
-# Founder-review hiring funnel — not public, not in sitemap
-Disallow: /careers
+# Application, offer, and document pages — public apply is noindex; offer/documents are token-only
+Disallow: /careers/apply
+Disallow: /careers/offer
+Disallow: /careers/documents
 
 # Netlify build internals (not public content)
 Disallow: /.netlify/

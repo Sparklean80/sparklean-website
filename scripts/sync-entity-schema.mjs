@@ -829,5 +829,13 @@ syncTrustWebPage({
  "How referring Sparklean protects partner reputations with supervised, insured, Workers’ Comp–covered teams.",
  includeServiceLink: false,
 });
+syncTrustWebPage({
+ relPath: "pages/careers.html",
+ pageUrl: "https://www.sparklean.co/careers",
+ pageName: "Careers at Sparklean Cleaning",
+ pageDescription:
+ "Apply for supervised Sparklean cleaning roles in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
+ includeServiceLink: false,
+});
 
 console.log("Entity schema sync complete. Canonical @id:", ORG_ID);

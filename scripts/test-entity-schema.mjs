@@ -130,6 +130,7 @@ const keyPages = [
  "pages/commercial-cleaning.html",
  "pages/post-construction-cleaning.html",
  "pages/specialized-cleaning.html",
+ "pages/careers.html",
  ...Object.values(CITY_PAGES).map((c) => `pages/${c.slug}.html`),
 ];
 

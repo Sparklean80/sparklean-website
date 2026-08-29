@@ -28,7 +28,13 @@ function listPublicHtml() {
     .trim()
     .split(/\r?\n/)
     .filter(Boolean)
-    .filter((f) => !f.includes("pages/signalhouse/") && f !== "googleb2e0bc4648b22d1e.html");
+    .filter((f) => !f.includes("pages/signalhouse/") && f !== "googleb2e0bc4648b22d1e.html")
+    .filter(
+      (f) =>
+        f !== "pages/careers-apply.html" &&
+        f !== "pages/careers-offer.html" &&
+        f !== "pages/careers-documents.html"
+    );
 }
 
 // --- Base tag exactly once per public HTML page ---
@@ -57,6 +63,12 @@ const signalhouse = execSync('git ls-files "pages/signalhouse/**/*.html"', {
 for (const rel of signalhouse) {
   const html = fs.readFileSync(path.join(root, rel), "utf8");
   assert(!html.includes("AW-17027441328"), `signalhouse ${rel} must not have Ads tag`);
+}
+
+for (const rel of ["pages/careers-apply.html", "pages/careers-offer.html", "pages/careers-documents.html"]) {
+  const html = fs.readFileSync(path.join(root, rel), "utf8");
+  assert(!html.includes("AW-17027441328"), `${rel} must not send hiring pages to Google Ads`);
+  assert(!html.includes("sparklean-ads.js"), `${rel} must not load Ads helper`);
 }
 
 // --- Conversion helper behavior (vm sandbox) ---

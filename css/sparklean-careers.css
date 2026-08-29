@@ -1,6 +1,6 @@
 /**
- * Careers funnel — full presentation layer.
- * Chrome matches production Why Sparklean header/footer; forms are guided, not a prototype dump.
+ * Careers funnel — content and forms only.
+ * Shared header/footer chrome comes from sparklean-site-header.css + sparklean-footer.css.
  */
 
 .careers-page {
@@ -9,120 +9,95 @@
   flex-direction: column;
   background: #0e0e0e;
   color: #f9f7f3;
+  overflow-x: hidden;
 }
 
-.careers-demo-badge,
-.careers-demo-fill {
-  display: none !important;
+.careers-empty,
+.careers-openings-list {
+  max-width: 720px;
+  margin: 0 auto 28px;
+  font-family: var(--serif, Georgia, serif);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: rgba(249, 247, 243, 0.82);
 }
 
-.founder-demo .careers-demo-badge {
-  display: block !important;
-  position: fixed;
-  top: 8px;
-  right: 16px;
-  z-index: 1200;
-  padding: 5px 12px;
-  border: 0;
-  background: #efe6d4;
-  color: #1a1814;
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-
-.founder-demo .careers-demo-fill {
-  display: inline-flex !important;
-  margin: 0 0 18px;
+.careers-openings-list {
+  list-style: none;
   padding: 0;
-  border: 0;
-  background: none;
-  color: #d4bf96;
-  font: inherit;
-  font-size: 0.82rem;
-  letter-spacing: 0.02em;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
 }
 
-.careers-demo-badge[hidden],
-.careers-demo-fill[hidden] {
-  display: none !important;
+.careers-openings-list a {
+  color: #d4bf96;
 }
 
 .careers-page footer {
   margin-top: auto;
   background: #0a0a0a;
   border-top: 1px solid rgba(184, 164, 122, 0.12);
+  padding: 0;
 }
 
 .careers-page .footer-top {
-  padding: 96px 80px 60px;
+  padding: 72px 80px 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
   border-bottom: 1px solid rgba(184, 164, 122, 0.08);
 }
 
+.careers-page .footer-logo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 52px;
+}
+
 .careers-page .footer-divider {
   width: 48px;
   height: 1px;
-  background: #b8a47a;
+  background: var(--gold, #b8a47a);
   margin: 20px auto 18px;
   opacity: 0.5;
 }
 
 .careers-page .footer-cities {
-  font-size: 0.62rem;
-  letter-spacing: 0.22em;
+  font-size: 0.55rem;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: rgba(184, 164, 122, 0.55);
+  color: rgba(184, 164, 122, 0.45);
   text-align: center;
-  line-height: 2.2;
+  line-height: 2.4;
 }
 
 .careers-page .footer-bottom {
-  padding: 22px 80px;
+  padding: 18px 80px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px 22px;
-}
-
-.careers-page .footer-copy {
-  font-size: 0.8rem;
-  color: rgba(249, 247, 243, 0.62);
-  letter-spacing: 0.04em;
-}
-
-.careers-page .footer-legal a {
-  font-size: 0.8rem;
-  color: rgba(249, 247, 243, 0.7);
+  gap: 8px 16px;
 }
 
 .careers-page .fcol-links {
   list-style: none;
 }
+
 .careers-page .fcol-contact {
-  display: grid;
-}
-.careers-page .fcol-t {
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #b8a47a;
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-.careers-page .fcol-links a,
-.careers-page .fcol-contact a {
-  font-size: 0.9rem !important;
-  color: rgba(249, 247, 243, 0.72) !important;
+.careers-page .fcol-t {
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold, #b8a47a);
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .careers-stage {
@@ -187,8 +162,9 @@
 
 .careers-details {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
+  max-width: 42rem;
   margin: 0 0 36px;
 }
 
@@ -276,7 +252,7 @@
 
 .careers-gate-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   gap: 28px 36px;
   align-items: start;
   margin-bottom: 8px;
@@ -687,10 +663,12 @@
     grid-template-columns: 1fr;
   }
 
-  .careers-page .footer-top,
+  .careers-page .footer-top {
+    padding: 56px 32px 48px;
+  }
+
   .careers-page .footer-bottom {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding: 18px 32px;
   }
 
   .offer-letter-body {
@@ -702,6 +680,13 @@
 }
 
 @media (max-width: 640px) {
+  .careers-page .footer-bottom {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    padding: 16px 20px;
+  }
+
   .careers-card {
     padding: 24px 18px 28px;
   }
