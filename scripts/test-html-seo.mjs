@@ -92,7 +92,10 @@ assert(
   sitemap.includes("https://www.sparklean.co/careers</loc>"),
   "sitemap.xml includes /careers"
 );
-assert(!sitemap.includes("/careers/apply"), "sitemap.xml excludes /careers/apply");
+assert(
+  sitemap.includes("https://www.sparklean.co/careers/apply</loc>"),
+  "sitemap.xml includes /careers/apply"
+);
 assert(!sitemap.includes("/careers/offer"), "sitemap.xml excludes /careers/offer");
 assert(
   !sitemap.includes("/careers/documents"),
@@ -103,7 +106,7 @@ assert(
   !/^Disallow:\s*\/careers\s*$/m.test(robotsTxt),
   "robots.txt does not blanket-disallow /careers"
 );
-assert(robotsTxt.includes("Disallow: /careers/apply"), "robots.txt disallows /careers/apply");
+assert(!robotsTxt.includes("Disallow: /careers/apply"), "robots.txt does not disallow public /careers/apply");
 assert(robotsTxt.includes("Disallow: /careers/offer"), "robots.txt disallows /careers/offer");
 assert(
   robotsTxt.includes("Disallow: /careers/documents"),

@@ -866,21 +866,6 @@
   status = 200
 
 [[headers]]
-  for = "/careers/apply"
-  [headers.values]
-    X-Robots-Tag = "noindex, nofollow"
-    Cache-Control = "no-store"
-[[headers]]
-  for = "/careers/apply/"
-  [headers.values]
-    X-Robots-Tag = "noindex, nofollow"
-    Cache-Control = "no-store"
-[[headers]]
-  for = "/pages/careers-apply.html"
-  [headers.values]
-    X-Robots-Tag = "noindex, nofollow"
-    Cache-Control = "no-store"
-[[headers]]
   for = "/careers/offer"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"

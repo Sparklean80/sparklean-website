@@ -72,7 +72,7 @@ assert(
   "storage 503 remains the document-collection failure"
 );
 
-for (const rel of [landing]) {
+for (const rel of [landing, applyPage]) {
   const html = read(rel);
   assert(!/name=["']robots["'][^>]*noindex/i.test(html), `${rel} is indexable`);
   assert(/<link rel="canonical"/i.test(html), `${rel} has canonical`);
@@ -82,18 +82,11 @@ for (const rel of [landing]) {
   assert(/aria-expanded/.test(html) && /nav-hamburger/.test(html), `${rel} hamburger has aria-expanded`);
   assert(/footer-bottom/.test(html) && /Workers' Comp/.test(html), `${rel} has homepage legal row`);
   assert(/nav-call/.test(html), `${rel} includes homepage call control`);
-  assert(html.includes("There are no open positions at this time. Please check back soon."), `${rel} has empty-state copy`);
 }
 
 {
-  const html = read(applyPage);
-  assert(/name=["']robots["'][^>]*noindex/i.test(html), `${applyPage} stays noindex`);
-  assert(!/application\/ld\+json/.test(html), `${applyPage} has no public structured data`);
-  assert(/rewards-panel-title/.test(html), `${applyPage} has homepage rewards panel`);
-  assert(/qualifying Sparklean services/.test(html), `${applyPage} uses homepage rewards copy`);
-  assert(/aria-expanded/.test(html) && /nav-hamburger/.test(html), `${applyPage} hamburger has aria-expanded`);
-  assert(/footer-bottom/.test(html) && /Workers' Comp/.test(html), `${applyPage} has homepage legal row`);
-  assert(/nav-call/.test(html), `${applyPage} includes homepage call control`);
+  const html = read(landing);
+  assert(html.includes("No current openings"), `${landing} has empty-state copy`);
 }
 
 for (const rel of tokenPages) {
@@ -112,12 +105,12 @@ assert(edgeBlock.includes("/careers/documents"), "documents path is gated");
 assert(!edgeBlock.includes("/pages/careers.html"), "public careers HTML is not gated");
 assert(!edgeBlock.includes("/pages/careers-apply.html"), "public apply HTML is not gated");
 
-assert(robots.includes("Disallow: /careers/apply"), "robots blocks apply");
+assert(!robots.includes("Disallow: /careers/apply"), "robots does not block public apply");
 assert(robots.includes("Disallow: /careers/offer"), "robots blocks offer");
 assert(robots.includes("Disallow: /careers/documents"), "robots blocks documents");
 assert(!/^Disallow:\s*\/careers\s*$/m.test(robots), "robots does not blanket-block careers");
-assert(/for = "\/careers\/apply"[\s\S]{0,160}X-Robots-Tag = "noindex/.test(toml), "apply URL is noindex");
-assert(/for = "\/pages\/careers-apply.html"[\s\S]{0,160}X-Robots-Tag = "noindex/.test(toml), "apply HTML is noindex");
+assert(!/for = "\/careers\/apply"[\s\S]{0,160}X-Robots-Tag = "noindex/.test(toml), "apply URL is not noindex");
+assert(!/for = "\/pages\/careers-apply.html"[\s\S]{0,160}X-Robots-Tag = "noindex/.test(toml), "apply HTML is not noindex");
 
 const gate = read("netlify/edge-functions/hiring-applicant-gate.js");
 assert(gate.includes("applicantToken"), "edge gate requires an applicant token");
