@@ -837,13 +837,5 @@ syncTrustWebPage({
  "Apply for supervised Sparklean cleaning roles in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral.",
  includeServiceLink: false,
 });
-syncTrustWebPage({
- relPath: "pages/careers-apply.html",
- pageUrl: "https://www.sparklean.co/careers/apply",
- pageName: "Apply for a Sparklean Cleaning Position",
- pageDescription:
- "Submit a Sparklean employment application for published cleaning openings.",
- includeServiceLink: false,
-});
 
 console.log("Entity schema sync complete. Canonical @id:", ORG_ID);

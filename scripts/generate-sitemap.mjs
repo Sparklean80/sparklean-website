@@ -60,7 +60,7 @@ function metaForPath(p) {
     return { changefreq: "monthly", priority: "0.9" };
   if (p === "/specialized-cleaning") return { changefreq: "monthly", priority: "0.85" };
   if (p === "/about" || p === "/contact") return { changefreq: "monthly", priority: "0.7" };
-  if (p === "/careers" || p === "/careers/apply") return { changefreq: "weekly", priority: "0.7" };
+  if (p === "/careers") return { changefreq: "weekly", priority: "0.7" };
   return { changefreq: "monthly", priority: "0.65" };
 }
 
@@ -114,6 +114,7 @@ function main() {
     // Utility / legal — noindex; keep pages live, exclude from sitemap
     if (key === "/customer-portal") continue;
     if (key === "/privacy" || key === "/terms" || key === "/accessibility") continue;
+    if (key === "/careers/apply" || key.startsWith("/careers/apply/")) continue;
     if (key === "/careers/offer" || key.startsWith("/careers/offer/")) continue;
     if (key === "/careers/documents" || key.startsWith("/careers/documents/")) continue;
     if (key.includes("*")) continue;
@@ -153,10 +154,11 @@ function main() {
       rel === "pages/privacy.html" ||
       rel === "pages/terms.html" ||
       rel === "pages/accessibility.html" ||
+      rel === "pages/careers-apply.html" ||
       rel === "pages/careers-offer.html" ||
       rel === "pages/careers-documents.html"
     ) {
-      continue; // noindex tokenized hiring pages
+      continue; // noindex apply + tokenized hiring pages
     }
     if (!targets.has(rel)) {
       console.warn(`[sitemap] orphan page (no 200 rewrite in netlify.toml): ${rel}`);

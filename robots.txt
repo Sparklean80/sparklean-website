@@ -4,7 +4,8 @@ Allow: /
 # Raw HTML lives under /pages/ for Netlify rewrites; index the clean URLs from the sitemap instead.
 Disallow: /pages/
 
-# Tokenized hiring offer and document pages — not public, not in sitemap
+# Application, offer, and document pages — public apply is noindex; offer/documents are token-only
+Disallow: /careers/apply
 Disallow: /careers/offer
 Disallow: /careers/documents
 
