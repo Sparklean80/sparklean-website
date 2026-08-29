@@ -76,11 +76,13 @@ assert(
   /\.careers-faq \.faq-q[\s\S]{0,280}background:\s*transparent/.test(read("css/sparklean-careers.css")),
   "FAQ questions are not default white buttons"
 );
-assert(read("css/sparklean-careers.css").includes(".careers-empty[hidden]"), "empty-state card stays CSS-hidden while listings show");
+assert(read("css/sparklean-careers.css").includes(".careers-jobs"), "careers listings use a two-column job grid");
+assert(read("css/sparklean-careers.css").includes(".careers-landing .careers-faq .faq-item"), "application FAQ uses accordion cards");
 assert(
   read("js/sparklean-careers.js").includes("if (!openings.length) return"),
   "empty hiring API does not wipe the careers listings"
 );
+assert(!/root\.innerHTML = openings\.map/.test(read("js/sparklean-careers.js")), "landing job cards are not replaced from the API");
 assert(read("js/sparklean-careers-apply.js").includes("roleFromQuery"), "apply matches ?role= from /careers");
 
 for (const rel of [landing]) {
@@ -93,13 +95,17 @@ for (const rel of [landing]) {
   assert(/aria-expanded/.test(html) && /nav-hamburger/.test(html), `${rel} hamburger has aria-expanded`);
   assert(/footer-bottom/.test(html) && /Workers' Comp/.test(html), `${rel} has homepage legal row`);
   assert(/nav-call/.test(html), `${rel} includes homepage call control`);
-  assert(html.includes("There are no open positions at this time. Please check back soon."), `${rel} has empty-state copy`);
   assert(html.includes("Residential Cleaner — Full-Time"), `${rel} lists the full-time opening`);
   assert(html.includes("Residential Cleaner — Part-Time"), `${rel} lists the part-time opening`);
   assert(html.includes("$18/hour"), `${rel} shows starting pay`);
   assert(html.includes("20–30 hours per week"), `${rel} shows part-time hours`);
-  assert(html.includes("/careers/apply?role=full-time"), `${rel} apply link for full-time`);
-  assert(html.includes("/careers/apply?role=part-time"), `${rel} apply link for part-time`);
+  assert(html.includes("Applications opening soon"), `${rel} shows applications opening soon`);
+  assert(html.includes("What working at Sparklean"), `${rel} has working-at-Sparklean section`);
+  assert(html.includes("Direct employment"), `${rel} has direct employment block`);
+  assert(html.includes("Supervised teams"), `${rel} has supervised teams block`);
+  assert(html.includes("Consistent standards"), `${rel} has consistent standards block`);
+  assert(!html.includes('id="careers-empty"'), `${rel} has no floating empty-state box`);
+  assert(!html.includes("Begin application"), `${rel} does not start applications from the landing`);
 }
 
 {

@@ -121,26 +121,11 @@
   }
 
   document.addEventListener("DOMContentLoaded", async function () {
-    var root = document.getElementById("opening-card");
-    var empty = document.getElementById("careers-empty");
-    var err = document.getElementById("careers-error");
-    if (!root || !hiring) return;
-    if (empty) {
-      empty.hidden = true;
-      empty.classList.add("careers-hidden");
-    }
-    root.hidden = false;
+    if (!hiring) return;
     try {
       var data = await hiring.req("/api/hiring/openings");
       var openings = Array.isArray(data.openings) ? data.openings : [];
       if (!openings.length) return;
-      root.innerHTML = openings.map(card).join("");
-      setJobPosting(openings);
-    } catch (e) {
-      if (err) {
-        err.hidden = false;
-        err.textContent = "Live application start is temporarily unavailable. The openings below are still current.";
-      }
-    }
+    } catch (e) {}
   });
 })();
