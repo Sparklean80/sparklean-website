@@ -12,6 +12,10 @@
   overflow-x: hidden;
 }
 
+.careers-empty[hidden] {
+  display: none !important;
+}
+
 .careers-empty,
 .careers-openings-list {
   max-width: 720px;

@@ -125,7 +125,10 @@
     var empty = document.getElementById("careers-empty");
     var err = document.getElementById("careers-error");
     if (!root || !hiring) return;
-    if (empty) empty.hidden = true;
+    if (empty) {
+      empty.hidden = true;
+      empty.classList.add("careers-hidden");
+    }
     root.hidden = false;
     try {
       var data = await hiring.req("/api/hiring/openings");

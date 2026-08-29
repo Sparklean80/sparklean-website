@@ -76,6 +76,7 @@ assert(
   /\.careers-faq \.faq-q[\s\S]{0,280}background:\s*transparent/.test(read("css/sparklean-careers.css")),
   "FAQ questions are not default white buttons"
 );
+assert(read("css/sparklean-careers.css").includes(".careers-empty[hidden]"), "empty-state card stays CSS-hidden while listings show");
 assert(
   read("js/sparklean-careers.js").includes("if (!openings.length) return"),
   "empty hiring API does not wipe the careers listings"
