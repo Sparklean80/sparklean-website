@@ -35,7 +35,12 @@
     return "Part-time · " + days + " availability · Shifts may begin at " + time;
   }
   function card(job) {
-    var href = "/careers/apply?job=" + encodeURIComponent(job.id);
+    var role = job.full_time ? "full-time" : "part-time";
+    var href =
+      "/careers/apply?job=" +
+      encodeURIComponent(job.id) +
+      "&role=" +
+      encodeURIComponent(role);
     return (
       '<article class="careers-card">' +
       '<p class="careers-kicker">Open role</p>' +
@@ -120,25 +125,18 @@
     var empty = document.getElementById("careers-empty");
     var err = document.getElementById("careers-error");
     if (!root || !hiring) return;
+    if (empty) empty.hidden = true;
+    root.hidden = false;
     try {
       var data = await hiring.req("/api/hiring/openings");
       var openings = Array.isArray(data.openings) ? data.openings : [];
-      root.innerHTML = "";
-      if (!openings.length) {
-        root.hidden = true;
-        if (empty) empty.hidden = false;
-        return;
-      }
-      root.hidden = false;
-      if (empty) empty.hidden = true;
+      if (!openings.length) return;
       root.innerHTML = openings.map(card).join("");
       setJobPosting(openings);
     } catch (e) {
-      root.innerHTML = "";
-      root.hidden = true;
       if (err) {
         err.hidden = false;
-        err.textContent = "Current openings could not be loaded. Please try again shortly.";
+        err.textContent = "Live application start is temporarily unavailable. The openings below are still current.";
       }
     }
   });

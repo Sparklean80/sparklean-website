@@ -76,7 +76,11 @@ assert(
   /\.careers-faq \.faq-q[\s\S]{0,280}background:\s*transparent/.test(read("css/sparklean-careers.css")),
   "FAQ questions are not default white buttons"
 );
-assert(!/Residential Cleaner — Full-Time/.test(read("js/sparklean-careers.js")), "job cards are rendered from the live API");
+assert(
+  read("js/sparklean-careers.js").includes("if (!openings.length) return"),
+  "empty hiring API does not wipe the careers listings"
+);
+assert(read("js/sparklean-careers-apply.js").includes("roleFromQuery"), "apply matches ?role= from /careers");
 
 for (const rel of [landing]) {
   const html = read(rel);
@@ -89,6 +93,12 @@ for (const rel of [landing]) {
   assert(/footer-bottom/.test(html) && /Workers' Comp/.test(html), `${rel} has homepage legal row`);
   assert(/nav-call/.test(html), `${rel} includes homepage call control`);
   assert(html.includes("There are no open positions at this time. Please check back soon."), `${rel} has empty-state copy`);
+  assert(html.includes("Residential Cleaner — Full-Time"), `${rel} lists the full-time opening`);
+  assert(html.includes("Residential Cleaner — Part-Time"), `${rel} lists the part-time opening`);
+  assert(html.includes("$18/hour"), `${rel} shows starting pay`);
+  assert(html.includes("20–30 hours per week"), `${rel} shows part-time hours`);
+  assert(html.includes("/careers/apply?role=full-time"), `${rel} apply link for full-time`);
+  assert(html.includes("/careers/apply?role=part-time"), `${rel} apply link for part-time`);
 }
 
 {

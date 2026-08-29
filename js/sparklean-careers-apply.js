@@ -124,6 +124,38 @@
   function jobIdFromQuery() {
     return new URLSearchParams(location.search).get("job") || "";
   }
+  function roleFromQuery() {
+    return (new URLSearchParams(location.search).get("role") || "").toLowerCase();
+  }
+  function matchOpening(openings, wantedId, role) {
+    if (wantedId) {
+      var byId = openings.filter(function (row) {
+        return row.id === wantedId;
+      })[0];
+      if (byId) return byId;
+    }
+    if (role === "full-time") {
+      return (
+        openings.filter(function (row) {
+          return row.full_time && /residential cleaner/i.test(row.title || "");
+        })[0] ||
+        openings.filter(function (row) {
+          return row.full_time;
+        })[0]
+      );
+    }
+    if (role === "part-time") {
+      return (
+        openings.filter(function (row) {
+          return !row.full_time && /residential cleaner/i.test(row.title || "");
+        })[0] ||
+        openings.filter(function (row) {
+          return !row.full_time;
+        })[0]
+      );
+    }
+    return openings.length === 1 ? openings[0] : null;
+  }
   function paintJobs(openings) {
     var list = el("apply-job-list");
     if (!list) return;
@@ -185,13 +217,7 @@
       var data = await hiring.req("/api/hiring/openings");
       var openings = Array.isArray(data.openings) ? data.openings : [];
       var wanted = jobIdFromQuery();
-      var selected = wanted
-        ? openings.filter(function (row) {
-            return row.id === wanted;
-          })[0]
-        : openings.length === 1
-          ? openings[0]
-          : null;
+      var selected = matchOpening(openings, wanted, roleFromQuery());
       if (!openings.length) {
         show("step-empty");
         return;
