@@ -32,15 +32,13 @@ import {
  rateLimitCheck,
 } from "./lib/request-guard.mjs";
 import { shouldForceBrevoFail } from "./lib/preview-brevo-fail.mjs";
+import { buildQuoteLeadHtmlEmail, partitionQuoteIntakeRows } from "./lib/lead-email-html.mjs";
 
 const MAX_BODY = 120_000;
 
 /** Shown in the intake UI on any server/email failure — luxury calm, no technical detail. */
 const PUBLIC_EMAIL_FAILURE =
  "We're having trouble submitting your request right now. Please call Sparklean directly at (239) 888-3588.";
-
-const LOGO_URL =
- "https://cdn.prod.website-files.com/69b2101ca55e3c42c4f97568/69b21b5c7958824a1f172b0f_sparklean-logo-transparent.png";
 
 const CONTACT_KEYS = new Set(["fullName", "phone", "email", "location"]);
 
@@ -394,183 +392,6 @@ function groupDetailRows(answers) {
  return rows;
 }
 
-const PROPERTY_DETAIL_KEYS = new Set([
- "serviceCategory",
- "bedrooms",
- "bathrooms",
- "sqftBand",
- "pets",
- "occupied",
- "floorNumber",
- "elevator",
- "hoaRules",
- "balconyGlass",
- "condoOccupied",
- "estateSqft",
- "staffOnSite",
- "security",
- "officeSize",
- "employees",
- "facilityType",
- "facilitySqft",
- "floors",
- "trafficLevel",
- "multiSuite",
- "pcSqft",
- "medicalSqft",
- "retailSqft",
- "hoaCommonSqft",
- "amenityTypes",
- "gateAccessModel",
- "hoaMeetingCadence",
- "examRooms",
- "moveType",
- "emptyHome",
- "intExt",
- "waterfront",
- "stories",
- "ladderAccess",
- "glassAmount",
- "screensTracks",
- "turnsPerMonth",
- "linensLaundry",
- "restock",
- "activeConstruction",
- "dustLevel",
- "stickersPaint",
- "constructionPhase",
- "punchListStatus",
- "cleanPhase",
- "addonFocus",
- "innerHomeProfile",
- "innerSeasonalPattern",
- "innerSparkleanHistory",
-]);
-
-const SERVICE_DETAIL_KEYS = new Set([
- "frequency",
- "frequencyEstate",
- "deepClean",
- "daysPerWeek",
- "dayNight",
- "restrooms",
- "trashService",
- "currentProvider",
- "dayPorter",
- "consumables",
- "disinfectCadence",
- "pairedService",
- "innerCadence",
-]);
-
-const SCHEDULING_DETAIL_KEYS = new Set(["timelinePc", "moveDate", "afterHoursAccess", "builderOrOwner"]);
-
-function isNotesKey(k) {
- return /^notes/i.test(k);
-}
-
-function partitionIntakeRows(detailRows) {
- const property = [];
- const services = [];
- const scheduling = [];
- const notes = [];
- for (const r of detailRows) {
- if (isNotesKey(r.key)) notes.push(r);
- else if (SCHEDULING_DETAIL_KEYS.has(r.key)) scheduling.push(r);
- else if (SERVICE_DETAIL_KEYS.has(r.key)) services.push(r);
- else if (PROPERTY_DETAIL_KEYS.has(r.key)) property.push(r);
- else property.push(r);
- }
- return { property, services, scheduling, notes };
-}
-
-function emailIntakeSection(title, rows) {
- if (!rows.length) return "";
- const inner = buildDetailTableRows(rows);
- return (
- `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">` +
- `<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(,,,.);">${escapeHtml(title)}</td></tr>` +
- `<tr><td style="padding:0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:rgba(,,,.);border-radius:4px;">${inner}</table></td></tr></table>`
- );
-}
-
-function buildDetailTableRows(rows) {
- return rows
- .map(
- (r) =>
- `<tr><td style="padding:10px 14px;border-bottom:1px solid rgba(,,,.);color:rgba(,,,.);font-size:12px;letter-spacing:.06em;text-transform:uppercase;">${escapeHtml(r.label)}</td>` +
- `<td style="padding:10px 14px;border-bottom:1px solid rgba(,,,.);color:#f9f7f3;font-size:14px;">${escapeHtml(r.value)}</td></tr>`
- )
- .join("");
-}
-
-function buildLuxuryHtmlEmail({
- leadId,
- submittedAtEst,
- priorityTags,
- serviceLabel,
- answers,
- summary,
- detailRows,
- trackingMeta,
-}) {
- const tel = digitsTel(answers.phone);
- const telHref = tel ? `tel:${tel}` : "tel:2398883588";
- const displayPhone = answers.phone || "(239) 888-3588";
- const replyHref = `mailto:${encodeURIComponent(answers.email)}?subject=${encodeURIComponent("Re: Sparklean inquiry")}`;
- const tagsHtml = priorityTags.length
- ? `<tr><td style="padding:0 0 20px 0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#d4bf96;">${priorityTags.map((t) => escapeHtml(t)).join(" · ")}</td></tr>`
- : "";
-
- const { property, services, scheduling, notes } = partitionIntakeRows(detailRows);
- const schedulingNotes = [...scheduling, ...notes];
- const sectionsHtml =
- emailIntakeSection("Property information", property) +
- emailIntakeSection("Requested services", services) +
- emailIntakeSection("Scheduling notes", schedulingNotes);
-
- return `<!DOCTYPE html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lead</title></head>
-<body style="margin:0;padding:0;background:#0a0a0a;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0a0a0a;padding:24px 12px;">
-<tr><td align="center">
-<table role="presentation" width="100%" style="max-width:600px;background:#121212;border:1px solid rgba(,,,.);border-radius:4px;overflow:hidden;">
-<tr><td style="padding:28px 28px 20px 28px;text-align:center;border-bottom:1px solid rgba(,,,.);">
-<img src="${LOGO_URL}" alt="Sparklean" width="180" style="display:block;margin:0 auto 16px auto;height:auto;">
-<p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#d4bf96;">Private intake brief</p>
-<p style="margin:8px 0 0 0;font-family:Georgia,serif;font-size:20px;color:#f9f7f3;">${escapeHtml(serviceLabel)}</p>
-<p style="margin:10px 0 0 0;font-family:Arial,sans-serif;font-size:12px;color:rgba(,,,.);">Lead ID <span style="color:#b8a47a;">${escapeHtml(leadId)}</span> · ${escapeHtml(submittedAtEst)}</p>
-${trackingMeta ? `<p style="margin:8px 0 0 0;font-family:Arial,sans-serif;font-size:11px;color:rgba(,,,.);">${escapeHtml(trackingMeta)}</p>` : ""}
-</td></tr>
-<tr><td style="padding:20px 24px 8px 24px;">${tagsHtml}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">
-<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(,,,.);">Contact information</td></tr>
-<tr><td style="padding:14px 0 0 0;font-family:Arial,sans-serif;font-size:15px;line-height:1.7;color:#f9f7f3;">
-<strong style="color:#f9f7f3;">${escapeHtml(answers.fullName)}</strong><br>
-<span style="color:rgba(,,,.);">${escapeHtml(answers.email)}</span><br>
-<span style="color:rgba(,,,.);">${escapeHtml(answers.location)}</span>
-</td></tr></table>
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:22px 0;">
-<tr><td align="center" style="border-radius:4px;background:linear-gradient(165deg,#d4bf96,#b8a47a);">
-<a href="${telHref}" style="display:block;padding:16px 20px;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase;color:#0e0e0e;text-decoration:none;">Call ${escapeHtml(displayPhone)}</a>
-</td></tr>
-<tr><td height="12"></td></tr>
-<tr><td align="center" style="border-radius:4px;border:1px solid #b8a47a;">
-<a href="${replyHref}" style="display:block;padding:14px 20px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;letter-spacing:.14em;text-transform:uppercase;color:#d4bf96;text-decoration:none;">Reply to lead</a>
-</td></tr>
-</table>
-${sectionsHtml}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-<tr><td style="font-family:Georgia,serif;font-size:13px;color:#b8a47a;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(,,,.);">Internal AI summary</td></tr>
-<tr><td style="padding:14px 0 8px 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.65;color:rgba(,,,.);font-style:italic;">${escapeHtml(summary)}</td></tr>
-</table>
-<p style="margin:20px 0 0 0;font-family:Arial,sans-serif;font-size:11px;line-height:1.5;color:rgba(,,,.);">Use Call / Reply above to reach the client. Do not discuss pricing in email—coordinate by phone.</p>
-</td></tr>
-</table>
-</td></tr></table>
-</body></html>`;
-}
-
 function formatPlainSection(title, rows) {
  if (!rows.length) return "";
  return `${title}\n${rows.map((r) => `${r.label}: ${r.value}`).join("\n")}\n`;
@@ -586,7 +407,7 @@ function buildPlainTextLead({
  detailRows,
  trackingMeta,
 }) {
- const { property, services, scheduling, notes } = partitionIntakeRows(detailRows);
+ const { property, services, scheduling, notes } = partitionQuoteIntakeRows(detailRows);
  const schedulingNotes = [...scheduling, ...notes];
  return [
  `SPARKLEAN — ${serviceLabel.toUpperCase()}`,
@@ -646,14 +467,6 @@ function json(data, status = 200) {
 
 function cors204() {
  return new Response(null, { status: 204 });
-}
-
-function escapeHtml(s) {
- return String(s ?? "")
- .replace(/&/g, "&amp;")
- .replace(/</g, "&lt;")
- .replace(/"/g, "&quot;")
- .replace(/'/g, "&#39;");
 }
 
 async function summarizeLead({ serviceLabel, answers, sourceUrl, submittedAt }) {
@@ -1066,7 +879,7 @@ export default async (request, context) => {
  const subject = buildEmailSubject({ serviceLabel, answers });
  const detailRows = groupDetailRows(answers);
 
- const html = buildLuxuryHtmlEmail({
+ const html = buildQuoteLeadHtmlEmail({
  leadId,
  submittedAtEst,
  priorityTags,

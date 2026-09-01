@@ -114,6 +114,11 @@ body.site-header-v2 {
   text-decoration-color: rgba(92, 74, 40, 0.45);
 }
 
+/* $5 / $100 offer line — 10% larger than label + Learn More on all breakpoints */
+.rewards-topbar-inner > span:not(.rewards-topbar-sep):not(.rewards-topbar-more) {
+  font-size: 1.1em;
+}
+
 /* —— Main nav row —— */
 .site-header > nav {
   position: relative !important;
@@ -390,6 +395,10 @@ body.site-header-v2 {
   line-height: 1.65;
   color: rgba(249, 247, 243, 0.72);
   margin: 0 0 12px;
+}
+
+.rewards-panel > p:first-of-type {
+  font-size: calc(0.74rem * 1.1);
 }
 
 .rewards-panel-example {

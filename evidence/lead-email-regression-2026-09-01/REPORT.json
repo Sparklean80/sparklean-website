@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-09-01T23:21:52.029Z",
+  "cause": "Invalid rgba(,,,.) in quote-submit.mjs luxury HTML email (commit 020eac3 mass reformat)",
+  "affectedCommit": "020eac3b330cc01e31eb08d246c91ea15f87be90",
+  "fix": "Centralized hex tokens in lead-email-tokens.mjs; templates in lead-email-html.mjs",
+  "evidenceFiles": [
+    "quote-desktop-600.html",
+    "quote-mobile-390.html",
+    "contact-desktop-600.html",
+    "contact-mobile-390.html",
+    "quote-raw.html",
+    "contact-raw.html"
+  ],
+  "screenshots": [
+    "quote-desktop-600.png",
+    "quote-mobile-390.png",
+    "contact-desktop-600.png",
+    "contact-mobile-390.png"
+  ],
+  "tests": "netlify/functions/lib/lead-email-templates.test.mjs (12 cases + snapshots)",
+  "preDeployGate": "npm run test:lead-emails (wired into netlify.toml build command)",
+  "brevoProbe": "node scripts/probe-lead-email-brevo.mjs (requires BREVO_API_KEY — not run in agent env)"
+}

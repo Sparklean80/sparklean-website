@@ -32,6 +32,7 @@ import {
   rateLimitCheck,
 } from "./lib/request-guard.mjs";
 import { shouldForceBrevoFail } from "./lib/preview-brevo-fail.mjs";
+import { buildContactLeadHtmlEmail } from "./lib/lead-email-html.mjs";
 
 const MAX_BODY = 80_000;
 const PUBLIC_FAILURE =
@@ -49,14 +50,6 @@ function json(data, status = 200) {
 
 function cors204() {
   return new Response(null, { status: 204 });
-}
-
-function escapeHtml(s) {
-  return String(s ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }
 
 function parseSender(fromRaw) {
@@ -304,13 +297,17 @@ export default async (request, context) => {
     message || "(none)",
   ].join("\n");
 
-  const html = `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;background:#0a0a0a;color:#f9f7f3;padding:24px;">
-<h1 style="color:#b8a47a;font-size:16px;letter-spacing:.12em;text-transform:uppercase;">Contact form</h1>
-<p style="font-size:12px;color:rgba(249,247,243,.55);">${escapeHtml(trackingMeta)}</p>
-<p><strong>${escapeHtml(fullName)}</strong><br>${escapeHtml(email)}<br>${escapeHtml(phone)}</p>
-<p>Property: ${escapeHtml(propertyType)}<br>Service: ${escapeHtml(serviceNeeded)}<br>Area: ${escapeHtml(cityArea)}<br>Timing: ${escapeHtml(preferredTiming)}</p>
-<p>${escapeHtml(message || "(no message)")}</p>
-</body></html>`;
+  const html = buildContactLeadHtmlEmail({
+    trackingMeta,
+    fullName,
+    email,
+    phone,
+    propertyType,
+    serviceNeeded,
+    cityArea,
+    preferredTiming,
+    message,
+  });
 
   const payloadHash = hashToken(`${subject}\n${text}`);
   try {

@@ -23,11 +23,15 @@
     "test:referral": "node scripts/test-referral-recurring.mjs",
     "test:final-cleanup": "node scripts/test-final-cleanup-pass.mjs",
     "test:contact-attribution": "node scripts/test-contact-attribution.mjs",
-    "test:site": "npm run test:schema && npm run test:html-seo && npm run test:careers && npm run test:testimonials && npm run test:referral && npm run test:final-cleanup && npm run test:contact-attribution && npm run test:funnel",
+    "test:lead-emails": "node scripts/test-lead-email-templates.mjs",
+    "test:lead-emails:evidence": "node scripts/capture-lead-email-evidence.mjs",
+    "probe:lead-email-brevo": "node scripts/probe-lead-email-brevo.mjs",
+    "test:site": "npm run test:schema && npm run test:html-seo && npm run test:careers && npm run test:testimonials && npm run test:referral && npm run test:final-cleanup && npm run test:contact-attribution && npm run test:lead-emails && npm run test:funnel",
     "gen:trust-pages": "node scripts/gen-trust-layer-pages.mjs"
   },
   "devDependencies": {
-    "jsdom": "^29.1.1"
+    "jsdom": "^29.1.1",
+    "playwright": "^1.62.1"
   },
   "dependencies": {
     "@netlify/blobs": "^10.7.12"

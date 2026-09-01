@@ -1,6 +1,6 @@
 [build]
   publish = "."
-  command = "npm run build"
+  command = "npm run build && npm run test:lead-emails"
 
 [functions]
   directory = "netlify/functions"
