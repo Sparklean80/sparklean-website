@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-09-15** (`/customer-portal` simplified Client App landing; Sign in → Sparklean OS `/customer-portal/app/`)
+Last updated: **2026-09-15** (`/customer-portal` landing type/spacing polish; Sign in without play icon; footer matches site `fcol` stack)
 
 ---
 
