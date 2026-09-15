@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-08-28** (`/careers` body layout: centered hero, two job cards, benefit blocks, accordion cards)
+Last updated: **2026-09-15** (`/customer-portal` simplified Client App landing; Sign in → Sparklean OS `/customer-portal/app/`)
 
 ---
 
@@ -85,7 +85,7 @@ Each new page: unique copy, local refs, FAQs, internal links, CTA to quote intak
 | Trigger | Owner |
 |---------|--------|
 | Post-booking install prompt + benefits copy | **Portal** (WV deploy) |
-| Marketing explainers (Safari Share, no App Store) | **Done** — `/customer-portal` |
+| Marketing explainers (Safari Share, no App Store) | **Client App install guide** — `/customer-portal/app/?help=install` (landing links there) |
 | Push notifications; SMS fallback | **Portal** |
 
 ### Priority 7 — Retention engine
@@ -486,14 +486,9 @@ Primary service + city CTAs use the durable href (not bare `/contact` self-links
 ## Workforce Vision relationship
 
 - Tony’s **proof infrastructure** product; Sparklean is **customer zero**
-- **Customer portal (live on marketing site):** `/customer-portal` → luxury landing page; CTAs open interim app URL until DNS is live
-  - **Interim app URL (all CTAs today):** `https://workforce-visionai-qrdpa.ondigitalocean.app/cx/sparklean`
-  - **Branded app URL (when DNS live):** `https://portal.sparklean.co` — Namecheap CNAME → DO app, then `CX_PORTAL_HOST_LIVE=1` on DO; swap CTAs + JSON-LD `WebApplication.url` in `pages/customer-portal.html`
-  - PWA via Add to Home Screen — **not** App Store; existing customers only (magic link)
-  - **iPhone install:** no Download button (Apple restriction) — Safari → Share (bottom bar) → Add to Home Screen; if link opened in Gmail, Open in Safari first
-  - **DNS (Tony/Namecheap):** CNAME `portal.sparklean.co` → `workforce-visionai-qrdpa.ondigitalocean.app`, then `CX_PORTAL_HOST_LIVE=1` on DO
-  - **Asset TODO:** export **512×512 PNG** app icon (gold Sparklean mark on square) for sharper PWA home screen icon — portal uses logo from CDN today
-  - **Brand tokens:** gold `#B8A47A`, cream `#F9F7F3`, Playfair Display + Montserrat (matches site)
+- **Customer portal (live on marketing site):** `/customer-portal` → `pages/customer-portal.html` on this Netlify site (`sparklean.co`). Landing only: title **Your Sparklean client app**; copy **appointments, invoices, and messages**; gold **Sign in** → `/customer-portal/app/`; secondary **Install the app** → `/customer-portal/app/?help=install`; visible help phone; “Installation is optional.” No feature laundry list or install how-to on this page.
+  - **Client App (Sparklean OS):** `/customer-portal/app/` is a Netlify 200 proxy to `https://api.sparklean.co/customer-portal/app/` (Render). Auth is owned by Sparklean OS, not this repo.
+  - Existing customers only. Installation is optional; iPhone/Android steps live in the Client App install guide, not this landing.
 - Planned: commercial **Trust Shield** section on `/commercial-cleaning` + `/proof` links on commercial invoices
 - Planned: subtle footer link to workforcevisionai.com
 - **Do not** software-ify homepage or residential pages
