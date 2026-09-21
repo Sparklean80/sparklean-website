@@ -29,6 +29,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>
+document.documentElement.setAttribute("data-install-os", /android/i.test(navigator.userAgent)&&!/windows phone/i.test(navigator.userAgent)?"android":"iphone");
+</script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--gold:#B8A47A;--gold-lt:#D4BF96;--dark:#0E0E0E;--dark2:#161616;--dark3:#1C1C1C;--nav-bg:#131313;--white:#F9F7F3;--w70:rgba(249,247,243,.7);--serif:'Playfair Display',Georgia,serif;--sans:'Montserrat',sans-serif;--nav-h:120px;}
@@ -51,7 +54,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:var(--nav-h);backgrou
 .portal-app-link{position:relative;z-index:2;}
 .cp-hero{position:relative;min-height:calc(100svh - 8px);display:flex;align-items:center;justify-content:center;padding:calc(var(--nav-h) + 88px) clamp(24px,5vw,80px) clamp(80px,9vw,112px);background:radial-gradient(ellipse 85% 55% at 50% 0%,rgba(184,164,122,.09) 0%,transparent 58%),linear-gradient(180deg,#0c0c0c 0%,#0e0e0e 45%,#0a0a0a 100%);overflow:hidden;}
 .cp-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(125deg,transparent 40%,rgba(184,164,122,.03) 50%,transparent 60%);pointer-events:none;}
-.cp-hero-inner{position:relative;z-index:2;width:100%;max-width:34rem;text-align:center;display:flex;flex-direction:column;align-items:center;}
+.cp-hero-inner{position:relative;z-index:2;width:100%;max-width:36rem;text-align:center;display:flex;flex-direction:column;align-items:center;}
 .cp-eyebrow{font-size:.62rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:rgba(212,191,150,.86);margin-bottom:28px;}
 .cp-hero h1{font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.55rem);font-weight:400;line-height:1.14;margin-bottom:18px;color:var(--white);letter-spacing:-.01em;}
 .cp-hero h1 em{font-style:italic;color:var(--gold-lt);}
@@ -64,6 +67,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:var(--nav-h);backgrou
 .cp-help a{color:var(--gold-lt);text-decoration:none;font-weight:500;white-space:nowrap;}
 .cp-help a:hover{color:var(--white);}
 .cp-optional{font-family:var(--serif);font-size:.95rem;font-style:italic;line-height:1.6;color:rgba(249,247,243,.62);margin-top:10px;}
+.cp-install{width:100%;margin-top:36px;text-align:left;}
+.cp-install-note{font-family:var(--sans);font-size:.95rem;font-weight:400;line-height:1.55;color:rgba(249,247,243,.78);margin:0 0 12px;}
+.cp-install-tabs{display:flex;gap:8px;margin:18px 0 16px;}
+.cp-install-tab{flex:1;min-height:44px;border:1px solid rgba(184,164,122,.35);background:transparent;color:var(--gold-lt);font-family:var(--sans);font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;}
+.cp-install-tab.is-active{background:rgba(184,164,122,.16);color:var(--white);border-color:var(--gold);}
+.cp-install-steps{margin:0;padding-left:1.2rem;color:rgba(249,247,243,.88);line-height:1.65;font-size:.95rem;}
+.cp-install-steps li{margin:0 0 10px;}
+.cp-android-install{margin-top:18px;width:100%;}
+.cp-android-install[hidden],.cp-install-steps[hidden]{display:none;}
+html[data-install-os="android"] [data-testid="install-steps-iphone"]{display:none;}
+html[data-install-os="iphone"] [data-testid="install-steps-android"]{display:none;}
 footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
 .footer-top{padding:72px 80px 60px;display:flex;flex-direction:column;align-items:center;border-bottom:1px solid rgba(184,164,122,.08);}
 .footer-logo-wrap{display:flex;flex-direction:column;align-items:center;}
@@ -236,10 +250,34 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  <p class="cp-sub">Appointments, invoices, and messages.</p>
  <div class="cp-actions">
  <a class="btn-gold portal-app-link" id="portal-open-btn" href="/customer-portal/app/">Sign in</a>
- <a class="cp-secondary" href="/customer-portal/app/?help=install">Install the app</a>
+ <a class="cp-secondary" href="#install">Install the app</a>
  </div>
  <p class="cp-help">Need help? Call <a href="tel:2398883588">(239) 888-3588</a></p>
  <p class="cp-optional">Installation is optional.</p>
+ <section class="cp-install" id="install" data-testid="cp-install">
+ <p class="cp-install-note">You can install Sparklean without signing in.</p>
+ <p class="cp-install-note">Add Sparklean to your home screen for easy access. Installation is optional.</p>
+ <p class="cp-install-note">iPhone and Android both work. Open the tab for your phone.</p>
+ <p class="cp-install-note">If Sparklean is already on your Home Screen, delete that icon first, then add it again from this page so updates come from Sparklean.</p>
+ <div class="cp-install-tabs" role="tablist" aria-label="Phone type">
+ <button type="button" role="tab" class="cp-install-tab" aria-selected="true" data-testid="install-os-iphone">iPhone</button>
+ <button type="button" role="tab" class="cp-install-tab" aria-selected="false" data-testid="install-os-android">Android</button>
+ </div>
+ <ol class="cp-install-steps" data-testid="install-steps-iphone" aria-label="iPhone">
+ <li>Open this page in Safari (the browser that came with your iPhone).</li>
+ <li>Tap the <strong>Share</strong> button.</li>
+ <li>Scroll and tap <strong>Add to Home Screen</strong>.</li>
+ <li>Tap <strong>Add</strong>. Sparklean will appear on your Home Screen like other apps.</li>
+ </ol>
+ <ol class="cp-install-steps" data-testid="install-steps-android" aria-label="Android" hidden>
+ <li>Open this page in Chrome.</li>
+ <li>Tap the three-dot menu in the corner.</li>
+ <li>Tap <strong>Add to Home screen</strong> or <strong>Install app</strong>.</li>
+ <li>Tap <strong>Add</strong> or <strong>Install</strong>. Sparklean will appear on your Home Screen.</li>
+ </ol>
+ <button type="button" class="btn-gold cp-android-install" data-testid="sk-android-install" hidden>Install app</button>
+ <p class="cp-install-note"><a class="cp-secondary" href="/customer-portal/app/?help=install">Open install in the app</a> — still without signing in.</p>
+ </section>
  </div>
  </header>
 </main>
@@ -309,6 +347,7 @@ footer{background:#0A0A0A;border-top:1px solid rgba(184,164,122,.12);padding:0;}
  }
 })();
 </script>
+<script src="/js/customer-portal-install.js"></script>
 <script src="/js/serviceFlows.js"></script>
 <script src="/js/quote-intake.js" defer></script>
 <script src="/js/sparklean-site-header.js" defer></script>
