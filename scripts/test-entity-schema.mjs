@@ -189,12 +189,13 @@ for (const rel of keyPages) {
  assert(html.includes(LOCKED_DESCRIPTION), `${rel} visible locked sentence`);
  }
 
-  // Homepage territory: Cape Coral present; banned geo phrases absent
+  // Homepage: five cities remain; SWFL is allowed as established origin copy only
   if (rel === "index.html") {
     assert(html.includes("Cape Coral"), "homepage mentions Cape Coral");
+    assert(html.includes("Southwest Florida"), "homepage names Southwest Florida as established origin");
     assert(
-      !/Southwest Florida|SW Florida|SW FL|Marco Island/i.test(html),
-      "homepage has no banned geo phrases"
+      !/SW Florida|SW FL|Marco Island/i.test(html),
+      "homepage has no abbreviated SWFL or Marco Island"
     );
   }
 }

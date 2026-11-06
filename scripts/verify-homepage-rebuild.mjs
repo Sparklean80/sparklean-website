@@ -8,8 +8,12 @@ const checks = [
   ["vacation card", h.includes('href="/vacation-rental-cleaning"')],
   ["city naples", h.includes("/house-cleaning-naples")],
   ["hero fetchpriority", h.includes('fetchpriority="high"')],
-  ["no banned geo", !/Southwest Florida|SW Florida|SW FL|Marco Island/i.test(h)],
+  ["southwest florida origin", h.includes("Southwest Florida")],
+  ["no abbreviated swfl or marco", !/SW Florida|SW FL|Marco Island/i.test(h)],
   ["cape coral", h.includes("Cape Coral")],
+  ["day porter visible", h.includes("Day Porter")],
+  ["seven-stage prepare", h.includes("Prepare")],
+  ["visual standard headline", h.includes("Don’t Just Tell Employees the Standard") || h.includes("Don't Just Tell Employees the Standard")],
 ];
 let fail = 0;
 for (const [n, ok] of checks) {

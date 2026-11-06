@@ -2,37 +2,37 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-11-06** (Homepage Bible correction — shared-standard philosophy on `review/homepage-master-bible-2026-11-06`; not deployed)
+Last updated: **2026-11-06** (Authoritative Website & Homepage Bible — one company, one operating standard; review only, not deployed)
 
 ---
 
-## Homepage Bible (authoritative brand philosophy)
+## Homepage Bible (authoritative — 2026-11-06)
 
-Do **not** reduce Sparklean’s differentiation to customized checklists, employee training videos, or proprietary software.
+**This replaces all earlier conflicting homepage instructions.** One company. One operating standard. Every property. Cleaning is the foundation; management is how Sparklean organizes, delivers, and scales it. Do not reduce Sparklean to checklists, training videos, labor supply, or a software product.
 
 **Identity:** Professional Cleaning. Expertly Managed.  
-**Operating statement:** Every property has a standard. Every team knows it. Every service is accountable.  
-**Deeper proposition:** Better cleaning begins with a shared understanding of what your property actually needs.
+**Broader identity:** Sparklean — Cleaning & Managed Property Services.  
+**Operating principle:** Every property has a standard. Every team knows it. Every service is accountable.
 
-**Principle:** We don’t assume we know exactly what the customer needs, and we don’t assume the customer has already communicated everything that matters. The customer helps define the standard. Sparklean owns the process of delivering it.
+**Principle:** The customer helps define what must be delivered. Sparklean defines and manages the operating process used to deliver it. We do not assume the customer knows everything about cleaning, and we do not assume Sparklean knows everything about the customer’s property.
 
-**Method:** Understand → Align → Visualize → Deliver → Document → Improve.
+**Method:** Understand → Align → Prepare → Execute → Verify → Report → Improve. Applies to a one-time cleaning, hotel-room turnover, construction project, or day porter shift.
 
-**Video:** Property-specific walkthroughs (under 30 seconds per area; under five minutes total per visit) keep the standard with the property. Program is an active initiative beginning this week — not a claim that every current job already has a video library.
+**Visual Standard:** Property-specific videos (under 30 seconds per area; under five minutes total; required viewing before each service). The standard belongs to the property—not to the memory of whoever is assigned that day. Videos reinforce understanding; they do not guarantee quality.
 
-**AI meeting notes:** Supporting records with consent; reviewed and corrected; **not** the contract. Do not claim currently deployed on every service.
+**Day porter:** Core growth offering — continuous facility care during operating hours, not a janitorial footnote. Not claimed as universally cheaper than nighttime cleaning.
 
-**Evidence:** Traceable relationship between expectations, execution, and results — not automatic proof of perfect cleaning. Room 312 is illustrative.
+**Evidence:** Connect expectations → execution → reviewable service record. Photos, QR, timestamps, and inspections support accountability; they are not automatic proof of perfect work.
 
-**Growth:** Sparklean has grown because of the way it approaches cleaning and management. Expansion into larger commercial, hospitality, construction, and managed-property work is an extension of that philosophy — not a departure from residential cleaning, and not a newly invented process. Hotels/resorts/managed facilities are current scoped-engagement offerings, not invented portfolios. No statewide residential routes.
+**Software:** One operating system supporting many property types. Not the product being sold. Public claims must match what is available or clearly defined for new-client implementation.
 
-**Evolution section (required homepage copy, after the Standard and before founders):**
-- Eyebrow: The Evolution of Sparklean
-- Headline: Our Approach Has Allowed Us to Think Bigger.
-- Body: dependable cleaning requires a shared understanding, not merely a task list; working with homes, businesses, and more complex properties reinforced communication, management, and accountability; that is why Sparklean is bringing the Standard to larger facilities now through individually scoped engagements; the properties and expectations may differ, but the commitment does not.
-- Close: We haven’t changed what we believe about cleaning. We’ve expanded where that belief can take us.
+**Growth:** Sparklean is actively building and marketing broader programs now because the same management method applies to more properties. Not a departure from cleaning. Do not invent resort contracts, hotel portfolios, or statewide residential crews.
 
-**SEO:** Keep Naples H1/title/canonical. Do not use “Southwest Florida” on the homepage (entity tests). Five city links remain.
+**Geographic:** Residential/commercial roots in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral. Homepage may state **Established in Southwest Florida. Expanding Our Management Standard Across Florida.** as business direction for managed cleaning, porter, housekeeping, and facility programs via scoped agreements. Schema `areaServed` and locked entity description stay five cities. No everyday statewide residential routes. No Marco Island / “SW FL” shorthand.
+
+**Required homepage order:** Hero → services (five cards + porter + hospitality) → difference → shared standard → visual standard → continuous property care → documented execution → why Sparklean has grown → people/management → trust → geographic reach → conversion.
+
+**SEO:** Keep Naples title, H1, and canonical. Five city links remain.
 
 **Review branch:** `review/homepage-master-bible-2026-11-06`. **Do not merge or production-deploy without Tony’s approval.**
 
@@ -40,9 +40,11 @@ Do **not** reduce Sparklean’s differentiation to customized checklists, employ
 
 ## Changelog (recent)
 
-**2026-11-06 — Homepage Bible correction (review only):** Replaced checklist/software-led copy with shared-standard partnership narrative; six stages Understand→Improve; video as centerpiece; AI walkthrough records (not claimed live); evolution section; evidence rewritten as expectations→execution→results. CSS: `css/homepage-bible-2026-11.css`. Evidence: `evidence/homepage-master-bible-2026-11-06/`.
+**2026-11-06 — Authoritative Website & Homepage Bible (review only):** One company / one operating standard; seven-stage method; day porter as core offering; Visual Standard; Florida expansion copy; Southwest Florida named as established origin (schema still five cities). CSS: `css/homepage-bible-2026-11.css`. Evidence: `evidence/homepage-master-bible-2026-11-06/`.
 
-**2026-11-06 — Homepage Master Bible 2.0 first pass (superseded by correction above):** Initial rebuild preserved H1, services, founder video, quote intake.
+**2026-11-06 — Homepage Bible correction (superseded):** Shared-standard six-stage narrative.
+
+**2026-11-06 — Homepage Master Bible 2.0 first pass (superseded):** Initial rebuild preserved H1, services, founder video, quote intake.
 
 ---
 
@@ -346,7 +348,7 @@ Reference: `pages/blog/fort-myers-commercial-office-cleaning.html`
 | `@type` | `Organization` + `LocalBusiness` only — `CleaningService` is **not** a schema.org type (404); offerings use `Service` + `OfferCatalog` |
 | Legal name | Sparklean Cleaning LLC (never “corporation”) |
 | Locked description | Professionally managed and supervised residential and commercial cleaning company serving Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral |
-| Service markets | **Five cities only:** Naples, Bonita Springs, Estero, Fort Myers, Cape Coral — do **not** publish Southwest Florida / SW Florida / SW FL / Marco Island as territory copy or schema `areaServed` |
+| Service markets | **Schema `areaServed`:** five cities only (Naples, Bonita Springs, Estero, Fort Myers, Cape Coral). **Homepage origin copy:** “Established in Southwest Florida” is allowed as business-direction language; do **not** put Southwest Florida / SW Florida / SW FL / Marco Island in schema `areaServed` or the locked description; do **not** imply statewide residential routes |
 | Address in schema | **None** — service-area business; no partial PostalAddress |
 | Source module | `data/sparklean-entity.mjs` |
 | Sync | `npm run schema:sync` |
