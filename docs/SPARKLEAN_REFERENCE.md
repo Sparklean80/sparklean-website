@@ -2,13 +2,47 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-11-06** (Homepage Master Bible 2.0 on review branch `review/homepage-master-bible-2026-11-06` — not deployed)
+Last updated: **2026-11-06** (Homepage Bible correction — shared-standard philosophy on `review/homepage-master-bible-2026-11-06`; not deployed)
+
+---
+
+## Homepage Bible (authoritative brand philosophy)
+
+Do **not** reduce Sparklean’s differentiation to customized checklists, employee training videos, or proprietary software.
+
+**Identity:** Professional Cleaning. Expertly Managed.  
+**Operating statement:** Every property has a standard. Every team knows it. Every service is accountable.  
+**Deeper proposition:** Better cleaning begins with a shared understanding of what your property actually needs.
+
+**Principle:** We don’t assume we know exactly what the customer needs, and we don’t assume the customer has already communicated everything that matters. The customer helps define the standard. Sparklean owns the process of delivering it.
+
+**Method:** Understand → Align → Visualize → Deliver → Document → Improve.
+
+**Video:** Property-specific walkthroughs (under 30 seconds per area; under five minutes total per visit) keep the standard with the property. Program is an active initiative beginning this week — not a claim that every current job already has a video library.
+
+**AI meeting notes:** Supporting records with consent; reviewed and corrected; **not** the contract. Do not claim currently deployed on every service.
+
+**Evidence:** Traceable relationship between expectations, execution, and results — not automatic proof of perfect cleaning. Room 312 is illustrative.
+
+**Growth:** Sparklean has grown because of the way it approaches cleaning and management. Expansion into larger commercial, hospitality, construction, and managed-property work is an extension of that philosophy — not a departure from residential cleaning, and not a newly invented process. Hotels/resorts/managed facilities are current scoped-engagement offerings, not invented portfolios. No statewide residential routes.
+
+**Evolution section (required homepage copy, after the Standard and before founders):**
+- Eyebrow: The Evolution of Sparklean
+- Headline: Our Approach Has Allowed Us to Think Bigger.
+- Body: dependable cleaning requires a shared understanding, not merely a task list; working with homes, businesses, and more complex properties reinforced communication, management, and accountability; that is why Sparklean is bringing the Standard to larger facilities now through individually scoped engagements; the properties and expectations may differ, but the commitment does not.
+- Close: We haven’t changed what we believe about cleaning. We’ve expanded where that belief can take us.
+
+**SEO:** Keep Naples H1/title/canonical. Do not use “Southwest Florida” on the homepage (entity tests). Five city links remain.
+
+**Review branch:** `review/homepage-master-bible-2026-11-06`. **Do not merge or production-deploy without Tony’s approval.**
 
 ---
 
 ## Changelog (recent)
 
-**2026-11-06 — Homepage Master Bible 2.0 (review only, not production):** Rebuild of `index.html` body order and copy from the approved homepage bible. Preserved H1 `Full-Service Cleaning Company in Naples, Florida`, title, canonical, JSON-LD/entity schema, five service cards/URLs/images, header/footer, founder video (`#founder-message`, poster, click-to-play), compact quote fields (`#home-quote-entry`), Inner Circle, and Client Login. New signature sections: Sparklean Difference, visual-training direction, conceptual Room 312 service record, property-issue types, six-stage operating model, scale/larger-program CTA, Office/Employee/Client App as Sparklean tools (no fake screens, no Workforce Vision branding). Meta description updated to Naples-led expertly-managed line; **did not** use “Southwest Florida” on the homepage (entity SEO tests still forbid it). CSS: `css/homepage-bible-2026-11.css`. Evidence: `evidence/homepage-master-bible-2026-11-06/`. **Do not merge or production-deploy without Tony’s approval.**
+**2026-11-06 — Homepage Bible correction (review only):** Replaced checklist/software-led copy with shared-standard partnership narrative; six stages Understand→Improve; video as centerpiece; AI walkthrough records (not claimed live); evolution section; evidence rewritten as expectations→execution→results. CSS: `css/homepage-bible-2026-11.css`. Evidence: `evidence/homepage-master-bible-2026-11-06/`.
+
+**2026-11-06 — Homepage Master Bible 2.0 first pass (superseded by correction above):** Initial rebuild preserved H1, services, founder video, quote intake.
 
 ---
 

@@ -26,6 +26,78 @@
   max-width: 48rem;
 }
 
+.hb-quote {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 2.1vw, 1.35rem);
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--gold-lt);
+  max-width: 38rem;
+  margin: 8px 0 22px;
+  padding: 4px 0 4px 16px;
+  border-left: 1px solid rgba(201, 168, 76, 0.55);
+}
+
+.hb-benefits strong {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.hb-ai {
+  background: var(--dark2);
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+}
+
+.hb-evolve {
+  background: var(--dark);
+}
+
+.hb-evolve-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 56px;
+  align-items: center;
+}
+
+.hb-evolve-grid > * {
+  min-width: 0;
+}
+
+.hb-evolve .sec-h {
+  overflow-wrap: break-word;
+  font-size: clamp(1.55rem, 2.6vw, 2.55rem);
+}
+
+.hb-evolve-photos {
+  position: relative;
+  padding: 0 0 28px 20px;
+}
+
+.hb-evolve-main {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+  border: 1px solid rgba(201, 168, 76, 0.14);
+}
+
+.hb-evolve-float {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 52%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 3px solid var(--dark);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
+}
+
 .hb-kicker {
   font-size: 0.52rem;
   font-weight: 600;
@@ -470,7 +542,8 @@
 
   .hb-diff-grid,
   .hb-visual-grid,
-  .hb-evidence-inner {
+  .hb-evidence-inner,
+  .hb-evolve-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
@@ -509,7 +582,8 @@
     grid-template-columns: 1fr;
   }
 
-  .hb-diff-float {
+  .hb-diff-float,
+  .hb-evolve-float {
     width: 44%;
   }
 

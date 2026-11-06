@@ -25,12 +25,12 @@ async function capture(label, width, height, extra = {}) {
     viewport: { width, height },
     deviceScaleFactor: extra.deviceScaleFactor || 1,
   });
+  await page.goto(BASE, { waitUntil: "networkidle", timeout: 60000 });
   if (extra.zoom) {
-    await page.evaluateOnNewDocument((z) => {
+    await page.evaluate((z) => {
       document.documentElement.style.zoom = String(z);
     }, extra.zoom);
   }
-  await page.goto(BASE, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForSelector(".homepage-hero__media img", { timeout: 20000 });
   const overflow = await page.evaluate(() => {
     const doc = document.documentElement;
