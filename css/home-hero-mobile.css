@@ -84,9 +84,9 @@
     bottom: auto !important;
     left: auto !important;
     width: 100% !important;
-    height: 68vw !important;
-    min-height: 280px !important;
-    max-height: 380px !important;
+    height: 48vw !important;
+    min-height: 188px !important;
+    max-height: 248px !important;
     aspect-ratio: auto !important;
     overflow: hidden !important;
     background: #0e0e0e !important;
@@ -147,8 +147,45 @@
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 22px 20px 44px !important;
+    padding: 16px 20px 20px !important;
     background: #11100e !important;
+  }
+
+  #home.homepage-hero .hero-tag {
+    margin-bottom: 12px;
+  }
+
+  #home.homepage-hero .hero-benefit {
+    font-size: 1.02rem !important;
+    line-height: 1.35 !important;
+    margin-bottom: 10px !important;
+  }
+
+  #home.homepage-hero .hero-sub {
+    font-size: 0.92rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 10px !important;
+    max-width: 36em;
+  }
+
+  #home.homepage-hero .hero-guar {
+    margin-bottom: 16px !important;
+  }
+
+  #home.homepage-hero .hero-btns {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    margin-top: 0;
+  }
+
+  #home.homepage-hero .hero-btns .btn-gold,
+  #home.homepage-hero .hero-btns .btn-outline {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    box-sizing: border-box;
   }
 
   .homepage-hero__content::before {
@@ -160,9 +197,9 @@
     position: static !important;
     display: flex !important;
     justify-content: center !important;
-    gap: 22px !important;
+    gap: 18px !important;
     margin: 0 !important;
-    padding: 14px 16px 22px !important;
+    padding: 10px 16px 16px !important;
     background: #11100e !important;
     border: 0 !important;
     border-top: 1px solid rgba(201, 168, 76, 0.12) !important;
@@ -241,6 +278,7 @@
     padding: 9px 10px !important;
     white-space: nowrap !important;
     max-width: none !important;
+    overflow: visible !important;
   }
 
   .site-header .nav-call {

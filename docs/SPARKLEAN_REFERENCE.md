@@ -40,6 +40,8 @@ Last updated: **2026-11-06** (Authoritative Website & Homepage Bible — one com
 
 ## Changelog (recent)
 
+**2026-11-06 — Homepage acceptance pass (review only):** Header Quote no longer clips at 125% desktop zoom (compact nav at 1200px). Mobile hero tightened; Day Porter / Hospitality CTAs open existing quote intake. Core-benefit copy stated once in the hero, then shown through residential, porter, commercial, and hotel examples. No production deploy.
+
 **2026-11-06 — Authoritative Website & Homepage Bible (review only):** One company / one operating standard; seven-stage method; day porter as core offering; Visual Standard; Florida expansion copy; Southwest Florida named as established origin (schema still five cities). CSS: `css/homepage-bible-2026-11.css`. Evidence: `evidence/homepage-master-bible-2026-11-06/`.
 
 **2026-11-06 — Homepage Bible correction (superseded):** Shared-standard six-stage narrative.

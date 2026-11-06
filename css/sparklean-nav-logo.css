@@ -141,7 +141,7 @@ a.nav-mobile-quote {
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1366px) {
   .nav-portal {
     display: none !important;
   }

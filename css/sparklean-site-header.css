@@ -355,8 +355,14 @@ body.site-header-v2 {
 
 .site-header .nav-btn {
   display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
   border: none !important;
   box-shadow: none !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  max-width: none;
 }
 
 /* Rewards explanation panel */
@@ -592,6 +598,21 @@ body.site-header-v2 {
   }
 }
 
+@media (max-width: 1366px) {
+  /* Keep Request a Quote fully visible before 125% zoom (~1152px) hits hamburger. */
+  .site-header .nav-links > li:nth-child(n + 5) {
+    display: none;
+  }
+
+  .site-header .nav-portal {
+    display: none !important;
+  }
+
+  .site-header .nav-links {
+    gap: 14px !important;
+  }
+}
+
 @media (max-width: 1320px) {
   .site-header .nav-links {
     gap: 12px !important;
@@ -627,8 +648,8 @@ body.site-header-v2 {
   }
 }
 
-/* Phone number stays through all desktop widths including 1280 */
-@media (min-width: 1101px) {
+/* Phone number stays on desktop until the compact header takes over. */
+@media (min-width: 1201px) {
   .site-header .nav-phone {
     display: inline-flex !important;
   }
@@ -638,7 +659,8 @@ body.site-header-v2 {
   }
 }
 
-@media (max-width: 1100px) {
+/* 1440px at 125% browser zoom ≈ 1152px innerWidth — compact header, not clipped Quote. */
+@media (max-width: 1200px) {
   .site-header .nav-links {
     display: none !important;
   }
@@ -670,11 +692,12 @@ body.site-header-v2 {
 
   .site-header .nav-btn {
     display: inline-flex !important;
-    padding: 8px 10px !important;
-    font-size: 0.42rem !important;
-    letter-spacing: 0.08em !important;
-    max-width: min(148px, 40vw);
-    overflow: hidden;
+    padding: 9px 12px !important;
+    font-size: 0.48rem !important;
+    letter-spacing: 0.1em !important;
+    max-width: none;
+    overflow: visible !important;
+    white-space: nowrap !important;
   }
 
   .rewards-topbar-inner {
