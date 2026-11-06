@@ -2,7 +2,13 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-09-15** (`/customer-portal` landing type/spacing polish; Sign in without play icon; footer matches site `fcol` stack)
+Last updated: **2026-11-06** (Homepage Master Bible 2.0 on review branch `review/homepage-master-bible-2026-11-06` — not deployed)
+
+---
+
+## Changelog (recent)
+
+**2026-11-06 — Homepage Master Bible 2.0 (review only, not production):** Rebuild of `index.html` body order and copy from the approved homepage bible. Preserved H1 `Full-Service Cleaning Company in Naples, Florida`, title, canonical, JSON-LD/entity schema, five service cards/URLs/images, header/footer, founder video (`#founder-message`, poster, click-to-play), compact quote fields (`#home-quote-entry`), Inner Circle, and Client Login. New signature sections: Sparklean Difference, visual-training direction, conceptual Room 312 service record, property-issue types, six-stage operating model, scale/larger-program CTA, Office/Employee/Client App as Sparklean tools (no fake screens, no Workforce Vision branding). Meta description updated to Naples-led expertly-managed line; **did not** use “Southwest Florida” on the homepage (entity SEO tests still forbid it). CSS: `css/homepage-bible-2026-11.css`. Evidence: `evidence/homepage-master-bible-2026-11-06/`. **Do not merge or production-deploy without Tony’s approval.**
 
 ---
 
