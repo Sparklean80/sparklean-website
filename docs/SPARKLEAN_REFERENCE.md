@@ -2,43 +2,75 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-11-06** (Authoritative Website & Homepage Bible — one company, one operating standard; review only, not deployed)
+Last updated: **2026-11-10** (authoritative homepage direction; connected property areas, actual-property training, client progress, invoice evidence, and existing-client onboarding; homepage candidate on review)
 
 ---
 
-## Homepage Bible (authoritative — 2026-11-06)
+## Homepage Bible (authoritative — 2026-11-10)
 
-**This replaces all earlier conflicting homepage instructions.** One company. One operating standard. Every property. Cleaning is the foundation; management is how Sparklean organizes, delivers, and scales it. Do not reduce Sparklean to checklists, training videos, labor supply, or a software product.
+This section governs the next homepage revision. Tony approved updating the Bible before changing the homepage. It incorporates the November 6 rules supplied by Tony and the subsequent property-area, employee, client, evidence, and estimating decisions. Conflicting historical guidance below is superseded for this scope.
+
+Verified GitHub source: `Sparklean80/sparklean-website` commit `64b2bcd5c1683c609e63722a4153c78c5dfe670f` on `review/website-bible-property-standard-2026-11-10`.
+
+### Local reconciliation (Website Cursor)
+
+GitHub did not contain `review/homepage-master-bible-2026-11-06`. That unpublished November 6 homepage (visual system, header Quote fix, intake CTAs, founder video, five-city schema, locked section order) is preserved locally at `017194a93710f29199a00f4f921fb23e21626d74`. This candidate continues from that implementation and applies the November 10 Bible plus the approved property-owner copy. Do not merge or production-deploy without Tony’s approval.
+
+### Source and publication status
+
+- Verified GitHub baseline is `Sparklean80/sparklean-website`, `main` at `a36bc026ca6cc2e1cc30f381ec466ca651f7500d`. Its prior reference was dated September 15.
+- The claimed `review/homepage-master-bible-2026-11-06` branch was unavailable on GitHub at Bible verification. This update incorporates Tony’s supplied November 6 summary plus the unpublished local implementation named above.
+- A published Bible is not a deployed product or homepage. Launch copy requires verified service capability.
+- The website is Sparklean’s acquisition and service explanation. Sparklean OS owns employee execution, scheduling, authentication, client progress, evidence, and billing. Workforce Vision remains a separate project.
+
+### Company identity and service promise
+
+One company, one operating standard. Cleaning is the foundation; management is how Sparklean scales. Sparklean manages cleaning, housekeeping, and property readiness within an agreed scope. The client helps define what must be delivered. Sparklean defines and manages the process, trains its own teams, verifies the result, and owns corrective follow-through.
+
+The method is **Understand → Align → Prepare → Execute → Verify → Report → Improve**.
+
+Position the company through concrete buyer outcomes and operational responsibility. Tony approved the Gavin Cooke / Naples Botanical Garden email as the sales voice reference. Explain how the property would operate with Sparklean, the management burden removed, and the role technology plays in consistency. Use confident, personal language. Show differentiation through specifics; avoid unsupported size, market leadership, exclusivity, or portfolio claims.
 
 **Identity:** Professional Cleaning. Expertly Managed.  
 **Broader identity:** Sparklean — Cleaning & Managed Property Services.  
 **Operating principle:** Every property has a standard. Every team knows it. Every service is accountable.
 
-**Principle:** The customer helps define what must be delivered. Sparklean defines and manages the operating process used to deliver it. We do not assume the customer knows everything about cleaning, and we do not assume Sparklean knows everything about the customer’s property.
+### Locked homepage sequence
 
-**Method:** Understand → Align → Prepare → Execute → Verify → Report → Improve. Applies to a one-time cleaning, hotel-room turnover, construction project, or day porter shift.
+1. **Hero** — preserve the Naples title and H1, the current identity and premium visual treatment. Develop supporting copy around managed property care and an accountable team.
+2. **Services** — homes; commercial/janitorial and dealerships; hotels/resorts and managed properties; construction/turnover; scoped specialty work. Explain the operating outcome for each.
+3. **Difference** — connect Sparklean’s management, standards, employee preparation, and follow-through.
+4. **Shared standard** — establish scope together, with Sparklean responsible for delivery methods.
+5. **Visual standard** — demonstrate instructions recorded in the actual property and tied to its specific areas.
+6. **Day porter** — a core growth offering, with planned rounds, public-area attention, replenishment, and escalation as agreed in scope.
+7. **Evidence** — illustrate client progress, completion records, photos, inspection, and correction.
+8. **Growth** — explain how repeatable operating methods and accumulated service data support consistency across accounts and locations.
+9. **People and management** — direct teams, supervisor responsibility, founder story, and support for covering employees.
+10. **Trust** — verified reviews, documented insurance, and the actual published guarantee.
+11. **Geographic reach** — Southwest Florida operating base and qualified Florida expansion inquiries, while retaining accurate current coverage and the five-city schema.
+12. **Conversion** — relevant property walkthrough or quote request through the existing intake.
 
-**Visual Standard:** Property-specific videos (under 30 seconds per area; under five minutes total; required viewing before each service). The standard belongs to the property—not to the memory of whoever is assigned that day. Videos reinforce understanding; they do not guarantee quality.
+Use the current black, gold, photography, logo, and website typography as the design foundation. Preserve crawlable service and five-city links. Schema `areaServed` and locked entity description stay five cities. No home address. No invented hotel portfolios or statewide residential crews.
 
-**Day porter:** Core growth offering — continuous facility care during operating hours, not a janitorial footnote. Not claimed as universally cheaper than nighttime cleaning.
+### Connected property model to explain
 
-**Evidence:** Connect expectations → execution → reviewable service record. Photos, QR, timestamps, and inspections support accountability; they are not automatic proof of perfect work.
+The core is a persistent property-area identity that links scope, standards, execution, evidence, and billing. Translate it into client value on the homepage; do not list QR, NFC, geofence, sensors, database events, or payroll tools.
 
-**Software:** One operating system supporting many property types. Not the product being sold. Public claims must match what is available or clearly defined for new-client implementation.
+### Claim and launch controls
 
-**Growth:** Sparklean is actively building and marketing broader programs now because the same management method applies to more properties. Not a departure from cleaning. Do not invent resort contracts, hotel portfolios, or statewide residential crews.
+Before copy promises a capability, verify it through its normal operating path. Keep proposed scope distinct from operational proof. If a feature is unavailable, use clear upcoming language, label illustrative examples, or defer the block. Training access is controlled; client-facing photos are approved.
 
-**Geographic:** Residential/commercial roots in Naples, Bonita Springs, Estero, Fort Myers, and Cape Coral. Homepage may state **Established in Southwest Florida. Expanding Our Management Standard Across Florida.** as business direction for managed cleaning, porter, housekeeping, and facility programs via scoped agreements. Schema `areaServed` and locked entity description stay five cities. No everyday statewide residential routes. No Marco Island / “SW FL” shorthand.
+### Homepage implementation handoff
 
-**Required homepage order:** Hero → services (five cards + porter + hospitality) → difference → shared standard → visual standard → continuous property care → documented execution → why Sparklean has grown → people/management → trust → geographic reach → conversion.
-
-**SEO:** Keep Naples title, H1, and canonical. Five city links remain.
-
-**Review branch:** `review/homepage-master-bible-2026-11-06`. **Do not merge or production-deploy without Tony’s approval.**
+Implement only in the locked order using existing styles and intake. Tony reviews the named homepage candidate before production publication.
 
 ---
 
 ## Changelog (recent)
+
+**2026-11-10 — Property-standard homepage candidate (review only):** Reconciled GitHub Bible `64b2bcd` with unpublished November 6 implementation `017194a`. Homepage copy rewritten for property-owner outcomes in the locked 12-section order. Visual Standard and Client App progress labeled as illustrative / confirmed during onboarding. No production deploy.
+
+**2026-11-10 — Authoritative Website Bible on GitHub (docs only):** `review/website-bible-property-standard-2026-11-10` @ `64b2bcd`. Connected property areas, actual-property training, client progress, invoice evidence, existing-client setup, Gavin email as sales voice.
 
 **2026-11-06 — Homepage acceptance pass (review only):** Header Quote no longer clips at 125% desktop zoom (compact nav at 1200px). Mobile hero tightened; Day Porter / Hospitality CTAs open existing quote intake. Core-benefit copy stated once in the hero, then shown through residential, porter, commercial, and hotel examples. No production deploy.
 

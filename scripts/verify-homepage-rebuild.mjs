@@ -13,12 +13,14 @@ const checks = [
   ["cape coral", h.includes("Cape Coral")],
   ["day porter visible", h.includes("Day Porter")],
   ["seven-stage prepare", h.includes("Prepare")],
-  ["visual standard headline", h.includes("Don’t Just Tell Employees the Standard") || h.includes("Don't Just Tell Employees the Standard")],
-  ["core benefit in hero", h.includes("prepare the people, manage the work, document the results")],
+  ["visual standard headline", h.includes("This room. This standard")],
+  ["core benefit in hero", h.includes("A property that’s ready") || h.includes("A property that's ready")],
+  ["walkthrough cta", h.includes("Request a property walkthrough") || h.includes("Let’s walk your property") || h.includes("Let's walk your property")],
+  ["illustrative labels", h.includes("Illustrative — not a live")],
   ["day porter intake", h.includes('data-sparklean-event-type="day_porter"') && h.includes("Discuss Day Porter Coverage") && h.includes("/contact?quote=1#quote-intake")],
   ["hospitality intake", h.includes('data-sparklean-event-type="hospitality_program"') && h.includes("/contact?quote=1#quote-intake")],
   ["five city links", ["/house-cleaning-naples", "/house-cleaning-bonita-springs", "/house-cleaning-estero", "/house-cleaning-fort-myers", "/house-cleaning-cape-coral"].every((u) => h.includes(u))],
-  ["residential conversion", h.includes('href="/residential-cleaning"') && h.includes("Request a Cleaning Quote")],
+  ["residential conversion", h.includes('href="/residential-cleaning"') && h.includes("/contact?quote=1#quote-intake")],
 ];
 let fail = 0;
 for (const [n, ok] of checks) {
