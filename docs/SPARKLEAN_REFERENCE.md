@@ -2,9 +2,89 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-09-15** (`/customer-portal` landing type/spacing polish; Sign in without play icon; footer matches site `fcol` stack)
+Last updated: **2026-11-10** (authoritative homepage direction; connected property areas, actual-property training, client progress, invoice evidence, and existing-client onboarding; homepage implementation pending)
 
 ---
+
+## Homepage Bible (authoritative — 2026-11-10)
+
+This section governs the next homepage revision. Tony approved updating the Bible before changing the homepage. It incorporates the November 6 rules supplied by Tony and the subsequent property-area, employee, client, evidence, and estimating decisions. Conflicting historical guidance below is superseded for this scope.
+
+### Source and publication status
+
+- Verified GitHub baseline is `Sparklean80/sparklean-website`, `main` at `a36bc026ca6cc2e1cc30f381ec466ca651f7500d`. Its prior reference was dated September 15.
+- The claimed `review/homepage-master-bible-2026-11-06` branch was unavailable in the connected website and OS repositories at verification. This update incorporates Tony's supplied November 6 summary; it does not claim to reproduce or verify an unpublished local implementation.
+- This is an approved direction for documentation and implementation planning. Homepage launch copy requires verified service capability. A published Bible is not a deployed product or homepage.
+- The website is Sparklean's acquisition and service explanation. Sparklean OS owns employee execution, scheduling, authentication, client progress, evidence, and billing. Workforce Vision remains a separate project. Historical ownership statements below must not cause new work or data to cross projects.
+
+### Company identity and service promise
+
+One company, one operating standard. Cleaning is the foundation; management is how Sparklean scales. Sparklean manages cleaning, housekeeping, and property readiness within an agreed scope. The client helps define what must be delivered. Sparklean defines and manages the process, trains its own teams, verifies the result, and owns corrective follow-through.
+
+The method is **Understand → Align → Prepare → Execute → Verify → Report → Improve**.
+
+Position the company through concrete buyer outcomes and operational responsibility. Tony approved the Gavin Cooke / Naples Botanical Garden email as the sales voice reference. Explain how the property would operate with Sparklean, the management burden removed, and the role technology plays in consistency. Use confident, personal language. Show differentiation through specifics; avoid unsupported size, market leadership, exclusivity, or portfolio claims.
+
+### Locked homepage sequence
+
+1. **Hero** — preserve the Naples title and H1, the current identity and premium visual treatment. Develop supporting copy around managed property care and an accountable team.
+2. **Services** — homes; commercial/janitorial and dealerships; hotels/resorts and managed properties; construction/turnover; scoped specialty work. Explain the operating outcome for each.
+3. **Difference** — connect Sparklean's management, standards, employee preparation, and follow-through.
+4. **Shared standard** — establish scope together, with Sparklean responsible for delivery methods.
+5. **Visual standard** — demonstrate instructions recorded in the actual property and tied to its specific areas.
+6. **Day porter** — a core growth offering, with planned rounds, public-area attention, replenishment, and escalation as agreed in scope.
+7. **Evidence** — illustrate client progress, completion records, photos, inspection, and correction.
+8. **Growth** — explain how repeatable operating methods and accumulated service data support consistency across accounts and locations.
+9. **People and management** — direct teams, supervisor responsibility, founder story, and support for covering employees.
+10. **Trust** — verified reviews, documented insurance, and the actual published guarantee.
+11. **Geographic reach** — Southwest Florida operating base and qualified Florida expansion inquiries, while retaining accurate current coverage and the five-city schema.
+12. **Conversion** — relevant property walkthrough or quote request through the existing intake.
+
+Use the current black, gold, photography, logo, and website typography as the design foundation. Website tokens remain separate from the OS app tokens. Preserve crawlable service and five-city links. Maintain the intake and SEO constraints. Prior proposed chat drafts that changed the H1 or section order are superseded by this sequence.
+
+### Connected property model to explain
+
+The core is a persistent property-area identity that links scope, standards, execution, evidence, and billing. Each visit retains its historical scope and standard versions.
+
+- **Walkthrough** — Office selects actual areas with one-handed searchable Add area. Templates, recent choices, automatic numbering, rename, duplicate, collapsed cards, and drafts make setup quick. Home and dealership examples are the first demonstration.
+- **Estimate** — selected areas establish included tasks, condition, frequency, expected labor, and an explainable total. Room prices are optional. Publish scope clarity without exposing private payroll, margin, or employee information.
+- **Existing clients** — the same setup works from Client → Property without a new estimate. Select recurring services and an effective date. Documentation setup preserves the agreed price. Added services or pricing changes follow approval.
+- **Actual-property training** — demonstrate this client's kitchen, showroom, restroom, or guest room. Start area opens its assigned short video. Required playback precedes work controls. Record the version and playback completion. Playback is a training record, not proof of comprehension.
+- **Execution** — Start area → instructions/video → required tasks → Finish area → two completion photos. Required evidence is accepted before final area completion. Support pauses, blocked areas, supervisor help, rework, multiple employees, and offline synchronization.
+- **Timing** — distinguish visit elapsed, area elapsed, individual labor, training, and travel. Two employees working together for 15 minutes yield 15 elapsed minutes and 30 labor minutes.
+- **Supporting signals** — location and available motion support the record within permissions and device limitations. They do not independently establish cleaning quality or prove time in a particular indoor room.
+- **Client progress** — current area, completed areas, remaining work, required-work progress, and last update. Preserve Cleaning finished, Awaiting inspection, and Ready as separate states when inspection applies.
+- **Finished record** — approved completion photos, recorded durations, exceptions, supervisor findings, and corrections appear in the completed client report and invoice experience.
+- **Invoice and history** — readable completion summary with the full evidence available; printable invoice/service package; Office property/date-range history for complaints and account review.
+- **Improvement** — inspection-qualified actuals inform expected times, estimating, training, and staffing. Scheduling suggestions consider addresses, availability, skills, and durations; Office reviews and clients agree before established appointments move.
+
+Employee Time & Pay, weekly schedules, private documents, payroll integration, and internal route suggestions support this operation but are not homepage feature lists.
+
+### Translate the model into client value
+
+Use examples that let visitors recognize their own property. The same standard can serve a home, dealership, resort, or construction project, with different scopes, frequencies, and deadlines.
+
+Emphasize that property instructions remain available through staffing changes; clients repeat fewer instructions; supervisors see exceptions and direct corrections; clients can understand the scope, follow progress, and review results.
+
+Explain each technical mechanism only when it helps the buyer understand that benefit. Avoid long homepage lists of QR, NFC, geofence, sensors, database events, or payroll tools. Show a concise demonstration with actual property footage, the employee's area instruction, completion photos, and the client report. Clearly label illustrative data.
+
+Evidence assists factual review and correction. It cannot guarantee retention, prevent termination, eliminate disputes, or compensate for repeated poor work. Do not promise those outcomes.
+
+### Claim and launch controls
+
+Before copy promises a capability, verify it through its normal operating path at a named candidate SHA and identify the services/accounts for which it is available. Keep proposed scope distinct from operational proof. If a feature is unavailable, use clear upcoming language or defer its promotional block.
+
+Actual-property recording requires permission and careful framing. Protect people, paperwork, security details, and other private material. Training access is controlled; client-facing photos are approved.
+
+Keep the Naples title/H1 and five city links. Do not publish a home address. Do not invent hotel accounts, portfolios, statewide residential crews, current statewide coverage, unsupported growth metrics, or claims that no competitor offers similar capabilities. Expansion ambition must not become a false service availability claim. Schema remains the approved five cities.
+
+### Homepage implementation handoff
+
+Website Cursor reconciles any unpublished November 6 material against this section, preserving unrelated work, and reports the resulting branch and SHA. Then implement the homepage only in the locked order using existing styles and intake. Include desktop, tablet, and phone review and verify CTA behavior, heading structure, links, and claim readiness. Tony reviews the named homepage candidate before production publication.
+
+## Historical reference
+
+The sections below preserve implementation history. The authoritative Homepage Bible above takes precedence where directions conflict.
 
 ## Performance + conversion roadmap
 
