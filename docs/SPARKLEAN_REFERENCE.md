@@ -2,7 +2,7 @@
 
 **Read this first** in any new Cursor chat about Sparklean Cleaning (`https://www.sparklean.co/`).
 
-Last updated: **2026-11-10** (authoritative homepage direction; connected property areas, actual-property training, client progress, invoice evidence, and existing-client onboarding; homepage candidate on review)
+Last updated: **2026-11-10** (property-standard homepage corrections: sales copy without internal guardrails; Preview banner for unfinished connected-property client features)
 
 ---
 
@@ -58,7 +58,7 @@ The core is a persistent property-area identity that links scope, standards, exe
 
 ### Claim and launch controls
 
-Before copy promises a capability, verify it through its normal operating path. Keep proposed scope distinct from operational proof. If a feature is unavailable, use clear upcoming language, label illustrative examples, or defer the block. Training access is controlled; client-facing photos are approved.
+Before copy promises a capability, verify it through its normal operating path. Keep proposed scope distinct from operational proof. If a feature is unavailable, use a visible “Preview of Sparklean’s connected property experience” label and future wording—not faint disclaimers or “confirmed during onboarding.” Training access is controlled; client-facing photos are approved. Keep verification phrases such as “not claimed as existing portfolios,” “not invented historical portfolios,” and “everyday residential crews are not claimed statewide” in this Bible, not in sales copy.
 
 ### Homepage implementation handoff
 
@@ -68,7 +68,9 @@ Implement only in the locked order using existing styles and intake. Tony review
 
 ## Changelog (recent)
 
-**2026-11-10 — Property-standard homepage candidate (review only):** Reconciled GitHub Bible `64b2bcd` with unpublished November 6 implementation `017194a`. Homepage copy rewritten for property-owner outcomes in the locked 12-section order. Visual Standard and Client App progress labeled as illustrative / confirmed during onboarding. Mobile hero spacing tightened so both walkthrough CTAs clear the sticky bar. No production deploy.
+**2026-11-10 — Property-standard homepage corrections (review only):** Removed internal guardrails from sales copy. Live Client App = appointments, invoices, messages. Employee area workflow (video → checklist → photos) matches Build stages 1–6. Client area progress and invoice evidence from those records remain Preview. Kitchen demonstration uses authentic photography and an honest video placeholder. No production deploy.
+
+**2026-11-10 — Property-standard homepage candidate (review only):** Reconciled GitHub Bible `64b2bcd` with unpublished November 6 implementation `017194a`. Homepage copy rewritten for property-owner outcomes in the locked 12-section order. Mobile hero spacing tightened so both walkthrough CTAs clear the sticky bar. No production deploy.
 
 **2026-11-10 — Authoritative Website Bible on GitHub (docs only):** `review/website-bible-property-standard-2026-11-10` @ `64b2bcd`. Connected property areas, actual-property training, client progress, invoice evidence, existing-client setup, Gavin email as sales voice.
 
