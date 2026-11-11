@@ -68,7 +68,7 @@ Implement only in the locked order using existing styles and intake. Tony review
 
 ## Changelog (recent)
 
-**2026-11-10 — Property-standard homepage candidate (review only):** Reconciled GitHub Bible `64b2bcd` with unpublished November 6 implementation `017194a`. Homepage copy rewritten for property-owner outcomes in the locked 12-section order. Visual Standard and Client App progress labeled as illustrative / confirmed during onboarding. No production deploy.
+**2026-11-10 — Property-standard homepage candidate (review only):** Reconciled GitHub Bible `64b2bcd` with unpublished November 6 implementation `017194a`. Homepage copy rewritten for property-owner outcomes in the locked 12-section order. Visual Standard and Client App progress labeled as illustrative / confirmed during onboarding. Mobile hero spacing tightened so both walkthrough CTAs clear the sticky bar. No production deploy.
 
 **2026-11-10 — Authoritative Website Bible on GitHub (docs only):** `review/website-bible-property-standard-2026-11-10` @ `64b2bcd`. Connected property areas, actual-property training, client progress, invoice evidence, existing-client setup, Gavin email as sales voice.
 
